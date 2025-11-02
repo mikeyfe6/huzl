@@ -1,13 +1,42 @@
 import { Image } from "expo-image";
+import { useEffect, useState } from "react";
 import { Platform, StyleSheet } from "react-native";
 
 import { HelloWave } from "@/components/hello-wave";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { supabase } from "@/utils/supabase";
 import { Link } from "expo-router";
 
 export default function HomeScreen() {
+    const [message, setMessage] = useState("Loading...");
+
+    useEffect(() => {
+        const fetchMessage = async () => {
+            console.log("Fetching from Supabase...");
+
+            const { data, error } = await supabase
+                .from("messages")
+                .select("text")
+                .limit(1);
+
+            console.log("Supabase response:", { data, error });
+
+            if (error) {
+                console.log("Error:", error);
+                setMessage("Error fetching message");
+            } else if (data && data.length > 0) {
+                console.log("Message found:", data[0].text);
+                setMessage(data[0].text);
+            } else {
+                console.log("No data returned, length:", data?.length);
+                setMessage("No message found");
+            }
+        };
+
+        fetchMessage();
+    }, []);
     return (
         <ParallaxScrollView
             headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -22,6 +51,12 @@ export default function HomeScreen() {
                 <ThemedText type="title">Welcome!</ThemedText>
                 <HelloWave />
             </ThemedView>
+
+            <ThemedView style={styles.stepContainer}>
+                <ThemedText type="subtitle">Supabase Message:</ThemedText>
+                <ThemedText>{message}</ThemedText>
+            </ThemedView>
+
             <ThemedView style={styles.stepContainer}>
                 <ThemedText type="subtitle">Step 1: Try it</ThemedText>
                 <ThemedText>
