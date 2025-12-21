@@ -1,16 +1,17 @@
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import {
+    Platform,
     ScrollView,
     StyleSheet,
     TextInput,
     TouchableOpacity,
     View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 
 type Frequency = "daily" | "monthly" | "yearly";
 
@@ -27,7 +28,8 @@ export default function ExpensesScreen() {
     const [expenseAmount, setExpenseAmount] = useState("");
     const [frequency, setFrequency] = useState<Frequency>("monthly");
     const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
-    const colorScheme = useColorScheme();
+    // const colorScheme = useColorScheme();
+    const colorScheme = "dark";
 
     const calculateYearlyTotal = (amount: number, freq: Frequency): number => {
         const num = parseFloat(amount.toString());
@@ -86,180 +88,198 @@ export default function ExpensesScreen() {
     };
 
     return (
-        <ScrollView
+        <SafeAreaView
             style={[
-                styles.container,
+                styles.safeAreaView,
                 {
+                    flex: 1,
                     backgroundColor:
                         colorScheme === "dark" ? "#1a1a1a" : "#f5f5f5",
                 },
             ]}
         >
-            {/* Input Section */}
-            <ThemedView style={styles.inputSection}>
-                <ThemedText type="title" style={styles.heading}>
-                    Expenses
-                </ThemedText>
-
-                <ThemedText style={styles.label}>Item Name</ThemedText>
-                <TextInput
-                    style={[
-                        styles.input,
-                        {
-                            color: colorScheme === "dark" ? "#fff" : "#000",
-                            borderColor:
-                                colorScheme === "dark" ? "#333" : "#ddd",
-                            backgroundColor:
-                                colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                        },
-                    ]}
-                    placeholder="e.g., Spotify"
-                    placeholderTextColor={
-                        colorScheme === "dark" ? "#666" : "#999"
-                    }
-                    value={expenseName}
-                    onChangeText={setExpenseName}
-                />
-
-                <ThemedText style={styles.label}>Amount (€)</ThemedText>
-                <TextInput
-                    style={[
-                        styles.input,
-                        {
-                            color: colorScheme === "dark" ? "#fff" : "#000",
-                            borderColor:
-                                colorScheme === "dark" ? "#333" : "#ddd",
-                            backgroundColor:
-                                colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                        },
-                    ]}
-                    placeholder="0.00"
-                    placeholderTextColor={
-                        colorScheme === "dark" ? "#666" : "#999"
-                    }
-                    value={expenseAmount}
-                    onChangeText={setExpenseAmount}
-                    keyboardType="decimal-pad"
-                />
-
-                <ThemedText style={styles.label}>Frequency</ThemedText>
-                <View
-                    style={[
-                        styles.pickerContainer,
-                        {
-                            borderColor:
-                                colorScheme === "dark" ? "#333" : "#ddd",
-                            backgroundColor:
-                                colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                        },
-                    ]}
-                >
-                    <Picker
-                        selectedValue={frequency}
-                        onValueChange={(itemValue) =>
-                            setFrequency(itemValue as Frequency)
-                        }
-                        style={{
-                            color: "#000",
-                            height: 40,
-                        }}
-                        dropdownIconColor="#000"
-                    >
-                        <Picker.Item label="Daily" value="daily" />
-                        <Picker.Item label="Monthly" value="monthly" />
-                        <Picker.Item label="Yearly" value="yearly" />
-                    </Picker>
-                </View>
-
-                <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={handleAddExpense}
-                >
-                    <ThemedText style={styles.buttonText}>
-                        Add Expense
+            <ScrollView
+                style={styles.container}
+                contentContainerStyle={{ paddingBottom: 24 }}
+            >
+                {/* Input Section */}
+                <ThemedView style={styles.inputSection}>
+                    <ThemedText type="title" style={styles.heading}>
+                        Expenses
                     </ThemedText>
-                </TouchableOpacity>
-            </ThemedView>
 
-            {/* Expenses List */}
-            {expenses.length > 0 && (
-                <ThemedView style={styles.listSection}>
-                    <ThemedText type="subtitle">Expenses List</ThemedText>
+                    <ThemedText style={styles.label}>Item Name</ThemedText>
+                    <TextInput
+                        style={[
+                            styles.input,
+                            {
+                                color: colorScheme === "dark" ? "#fff" : "#000",
+                                borderColor:
+                                    colorScheme === "dark" ? "#333" : "#ddd",
+                                backgroundColor:
+                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
+                            },
+                        ]}
+                        placeholder="e.g., Spotify"
+                        placeholderTextColor={
+                            colorScheme === "dark" ? "#666" : "#999"
+                        }
+                        value={expenseName}
+                        onChangeText={setExpenseName}
+                    />
 
-                    {expenses.map((expense) => (
-                        <View
-                            key={expense.id}
-                            style={[
-                                styles.expenseCard,
-                                {
-                                    backgroundColor:
-                                        colorScheme === "dark"
-                                            ? "#2a2a2a"
-                                            : "#fff",
-                                    borderColor:
-                                        colorScheme === "dark"
-                                            ? "#333"
-                                            : "#ddd",
-                                },
-                            ]}
+                    <ThemedText style={styles.label}>Amount (€)</ThemedText>
+                    <TextInput
+                        style={[
+                            styles.input,
+                            {
+                                color: colorScheme === "dark" ? "#fff" : "#000",
+                                borderColor:
+                                    colorScheme === "dark" ? "#333" : "#ddd",
+                                backgroundColor:
+                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
+                            },
+                        ]}
+                        placeholder="0.00"
+                        placeholderTextColor={
+                            colorScheme === "dark" ? "#666" : "#999"
+                        }
+                        value={expenseAmount}
+                        onChangeText={setExpenseAmount}
+                        keyboardType="decimal-pad"
+                    />
+
+                    <ThemedText style={styles.label}>Frequency</ThemedText>
+                    <View
+                        style={[
+                            styles.pickerContainer,
+                            {
+                                borderColor:
+                                    colorScheme === "dark" ? "#333" : "#ddd",
+                                backgroundColor:
+                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
+                            },
+                            Platform.OS === "ios"
+                                ? { height: 150, overflow: "hidden" }
+                                : null,
+                        ]}
+                    >
+                        <Picker
+                            selectedValue={frequency}
+                            onValueChange={(itemValue) =>
+                                setFrequency(itemValue as Frequency)
+                            }
+                            style={[styles.pickerInput]}
+                            {...(Platform.OS === "android"
+                                ? {
+                                      mode: "dropdown" as const,
+                                      dropdownIconColor: "#000",
+                                  }
+                                : {})}
                         >
-                            <View style={styles.expenseHeader}>
-                                <View style={styles.expenseInfo}>
-                                    <ThemedText type="defaultSemiBold">
-                                        {expense.name}
+                            <Picker.Item label="Daily" value="daily" />
+                            <Picker.Item label="Monthly" value="monthly" />
+                            <Picker.Item label="Yearly" value="yearly" />
+                        </Picker>
+                    </View>
+
+                    <TouchableOpacity
+                        style={styles.addButton}
+                        onPress={handleAddExpense}
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            Add Expense
+                        </ThemedText>
+                    </TouchableOpacity>
+                </ThemedView>
+
+                {/* Expenses List */}
+                {expenses.length > 0 && (
+                    <ThemedView style={styles.listSection}>
+                        <ThemedText type="subtitle">Expenses List</ThemedText>
+
+                        {expenses.map((expense) => (
+                            <View
+                                key={expense.id}
+                                style={[
+                                    styles.expenseCard,
+                                    {
+                                        backgroundColor:
+                                            colorScheme === "dark"
+                                                ? "#2a2a2a"
+                                                : "#fff",
+                                        borderColor:
+                                            colorScheme === "dark"
+                                                ? "#333"
+                                                : "#ddd",
+                                    },
+                                ]}
+                            >
+                                <View style={styles.expenseHeader}>
+                                    <View style={styles.expenseInfo}>
+                                        <ThemedText type="defaultSemiBold">
+                                            {expense.name}
+                                        </ThemedText>
+                                        <ThemedText
+                                            style={styles.frequencyLabel}
+                                        >
+                                            €{expense.amount.toFixed(2)} /{" "}
+                                            {getFrequencyLabel(
+                                                expense.frequency
+                                            )}
+                                        </ThemedText>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            handleDeleteExpense(expense.id)
+                                        }
+                                    >
+                                        <ThemedText style={styles.deleteButton}>
+                                            Delete
+                                        </ThemedText>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.yearlyTotalBox}>
+                                    <ThemedText style={styles.yearlyLabel}>
+                                        Yearly Total:
                                     </ThemedText>
-                                    <ThemedText style={styles.frequencyLabel}>
-                                        €{expense.amount.toFixed(2)} /{" "}
-                                        {getFrequencyLabel(expense.frequency)}
+                                    <ThemedText style={styles.yearlyAmount}>
+                                        €{expense.yearlyTotal.toFixed(2)}
                                     </ThemedText>
                                 </View>
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        handleDeleteExpense(expense.id)
-                                    }
-                                >
-                                    <ThemedText style={styles.deleteButton}>
-                                        Delete
-                                    </ThemedText>
-                                </TouchableOpacity>
                             </View>
-                            <View style={styles.yearlyTotalBox}>
-                                <ThemedText style={styles.yearlyLabel}>
-                                    Yearly Total:
-                                </ThemedText>
-                                <ThemedText style={styles.yearlyAmount}>
-                                    €{expense.yearlyTotal.toFixed(2)}
-                                </ThemedText>
-                            </View>
-                        </View>
-                    ))}
-                </ThemedView>
-            )}
+                        ))}
+                    </ThemedView>
+                )}
 
-            {/* Total Yearly Spend */}
-            {expenses.length > 0 && (
-                <ThemedView style={styles.totalSection}>
-                    <ThemedText type="subtitle" style={styles.totalLabel}>
-                        Total Yearly Spend
-                    </ThemedText>
-                    <ThemedText style={styles.totalAmount}>
-                        €{totalYearlySpend.toFixed(2)}
-                    </ThemedText>
-                </ThemedView>
-            )}
+                {/* Total Yearly Spend */}
+                {expenses.length > 0 && (
+                    <ThemedView style={styles.totalSection}>
+                        <ThemedText type="subtitle" style={styles.totalLabel}>
+                            Total Yearly Spend
+                        </ThemedText>
+                        <ThemedText style={styles.totalAmount}>
+                            €{totalYearlySpend.toFixed(2)}
+                        </ThemedText>
+                    </ThemedView>
+                )}
 
-            {expenses.length === 0 && (
-                <ThemedView style={styles.emptyState}>
-                    <ThemedText style={styles.emptyStateText}>
-                        Add your first expense!
-                    </ThemedText>
-                </ThemedView>
-            )}
-        </ScrollView>
+                {expenses.length === 0 && (
+                    <ThemedView style={styles.emptyState}>
+                        <ThemedText style={styles.emptyStateText}>
+                            Add your first expense!
+                        </ThemedText>
+                    </ThemedView>
+                )}
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeAreaView: {
+        flex: 1,
+    },
     container: {
         flex: 1,
         paddingHorizontal: 0,
@@ -288,6 +308,36 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         marginTop: 4,
+        justifyContent: "center",
+    },
+    pickerInput: {
+        fontFamily: "System",
+        fontSize: Platform.select({
+            ios: 16,
+            android: 16,
+            default: 16,
+        }),
+        borderRadius: 8,
+        color: Platform.select({
+            ios: "#fff",
+            android: "#000",
+            default: "#000",
+        }),
+        height: Platform.select({
+            ios: 216,
+            android: 50,
+            default: 50,
+        }),
+        paddingHorizontal: Platform.select({
+            ios: 0,
+            android: 0,
+            default: 12,
+        }),
+        paddingVertical: Platform.select({
+            ios: 0,
+            android: 0,
+            default: 10,
+        }),
     },
     addButton: {
         backgroundColor: "#4caf50",
