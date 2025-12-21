@@ -5,25 +5,66 @@
 
 import { Platform } from "react-native";
 
-const tintColorLight = "#0a7ea4";
-const tintColorDark = "#fff";
+export const linkColor = "#0a7ea4";
+export const whiteColor = "#fff";
+export const blackColor = "#000";
+export const greenColor = "#4caf50";
+export const redColor = "#f44336";
+export const blueColor = "#2196f3";
+
+export const almostWhiteColor = "#f5f5f5";
+export const lightGreyColor = "#ddd";
+export const mediumGreyColor = "#999";
+export const darkGreyColor = "#666";
+export const veryDarkGreyColor = "#333";
+export const almostBlackColor = "#2a2a2a";
+export const nearBlackColor = "#1a1a1a";
+export const charcoalColor = "#151718";
+export const onyxColor = "#11181C";
+export const lightTextColor = "#ecedee";
+export const slateColor = "#687076";
+export const silverColor = "#9ba1a6";
 
 export const Colors = {
     light: {
-        text: "#11181C",
-        background: "#fff",
-        tint: tintColorLight,
-        icon: "#687076",
-        tabIconDefault: "#687076",
-        tabIconSelected: tintColorLight,
+        text: onyxColor,
+        background: whiteColor,
+        tint: linkColor,
+        icon: slateColor,
+        tabIconDefault: slateColor,
+        tabIconSelected: linkColor,
+
+        // Add your expense screen colors
+        screenBackground: almostWhiteColor,
+        cardBackground: whiteColor,
+        inputBackground: whiteColor,
+        inputBorder: lightGreyColor,
+        inputText: blackColor,
+        label: blackColor,
+        placeholder: mediumGreyColor,
+        emptyStateText: darkGreyColor,
+        borderColor: lightGreyColor,
+        dividerColor: "rgba(0,0,0,0.1)",
     },
     dark: {
-        text: "#ECEDEE",
-        background: "#151718",
-        tint: tintColorDark,
-        icon: "#9BA1A6",
-        tabIconDefault: "#9BA1A6",
-        tabIconSelected: tintColorDark,
+        text: lightTextColor,
+        background: charcoalColor,
+        tint: linkColor,
+        icon: silverColor,
+        tabIconDefault: silverColor,
+        tabIconSelected: linkColor,
+
+        // Add your expense screen colors
+        screenBackground: nearBlackColor,
+        cardBackground: almostBlackColor,
+        inputBackground: almostBlackColor,
+        inputBorder: veryDarkGreyColor,
+        inputText: whiteColor,
+        label: whiteColor,
+        placeholder: darkGreyColor,
+        emptyStateText: mediumGreyColor,
+        borderColor: veryDarkGreyColor,
+        dividerColor: "rgba(255,255,255,0.1)",
     },
 };
 

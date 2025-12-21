@@ -1,5 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
     Platform,
     ScrollView,
@@ -12,6 +13,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import {
+    blackColor,
+    blueColor,
+    Colors,
+    greenColor,
+    redColor,
+    whiteColor,
+} from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 type Frequency = "daily" | "monthly" | "yearly";
 
@@ -28,8 +38,186 @@ export default function ExpensesScreen() {
     const [expenseAmount, setExpenseAmount] = useState("");
     const [frequency, setFrequency] = useState<Frequency>("monthly");
     const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
-    // const colorScheme = useColorScheme();
-    const colorScheme = "dark";
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+
+    const styles = useMemo(
+        () =>
+            StyleSheet.create({
+                safeAreaView: {
+                    flex: 1,
+                    backgroundColor: theme.screenBackground,
+                },
+                container: {
+                    flex: 1,
+                    paddingHorizontal: 0,
+                },
+                inputSection: {
+                    padding: 16,
+                    paddingTop: 24,
+                    gap: 12,
+                },
+                heading: {
+                    marginBottom: 16,
+                },
+                label: {
+                    fontSize: 14,
+                    fontWeight: "600",
+                    marginTop: 8,
+                    color: theme.label,
+                },
+                input: {
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                    fontSize: 16,
+                    color: theme.inputText,
+                    borderColor: theme.inputBorder,
+                    backgroundColor: theme.inputBackground,
+                },
+                placeholderText: {
+                    color: theme.placeholder,
+                },
+                pickerContainer: {
+                    overflow: Platform.select({
+                        ios: "hidden",
+                        android: "hidden",
+                        default: "visible",
+                    }),
+                    height: Platform.select({
+                        ios: 150,
+                        android: undefined,
+                        default: undefined,
+                    }),
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    marginTop: 4,
+                    justifyContent: "center",
+                    borderColor: theme.inputBorder,
+                    backgroundColor: theme.inputBackground,
+                },
+                pickerInput: {
+                    fontFamily: "System",
+                    fontSize: Platform.select({
+                        ios: 16,
+                        android: 16,
+                        default: 16,
+                    }),
+                    borderRadius: 8,
+                    color: Platform.select({
+                        ios: whiteColor,
+                        android: whiteColor,
+                        default: blackColor,
+                    }),
+                    height: Platform.select({
+                        ios: 216,
+                        android: 50,
+                        default: 50,
+                    }),
+                    paddingHorizontal: Platform.select({
+                        ios: 0,
+                        android: 0,
+                        default: 12,
+                    }),
+                    paddingVertical: Platform.select({
+                        ios: 0,
+                        android: 0,
+                        default: 10,
+                    }),
+                },
+                addButton: {
+                    backgroundColor: greenColor,
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    marginTop: 8,
+                },
+                buttonText: {
+                    color: whiteColor,
+                    fontWeight: "600",
+                    fontSize: 16,
+                },
+                listSection: {
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    gap: 10,
+                },
+                expenseCard: {
+                    padding: 12,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    marginBottom: 8,
+                    gap: 12,
+                    backgroundColor: theme.cardBackground,
+                    borderColor: theme.borderColor,
+                },
+                expenseHeader: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                },
+                expenseInfo: {
+                    flex: 1,
+                },
+                frequencyLabel: {
+                    fontSize: 13,
+                    opacity: 0.7,
+                    marginTop: 4,
+                },
+                deleteButton: {
+                    color: redColor,
+                    fontWeight: "600",
+                },
+                yearlyTotalBox: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingTop: 8,
+                    borderTopWidth: 1,
+                    borderTopColor: theme.dividerColor,
+                },
+                yearlyLabel: {
+                    fontSize: 13,
+                    fontWeight: "500",
+                },
+                yearlyAmount: {
+                    fontSize: 14,
+                    fontWeight: "600",
+                    color: blueColor,
+                },
+                totalSection: {
+                    paddingHorizontal: 16,
+                    paddingVertical: 20,
+                    marginHorizontal: 16,
+                    marginBottom: 16,
+                    borderRadius: 12,
+                    backgroundColor: blueColor,
+                    gap: 8,
+                },
+                totalLabel: {
+                    color: whiteColor,
+                },
+                totalAmount: {
+                    fontSize: 32,
+                    fontWeight: "bold",
+                    color: whiteColor,
+                },
+                emptyState: {
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingVertical: 60,
+                },
+                emptyStateText: {
+                    fontSize: 18,
+                    opacity: 0.6,
+                    textAlign: "center",
+                    color: theme.emptyStateText,
+                },
+            }),
+        [theme]
+    );
 
     const calculateYearlyTotal = (amount: number, freq: Frequency): number => {
         const num = parseFloat(amount.toString());
@@ -88,16 +276,7 @@ export default function ExpensesScreen() {
     };
 
     return (
-        <SafeAreaView
-            style={[
-                styles.safeAreaView,
-                {
-                    flex: 1,
-                    backgroundColor:
-                        colorScheme === "dark" ? "#1a1a1a" : "#f5f5f5",
-                },
-            ]}
-        >
+        <SafeAreaView style={styles.safeAreaView}>
             <ScrollView
                 style={styles.container}
                 contentContainerStyle={{ paddingBottom: 24 }}
@@ -110,77 +289,61 @@ export default function ExpensesScreen() {
 
                     <ThemedText style={styles.label}>Item Name</ThemedText>
                     <TextInput
-                        style={[
-                            styles.input,
-                            {
-                                color: colorScheme === "dark" ? "#fff" : "#000",
-                                borderColor:
-                                    colorScheme === "dark" ? "#333" : "#ddd",
-                                backgroundColor:
-                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                            },
-                        ]}
+                        style={styles.input}
                         placeholder="e.g., Spotify"
-                        placeholderTextColor={
-                            colorScheme === "dark" ? "#666" : "#999"
-                        }
+                        placeholderTextColor={theme.placeholder}
                         value={expenseName}
                         onChangeText={setExpenseName}
                     />
 
                     <ThemedText style={styles.label}>Amount (€)</ThemedText>
                     <TextInput
-                        style={[
-                            styles.input,
-                            {
-                                color: colorScheme === "dark" ? "#fff" : "#000",
-                                borderColor:
-                                    colorScheme === "dark" ? "#333" : "#ddd",
-                                backgroundColor:
-                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                            },
-                        ]}
+                        style={styles.input}
                         placeholder="0.00"
-                        placeholderTextColor={
-                            colorScheme === "dark" ? "#666" : "#999"
-                        }
+                        placeholderTextColor={theme.placeholder}
                         value={expenseAmount}
                         onChangeText={setExpenseAmount}
                         keyboardType="decimal-pad"
                     />
 
                     <ThemedText style={styles.label}>Frequency</ThemedText>
-                    <View
-                        style={[
-                            styles.pickerContainer,
-                            {
-                                borderColor:
-                                    colorScheme === "dark" ? "#333" : "#ddd",
-                                backgroundColor:
-                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                            },
-                            Platform.OS === "ios"
-                                ? { height: 150, overflow: "hidden" }
-                                : null,
-                        ]}
-                    >
+                    <View style={[styles.pickerContainer]}>
                         <Picker
                             selectedValue={frequency}
                             onValueChange={(itemValue) =>
                                 setFrequency(itemValue as Frequency)
                             }
-                            style={[styles.pickerInput]}
-                            {...(Platform.OS === "android"
-                                ? {
-                                      mode: "dropdown" as const,
-                                      dropdownIconColor: "#000",
-                                  }
-                                : {})}
+                            style={[
+                                styles.pickerInput,
+                                Platform.OS === "web"
+                                    ? ([
+                                          {
+                                              appearance: "none",
+                                              WebkitAppearance: "none",
+                                              MozAppearance: "none",
+                                          } as any,
+                                      ] as any)
+                                    : null,
+                            ]}
                         >
                             <Picker.Item label="Daily" value="daily" />
                             <Picker.Item label="Monthly" value="monthly" />
                             <Picker.Item label="Yearly" value="yearly" />
                         </Picker>
+                        {Platform.OS === "web" && (
+                            <Ionicons
+                                name="chevron-down"
+                                size={18}
+                                color={blackColor}
+                                style={{
+                                    position: "absolute",
+                                    right: 12,
+                                    top: "50%",
+                                    marginTop: -9,
+                                    pointerEvents: "none",
+                                }}
+                            />
+                        )}
                     </View>
 
                     <TouchableOpacity
@@ -199,22 +362,7 @@ export default function ExpensesScreen() {
                         <ThemedText type="subtitle">Expenses List</ThemedText>
 
                         {expenses.map((expense) => (
-                            <View
-                                key={expense.id}
-                                style={[
-                                    styles.expenseCard,
-                                    {
-                                        backgroundColor:
-                                            colorScheme === "dark"
-                                                ? "#2a2a2a"
-                                                : "#fff",
-                                        borderColor:
-                                            colorScheme === "dark"
-                                                ? "#333"
-                                                : "#ddd",
-                                    },
-                                ]}
-                            >
+                            <View key={expense.id} style={styles.expenseCard}>
                                 <View style={styles.expenseHeader}>
                                     <View style={styles.expenseInfo}>
                                         <ThemedText type="defaultSemiBold">
@@ -275,154 +423,3 @@ export default function ExpensesScreen() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    safeAreaView: {
-        flex: 1,
-    },
-    container: {
-        flex: 1,
-        paddingHorizontal: 0,
-    },
-    inputSection: {
-        padding: 16,
-        paddingTop: 24,
-        gap: 12,
-    },
-    heading: {
-        marginBottom: 16,
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: "600",
-        marginTop: 8,
-    },
-    input: {
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        fontSize: 16,
-    },
-    pickerContainer: {
-        borderWidth: 1,
-        borderRadius: 8,
-        marginTop: 4,
-        justifyContent: "center",
-    },
-    pickerInput: {
-        fontFamily: "System",
-        fontSize: Platform.select({
-            ios: 16,
-            android: 16,
-            default: 16,
-        }),
-        borderRadius: 8,
-        color: Platform.select({
-            ios: "#fff",
-            android: "#000",
-            default: "#000",
-        }),
-        height: Platform.select({
-            ios: 216,
-            android: 50,
-            default: 50,
-        }),
-        paddingHorizontal: Platform.select({
-            ios: 0,
-            android: 0,
-            default: 12,
-        }),
-        paddingVertical: Platform.select({
-            ios: 0,
-            android: 0,
-            default: 10,
-        }),
-    },
-    addButton: {
-        backgroundColor: "#4caf50",
-        paddingVertical: 12,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 8,
-    },
-    buttonText: {
-        color: "#fff",
-        fontWeight: "600",
-        fontSize: 16,
-    },
-    listSection: {
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        gap: 10,
-    },
-    expenseCard: {
-        padding: 12,
-        borderRadius: 8,
-        borderWidth: 1,
-        marginBottom: 8,
-        gap: 12,
-    },
-    expenseHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    expenseInfo: {
-        flex: 1,
-    },
-    frequencyLabel: {
-        fontSize: 13,
-        opacity: 0.7,
-        marginTop: 4,
-    },
-    deleteButton: {
-        color: "#f44336",
-        fontWeight: "600",
-    },
-    yearlyTotalBox: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingTop: 8,
-        borderTopWidth: 1,
-        borderTopColor: "rgba(0,0,0,0.1)",
-    },
-    yearlyLabel: {
-        fontSize: 13,
-        fontWeight: "500",
-    },
-    yearlyAmount: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#2196F3",
-    },
-    totalSection: {
-        paddingHorizontal: 16,
-        paddingVertical: 20,
-        marginHorizontal: 16,
-        marginBottom: 16,
-        borderRadius: 12,
-        backgroundColor: "#2196F3",
-        gap: 8,
-    },
-    totalLabel: {
-        color: "#fff",
-    },
-    totalAmount: {
-        fontSize: 32,
-        fontWeight: "bold",
-        color: "#fff",
-    },
-    emptyState: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingVertical: 60,
-    },
-    emptyStateText: {
-        fontSize: 18,
-        opacity: 0.6,
-        textAlign: "center",
-    },
-});
