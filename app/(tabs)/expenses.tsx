@@ -126,6 +126,13 @@ export default function ExpensesScreen() {
                         default: 10,
                     }),
                 },
+                pickerOption: {
+                    fontSize: Platform.select({
+                        ios: 16,
+                        android: 16,
+                        default: 16,
+                    }),
+                },
                 addButton: {
                     backgroundColor: greenColor,
                     paddingVertical: 12,
@@ -138,7 +145,7 @@ export default function ExpensesScreen() {
                     fontWeight: "600",
                     fontSize: 16,
                 },
-                listSection: {
+                expenseList: {
                     paddingHorizontal: 16,
                     paddingVertical: 12,
                     gap: 10,
@@ -202,6 +209,7 @@ export default function ExpensesScreen() {
                     fontSize: 32,
                     fontWeight: "bold",
                     color: whiteColor,
+                    lineHeight: 40,
                 },
                 emptyState: {
                     flex: 1,
@@ -325,6 +333,7 @@ export default function ExpensesScreen() {
                                       ] as any)
                                     : null,
                             ]}
+                            itemStyle={styles.pickerOption}
                         >
                             <Picker.Item label="Daily" value="daily" />
                             <Picker.Item label="Monthly" value="monthly" />
@@ -358,7 +367,7 @@ export default function ExpensesScreen() {
 
                 {/* Expenses List */}
                 {expenses.length > 0 && (
-                    <ThemedView style={styles.listSection}>
+                    <ThemedView style={styles.expenseList}>
                         <ThemedText type="subtitle">Expenses List</ThemedText>
 
                         {expenses.map((expense) => (
