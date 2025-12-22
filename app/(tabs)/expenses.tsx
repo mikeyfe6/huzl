@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -44,10 +43,6 @@ export default function ExpensesScreen() {
     const styles = useMemo(
         () =>
             StyleSheet.create({
-                safeAreaView: {
-                    flex: 1,
-                    backgroundColor: theme.screenBackground,
-                },
                 container: {
                     flex: 1,
                     paddingHorizontal: 0,
@@ -228,8 +223,8 @@ export default function ExpensesScreen() {
     );
 
     const calculateYearlyTotal = (amount: number, freq: Frequency): number => {
-        const num = parseFloat(amount.toString());
-        if (isNaN(num)) return 0;
+        const num = Number.parseFloat(amount.toString());
+        if (Number.isNaN(num)) return 0;
 
         switch (freq) {
             case "daily":
@@ -246,13 +241,13 @@ export default function ExpensesScreen() {
     const handleAddExpense = () => {
         if (expenseName.trim() && expenseAmount.trim()) {
             const yearlyTotal = calculateYearlyTotal(
-                parseFloat(expenseAmount),
+                Number.parseFloat(expenseAmount),
                 frequency
             );
             const newExpense: ExpenseItem = {
                 id: Date.now().toString(),
                 name: expenseName,
-                amount: parseFloat(expenseAmount),
+                amount: Number.parseFloat(expenseAmount),
                 frequency,
                 yearlyTotal,
             };
@@ -284,151 +279,142 @@ export default function ExpensesScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
-            <ScrollView
-                style={styles.container}
-                contentContainerStyle={{ paddingBottom: 24 }}
-            >
-                {/* Input Section */}
-                <ThemedView style={styles.inputSection}>
-                    <ThemedText type="title" style={styles.heading}>
-                        Expenses
-                    </ThemedText>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={{ paddingBottom: 24 }}
+        >
+            <ThemedView style={styles.inputSection}>
+                <ThemedText type="title" style={styles.heading}>
+                    Expenses
+                </ThemedText>
 
-                    <ThemedText style={styles.label}>Item Name</ThemedText>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="e.g., Spotify"
-                        placeholderTextColor={theme.placeholder}
-                        value={expenseName}
-                        onChangeText={setExpenseName}
-                    />
+                <ThemedText style={styles.label}>Item Name</ThemedText>
+                <TextInput
+                    style={styles.input}
+                    placeholder="e.g., Spotify"
+                    placeholderTextColor={theme.placeholder}
+                    value={expenseName}
+                    onChangeText={setExpenseName}
+                />
 
-                    <ThemedText style={styles.label}>Amount (€)</ThemedText>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="0.00"
-                        placeholderTextColor={theme.placeholder}
-                        value={expenseAmount}
-                        onChangeText={setExpenseAmount}
-                        keyboardType="decimal-pad"
-                    />
+                <ThemedText style={styles.label}>Amount (€)</ThemedText>
+                <TextInput
+                    style={styles.input}
+                    placeholder="0.00"
+                    placeholderTextColor={theme.placeholder}
+                    value={expenseAmount}
+                    onChangeText={setExpenseAmount}
+                    keyboardType="decimal-pad"
+                />
 
-                    <ThemedText style={styles.label}>Frequency</ThemedText>
-                    <View style={[styles.pickerContainer]}>
-                        <Picker
-                            selectedValue={frequency}
-                            onValueChange={(itemValue) =>
-                                setFrequency(itemValue as Frequency)
-                            }
-                            style={[
-                                styles.pickerInput,
-                                Platform.OS === "web"
-                                    ? ([
-                                          {
-                                              appearance: "none",
-                                              WebkitAppearance: "none",
-                                              MozAppearance: "none",
-                                          } as any,
-                                      ] as any)
-                                    : null,
-                            ]}
-                            itemStyle={styles.pickerOption}
-                        >
-                            <Picker.Item label="Daily" value="daily" />
-                            <Picker.Item label="Monthly" value="monthly" />
-                            <Picker.Item label="Yearly" value="yearly" />
-                        </Picker>
-                        {Platform.OS === "web" && (
-                            <Ionicons
-                                name="chevron-down"
-                                size={18}
-                                color={blackColor}
-                                style={{
-                                    position: "absolute",
-                                    right: 12,
-                                    top: "50%",
-                                    marginTop: -9,
-                                    pointerEvents: "none",
-                                }}
-                            />
-                        )}
-                    </View>
-
-                    <TouchableOpacity
-                        style={styles.addButton}
-                        onPress={handleAddExpense}
+                <ThemedText style={styles.label}>Frequency</ThemedText>
+                <View style={[styles.pickerContainer]}>
+                    <Picker
+                        selectedValue={frequency}
+                        onValueChange={(itemValue) =>
+                            setFrequency(itemValue as Frequency)
+                        }
+                        style={[
+                            styles.pickerInput,
+                            Platform.OS === "web"
+                                ? ([
+                                      {
+                                          appearance: "none",
+                                          WebkitAppearance: "none",
+                                          MozAppearance: "none",
+                                      } as any,
+                                  ] as any)
+                                : null,
+                        ]}
+                        itemStyle={styles.pickerOption}
                     >
-                        <ThemedText style={styles.buttonText}>
-                            Add Expense
-                        </ThemedText>
-                    </TouchableOpacity>
-                </ThemedView>
+                        <Picker.Item label="Daily" value="daily" />
+                        <Picker.Item label="Monthly" value="monthly" />
+                        <Picker.Item label="Yearly" value="yearly" />
+                    </Picker>
+                    {Platform.OS === "web" && (
+                        <Ionicons
+                            name="chevron-down"
+                            size={18}
+                            color={blackColor}
+                            style={{
+                                position: "absolute",
+                                right: 12,
+                                top: "50%",
+                                marginTop: -9,
+                                pointerEvents: "none",
+                            }}
+                        />
+                    )}
+                </View>
 
-                {/* Expenses List */}
-                {expenses.length > 0 && (
-                    <ThemedView style={styles.expenseList}>
-                        <ThemedText type="subtitle">Expenses List</ThemedText>
+                <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={handleAddExpense}
+                >
+                    <ThemedText style={styles.buttonText}>
+                        Add Expense
+                    </ThemedText>
+                </TouchableOpacity>
+            </ThemedView>
 
-                        {expenses.map((expense) => (
-                            <View key={expense.id} style={styles.expenseCard}>
-                                <View style={styles.expenseHeader}>
-                                    <View style={styles.expenseInfo}>
-                                        <ThemedText type="defaultSemiBold">
-                                            {expense.name}
-                                        </ThemedText>
-                                        <ThemedText
-                                            style={styles.frequencyLabel}
-                                        >
-                                            €{expense.amount.toFixed(2)} /{" "}
-                                            {getFrequencyLabel(
-                                                expense.frequency
-                                            )}
-                                        </ThemedText>
-                                    </View>
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            handleDeleteExpense(expense.id)
-                                        }
-                                    >
-                                        <ThemedText style={styles.deleteButton}>
-                                            Delete
-                                        </ThemedText>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.yearlyTotalBox}>
-                                    <ThemedText style={styles.yearlyLabel}>
-                                        Yearly Total:
+            {expenses.length > 0 && (
+                <ThemedView style={styles.expenseList}>
+                    <ThemedText type="subtitle">Expenses List</ThemedText>
+
+                    {expenses.map((expense) => (
+                        <View key={expense.id} style={styles.expenseCard}>
+                            <View style={styles.expenseHeader}>
+                                <View style={styles.expenseInfo}>
+                                    <ThemedText type="defaultSemiBold">
+                                        {expense.name}
                                     </ThemedText>
-                                    <ThemedText style={styles.yearlyAmount}>
-                                        €{expense.yearlyTotal.toFixed(2)}
+                                    <ThemedText style={styles.frequencyLabel}>
+                                        €{expense.amount.toFixed(2)} /{" "}
+                                        {getFrequencyLabel(expense.frequency)}
                                     </ThemedText>
                                 </View>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        handleDeleteExpense(expense.id)
+                                    }
+                                >
+                                    <ThemedText style={styles.deleteButton}>
+                                        Delete
+                                    </ThemedText>
+                                </TouchableOpacity>
                             </View>
-                        ))}
-                    </ThemedView>
-                )}
+                            <View style={styles.yearlyTotalBox}>
+                                <ThemedText style={styles.yearlyLabel}>
+                                    Yearly Total:
+                                </ThemedText>
+                                <ThemedText style={styles.yearlyAmount}>
+                                    €{expense.yearlyTotal.toFixed(2)}
+                                </ThemedText>
+                            </View>
+                        </View>
+                    ))}
+                </ThemedView>
+            )}
 
-                {/* Total Yearly Spend */}
-                {expenses.length > 0 && (
-                    <ThemedView style={styles.totalSection}>
-                        <ThemedText type="subtitle" style={styles.totalLabel}>
-                            Total Yearly Spend
-                        </ThemedText>
-                        <ThemedText style={styles.totalAmount}>
-                            €{totalYearlySpend.toFixed(2)}
-                        </ThemedText>
-                    </ThemedView>
-                )}
+            {expenses.length > 0 && (
+                <ThemedView style={styles.totalSection}>
+                    <ThemedText type="subtitle" style={styles.totalLabel}>
+                        Total Yearly Spend
+                    </ThemedText>
+                    <ThemedText style={styles.totalAmount}>
+                        €{totalYearlySpend.toFixed(2)}
+                    </ThemedText>
+                </ThemedView>
+            )}
 
-                {expenses.length === 0 && (
-                    <ThemedView style={styles.emptyState}>
-                        <ThemedText style={styles.emptyStateText}>
-                            Add your first expense!
-                        </ThemedText>
-                    </ThemedView>
-                )}
-            </ScrollView>
-        </SafeAreaView>
+            {expenses.length === 0 && (
+                <ThemedView style={styles.emptyState}>
+                    <ThemedText style={styles.emptyStateText}>
+                        Add your first expense!
+                    </ThemedText>
+                </ThemedView>
+            )}
+        </ScrollView>
     );
 }
