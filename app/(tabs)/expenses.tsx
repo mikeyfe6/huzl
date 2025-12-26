@@ -132,6 +132,13 @@ export default function ExpensesScreen() {
                         default: 16,
                     }),
                 },
+                pickerIcon: {
+                    position: "absolute",
+                    right: 12,
+                    top: "50%",
+                    marginTop: -9,
+                    pointerEvents: "none",
+                },
                 addButton: {
                     backgroundColor: greenColor,
                     paddingVertical: 12,
@@ -196,6 +203,7 @@ export default function ExpensesScreen() {
                     paddingHorizontal: 16,
                     paddingVertical: 20,
                     marginHorizontal: 16,
+                    marginTop: 24,
                     marginBottom: 16,
                     borderRadius: 12,
                     backgroundColor: blueColor,
@@ -413,13 +421,7 @@ export default function ExpensesScreen() {
                             name="chevron-down"
                             size={18}
                             color={blackColor}
-                            style={{
-                                position: "absolute",
-                                right: 12,
-                                top: "50%",
-                                marginTop: -9,
-                                pointerEvents: "none",
-                            }}
+                            style={styles.pickerIcon}
                         />
                     )}
                 </View>
