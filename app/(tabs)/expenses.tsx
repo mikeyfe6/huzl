@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
     Platform,
     ScrollView,
@@ -48,6 +48,8 @@ export default function ExpensesScreen() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { user } = useAuth();
+    const nameInputRef = useRef<TextInput>(null);
+    const scrollViewRef = useRef<ScrollView>(null);
 
     const styles = useMemo(
         () =>
@@ -72,7 +74,7 @@ export default function ExpensesScreen() {
                 },
                 categoryGroup: {
                     flexDirection: "row",
-                    gap: 8,
+                    gap: 12,
                     marginTop: 4,
                 },
                 categoryOption: {
@@ -162,12 +164,16 @@ export default function ExpensesScreen() {
                     marginTop: -9,
                     pointerEvents: "none",
                 },
-                addButton: {
-                    backgroundColor: greenColor,
+                inputButtons: {
+                    flexDirection: "row",
+                    gap: 12,
+                },
+                inputButton: {
                     paddingVertical: 12,
                     borderRadius: 8,
                     alignItems: "center",
                     marginTop: 8,
+                    flex: 1,
                 },
                 buttonText: {
                     color: whiteColor,
@@ -178,6 +184,9 @@ export default function ExpensesScreen() {
                     paddingHorizontal: 16,
                     paddingVertical: 12,
                     gap: 10,
+                },
+                expenseTitle: {
+                    marginBottom: 12,
                 },
                 expenseCard: {
                     padding: 12,
@@ -200,6 +209,10 @@ export default function ExpensesScreen() {
                     fontSize: 13,
                     opacity: 0.7,
                     marginTop: 4,
+                },
+                expenseIcons: {
+                    flexDirection: "row",
+                    gap: 16,
                 },
                 expenseIcon: {
                     borderWidth: 1,
@@ -240,6 +253,18 @@ export default function ExpensesScreen() {
                     borderRadius: 12,
                     backgroundColor: blueColor,
                     gap: 8,
+                },
+                totalDetails: {
+                    flexDirection: "row",
+                    gap: 12,
+                    paddingHorizontal: 16,
+                    marginBottom: 16,
+                },
+                totalPeriod: {
+                    flex: 1,
+                    marginHorizontal: 0,
+                    marginTop: 0,
+                    marginBottom: 0,
                 },
                 totalLabel: {
                     color: whiteColor,
@@ -308,7 +333,13 @@ export default function ExpensesScreen() {
                     .select()
                     .single();
 
-                if (!error && data) {
+                if (error) {
+                    console.error("Update error:", error);
+                    alert(`Failed to update expense: ${error.message}`);
+                    return;
+                }
+
+                if (data) {
                     setExpenses((prev) =>
                         prev.map((exp) =>
                             exp.id === editingId
@@ -350,7 +381,13 @@ export default function ExpensesScreen() {
                     .select()
                     .single();
 
-                if (!error && data) {
+                if (error) {
+                    console.error("Insert error:", error);
+                    alert(`Failed to add expense: ${error.message}`);
+                    return;
+                }
+
+                if (data) {
                     const newExpense: ExpenseItem = {
                         id: data.id,
                         name: data.name,
@@ -379,6 +416,8 @@ export default function ExpensesScreen() {
         setFrequency(expense.frequency);
         setCategory(expense.category);
         setEditingId(expense.id);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        setTimeout(() => nameInputRef.current?.focus(), 100);
     };
 
     const handleCancelEdit = () => {
@@ -411,6 +450,9 @@ export default function ExpensesScreen() {
         (sum, expense) => sum + expense.yearlyTotal,
         0
     );
+
+    const totalMonthlySpend = totalYearlySpend / 12;
+    const totalDailySpend = totalYearlySpend / 365;
 
     const personalYearlySpend = expenses
         .filter((e) => e.category === "personal")
@@ -471,6 +513,7 @@ export default function ExpensesScreen() {
 
     return (
         <ScrollView
+            ref={scrollViewRef}
             style={styles.container}
             contentContainerStyle={{ paddingBottom: 24 }}
         >
@@ -481,6 +524,7 @@ export default function ExpensesScreen() {
 
                 <ThemedText style={styles.label}>Item Name</ThemedText>
                 <TextInput
+                    ref={nameInputRef}
                     style={styles.input}
                     placeholder="e.g., Spotify"
                     placeholderTextColor={theme.placeholder}
@@ -565,9 +609,12 @@ export default function ExpensesScreen() {
                     )}
                 </View>
 
-                <View style={{ flexDirection: "row", gap: 8 }}>
+                <View style={styles.inputButtons}>
                     <TouchableOpacity
-                        style={[styles.addButton, { flex: 1 }]}
+                        style={[
+                            styles.inputButton,
+                            { backgroundColor: greenColor },
+                        ]}
                         onPress={handleAddExpense}
                     >
                         <ThemedText style={styles.buttonText}>
@@ -577,8 +624,8 @@ export default function ExpensesScreen() {
                     {editingId && (
                         <TouchableOpacity
                             style={[
-                                styles.addButton,
-                                { flex: 1, backgroundColor: redColor },
+                                styles.inputButton,
+                                { backgroundColor: redColor },
                             ]}
                             onPress={handleCancelEdit}
                         >
@@ -592,7 +639,9 @@ export default function ExpensesScreen() {
 
             {expenses.length > 0 && (
                 <ThemedView style={styles.expenseList}>
-                    <ThemedText type="subtitle">Expenses List</ThemedText>
+                    <ThemedText type="subtitle" style={styles.expenseTitle}>
+                        Expenses List
+                    </ThemedText>
 
                     {expenses.map((expense) => (
                         <View key={expense.id} style={styles.expenseCard}>
@@ -610,7 +659,7 @@ export default function ExpensesScreen() {
                                             expense.category.slice(1)}
                                     </ThemedText>
                                 </View>
-                                <View style={{ flexDirection: "row", gap: 16 }}>
+                                <View style={styles.expenseIcons}>
                                     <TouchableOpacity
                                         onPress={() =>
                                             handleEditExpense(expense)
@@ -661,20 +710,56 @@ export default function ExpensesScreen() {
             )}
 
             {expenses.length > 0 && (
-                <ThemedView style={styles.totalSection}>
-                    <ThemedText type="subtitle" style={styles.totalLabel}>
-                        Total Yearly Spend
-                    </ThemedText>
-                    <ThemedText style={styles.totalAmount}>
-                        €{totalYearlySpend.toFixed(2)}
-                    </ThemedText>
-                    <ThemedText style={styles.totalLabel}>
-                        Personal: €{personalYearlySpend.toFixed(2)}
-                    </ThemedText>
-                    <ThemedText style={styles.totalLabel}>
-                        Business: €{businessYearlySpend.toFixed(2)}
-                    </ThemedText>
-                </ThemedView>
+                <>
+                    <ThemedView style={styles.totalSection}>
+                        <ThemedText type="subtitle" style={styles.totalLabel}>
+                            Total Yearly Spend
+                        </ThemedText>
+                        <ThemedText style={styles.totalAmount}>
+                            €{totalYearlySpend.toFixed(2)}
+                        </ThemedText>
+                        <ThemedText style={styles.totalLabel}>
+                            Personal: €{personalYearlySpend.toFixed(2)}
+                        </ThemedText>
+                        <ThemedText style={styles.totalLabel}>
+                            Business: €{businessYearlySpend.toFixed(2)}
+                        </ThemedText>
+                    </ThemedView>
+
+                    <View style={styles.totalDetails}>
+                        <ThemedView
+                            style={[styles.totalSection, styles.totalPeriod]}
+                        >
+                            <ThemedText
+                                type="defaultSemiBold"
+                                style={styles.totalLabel}
+                            >
+                                Total Monthly Spend
+                            </ThemedText>
+                            <ThemedText
+                                style={[styles.totalAmount, { fontSize: 24 }]}
+                            >
+                                €{totalMonthlySpend.toFixed(2)}
+                            </ThemedText>
+                        </ThemedView>
+
+                        <ThemedView
+                            style={[styles.totalSection, styles.totalPeriod]}
+                        >
+                            <ThemedText
+                                type="defaultSemiBold"
+                                style={styles.totalLabel}
+                            >
+                                Total Daily Spend
+                            </ThemedText>
+                            <ThemedText
+                                style={[styles.totalAmount, { fontSize: 24 }]}
+                            >
+                                €{totalDailySpend.toFixed(2)}
+                            </ThemedText>
+                        </ThemedView>
+                    </View>
+                </>
             )}
 
             {expenses.length === 0 && !loading && (
