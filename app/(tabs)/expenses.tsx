@@ -27,6 +27,12 @@ import { supabase } from "@/utils/supabase";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business";
+type SortOption =
+    | "default"
+    | "alphabetic-asc"
+    | "alphabetic-desc"
+    | "cost-asc"
+    | "cost-desc";
 
 interface ExpenseItem {
     id: string;
@@ -45,6 +51,7 @@ export default function ExpensesScreen() {
     const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [sortOption, setSortOption] = useState<SortOption>("default");
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { user } = useAuth();
@@ -110,7 +117,7 @@ export default function ExpensesScreen() {
                         default: "visible",
                     }),
                     height: Platform.select({
-                        ios: 150,
+                        ios: 125,
                         android: undefined,
                         default: undefined,
                     }),
@@ -187,6 +194,25 @@ export default function ExpensesScreen() {
                 },
                 expenseTitle: {
                     marginBottom: 12,
+                },
+                sortHeader: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 12,
+                    gap: 8,
+                },
+                sortPicker: {
+                    width: Platform.select({
+                        ios: 140,
+                        android: 140,
+                        default: 140,
+                    }),
+                    height: Platform.select({
+                        ios: 50,
+                        android: 40,
+                        default: 40,
+                    }),
                 },
                 expenseCard: {
                     padding: 12,
@@ -446,6 +472,26 @@ export default function ExpensesScreen() {
         }
     };
 
+    const getSortedExpenses = (): ExpenseItem[] => {
+        const sorted = [...expenses];
+
+        switch (sortOption) {
+            case "alphabetic-asc":
+                return sorted.sort((a, b) => a.name.localeCompare(b.name));
+            case "alphabetic-desc":
+                return sorted.sort((a, b) => b.name.localeCompare(a.name));
+            case "cost-asc":
+                return sorted.sort((a, b) => a.yearlyTotal - b.yearlyTotal);
+            case "cost-desc":
+                return sorted.sort((a, b) => b.yearlyTotal - a.yearlyTotal);
+            case "default":
+            default:
+                return sorted;
+        }
+    };
+
+    const sortedExpenses = getSortedExpenses();
+
     const totalYearlySpend = expenses.reduce(
         (sum, expense) => sum + expense.yearlyTotal,
         0
@@ -639,11 +685,54 @@ export default function ExpensesScreen() {
 
             {expenses.length > 0 && (
                 <ThemedView style={styles.expenseList}>
-                    <ThemedText type="subtitle" style={styles.expenseTitle}>
-                        Expenses List
-                    </ThemedText>
+                    <View style={styles.sortHeader}>
+                        <ThemedText type="subtitle">Expenses List</ThemedText>
+                        <View
+                            style={[styles.pickerContainer, styles.sortPicker]}
+                        >
+                            <Picker
+                                selectedValue={sortOption}
+                                onValueChange={(itemValue) =>
+                                    setSortOption(itemValue as SortOption)
+                                }
+                                style={[
+                                    styles.pickerInput,
+                                    Platform.OS === "web"
+                                        ? ([
+                                              {
+                                                  appearance: "none",
+                                                  WebkitAppearance: "none",
+                                                  MozAppearance: "none",
+                                              } as any,
+                                          ] as any)
+                                        : null,
+                                ]}
+                                itemStyle={styles.pickerOption}
+                            >
+                                <Picker.Item label="Default" value="default" />
+                                <Picker.Item
+                                    label="A-Z"
+                                    value="alphabetic-asc"
+                                />
+                                <Picker.Item
+                                    label="Z-A"
+                                    value="alphabetic-desc"
+                                />
+                                <Picker.Item label="Cost ↑" value="cost-asc" />
+                                <Picker.Item label="Cost ↓" value="cost-desc" />
+                            </Picker>
+                            {Platform.OS === "web" && (
+                                <Ionicons
+                                    name="chevron-down"
+                                    size={18}
+                                    color={blackColor}
+                                    style={styles.pickerIcon}
+                                />
+                            )}
+                        </View>
+                    </View>
 
-                    {expenses.map((expense) => (
+                    {sortedExpenses.map((expense) => (
                         <View key={expense.id} style={styles.expenseCard}>
                             <View style={styles.expenseHeader}>
                                 <View style={styles.expenseInfo}>
