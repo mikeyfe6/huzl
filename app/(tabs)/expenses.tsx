@@ -17,6 +17,7 @@ import {
     blueColor,
     Colors,
     greenColor,
+    mediumGreyColor,
     redColor,
     whiteColor,
 } from "@/constants/theme";
@@ -25,12 +26,14 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { supabase } from "@/utils/supabase";
 
 type Frequency = "daily" | "monthly" | "yearly";
+type Category = "personal" | "business";
 
 interface ExpenseItem {
     id: string;
     name: string;
     amount: number;
     frequency: Frequency;
+    category: Category;
     yearlyTotal: number;
 }
 
@@ -38,8 +41,10 @@ export default function ExpensesScreen() {
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
     const [frequency, setFrequency] = useState<Frequency>("monthly");
+    const [category, setCategory] = useState<Category>("personal");
     const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
     const [loading, setLoading] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { user } = useAuth();
@@ -64,6 +69,24 @@ export default function ExpensesScreen() {
                     fontWeight: "600",
                     marginTop: 8,
                     color: theme.label,
+                },
+                categoryGroup: {
+                    flexDirection: "row",
+                    gap: 8,
+                    marginTop: 4,
+                },
+                categoryOption: {
+                    flex: 1,
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    paddingVertical: 10,
+                    alignItems: "center",
+                    borderColor: theme.inputBorder,
+                    backgroundColor: theme.inputBackground,
+                },
+                categoryOptionActive: {
+                    borderColor: blueColor,
+                    backgroundColor: theme.cardBackground,
                 },
                 input: {
                     borderWidth: 1,
@@ -178,6 +201,15 @@ export default function ExpensesScreen() {
                     opacity: 0.7,
                     marginTop: 4,
                 },
+                expenseIcon: {
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    padding: 8,
+                },
+                editButton: {
+                    color: blueColor,
+                    fontWeight: "600",
+                },
                 deleteButton: {
                     color: redColor,
                     fontWeight: "600",
@@ -261,34 +293,100 @@ export default function ExpensesScreen() {
 
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from("expenses")
-                .insert({
-                    user_id: user.id,
-                    name: expenseName,
-                    amount: Number.parseFloat(expenseAmount),
-                    frequency,
-                    yearly_total: yearlyTotal,
-                })
-                .select()
-                .single();
+            if (editingId) {
+                // Update existing expense
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .update({
+                        name: expenseName,
+                        amount: Number.parseFloat(expenseAmount),
+                        frequency,
+                        category,
+                        yearly_total: yearlyTotal,
+                    })
+                    .eq("id", editingId)
+                    .select()
+                    .single();
 
-            if (!error && data) {
-                const newExpense: ExpenseItem = {
-                    id: data.id,
-                    name: data.name,
-                    amount: Number.parseFloat(String(data.amount)),
-                    frequency: data.frequency as Frequency,
-                    yearlyTotal: Number.parseFloat(String(data.yearly_total)),
-                };
-                setExpenses((prev) => [newExpense, ...prev]);
-                setExpenseName("");
-                setExpenseAmount("");
-                setFrequency("monthly");
+                if (!error && data) {
+                    setExpenses((prev) =>
+                        prev.map((exp) =>
+                            exp.id === editingId
+                                ? {
+                                      id: data.id,
+                                      name: data.name,
+                                      amount: Number.parseFloat(
+                                          String(data.amount)
+                                      ),
+                                      frequency: data.frequency as Frequency,
+                                      category:
+                                          (data.category as Category) ??
+                                          "personal",
+                                      yearlyTotal: Number.parseFloat(
+                                          String(data.yearly_total)
+                                      ),
+                                  }
+                                : exp
+                        )
+                    );
+                    setExpenseName("");
+                    setExpenseAmount("");
+                    setFrequency("monthly");
+                    setCategory("personal");
+                    setEditingId(null);
+                }
+            } else {
+                // Create new expense
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .insert({
+                        user_id: user.id,
+                        name: expenseName,
+                        amount: Number.parseFloat(expenseAmount),
+                        frequency,
+                        category,
+                        yearly_total: yearlyTotal,
+                    })
+                    .select()
+                    .single();
+
+                if (!error && data) {
+                    const newExpense: ExpenseItem = {
+                        id: data.id,
+                        name: data.name,
+                        amount: Number.parseFloat(String(data.amount)),
+                        frequency: data.frequency as Frequency,
+                        category: (data.category as Category) ?? "personal",
+                        yearlyTotal: Number.parseFloat(
+                            String(data.yearly_total)
+                        ),
+                    };
+                    setExpenses((prev) => [newExpense, ...prev]);
+                    setExpenseName("");
+                    setExpenseAmount("");
+                    setFrequency("monthly");
+                    setCategory("personal");
+                }
             }
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleEditExpense = (expense: ExpenseItem) => {
+        setExpenseName(expense.name);
+        setExpenseAmount(expense.amount.toString());
+        setFrequency(expense.frequency);
+        setCategory(expense.category);
+        setEditingId(expense.id);
+    };
+
+    const handleCancelEdit = () => {
+        setExpenseName("");
+        setExpenseAmount("");
+        setFrequency("monthly");
+        setCategory("personal");
+        setEditingId(null);
     };
 
     const handleDeleteExpense = async (id: string) => {
@@ -314,6 +412,14 @@ export default function ExpensesScreen() {
         0
     );
 
+    const personalYearlySpend = expenses
+        .filter((e) => e.category === "personal")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const businessYearlySpend = expenses
+        .filter((e) => e.category === "business")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
     const getFrequencyLabel = (freq: Frequency): string => {
         switch (freq) {
             case "daily":
@@ -336,7 +442,7 @@ export default function ExpensesScreen() {
             try {
                 const { data, error } = await supabase
                     .from("expenses")
-                    .select("id,name,amount,frequency,yearly_total")
+                    .select("id,name,amount,frequency,category,yearly_total")
                     .order("created_at", { ascending: false });
                 if (!error && data) {
                     const mapped: ExpenseItem[] = data.map((row: any) => ({
@@ -344,6 +450,7 @@ export default function ExpensesScreen() {
                         name: row.name,
                         amount: Number.parseFloat(String(row.amount)),
                         frequency: row.frequency as Frequency,
+                        category: (row.category as Category) ?? "personal",
                         yearlyTotal: Number.parseFloat(
                             String(row.yearly_total)
                         ),
@@ -391,6 +498,38 @@ export default function ExpensesScreen() {
                     keyboardType="decimal-pad"
                 />
 
+                <ThemedText style={styles.label}>Category</ThemedText>
+                <View style={styles.categoryGroup}>
+                    <TouchableOpacity
+                        style={[
+                            styles.categoryOption,
+                            category === "personal" &&
+                                styles.categoryOptionActive,
+                        ]}
+                        onPress={() => setCategory("personal")}
+                        accessibilityRole="radio"
+                        accessibilityState={{
+                            selected: category === "personal",
+                        }}
+                    >
+                        <ThemedText>Personal</ThemedText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.categoryOption,
+                            category === "business" &&
+                                styles.categoryOptionActive,
+                        ]}
+                        onPress={() => setCategory("business")}
+                        accessibilityRole="radio"
+                        accessibilityState={{
+                            selected: category === "business",
+                        }}
+                    >
+                        <ThemedText>Business</ThemedText>
+                    </TouchableOpacity>
+                </View>
+
                 <ThemedText style={styles.label}>Frequency</ThemedText>
                 <View style={[styles.pickerContainer]}>
                     <Picker
@@ -426,14 +565,29 @@ export default function ExpensesScreen() {
                     )}
                 </View>
 
-                <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={handleAddExpense}
-                >
-                    <ThemedText style={styles.buttonText}>
-                        Add Expense
-                    </ThemedText>
-                </TouchableOpacity>
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                    <TouchableOpacity
+                        style={[styles.addButton, { flex: 1 }]}
+                        onPress={handleAddExpense}
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            {editingId ? "Update Expense" : "Add Expense"}
+                        </ThemedText>
+                    </TouchableOpacity>
+                    {editingId && (
+                        <TouchableOpacity
+                            style={[
+                                styles.addButton,
+                                { flex: 1, backgroundColor: redColor },
+                            ]}
+                            onPress={handleCancelEdit}
+                        >
+                            <ThemedText style={styles.buttonText}>
+                                Cancel
+                            </ThemedText>
+                        </TouchableOpacity>
+                    )}
+                </View>
             </ThemedView>
 
             {expenses.length > 0 && (
@@ -449,18 +603,49 @@ export default function ExpensesScreen() {
                                     </ThemedText>
                                     <ThemedText style={styles.frequencyLabel}>
                                         €{expense.amount.toFixed(2)} /{" "}
-                                        {getFrequencyLabel(expense.frequency)}
+                                        {getFrequencyLabel(expense.frequency)} /{" "}
+                                        {expense.category
+                                            .charAt(0)
+                                            .toUpperCase() +
+                                            expense.category.slice(1)}
                                     </ThemedText>
                                 </View>
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        handleDeleteExpense(expense.id)
-                                    }
-                                >
-                                    <ThemedText style={styles.deleteButton}>
-                                        Delete
-                                    </ThemedText>
-                                </TouchableOpacity>
+                                <View style={{ flexDirection: "row", gap: 16 }}>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            handleEditExpense(expense)
+                                        }
+                                        style={[
+                                            styles.expenseIcon,
+                                            {
+                                                borderColor: mediumGreyColor,
+                                            },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name="pencil"
+                                            size={16}
+                                            color={mediumGreyColor}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            handleDeleteExpense(expense.id)
+                                        }
+                                        style={[
+                                            styles.expenseIcon,
+                                            {
+                                                borderColor: redColor,
+                                            },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name="trash"
+                                            size={16}
+                                            color={redColor}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                             <View style={styles.yearlyTotalBox}>
                                 <ThemedText style={styles.yearlyLabel}>
@@ -482,6 +667,12 @@ export default function ExpensesScreen() {
                     </ThemedText>
                     <ThemedText style={styles.totalAmount}>
                         €{totalYearlySpend.toFixed(2)}
+                    </ThemedText>
+                    <ThemedText style={styles.totalLabel}>
+                        Personal: €{personalYearlySpend.toFixed(2)}
+                    </ThemedText>
+                    <ThemedText style={styles.totalLabel}>
+                        Business: €{businessYearlySpend.toFixed(2)}
                     </ThemedText>
                 </ThemedView>
             )}
