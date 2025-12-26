@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     Platform,
     ScrollView,
@@ -20,7 +20,9 @@ import {
     redColor,
     whiteColor,
 } from "@/constants/theme";
+import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { supabase } from "@/utils/supabase";
 
 type Frequency = "daily" | "monthly" | "yearly";
 
@@ -37,8 +39,10 @@ export default function ExpensesScreen() {
     const [expenseAmount, setExpenseAmount] = useState("");
     const [frequency, setFrequency] = useState<Frequency>("monthly");
     const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
+    const [loading, setLoading] = useState(false);
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+    const { user } = useAuth();
 
     const styles = useMemo(
         () =>
@@ -238,28 +242,63 @@ export default function ExpensesScreen() {
         }
     };
 
-    const handleAddExpense = () => {
-        if (expenseName.trim() && expenseAmount.trim()) {
-            const yearlyTotal = calculateYearlyTotal(
-                Number.parseFloat(expenseAmount),
-                frequency
-            );
-            const newExpense: ExpenseItem = {
-                id: Date.now().toString(),
-                name: expenseName,
-                amount: Number.parseFloat(expenseAmount),
-                frequency,
-                yearlyTotal,
-            };
-            setExpenses([...expenses, newExpense]);
-            setExpenseName("");
-            setExpenseAmount("");
-            setFrequency("monthly");
+    const handleAddExpense = async () => {
+        if (!user) return; // require auth
+        if (!expenseName.trim() || !expenseAmount.trim()) return;
+
+        const yearlyTotal = calculateYearlyTotal(
+            Number.parseFloat(expenseAmount),
+            frequency
+        );
+
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from("expenses")
+                .insert({
+                    user_id: user.id,
+                    name: expenseName,
+                    amount: Number.parseFloat(expenseAmount),
+                    frequency,
+                    yearly_total: yearlyTotal,
+                })
+                .select()
+                .single();
+
+            if (!error && data) {
+                const newExpense: ExpenseItem = {
+                    id: data.id,
+                    name: data.name,
+                    amount: Number.parseFloat(String(data.amount)),
+                    frequency: data.frequency as Frequency,
+                    yearlyTotal: Number.parseFloat(String(data.yearly_total)),
+                };
+                setExpenses((prev) => [newExpense, ...prev]);
+                setExpenseName("");
+                setExpenseAmount("");
+                setFrequency("monthly");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleDeleteExpense = (id: string) => {
-        setExpenses(expenses.filter((expense) => expense.id !== id));
+    const handleDeleteExpense = async (id: string) => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from("expenses")
+                .delete()
+                .eq("id", id);
+            if (!error) {
+                setExpenses((prev) =>
+                    prev.filter((expense) => expense.id !== id)
+                );
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const totalYearlySpend = expenses.reduce(
@@ -277,6 +316,43 @@ export default function ExpensesScreen() {
                 return "Yearly";
         }
     };
+
+    useEffect(() => {
+        if (!user) {
+            setExpenses([]);
+            return;
+        }
+        let isMounted = true;
+        const fetchExpenses = async () => {
+            setLoading(true);
+            try {
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .select("id,name,amount,frequency,yearly_total")
+                    .order("created_at", { ascending: false });
+                if (!error && data) {
+                    const mapped: ExpenseItem[] = data.map((row: any) => ({
+                        id: row.id,
+                        name: row.name,
+                        amount: Number.parseFloat(String(row.amount)),
+                        frequency: row.frequency as Frequency,
+                        yearlyTotal: Number.parseFloat(
+                            String(row.yearly_total)
+                        ),
+                    }));
+                    if (isMounted) setExpenses(mapped);
+                } else if (isMounted) {
+                    setExpenses([]);
+                }
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        };
+        fetchExpenses();
+        return () => {
+            isMounted = false;
+        };
+    }, [user]);
 
     return (
         <ScrollView
@@ -408,10 +484,12 @@ export default function ExpensesScreen() {
                 </ThemedView>
             )}
 
-            {expenses.length === 0 && (
+            {expenses.length === 0 && !loading && (
                 <ThemedView style={styles.emptyState}>
                     <ThemedText style={styles.emptyStateText}>
-                        Add your first expense!
+                        {user
+                            ? "Add your first expense!"
+                            : "Sign in to track your expenses."}
                     </ThemedText>
                 </ThemedView>
             )}
