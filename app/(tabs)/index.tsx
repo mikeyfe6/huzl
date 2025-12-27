@@ -4,11 +4,15 @@ import {
     Colors,
     greenColor,
     mediumGreyColor,
+    redColor,
     whiteColor,
 } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useMemo, useState } from "react";
+import { useCurrency } from "@/hooks/use-currency";
+import { supabase } from "@/utils/supabase";
+import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useMemo, useState } from "react";
 import {
     Platform,
     StyleSheet,
@@ -18,13 +22,15 @@ import {
 } from "react-native";
 
 export default function HomeScreen() {
-    const { user, loading, signIn, signUp, signOut } = useAuth();
+    const { user, loading, signIn, signUp } = useAuth();
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+    const { symbol: currencySymbol } = useCurrency();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [expenses, setExpenses] = useState<any[]>([]);
 
     const styles = useMemo(
         () =>
@@ -60,18 +66,18 @@ export default function HomeScreen() {
                     color: theme.inputText,
                     backgroundColor: theme.inputBackground,
                 },
-                primaryButton: {
+                signInButton: {
                     backgroundColor: greenColor,
                     paddingVertical: 12,
                     borderRadius: 8,
                     alignItems: "center",
                 },
-                primaryText: {
+                signInText: {
                     color: whiteColor,
                     fontWeight: "600",
                     fontSize: 16,
                 },
-                secondaryButton: {
+                signUpButton: {
                     borderWidth: 1,
                     borderColor: mediumGreyColor,
                     paddingVertical: 12,
@@ -79,7 +85,7 @@ export default function HomeScreen() {
                     minWidth: 150,
                     alignItems: "center",
                 },
-                secondaryText: {
+                signUpText: {
                     fontWeight: "600",
                     fontSize: 16,
                 },
@@ -87,9 +93,104 @@ export default function HomeScreen() {
                     color: "red",
                     textAlign: "center",
                 },
+                statsContainer: {
+                    gap: 12,
+                    width: "100%",
+                    maxWidth: 400,
+                    marginTop: 24,
+                },
+                statCard: {
+                    padding: 16,
+                    borderRadius: 12,
+                    backgroundColor: theme.cardBackground,
+                },
+                statWrapper: {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 4,
+                },
+                statLabel: {
+                    fontSize: 14,
+                    opacity: 0.7,
+                    marginBottom: 8,
+                    textAlign: "center",
+                },
+                statValue: {
+                    fontSize: 24,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                },
+                greyText: {
+                    color: mediumGreyColor,
+                },
             }),
         [theme]
     );
+
+    const calculateYearlyTotal = (
+        amount: number,
+        freq: "daily" | "monthly" | "yearly"
+    ): number => {
+        const num = Number.parseFloat(amount.toString());
+        if (Number.isNaN(num)) return 0;
+
+        switch (freq) {
+            case "daily":
+                return num * 365;
+            case "monthly":
+                return num * 12;
+            case "yearly":
+                return num;
+            default:
+                return 0;
+        }
+    };
+
+    useEffect(() => {
+        if (!user) return;
+
+        let isMounted = true;
+        const fetchExpenses = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .select("amount,frequency,active")
+                    .eq("active", true);
+                if (!error && data && isMounted) {
+                    setExpenses(data);
+                }
+            } catch (err) {
+                console.error("Error fetching expenses:", err);
+            }
+        };
+
+        fetchExpenses();
+        return () => {
+            isMounted = false;
+        };
+    }, [user]);
+
+    const monthlyIncome = useMemo(() => {
+        const val = (user?.user_metadata as any)?.monthly_income;
+        if (typeof val === "number") return val;
+        if (val) return Number.parseFloat(String(val));
+        return null;
+    }, [user]);
+
+    const totals = useMemo(() => {
+        let monthlyTotal = 0;
+        let yearlyTotal = 0;
+
+        expenses.forEach((expense) => {
+            const amount = Number.parseFloat(String(expense.amount));
+            const yearly = calculateYearlyTotal(amount, expense.frequency);
+            yearlyTotal += yearly;
+            monthlyTotal += yearly / 12;
+        });
+
+        return { monthlyTotal, yearlyTotal };
+    }, [expenses]);
 
     const handleSignIn = async () => {
         setError(null);
@@ -136,17 +237,17 @@ export default function HomeScreen() {
                     />
                     <TouchableOpacity
                         onPress={handleSignIn}
-                        style={styles.primaryButton}
+                        style={styles.signInButton}
                     >
-                        <ThemedText style={styles.primaryText}>
+                        <ThemedText style={styles.signInText}>
                             Sign In
                         </ThemedText>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={handleSignUp}
-                        style={styles.secondaryButton}
+                        style={styles.signUpButton}
                     >
-                        <ThemedText style={styles.secondaryText}>
+                        <ThemedText style={styles.signUpText}>
                             Create Account
                         </ThemedText>
                     </TouchableOpacity>
@@ -164,14 +265,64 @@ export default function HomeScreen() {
         <ThemedView style={styles.container}>
             <ThemedText type="title">Overview</ThemedText>
             <ThemedText style={styles.text}>
-                Signed in as {user.email}
+                Signed in as{" "}
+                <ThemedText style={styles.greyText}>{user.email}</ThemedText>
             </ThemedText>
-            <TouchableOpacity
-                onPress={signOut}
-                style={[styles.secondaryButton, { marginTop: 24 }]}
-            >
-                <ThemedText style={styles.secondaryText}>Sign Out</ThemedText>
-            </TouchableOpacity>
+
+            <ThemedView style={styles.statsContainer}>
+                {monthlyIncome !== null && (
+                    <ThemedView style={styles.statCard}>
+                        <ThemedText style={styles.statLabel}>
+                            Monthly Income
+                        </ThemedText>
+                        <View style={styles.statWrapper}>
+                            <Ionicons
+                                name="add-outline"
+                                size={16}
+                                color={greenColor}
+                            />
+                            <ThemedText style={styles.statValue}>
+                                {currencySymbol}
+                                {monthlyIncome.toFixed(2)}
+                            </ThemedText>
+                        </View>
+                    </ThemedView>
+                )}
+
+                <ThemedView style={styles.statCard}>
+                    <ThemedText style={styles.statLabel}>
+                        Monthly Costs
+                    </ThemedText>
+                    <View style={styles.statWrapper}>
+                        <Ionicons
+                            name="remove-outline"
+                            size={16}
+                            color={redColor}
+                        />
+                        <ThemedText style={styles.statValue}>
+                            {currencySymbol}
+                            {totals.monthlyTotal.toFixed(2)}
+                        </ThemedText>
+                    </View>
+                </ThemedView>
+
+                <ThemedView style={styles.statCard}>
+                    <ThemedText style={styles.statLabel}>
+                        Yearly Costs
+                    </ThemedText>
+                    <View style={styles.statWrapper}>
+                        <Ionicons
+                            name="remove-outline"
+                            size={16}
+                            color={redColor}
+                        />
+                        <ThemedText style={styles.statValue}>
+                            {currencySymbol}
+                            {totals.yearlyTotal.toFixed(2)}
+                        </ThemedText>
+                    </View>
+                </ThemedView>
+            </ThemedView>
         </ThemedView>
     );
 }

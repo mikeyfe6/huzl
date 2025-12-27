@@ -1,6 +1,6 @@
 import { StyleSheet, Text, type TextProps } from "react-native";
 
-import { linkColor, redColor } from "@/constants/theme";
+import { lightGreyColor, linkColor, redColor } from "@/constants/theme";
 
 import { useThemeColor } from "@/hooks/use-theme-color";
 
@@ -13,7 +13,8 @@ export type ThemedTextProps = TextProps & {
         | "defaultSemiBold"
         | "subtitle"
         | "link"
-        | "danger";
+        | "danger"
+        | "label";
 };
 
 export function ThemedText({
@@ -35,6 +36,7 @@ export function ThemedText({
                 type === "subtitle" ? styles.subtitle : undefined,
                 type === "link" ? styles.link : undefined,
                 type === "danger" ? styles.danger : undefined,
+                type === "label" ? styles.label : undefined,
                 style,
             ]}
             {...rest}
@@ -68,5 +70,8 @@ const styles = StyleSheet.create({
     },
     danger: {
         color: redColor,
+    },
+    label: {
+        color: lightGreyColor,
     },
 });

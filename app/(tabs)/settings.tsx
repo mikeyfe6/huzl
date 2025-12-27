@@ -16,6 +16,7 @@ import {
     Colors,
     greenColor,
     linkColor,
+    redColor,
     silverColor,
     whiteColor,
 } from "@/constants/theme";
@@ -27,7 +28,7 @@ import { supabase } from "@/utils/supabase";
 export default function SettingsScreen() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
-    const { user, refreshUser } = useAuth();
+    const { user, refreshUser, signOut } = useAuth();
     const { symbol: currencySymbol, code: currencyCode } = useCurrency();
 
     const [displayName, setDisplayName] = useState("");
@@ -138,6 +139,18 @@ export default function SettingsScreen() {
                 },
                 saveButtonText: {
                     color: whiteColor,
+                    fontWeight: "600",
+                    fontSize: 16,
+                },
+                logOutButton: {
+                    borderWidth: 1,
+                    borderColor: redColor,
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: "center",
+                },
+                logOutButtonText: {
+                    color: redColor,
                     fontWeight: "600",
                     fontSize: 16,
                 },
@@ -281,9 +294,7 @@ export default function SettingsScreen() {
                     <ThemedText style={styles.sectionTitle} type="subtitle">
                         About
                     </ThemedText>
-                    <ThemedView
-                        style={[styles.settingItem, styles.settingItemNoBorder]}
-                    >
+                    <ThemedView style={[styles.settingItem]}>
                         <ThemedText style={styles.settingLabel}>
                             Version
                         </ThemedText>
@@ -291,6 +302,20 @@ export default function SettingsScreen() {
                             1.0.0
                         </ThemedText>
                     </ThemedView>
+                </ThemedView>
+
+                <ThemedView style={{ marginTop: 24 }}>
+                    <TouchableOpacity
+                        style={[styles.logOutButton]}
+                        onPress={async () => {
+                            await signOut();
+                            router.push("/");
+                        }}
+                    >
+                        <ThemedText style={styles.logOutButtonText}>
+                            Sign Out
+                        </ThemedText>
+                    </TouchableOpacity>
                 </ThemedView>
             </ThemedView>
 
