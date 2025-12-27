@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -16,9 +16,12 @@ import {
     redColor,
     whiteColor,
 } from "@/constants/theme";
+import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { supabase } from "@/utils/supabase";
 
 export default function BudgetsScreen() {
+    const { user } = useAuth();
     const [budgetName, setBudgetName] = useState("");
     const [totalAmount, setTotalAmount] = useState("");
     const [budgets, setBudgets] = useState<
@@ -35,8 +38,71 @@ export default function BudgetsScreen() {
     );
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
+    const [loading, setLoading] = useState(false);
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+
+    // Helper function to fetch and transform budget expenses
+    const fetchBudgetExpenses = async (budgetId: string) => {
+        const { data: expensesData } = await supabase
+            .from("budget_expenses")
+            .select("*")
+            .eq("budget_id", budgetId)
+            .order("created_at", { ascending: false });
+
+        const expenses = expensesData || [];
+        return {
+            expenses: expenses.map((exp) => ({
+                id: exp.id,
+                name: exp.name,
+                amount: exp.amount,
+            })),
+            spent: expenses.reduce((sum, exp) => sum + exp.amount, 0),
+        };
+    };
+
+    // Helper function to transform budget data
+    const transformBudgetData = async (budget: any) => {
+        const { expenses, spent } = await fetchBudgetExpenses(budget.id);
+        return {
+            id: budget.id,
+            name: budget.name,
+            total: budget.total,
+            spent,
+            expenses,
+        };
+    };
+
+    // Fetch budgets and their expenses on mount
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchBudgets = async () => {
+            setLoading(true);
+            try {
+                const { data: budgetsData, error: budgetsError } =
+                    await supabase
+                        .from("budgets")
+                        .select("*")
+                        .eq("user_id", user.id)
+                        .order("created_at", { ascending: false });
+
+                if (budgetsError) throw budgetsError;
+
+                const budgetsWithExpenses = await Promise.all(
+                    (budgetsData || []).map(transformBudgetData)
+                );
+
+                setBudgets(budgetsWithExpenses);
+            } catch (error) {
+                console.error("Error fetching budgets:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBudgets();
+    }, [user]);
 
     const styles = useMemo(
         () =>
@@ -166,57 +232,124 @@ export default function BudgetsScreen() {
         [theme, colorScheme]
     );
 
-    const handleCreateBudget = () => {
-        if (budgetName.trim() && totalAmount.trim()) {
-            const newBudget = {
-                id: Date.now().toString(),
-                name: budgetName,
-                total: Number.parseFloat(totalAmount),
-                spent: 0,
-                expenses: [],
-            };
-            setBudgets([...budgets, newBudget]);
-            setBudgetName("");
-            setTotalAmount("");
-        }
-    };
+    const handleCreateBudget = async () => {
+        if (!user || !budgetName.trim() || !totalAmount.trim()) return;
 
-    const handleAddExpense = () => {
-        if (selectedBudgetId && expenseName.trim() && expenseAmount.trim()) {
-            const updatedBudgets = budgets.map((budget) => {
-                if (budget.id === selectedBudgetId) {
-                    const expense = {
-                        id: Date.now().toString(),
-                        name: expenseName,
-                        amount: Number.parseFloat(expenseAmount),
-                    };
-                    return {
-                        ...budget,
-                        expenses: [...budget.expenses, expense],
-                        spent: budget.spent + Number.parseFloat(expenseAmount),
-                    };
-                }
-                return budget;
-            });
-            setBudgets(updatedBudgets);
-            setExpenseName("");
-            setExpenseAmount("");
-        }
-    };
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from("budgets")
+                .insert({
+                    user_id: user.id,
+                    name: budgetName,
+                    total: Number.parseFloat(totalAmount),
+                })
+                .select()
+                .single();
 
-    const handleDeleteExpense = (expenseId: string) => {
-        const updatedBudgets = budgets.map((budget) => {
-            if (budget.id === selectedBudgetId) {
-                const expense = budget.expenses.find((e) => e.id === expenseId);
-                return {
-                    ...budget,
-                    expenses: budget.expenses.filter((e) => e.id !== expenseId),
-                    spent: budget.spent - (expense?.amount || 0),
-                };
+            if (error) {
+                console.error("Error creating budget:", error);
+                return;
             }
-            return budget;
-        });
-        setBudgets(updatedBudgets);
+
+            if (data) {
+                setBudgets([
+                    ...budgets,
+                    {
+                        id: data.id,
+                        name: data.name,
+                        total: data.total,
+                        spent: 0,
+                        expenses: [],
+                    },
+                ]);
+                setBudgetName("");
+                setTotalAmount("");
+            }
+        } catch (err) {
+            console.error("Exception creating budget:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddExpense = async () => {
+        if (
+            !user ||
+            !selectedBudgetId ||
+            !expenseName.trim() ||
+            !expenseAmount.trim()
+        )
+            return;
+
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from("budget_expenses")
+                .insert({
+                    budget_id: selectedBudgetId,
+                    name: expenseName,
+                    amount: Number.parseFloat(expenseAmount),
+                })
+                .select()
+                .single();
+
+            if (!error && data) {
+                const updatedBudgets = budgets.map((budget) => {
+                    if (budget.id === selectedBudgetId) {
+                        const expense = {
+                            id: data.id,
+                            name: data.name,
+                            amount: data.amount,
+                        };
+                        return {
+                            ...budget,
+                            expenses: [...budget.expenses, expense],
+                            spent: budget.spent + data.amount,
+                        };
+                    }
+                    return budget;
+                });
+                setBudgets(updatedBudgets);
+                setExpenseName("");
+                setExpenseAmount("");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteExpense = async (expenseId: string) => {
+        if (!user) return;
+
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from("budget_expenses")
+                .delete()
+                .eq("id", expenseId);
+
+            if (!error) {
+                const updatedBudgets = budgets.map((budget) => {
+                    if (budget.id === selectedBudgetId) {
+                        const expense = budget.expenses.find(
+                            (e) => e.id === expenseId
+                        );
+                        return {
+                            ...budget,
+                            expenses: budget.expenses.filter(
+                                (e) => e.id !== expenseId
+                            ),
+                            spent: budget.spent - (expense?.amount || 0),
+                        };
+                    }
+                    return budget;
+                });
+                setBudgets(updatedBudgets);
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const selectedBudget = budgets.find((b) => b.id === selectedBudgetId);
@@ -254,9 +387,10 @@ export default function BudgetsScreen() {
                 <TouchableOpacity
                     style={styles.createButton}
                     onPress={handleCreateBudget}
+                    disabled={loading}
                 >
                     <ThemedText style={styles.buttonText}>
-                        Create Budget
+                        {loading ? "Creating..." : "Create Budget"}
                     </ThemedText>
                 </TouchableOpacity>
             </ThemedView>
@@ -341,9 +475,10 @@ export default function BudgetsScreen() {
                     <TouchableOpacity
                         style={styles.addButton}
                         onPress={handleAddExpense}
+                        disabled={loading}
                     >
                         <ThemedText style={styles.buttonText}>
-                            Add Expense
+                            {loading ? "Adding..." : "Add Expense"}
                         </ThemedText>
                     </TouchableOpacity>
 
