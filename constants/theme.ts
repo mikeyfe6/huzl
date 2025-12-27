@@ -10,6 +10,8 @@ export const whiteColor = "#fff";
 export const blackColor = "#000";
 export const greenColor = "#4caf50";
 export const redColor = "#f44336";
+export const greenAlphaColor = "#133d2f";
+export const redAlphaColor = "#3d1b1b";
 export const blueColor = "#0c86c5";
 export const goldColor = "#FAAF41";
 

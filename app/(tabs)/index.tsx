@@ -2,9 +2,12 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import {
     Colors,
+    greenAlphaColor,
     greenColor,
     mediumGreyColor,
+    redAlphaColor,
     redColor,
+    silverColor,
     whiteColor,
 } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
@@ -104,6 +107,12 @@ export default function HomeScreen() {
                     borderRadius: 12,
                     backgroundColor: theme.cardBackground,
                 },
+                statCardPositive: {
+                    backgroundColor: greenAlphaColor,
+                },
+                statCardNegative: {
+                    backgroundColor: redAlphaColor,
+                },
                 statWrapper: {
                     flexDirection: "row",
                     alignItems: "center",
@@ -112,7 +121,7 @@ export default function HomeScreen() {
                 },
                 statLabel: {
                     fontSize: 14,
-                    opacity: 0.7,
+                    color: silverColor,
                     marginBottom: 8,
                     textAlign: "center",
                 },
@@ -120,6 +129,12 @@ export default function HomeScreen() {
                     fontSize: 24,
                     fontWeight: "bold",
                     textAlign: "center",
+                },
+                statTextPositive: {
+                    color: greenColor,
+                },
+                statTextNegative: {
+                    color: redColor,
                 },
                 greyText: {
                     color: mediumGreyColor,
@@ -192,6 +207,11 @@ export default function HomeScreen() {
         return { monthlyTotal, yearlyTotal };
     }, [expenses]);
 
+    const monthlyDisposable = useMemo(() => {
+        if (monthlyIncome === null) return null;
+        return monthlyIncome - totals.monthlyTotal;
+    }, [monthlyIncome, totals]);
+
     const handleSignIn = async () => {
         setError(null);
         const { error } = await signIn(email.trim(), password);
@@ -215,7 +235,7 @@ export default function HomeScreen() {
     if (!user) {
         return (
             <ThemedView style={styles.container}>
-                <ThemedText type="title">Welcome</ThemedText>
+                <ThemedText type="title">Welcome at Huzl</ThemedText>
                 <ThemedText style={styles.text}>Sign in to continue</ThemedText>
                 <View style={styles.inputSection}>
                     <TextInput
@@ -263,7 +283,7 @@ export default function HomeScreen() {
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText type="title">Overview</ThemedText>
+            <ThemedText type="title">Huzl</ThemedText>
             <ThemedText style={styles.text}>
                 Signed in as{" "}
                 <ThemedText style={styles.greyText}>{user.email}</ThemedText>
@@ -306,22 +326,31 @@ export default function HomeScreen() {
                     </View>
                 </ThemedView>
 
-                <ThemedView style={styles.statCard}>
-                    <ThemedText style={styles.statLabel}>
-                        Yearly Costs
-                    </ThemedText>
-                    <View style={styles.statWrapper}>
-                        <Ionicons
-                            name="remove-outline"
-                            size={16}
-                            color={redColor}
-                        />
-                        <ThemedText style={styles.statValue}>
-                            {currencySymbol}
-                            {totals.yearlyTotal.toFixed(2)}
+                {monthlyDisposable !== null && (
+                    <ThemedView
+                        style={[
+                            styles.statCard,
+                            monthlyDisposable >= 0
+                                ? styles.statCardPositive
+                                : styles.statCardNegative,
+                        ]}
+                    >
+                        <ThemedText style={styles.statLabel}>
+                            Monthly Remaining
                         </ThemedText>
-                    </View>
-                </ThemedView>
+                        <ThemedText
+                            style={[
+                                styles.statValue,
+                                monthlyDisposable >= 0
+                                    ? styles.statTextPositive
+                                    : styles.statTextNegative,
+                            ]}
+                        >
+                            {currencySymbol}
+                            {monthlyDisposable.toFixed(2)}
+                        </ThemedText>
+                    </ThemedView>
+                )}
             </ThemedView>
         </ThemedView>
     );
