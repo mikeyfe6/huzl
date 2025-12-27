@@ -22,6 +22,7 @@ const MAPPING = {
     "chevron.left.forwardslash.chevron.right": "code",
     "chevron.right": "chevron-right",
     "figure.play": "play-circle-filled",
+    gear: "settings",
     "sun.righthalf.filled": "sunny",
 } as IconMapping;
 
@@ -35,7 +36,7 @@ export function IconSymbol({
     size = 24,
     color,
     style,
-}: {
+}: Readonly<{
     name: IconSymbolName;
     size?: number;
     color: string | OpaqueColorValue;

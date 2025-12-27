@@ -1,8 +1,3 @@
-import {
-    getSortLabel,
-    SortModal,
-    SortOption,
-} from "@/components/ui/sort-modal";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -17,6 +12,11 @@ import {
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import {
+    getSortLabel,
+    SortModal,
+    SortOption,
+} from "@/components/ui/sort-modal";
 import {
     blackColor,
     blueColor,
