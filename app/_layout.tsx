@@ -28,8 +28,8 @@ export default function RootLayout() {
                         options={{ headerShown: false }}
                     />
                     <Stack.Screen
-                        name="modal"
-                        options={{ presentation: "modal", title: "Modal" }}
+                        name="income"
+                        options={{ presentation: "modal", title: "Income" }}
                     />
                 </Stack>
                 <StatusBar style="auto" />

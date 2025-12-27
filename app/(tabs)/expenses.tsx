@@ -29,6 +29,7 @@ import {
 } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 
 type Frequency = "daily" | "monthly" | "yearly";
@@ -53,9 +54,9 @@ export default function ExpensesScreen() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption>("default");
     const [sortModalVisible, setSortModalVisible] = useState(false);
-    const currencySymbol = "€";
 
     const { user } = useAuth();
+    const { symbol: currencySymbol } = useCurrency();
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
 
@@ -614,7 +615,9 @@ export default function ExpensesScreen() {
                     onChangeText={setExpenseName}
                 />
 
-                <ThemedText style={styles.label}>Amount (€)</ThemedText>
+                <ThemedText style={styles.label}>
+                    Amount ({currencySymbol})
+                </ThemedText>
                 <TextInput
                     style={styles.input}
                     placeholder="0.00"

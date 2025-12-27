@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
     Alert,
@@ -5,22 +6,33 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
+    View,
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Colors, greenColor, silverColor, whiteColor } from "@/constants/theme";
+import { CurrencyPickerModal } from "@/components/ui/currency-modal";
+import {
+    Colors,
+    greenColor,
+    linkColor,
+    silverColor,
+    whiteColor,
+} from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 
 export default function SettingsScreen() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { user, refreshUser } = useAuth();
+    const { symbol: currencySymbol, code: currencyCode } = useCurrency();
 
     const [displayName, setDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
+    const [currencyModalVisible, setCurrencyModalVisible] = useState(false);
 
     useEffect(() => {
         if (user?.user_metadata) {
@@ -70,9 +82,6 @@ export default function SettingsScreen() {
                 heading: {
                     marginBottom: 16,
                 },
-                section: {
-                    marginBottom: 0,
-                },
                 sectionTitle: {
                     marginTop: 8,
                     marginBottom: 8,
@@ -80,18 +89,31 @@ export default function SettingsScreen() {
                     color: silverColor,
                 },
                 settingItem: {
-                    paddingVertical: 12,
+                    paddingTop: 12,
+                    paddingBottom: 20,
                     borderBottomWidth: 1,
                     borderBottomColor: theme.dividerColor,
                 },
-                settingItemLast: {
+                settingLink: {
+                    fontSize: 14,
+                },
+                settingItemNoBorder: {
                     borderBottomWidth: 0,
+                },
+                settingItemMargin: {
+                    marginBottom: 12,
                 },
                 settingLabel: {
                     fontSize: 14,
                     color: theme.label,
                     fontWeight: "600",
                     marginBottom: 12,
+                },
+                settingLabelLink: {
+                    color: linkColor,
+                },
+                settingLabelNoMargin: {
+                    marginBottom: 0,
                 },
                 settingValue: {
                     fontSize: 14,
@@ -112,7 +134,6 @@ export default function SettingsScreen() {
                     paddingVertical: 12,
                     borderRadius: 8,
                     alignItems: "center",
-                    marginTop: 12,
                     backgroundColor: greenColor,
                 },
                 saveButtonText: {
@@ -124,6 +145,13 @@ export default function SettingsScreen() {
         [theme]
     );
 
+    const monthlyIncome = useMemo(() => {
+        const val = (user?.user_metadata as any)?.monthly_income;
+        if (typeof val === "number") return val;
+        if (val) return Number.parseFloat(String(val));
+        return null;
+    }, [user]);
+
     return (
         <ScrollView
             style={styles.container}
@@ -134,7 +162,7 @@ export default function SettingsScreen() {
                     Settings
                 </ThemedText>
 
-                <ThemedView style={styles.section}>
+                <ThemedView>
                     <ThemedText style={styles.sectionTitle} type="subtitle">
                         Profile
                     </ThemedText>
@@ -147,7 +175,7 @@ export default function SettingsScreen() {
                         </ThemedText>
                     </ThemedView>
                     <ThemedView
-                        style={[styles.settingItem, styles.settingItemLast]}
+                        style={[styles.settingItem, styles.settingItemNoBorder]}
                     >
                         <ThemedText style={styles.settingLabel}>
                             Display Name
@@ -171,11 +199,11 @@ export default function SettingsScreen() {
                     </TouchableOpacity>
                 </ThemedView>
 
-                <ThemedView style={styles.section}>
+                <ThemedView>
                     <ThemedText style={styles.sectionTitle} type="subtitle">
                         Appearance
                     </ThemedText>
-                    <ThemedView style={[styles.settingItem]}>
+                    <ThemedView style={styles.settingItem}>
                         <ThemedText style={styles.settingLabel}>
                             Theme
                         </ThemedText>
@@ -185,26 +213,76 @@ export default function SettingsScreen() {
                     </ThemedView>
                 </ThemedView>
 
-                <ThemedView style={styles.section}>
+                <ThemedView>
                     <ThemedText style={styles.sectionTitle} type="subtitle">
                         Currency
                     </ThemedText>
-                    <ThemedView style={[styles.settingItem]}>
-                        <ThemedText style={styles.settingLabel}>
-                            Currency Symbol
-                        </ThemedText>
-                        <ThemedText style={styles.settingValue}>
-                            € (EUR)
-                        </ThemedText>
-                    </ThemedView>
+                    <TouchableOpacity
+                        style={styles.settingItem}
+                        onPress={() => setCurrencyModalVisible(true)}
+                    >
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            <ThemedText
+                                style={[
+                                    styles.settingLabel,
+                                    styles.settingLabelNoMargin,
+                                    styles.settingLabelLink,
+                                ]}
+                            >
+                                Currency Symbol
+                            </ThemedText>
+                            <ThemedText style={styles.settingValue}>
+                                {currencySymbol} ({currencyCode})
+                            </ThemedText>
+                        </View>
+                    </TouchableOpacity>
                 </ThemedView>
 
-                <ThemedView style={styles.section}>
+                <ThemedView>
+                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                        Income
+                    </ThemedText>
+                    <TouchableOpacity
+                        style={styles.settingItem}
+                        onPress={() => router.push("/income")}
+                    >
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            <ThemedText
+                                style={[
+                                    styles.settingLabel,
+                                    styles.settingLabelNoMargin,
+                                    styles.settingLabelLink,
+                                ]}
+                            >
+                                Monthly Income
+                            </ThemedText>
+                            <ThemedText style={styles.settingValue}>
+                                {monthlyIncome === null
+                                    ? "Not set"
+                                    : monthlyIncome}
+                            </ThemedText>
+                        </View>
+                    </TouchableOpacity>
+                </ThemedView>
+
+                <ThemedView>
                     <ThemedText style={styles.sectionTitle} type="subtitle">
                         About
                     </ThemedText>
                     <ThemedView
-                        style={[styles.settingItem, styles.settingItemLast]}
+                        style={[styles.settingItem, styles.settingItemNoBorder]}
                     >
                         <ThemedText style={styles.settingLabel}>
                             Version
@@ -215,6 +293,12 @@ export default function SettingsScreen() {
                     </ThemedView>
                 </ThemedView>
             </ThemedView>
+
+            <CurrencyPickerModal
+                visible={currencyModalVisible}
+                onClose={() => setCurrencyModalVisible(false)}
+                currentSymbol={currencySymbol}
+            />
         </ScrollView>
     );
 }
