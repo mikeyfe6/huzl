@@ -11,6 +11,7 @@ export const blackColor = "#000";
 export const greenColor = "#4caf50";
 export const redColor = "#f44336";
 export const blueColor = "#2196f3";
+export const goldColor = "#FAAF41";
 
 export const almostWhiteColor = "#f5f5f5";
 export const lightGreyColor = "#ddd";

@@ -16,6 +16,7 @@ import {
     blackColor,
     blueColor,
     Colors,
+    goldColor,
     greenColor,
     mediumGreyColor,
     redColor,
@@ -53,9 +54,12 @@ export default function ExpensesScreen() {
     const [loading, setLoading] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption>("default");
+    const currencySymbol = "€";
+
+    const { user } = useAuth();
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
-    const { user } = useAuth();
+
     const nameInputRef = useRef<TextInput>(null);
     const scrollViewRef = useRef<ScrollView>(null);
 
@@ -87,7 +91,7 @@ export default function ExpensesScreen() {
                 },
                 categoryOption: {
                     flex: 1,
-                    borderWidth: 1,
+                    borderWidth: 1.5,
                     borderRadius: 8,
                     paddingVertical: 10,
                     alignItems: "center",
@@ -765,9 +769,17 @@ export default function ExpensesScreen() {
                                     <ThemedText type="defaultSemiBold">
                                         {expense.name}
                                     </ThemedText>
-                                    <ThemedText style={styles.frequencyLabel}>
-                                        €{expense.amount.toFixed(2)} /{" "}
-                                        {getFrequencyLabel(expense.frequency)} /{" "}
+                                    <ThemedText
+                                        style={[
+                                            styles.frequencyLabel,
+                                            expense.category === "business" && {
+                                                color: goldColor,
+                                            },
+                                        ]}
+                                    >
+                                        {currencySymbol}{" "}
+                                        {expense.amount.toFixed(2)} -{" "}
+                                        {getFrequencyLabel(expense.frequency)} -{" "}
                                         {expense.category
                                             .charAt(0)
                                             .toUpperCase() +
@@ -846,7 +858,8 @@ export default function ExpensesScreen() {
                                     Yearly Total:
                                 </ThemedText>
                                 <ThemedText style={styles.yearlyAmount}>
-                                    €{expense.yearlyTotal.toFixed(2)}
+                                    {currencySymbol}{" "}
+                                    {expense.yearlyTotal.toFixed(2)}
                                 </ThemedText>
                             </View>
                         </View>
@@ -861,13 +874,15 @@ export default function ExpensesScreen() {
                             Total Yearly Spend
                         </ThemedText>
                         <ThemedText style={styles.totalAmount}>
-                            €{totalYearlySpend.toFixed(2)}
+                            {currencySymbol} {totalYearlySpend.toFixed(2)}
                         </ThemedText>
                         <ThemedText style={styles.totalLabel}>
-                            Personal: €{personalYearlySpend.toFixed(2)}
+                            Personal: {currencySymbol}{" "}
+                            {personalYearlySpend.toFixed(2)}
                         </ThemedText>
                         <ThemedText style={styles.totalLabel}>
-                            Business: €{businessYearlySpend.toFixed(2)}
+                            Business: {currencySymbol}{" "}
+                            {businessYearlySpend.toFixed(2)}
                         </ThemedText>
                     </ThemedView>
 
@@ -884,7 +899,7 @@ export default function ExpensesScreen() {
                             <ThemedText
                                 style={[styles.totalAmount, { fontSize: 24 }]}
                             >
-                                €{totalMonthlySpend.toFixed(2)}
+                                {currencySymbol} {totalMonthlySpend.toFixed(2)}
                             </ThemedText>
                         </ThemedView>
 
@@ -900,7 +915,7 @@ export default function ExpensesScreen() {
                             <ThemedText
                                 style={[styles.totalAmount, { fontSize: 24 }]}
                             >
-                                €{totalDailySpend.toFixed(2)}
+                                {currencySymbol} {totalDailySpend.toFixed(2)}
                             </ThemedText>
                         </ThemedView>
                     </View>
