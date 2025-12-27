@@ -353,7 +353,6 @@ export default function ExpensesScreen() {
                         amount: Number.parseFloat(expenseAmount),
                         frequency,
                         category,
-                        yearly_total: yearlyTotal,
                     })
                     .eq("id", editingId)
                     .select()
@@ -366,21 +365,21 @@ export default function ExpensesScreen() {
                 }
 
                 if (data) {
+                    const amount = Number.parseFloat(String(data.amount));
                     setExpenses((prev) =>
                         prev.map((exp) =>
                             exp.id === editingId
                                 ? {
                                       id: data.id,
                                       name: data.name,
-                                      amount: Number.parseFloat(
-                                          String(data.amount)
-                                      ),
+                                      amount,
                                       frequency: data.frequency as Frequency,
                                       category:
                                           (data.category as Category) ??
                                           "personal",
-                                      yearlyTotal: Number.parseFloat(
-                                          String(data.yearly_total)
+                                      yearlyTotal: calculateYearlyTotal(
+                                          amount,
+                                          data.frequency as Frequency
                                       ),
                                   }
                                 : exp
@@ -402,7 +401,6 @@ export default function ExpensesScreen() {
                         amount: Number.parseFloat(expenseAmount),
                         frequency,
                         category,
-                        yearly_total: yearlyTotal,
                     })
                     .select()
                     .single();
@@ -414,14 +412,16 @@ export default function ExpensesScreen() {
                 }
 
                 if (data) {
+                    const amount = Number.parseFloat(String(data.amount));
                     const newExpense: ExpenseItem = {
                         id: data.id,
                         name: data.name,
-                        amount: Number.parseFloat(String(data.amount)),
+                        amount,
                         frequency: data.frequency as Frequency,
                         category: (data.category as Category) ?? "personal",
-                        yearlyTotal: Number.parseFloat(
-                            String(data.yearly_total)
+                        yearlyTotal: calculateYearlyTotal(
+                            amount,
+                            data.frequency as Frequency
                         ),
                     };
                     setExpenses((prev) => [newExpense, ...prev]);
@@ -530,19 +530,23 @@ export default function ExpensesScreen() {
             try {
                 const { data, error } = await supabase
                     .from("expenses")
-                    .select("id,name,amount,frequency,category,yearly_total")
+                    .select("id,name,amount,frequency,category")
                     .order("created_at", { ascending: false });
                 if (!error && data) {
-                    const mapped: ExpenseItem[] = data.map((row: any) => ({
-                        id: row.id,
-                        name: row.name,
-                        amount: Number.parseFloat(String(row.amount)),
-                        frequency: row.frequency as Frequency,
-                        category: (row.category as Category) ?? "personal",
-                        yearlyTotal: Number.parseFloat(
-                            String(row.yearly_total)
-                        ),
-                    }));
+                    const mapped: ExpenseItem[] = data.map((row: any) => {
+                        const amount = Number.parseFloat(String(row.amount));
+                        return {
+                            id: row.id,
+                            name: row.name,
+                            amount,
+                            frequency: row.frequency as Frequency,
+                            category: (row.category as Category) ?? "personal",
+                            yearlyTotal: calculateYearlyTotal(
+                                amount,
+                                row.frequency as Frequency
+                            ),
+                        };
+                    });
                     if (isMounted) setExpenses(mapped);
                 } else if (isMounted) {
                     setExpenses([]);
