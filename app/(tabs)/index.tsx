@@ -302,8 +302,7 @@ export default function HomeScreen() {
                                 color={greenColor}
                             />
                             <ThemedText style={styles.statValue}>
-                                {currencySymbol}
-                                {monthlyIncome.toFixed(2)}
+                                {currencySymbol} {monthlyIncome.toFixed(2)}
                             </ThemedText>
                         </View>
                     </ThemedView>
@@ -320,8 +319,7 @@ export default function HomeScreen() {
                             color={redColor}
                         />
                         <ThemedText style={styles.statValue}>
-                            {currencySymbol}
-                            {totals.monthlyTotal.toFixed(2)}
+                            {currencySymbol} {totals.monthlyTotal.toFixed(2)}
                         </ThemedText>
                     </View>
                 </ThemedView>
@@ -346,8 +344,7 @@ export default function HomeScreen() {
                                     : styles.statTextNegative,
                             ]}
                         >
-                            {currencySymbol}
-                            {monthlyDisposable.toFixed(2)}
+                            {currencySymbol} {monthlyDisposable.toFixed(2)}
                         </ThemedText>
                     </ThemedView>
                 )}

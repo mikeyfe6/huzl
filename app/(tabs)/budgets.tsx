@@ -18,10 +18,12 @@ import {
 } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 
 export default function BudgetsScreen() {
     const { user } = useAuth();
+    const { symbol: currencySymbol } = useCurrency();
     const [budgetName, setBudgetName] = useState("");
     const [totalAmount, setTotalAmount] = useState("");
     const [budgets, setBudgets] = useState<
@@ -374,7 +376,9 @@ export default function BudgetsScreen() {
                     onChangeText={setBudgetName}
                 />
 
-                <ThemedText style={styles.label}>Total Amount ($)</ThemedText>
+                <ThemedText style={styles.label}>
+                    Total Amount ({currencySymbol})
+                </ThemedText>
                 <TextInput
                     style={styles.input}
                     placeholder="0.00"
@@ -413,8 +417,8 @@ export default function BudgetsScreen() {
                                 {budget.name}
                             </ThemedText>
                             <ThemedText style={styles.budgetAmount}>
-                                ${budget.spent.toFixed(2)} / $
-                                {budget.total.toFixed(2)}
+                                {currencySymbol} {budget.spent.toFixed(2)} -{" "}
+                                {currencySymbol} {budget.total.toFixed(2)}
                             </ThemedText>
                             <View style={styles.progressBar}>
                                 <View
@@ -442,7 +446,7 @@ export default function BudgetsScreen() {
                         {selectedBudget.name}
                     </ThemedText>
                     <ThemedText style={styles.remainingText}>
-                        Remaining: $
+                        Remaining: {currencySymbol}{" "}
                         <ThemedText
                             style={{
                                 color:
@@ -462,7 +466,9 @@ export default function BudgetsScreen() {
                         onChangeText={setExpenseName}
                     />
 
-                    <ThemedText style={styles.label}>Amount ($)</ThemedText>
+                    <ThemedText style={styles.label}>
+                        Amount ({currencySymbol})
+                    </ThemedText>
                     <TextInput
                         style={styles.input}
                         placeholder="0.00"
@@ -507,7 +513,8 @@ export default function BudgetsScreen() {
                                         {expense.name}
                                     </ThemedText>
                                     <ThemedText>
-                                        ${expense.amount.toFixed(2)}
+                                        {currencySymbol}{" "}
+                                        {expense.amount.toFixed(2)}
                                     </ThemedText>
                                 </View>
                                 <TouchableOpacity
