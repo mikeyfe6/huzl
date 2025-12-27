@@ -8,6 +8,7 @@ type AuthContextValue = {
     signIn: (email: string, password: string) => Promise<{ error?: string }>;
     signUp: (email: string, password: string) => Promise<{ error?: string }>;
     signOut: () => Promise<void>;
+    refreshUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -60,8 +61,13 @@ export function AuthProvider({
         await supabase.auth.signOut();
     };
 
+    const refreshUser = async () => {
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user ?? null);
+    };
+
     const value = useMemo<AuthContextValue>(
-        () => ({ user, loading, signIn, signUp, signOut }),
+        () => ({ user, loading, signIn, signUp, signOut, refreshUser }),
         [user, loading]
     );
 

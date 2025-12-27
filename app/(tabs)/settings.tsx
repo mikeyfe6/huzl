@@ -1,13 +1,60 @@
+import { useEffect, useMemo, useState } from "react";
+import {
+    Alert,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+} from "react-native";
+
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Colors } from "@/constants/theme";
+import { Colors, greenColor, silverColor, whiteColor } from "@/constants/theme";
+import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useMemo } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { supabase } from "@/utils/supabase";
 
 export default function SettingsScreen() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+    const { user, refreshUser } = useAuth();
+
+    const [displayName, setDisplayName] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (user?.user_metadata) {
+            setDisplayName(user.user_metadata.display_name || "");
+        }
+    }, [user]);
+
+    const handleSaveProfile = async () => {
+        if (!user) return;
+
+        setLoading(true);
+        try {
+            const { error } = await supabase.auth.updateUser({
+                data: {
+                    display_name: displayName,
+                },
+            });
+
+            if (error) {
+                Alert.alert(
+                    "Error",
+                    `Failed to update profile: ${error.message}`
+                );
+            } else {
+                await refreshUser();
+                Alert.alert("Success", "Profile updated successfully");
+            }
+        } catch (err) {
+            console.error("Profile update error:", err);
+            Alert.alert("Error", "An unexpected error occurred");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const styles = useMemo(
         () =>
@@ -16,20 +63,21 @@ export default function SettingsScreen() {
                     flex: 1,
                 },
                 wrapper: {
-                    paddingHorizontal: 16,
+                    padding: 16,
+                    paddingTop: 24,
+                    gap: 12,
                 },
                 heading: {
-                    marginTop: 24,
                     marginBottom: 16,
                 },
                 section: {
-                    marginBottom: 24,
+                    marginBottom: 0,
                 },
                 sectionTitle: {
+                    marginTop: 8,
                     marginBottom: 8,
-                    fontSize: 14,
                     fontWeight: "600",
-                    color: theme.label,
+                    color: silverColor,
                 },
                 settingItem: {
                     paddingVertical: 12,
@@ -40,13 +88,37 @@ export default function SettingsScreen() {
                     borderBottomWidth: 0,
                 },
                 settingLabel: {
-                    fontSize: 16,
-                    color: theme.text,
+                    fontSize: 14,
+                    color: theme.label,
+                    fontWeight: "600",
+                    marginBottom: 12,
                 },
                 settingValue: {
                     fontSize: 14,
                     color: theme.placeholder,
+                },
+                input: {
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                    fontSize: 16,
+                    color: theme.inputText,
+                    borderColor: theme.inputBorder,
+                    backgroundColor: theme.inputBackground,
                     marginTop: 4,
+                },
+                saveButton: {
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    marginTop: 12,
+                    backgroundColor: greenColor,
+                },
+                saveButtonText: {
+                    color: whiteColor,
+                    fontWeight: "600",
+                    fontSize: 16,
                 },
             }),
         [theme]
@@ -63,10 +135,47 @@ export default function SettingsScreen() {
                 </ThemedText>
 
                 <ThemedView style={styles.section}>
-                    <ThemedText style={styles.sectionTitle}>
-                        Appearance
+                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                        Profile
                     </ThemedText>
                     <ThemedView style={styles.settingItem}>
+                        <ThemedText style={styles.settingLabel}>
+                            Email
+                        </ThemedText>
+                        <ThemedText style={styles.settingValue}>
+                            {user?.email || "Not set"}
+                        </ThemedText>
+                    </ThemedView>
+                    <ThemedView
+                        style={[styles.settingItem, styles.settingItemLast]}
+                    >
+                        <ThemedText style={styles.settingLabel}>
+                            Display Name
+                        </ThemedText>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Your name"
+                            placeholderTextColor={theme.placeholder}
+                            value={displayName}
+                            onChangeText={setDisplayName}
+                        />
+                    </ThemedView>
+                    <TouchableOpacity
+                        style={styles.saveButton}
+                        onPress={handleSaveProfile}
+                        disabled={loading}
+                    >
+                        <ThemedText style={styles.saveButtonText}>
+                            {loading ? "Saving..." : "Save Profile"}
+                        </ThemedText>
+                    </TouchableOpacity>
+                </ThemedView>
+
+                <ThemedView style={styles.section}>
+                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                        Appearance
+                    </ThemedText>
+                    <ThemedView style={[styles.settingItem]}>
                         <ThemedText style={styles.settingLabel}>
                             Theme
                         </ThemedText>
@@ -77,10 +186,10 @@ export default function SettingsScreen() {
                 </ThemedView>
 
                 <ThemedView style={styles.section}>
-                    <ThemedText style={styles.sectionTitle}>
+                    <ThemedText style={styles.sectionTitle} type="subtitle">
                         Currency
                     </ThemedText>
-                    <ThemedView style={styles.settingItem}>
+                    <ThemedView style={[styles.settingItem]}>
                         <ThemedText style={styles.settingLabel}>
                             Currency Symbol
                         </ThemedText>
@@ -91,8 +200,12 @@ export default function SettingsScreen() {
                 </ThemedView>
 
                 <ThemedView style={styles.section}>
-                    <ThemedText style={styles.sectionTitle}>About</ThemedText>
-                    <ThemedView style={styles.settingItem}>
+                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                        About
+                    </ThemedText>
+                    <ThemedView
+                        style={[styles.settingItem, styles.settingItemLast]}
+                    >
                         <ThemedText style={styles.settingLabel}>
                             Version
                         </ThemedText>
