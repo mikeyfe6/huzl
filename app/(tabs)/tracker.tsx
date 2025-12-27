@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -9,6 +9,13 @@ import {
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import {
+    blueColor,
+    Colors,
+    greenColor,
+    redColor,
+    whiteColor,
+} from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export default function BudgetsScreen() {
@@ -29,13 +36,142 @@ export default function BudgetsScreen() {
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
     const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+
+    const styles = useMemo(
+        () =>
+            StyleSheet.create({
+                container: {
+                    flex: 1,
+                    paddingHorizontal: 0,
+                },
+                inputSection: {
+                    padding: 16,
+                    paddingTop: 24,
+                    gap: 12,
+                },
+                heading: {
+                    marginBottom: 16,
+                },
+                label: {
+                    fontSize: 14,
+                    fontWeight: "600",
+                    marginTop: 8,
+                    color: theme.label,
+                },
+                input: {
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                    fontSize: 16,
+                    color: theme.inputText,
+                    borderColor: theme.inputBorder,
+                    backgroundColor: theme.inputBackground,
+                },
+                createButton: {
+                    backgroundColor: blueColor,
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    marginTop: 8,
+                },
+                addButton: {
+                    backgroundColor: greenColor,
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    marginTop: 8,
+                },
+                buttonText: {
+                    color: whiteColor,
+                    fontWeight: "600",
+                    fontSize: 16,
+                },
+                budgetListSection: {
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    gap: 10,
+                },
+                budgetCard: {
+                    padding: 12,
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    gap: 8,
+                    backgroundColor: theme.cardBackground,
+                    borderColor: theme.borderColor,
+                },
+                budgetAmount: {
+                    fontSize: 14,
+                    opacity: 0.8,
+                    color: theme.label,
+                },
+                progressBar: {
+                    height: 8,
+                    backgroundColor: theme.inputBorder,
+                    borderRadius: 4,
+                    overflow: "hidden",
+                    marginTop: 4,
+                },
+                progressFill: {
+                    height: "100%",
+                    backgroundColor: blueColor,
+                },
+                expenseSection: {
+                    paddingHorizontal: 16,
+                    paddingVertical: 16,
+                    gap: 12,
+                },
+                remainingText: {
+                    fontSize: 16,
+                    fontWeight: "500",
+                    marginBottom: 8,
+                    color: theme.label,
+                },
+                expenseItem: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: 12,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    marginBottom: 8,
+                    backgroundColor: theme.cardBackground,
+                    borderColor: theme.borderColor,
+                },
+                expenseInfo: {
+                    flex: 1,
+                },
+                deleteButton: {
+                    color: redColor,
+                    fontWeight: "600",
+                },
+                emptyState: {
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingVertical: 60,
+                },
+                emptyStateText: {
+                    fontSize: 18,
+                    opacity: 0.6,
+                    textAlign: "center",
+                    color: theme.emptyStateText,
+                },
+                selectedCard: {
+                    borderColor: blueColor,
+                    backgroundColor: theme.cardBackground,
+                },
+            }),
+        [theme, colorScheme]
+    );
 
     const handleCreateBudget = () => {
         if (budgetName.trim() && totalAmount.trim()) {
             const newBudget = {
                 id: Date.now().toString(),
                 name: budgetName,
-                total: parseFloat(totalAmount),
+                total: Number.parseFloat(totalAmount),
                 spent: 0,
                 expenses: [],
             };
@@ -52,12 +188,12 @@ export default function BudgetsScreen() {
                     const expense = {
                         id: Date.now().toString(),
                         name: expenseName,
-                        amount: parseFloat(expenseAmount),
+                        amount: Number.parseFloat(expenseAmount),
                     };
                     return {
                         ...budget,
                         expenses: [...budget.expenses, expense],
-                        spent: budget.spent + parseFloat(expenseAmount),
+                        spent: budget.spent + Number.parseFloat(expenseAmount),
                     };
                 }
                 return budget;
@@ -89,57 +225,27 @@ export default function BudgetsScreen() {
         : 0;
 
     return (
-        <ScrollView
-            style={[
-                styles.container,
-                {
-                    backgroundColor:
-                        colorScheme === "dark" ? "#1a1a1a" : "#f5f5f5",
-                },
-            ]}
-        >
+        <ScrollView style={styles.container}>
             {/* Create Budget Section */}
             <ThemedView style={styles.inputSection}>
                 <ThemedText type="title" style={styles.heading}>
                     Budgets
                 </ThemedText>
 
-                <ThemedText style={styles.label}>Potje Name</ThemedText>
+                <ThemedText style={styles.label}>Budget Name</ThemedText>
                 <TextInput
-                    style={[
-                        styles.input,
-                        {
-                            color: colorScheme === "dark" ? "#fff" : "#000",
-                            borderColor:
-                                colorScheme === "dark" ? "#333" : "#ddd",
-                            backgroundColor:
-                                colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                        },
-                    ]}
+                    style={styles.input}
                     placeholder="e.g., Groceries"
-                    placeholderTextColor={
-                        colorScheme === "dark" ? "#666" : "#999"
-                    }
+                    placeholderTextColor={theme.placeholder}
                     value={budgetName}
                     onChangeText={setBudgetName}
                 />
 
                 <ThemedText style={styles.label}>Total Amount ($)</ThemedText>
                 <TextInput
-                    style={[
-                        styles.input,
-                        {
-                            color: colorScheme === "dark" ? "#fff" : "#000",
-                            borderColor:
-                                colorScheme === "dark" ? "#333" : "#ddd",
-                            backgroundColor:
-                                colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                        },
-                    ]}
+                    style={styles.input}
                     placeholder="0.00"
-                    placeholderTextColor={
-                        colorScheme === "dark" ? "#666" : "#999"
-                    }
+                    placeholderTextColor={theme.placeholder}
                     value={totalAmount}
                     onChangeText={setTotalAmount}
                     keyboardType="decimal-pad"
@@ -150,7 +256,7 @@ export default function BudgetsScreen() {
                     onPress={handleCreateBudget}
                 >
                     <ThemedText style={styles.buttonText}>
-                        Create Potje
+                        Create Budget
                     </ThemedText>
                 </TouchableOpacity>
             </ThemedView>
@@ -158,28 +264,14 @@ export default function BudgetsScreen() {
             {/* Budget List */}
             {budgets.length > 0 && (
                 <ThemedView style={styles.budgetListSection}>
-                    <ThemedText type="subtitle">Your Potjes</ThemedText>
+                    <ThemedText type="subtitle">Your Budgets</ThemedText>
                     {budgets.map((budget) => (
                         <TouchableOpacity
                             key={budget.id}
                             style={[
                                 styles.budgetCard,
-                                {
-                                    backgroundColor:
-                                        selectedBudgetId === budget.id
-                                            ? colorScheme === "dark"
-                                                ? "#1e3a5f"
-                                                : "#e3f2fd"
-                                            : colorScheme === "dark"
-                                            ? "#2a2a2a"
-                                            : "#fff",
-                                    borderColor:
-                                        selectedBudgetId === budget.id
-                                            ? "#2196F3"
-                                            : colorScheme === "dark"
-                                            ? "#333"
-                                            : "#ddd",
-                                },
+                                selectedBudgetId === budget.id &&
+                                    styles.selectedCard,
                             ]}
                             onPress={() => setSelectedBudgetId(budget.id)}
                         >
@@ -220,7 +312,7 @@ export default function BudgetsScreen() {
                         <ThemedText
                             style={{
                                 color:
-                                    remainingAmount < 0 ? "#f44336" : "#4caf50",
+                                    remainingAmount < 0 ? redColor : greenColor,
                             }}
                         >
                             {remainingAmount.toFixed(2)}
@@ -229,40 +321,18 @@ export default function BudgetsScreen() {
 
                     <ThemedText style={styles.label}>Expense Name</ThemedText>
                     <TextInput
-                        style={[
-                            styles.input,
-                            {
-                                color: colorScheme === "dark" ? "#fff" : "#000",
-                                borderColor:
-                                    colorScheme === "dark" ? "#333" : "#ddd",
-                                backgroundColor:
-                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                            },
-                        ]}
+                        style={styles.input}
                         placeholder="e.g., Apples"
-                        placeholderTextColor={
-                            colorScheme === "dark" ? "#666" : "#999"
-                        }
+                        placeholderTextColor={theme.placeholder}
                         value={expenseName}
                         onChangeText={setExpenseName}
                     />
 
                     <ThemedText style={styles.label}>Amount ($)</ThemedText>
                     <TextInput
-                        style={[
-                            styles.input,
-                            {
-                                color: colorScheme === "dark" ? "#fff" : "#000",
-                                borderColor:
-                                    colorScheme === "dark" ? "#333" : "#ddd",
-                                backgroundColor:
-                                    colorScheme === "dark" ? "#2a2a2a" : "#fff",
-                            },
-                        ]}
+                        style={styles.input}
                         placeholder="0.00"
-                        placeholderTextColor={
-                            colorScheme === "dark" ? "#666" : "#999"
-                        }
+                        placeholderTextColor={theme.placeholder}
                         value={expenseAmount}
                         onChangeText={setExpenseAmount}
                         keyboardType="decimal-pad"
@@ -296,22 +366,7 @@ export default function BudgetsScreen() {
                         </ThemedText>
                     ) : (
                         selectedBudget.expenses.map((expense) => (
-                            <View
-                                key={expense.id}
-                                style={[
-                                    styles.expenseItem,
-                                    {
-                                        backgroundColor:
-                                            colorScheme === "dark"
-                                                ? "#2a2a2a"
-                                                : "#f9f9f9",
-                                        borderColor:
-                                            colorScheme === "dark"
-                                                ? "#333"
-                                                : "#eee",
-                                    },
-                                ]}
-                            >
+                            <View key={expense.id} style={styles.expenseItem}>
                                 <View style={styles.expenseInfo}>
                                     <ThemedText type="defaultSemiBold">
                                         {expense.name}
@@ -338,119 +393,10 @@ export default function BudgetsScreen() {
             {budgets.length === 0 && (
                 <ThemedView style={styles.emptyState}>
                     <ThemedText style={styles.emptyStateText}>
-                        Create a potje to get started!
+                        Create a budget to get started!
                     </ThemedText>
                 </ThemedView>
             )}
         </ScrollView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingHorizontal: 0,
-    },
-    inputSection: {
-        padding: 16,
-        paddingTop: 24,
-        gap: 12,
-    },
-    heading: {
-        marginBottom: 16,
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: "600",
-        marginTop: 8,
-    },
-    input: {
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        fontSize: 16,
-    },
-    createButton: {
-        backgroundColor: "#2196F3",
-        paddingVertical: 12,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 8,
-    },
-    addButton: {
-        backgroundColor: "#4caf50",
-        paddingVertical: 12,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 8,
-    },
-    buttonText: {
-        color: "#fff",
-        fontWeight: "600",
-        fontSize: 16,
-    },
-    budgetListSection: {
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        gap: 10,
-    },
-    budgetCard: {
-        padding: 12,
-        borderRadius: 8,
-        borderWidth: 2,
-        gap: 8,
-    },
-    budgetAmount: {
-        fontSize: 14,
-        opacity: 0.8,
-    },
-    progressBar: {
-        height: 8,
-        backgroundColor: "#e0e0e0",
-        borderRadius: 4,
-        overflow: "hidden",
-        marginTop: 4,
-    },
-    progressFill: {
-        height: "100%",
-        backgroundColor: "#2196F3",
-    },
-    expenseSection: {
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-        gap: 12,
-    },
-    remainingText: {
-        fontSize: 16,
-        fontWeight: "500",
-        marginBottom: 8,
-    },
-    expenseItem: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: 12,
-        borderRadius: 8,
-        borderWidth: 1,
-        marginBottom: 8,
-    },
-    expenseInfo: {
-        flex: 1,
-    },
-    deleteButton: {
-        color: "#f44336",
-        fontWeight: "600",
-    },
-    emptyState: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingVertical: 60,
-    },
-    emptyStateText: {
-        fontSize: 18,
-        opacity: 0.6,
-        textAlign: "center",
-    },
-});

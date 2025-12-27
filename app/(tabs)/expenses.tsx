@@ -69,6 +69,7 @@ export default function ExpensesScreen() {
                 container: {
                     flex: 1,
                     paddingHorizontal: 0,
+                    
                 },
                 inputSection: {
                     padding: 16,
