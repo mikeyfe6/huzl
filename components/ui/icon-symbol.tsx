@@ -42,7 +42,7 @@ export function IconSymbol({
     color: string | OpaqueColorValue;
     style?: StyleProp<TextStyle>;
     weight?: SymbolWeight;
-}) {
+}>) {
     return (
         <MaterialIcons
             color={color}
