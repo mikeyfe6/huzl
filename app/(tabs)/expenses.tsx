@@ -1,3 +1,8 @@
+import {
+    getSortLabel,
+    SortModal,
+    SortOption,
+} from "@/components/ui/sort-modal";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -28,13 +33,6 @@ import { supabase } from "@/utils/supabase";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business";
-type SortOption =
-    | "default"
-    | "alphabetic-asc"
-    | "alphabetic-desc"
-    | "cost-asc"
-    | "cost-desc";
-
 interface ExpenseItem {
     id: string;
     name: string;
@@ -54,6 +52,7 @@ export default function ExpensesScreen() {
     const [loading, setLoading] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption>("default");
+    const [sortModalVisible, setSortModalVisible] = useState(false);
     const currencySymbol = "€";
 
     const { user } = useAuth();
@@ -207,17 +206,20 @@ export default function ExpensesScreen() {
                     marginBottom: 12,
                     gap: 8,
                 },
-                sortPicker: {
-                    width: Platform.select({
-                        ios: 140,
-                        android: 140,
-                        default: 140,
-                    }),
-                    height: Platform.select({
-                        ios: 50,
-                        android: 40,
-                        default: 40,
-                    }),
+                sortTrigger: {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 8,
+                    paddingHorizontal: 12,
+                    paddingVertical: 8,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    borderColor: theme.inputBorder,
+                    backgroundColor: theme.cardBackground,
+                },
+                sortTriggerText: {
+                    color: theme.label,
+                    fontWeight: "600",
                 },
                 expenseCard: {
                     padding: 12,
@@ -353,7 +355,6 @@ export default function ExpensesScreen() {
                         amount: Number.parseFloat(expenseAmount),
                         frequency,
                         category,
-                        active: true,
                     })
                     .eq("id", editingId)
                     .select()
@@ -514,6 +515,11 @@ export default function ExpensesScreen() {
             default:
                 return sorted;
         }
+    };
+
+    const setSortAndClose = (opt: SortOption) => {
+        setSortOption(opt);
+        setSortModalVisible(false);
     };
 
     const sortedExpenses = getSortedExpenses();
@@ -717,50 +723,34 @@ export default function ExpensesScreen() {
                 <ThemedView style={styles.expenseList}>
                     <View style={styles.sortHeader}>
                         <ThemedText type="subtitle">Expenses List</ThemedText>
-                        <View
-                            style={[styles.pickerContainer, styles.sortPicker]}
+                        <TouchableOpacity
+                            style={styles.sortTrigger}
+                            onPress={() => setSortModalVisible(true)}
+                            accessibilityRole="button"
+                            accessibilityLabel="Open sort options"
                         >
-                            <Picker
-                                selectedValue={sortOption}
-                                onValueChange={(itemValue) =>
-                                    setSortOption(itemValue as SortOption)
-                                }
-                                style={[
-                                    styles.pickerInput,
-                                    Platform.OS === "web"
-                                        ? ([
-                                              {
-                                                  appearance: "none",
-                                                  WebkitAppearance: "none",
-                                                  MozAppearance: "none",
-                                              } as any,
-                                          ] as any)
-                                        : null,
-                                ]}
-                                itemStyle={styles.pickerOption}
-                            >
-                                <Picker.Item label="Default" value="default" />
-                                <Picker.Item
-                                    label="A-Z"
-                                    value="alphabetic-asc"
-                                />
-                                <Picker.Item
-                                    label="Z-A"
-                                    value="alphabetic-desc"
-                                />
-                                <Picker.Item label="Cost ↑" value="cost-asc" />
-                                <Picker.Item label="Cost ↓" value="cost-desc" />
-                            </Picker>
-                            {Platform.OS === "web" && (
-                                <Ionicons
-                                    name="chevron-down"
-                                    size={18}
-                                    color={blackColor}
-                                    style={styles.pickerIcon}
-                                />
-                            )}
-                        </View>
+                            <Ionicons
+                                name="swap-vertical"
+                                size={16}
+                                color={theme.label}
+                            />
+                            <ThemedText style={styles.sortTriggerText}>
+                                {getSortLabel(sortOption)}
+                            </ThemedText>
+                            <Ionicons
+                                name="chevron-down"
+                                size={16}
+                                color={theme.label}
+                            />
+                        </TouchableOpacity>
                     </View>
+                    <SortModal
+                        visible={sortModalVisible}
+                        sortOption={sortOption}
+                        onSelect={setSortAndClose}
+                        onRequestClose={() => setSortModalVisible(false)}
+                        theme={theme}
+                    />
 
                     {sortedExpenses.map((expense) => (
                         <View key={expense.id} style={styles.expenseCard}>
