@@ -72,7 +72,7 @@ export function CurrencyPickerModal({
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">Select Currency</ThemedText>
                     <TouchableOpacity onPress={onClose} disabled={saving}>
-                        <ThemedText type="link">Close</ThemedText>
+                        <ThemedText type="danger">Close</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
 

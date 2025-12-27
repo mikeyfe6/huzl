@@ -69,9 +69,9 @@ export default function ModalScreen() {
                     marginTop: 4,
                 },
                 hint: {
-                    marginTop: 8,
                     color: silverColor,
                     textAlign: "center",
+                    marginBottom: 24,
                 },
                 actions: {
                     marginTop: 16,
@@ -136,6 +136,9 @@ export default function ModalScreen() {
                 <ThemedText type="title" style={styles.title}>
                     Set Monthly Income
                 </ThemedText>
+                <ThemedText style={styles.hint}>
+                    Used for budget and summaries.
+                </ThemedText>
                 <ThemedText style={styles.label}>
                     Amount ({currencySymbol})
                 </ThemedText>
@@ -147,9 +150,6 @@ export default function ModalScreen() {
                     value={income}
                     onChangeText={setIncome}
                 />
-                <ThemedText style={styles.hint}>
-                    Used for budget and summaries.
-                </ThemedText>
                 <ThemedView style={styles.actions}>
                     <TouchableOpacity
                         style={styles.saveButton}
@@ -164,7 +164,7 @@ export default function ModalScreen() {
                         style={styles.cancelLink}
                         onPress={() => router.back()}
                     >
-                        <ThemedText type="link">Cancel</ThemedText>
+                        <ThemedText type="danger">Cancel</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
             </ThemedView>

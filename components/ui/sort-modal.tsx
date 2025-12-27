@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-import { Colors, blueColor, redColor } from "@/constants/theme";
+import { Colors, blueColor } from "@/constants/theme";
 
 type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
@@ -97,7 +97,6 @@ export function SortModal({
                     gap: 10,
                 },
                 itemText: {
-                    color: theme.inputText,
                     fontSize: 16,
                 },
                 cancel: {
@@ -154,9 +153,7 @@ export function SortModal({
                         style={styles.cancel}
                         onPress={onRequestClose}
                     >
-                        <ThemedText
-                            style={[styles.itemText, { color: redColor }]}
-                        >
+                        <ThemedText type="danger" style={[styles.itemText]}>
                             Cancel
                         </ThemedText>
                     </TouchableOpacity>
