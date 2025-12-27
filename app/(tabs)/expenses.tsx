@@ -41,6 +41,7 @@ interface ExpenseItem {
     frequency: Frequency;
     category: Category;
     yearlyTotal: number;
+    active: boolean;
 }
 
 export default function ExpensesScreen() {
@@ -337,11 +338,6 @@ export default function ExpensesScreen() {
         if (!user) return; // require auth
         if (!expenseName.trim() || !expenseAmount.trim()) return;
 
-        const yearlyTotal = calculateYearlyTotal(
-            Number.parseFloat(expenseAmount),
-            frequency
-        );
-
         setLoading(true);
         try {
             if (editingId) {
@@ -353,6 +349,7 @@ export default function ExpensesScreen() {
                         amount: Number.parseFloat(expenseAmount),
                         frequency,
                         category,
+                        active: true,
                     })
                     .eq("id", editingId)
                     .select()
@@ -381,6 +378,7 @@ export default function ExpensesScreen() {
                                           amount,
                                           data.frequency as Frequency
                                       ),
+                                      active: data.active ?? true,
                                   }
                                 : exp
                         )
@@ -401,6 +399,7 @@ export default function ExpensesScreen() {
                         amount: Number.parseFloat(expenseAmount),
                         frequency,
                         category,
+                        active: true,
                     })
                     .select()
                     .single();
@@ -423,6 +422,7 @@ export default function ExpensesScreen() {
                             amount,
                             data.frequency as Frequency
                         ),
+                        active: data.active ?? true,
                     };
                     setExpenses((prev) => [newExpense, ...prev]);
                     setExpenseName("");
@@ -472,6 +472,28 @@ export default function ExpensesScreen() {
         }
     };
 
+    const handleToggleActive = async (id: string, currentActive: boolean) => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from("expenses")
+                .update({ active: !currentActive })
+                .eq("id", id);
+            if (!error) {
+                setExpenses((prev) =>
+                    prev.map((expense) =>
+                        expense.id === id
+                            ? { ...expense, active: !currentActive }
+                            : expense
+                    )
+                );
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const getSortedExpenses = (): ExpenseItem[] => {
         const sorted = [...expenses];
 
@@ -492,20 +514,19 @@ export default function ExpensesScreen() {
 
     const sortedExpenses = getSortedExpenses();
 
-    const totalYearlySpend = expenses.reduce(
-        (sum, expense) => sum + expense.yearlyTotal,
-        0
-    );
+    const totalYearlySpend = expenses
+        .filter((e) => e.active)
+        .reduce((sum, expense) => sum + expense.yearlyTotal, 0);
 
     const totalMonthlySpend = totalYearlySpend / 12;
     const totalDailySpend = totalYearlySpend / 365;
 
     const personalYearlySpend = expenses
-        .filter((e) => e.category === "personal")
+        .filter((e) => e.active && e.category === "personal")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
     const businessYearlySpend = expenses
-        .filter((e) => e.category === "business")
+        .filter((e) => e.active && e.category === "business")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
     const getFrequencyLabel = (freq: Frequency): string => {
@@ -530,7 +551,7 @@ export default function ExpensesScreen() {
             try {
                 const { data, error } = await supabase
                     .from("expenses")
-                    .select("id,name,amount,frequency,category")
+                    .select("id,name,amount,frequency,category,active")
                     .order("created_at", { ascending: false });
                 if (!error && data) {
                     const mapped: ExpenseItem[] = data.map((row: any) => {
@@ -545,6 +566,7 @@ export default function ExpensesScreen() {
                                 amount,
                                 row.frequency as Frequency
                             ),
+                            active: row.active ?? true,
                         };
                     });
                     if (isMounted) setExpenses(mapped);
@@ -753,6 +775,36 @@ export default function ExpensesScreen() {
                                     </ThemedText>
                                 </View>
                                 <View style={styles.expenseIcons}>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            handleToggleActive(
+                                                expense.id,
+                                                expense.active
+                                            )
+                                        }
+                                        style={[
+                                            styles.expenseIcon,
+                                            {
+                                                borderColor: expense.active
+                                                    ? greenColor
+                                                    : mediumGreyColor,
+                                            },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name={
+                                                expense.active
+                                                    ? "eye"
+                                                    : "eye-off"
+                                            }
+                                            size={16}
+                                            color={
+                                                expense.active
+                                                    ? greenColor
+                                                    : mediumGreyColor
+                                            }
+                                        />
+                                    </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() =>
                                             handleEditExpense(expense)
