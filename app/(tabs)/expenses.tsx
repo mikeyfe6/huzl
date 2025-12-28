@@ -200,6 +200,11 @@ export default function ExpensesScreen() {
                 expenseTitle: {
                     marginBottom: 12,
                 },
+                expenseAmounts: {
+                    flexDirection: "row",
+                    gap: 8,
+                    alignItems: "baseline",
+                },
                 sortHeader: {
                     flexDirection: "row",
                     justifyContent: "space-between",
@@ -230,6 +235,9 @@ export default function ExpensesScreen() {
                     gap: 12,
                     backgroundColor: theme.cardBackground,
                     borderColor: theme.borderColor,
+                },
+                expenseCardInactive: {
+                    opacity: 0.5,
                 },
                 expenseHeader: {
                     flexDirection: "row",
@@ -278,6 +286,11 @@ export default function ExpensesScreen() {
                     fontWeight: "600",
                     color: blueColor,
                 },
+                monthlyAmount: {
+                    fontSize: 14,
+                    fontWeight: "600",
+                    color: mediumGreyColor,
+                },
                 totalSection: {
                     paddingHorizontal: 16,
                     paddingVertical: 20,
@@ -288,10 +301,10 @@ export default function ExpensesScreen() {
                     gap: 8,
                 },
                 dailyTab: {
-                    backgroundColor: "#0a7ea475",
+                    backgroundColor: "#0a7ea490",
                 },
                 monthlyTab: {
-                    backgroundColor: "#F59E0B50",
+                    backgroundColor: "#F59E0B75",
                 },
                 yearlyTab: {
                     backgroundColor: "#133d2f",
@@ -768,7 +781,13 @@ export default function ExpensesScreen() {
                     />
 
                     {sortedExpenses.map((expense) => (
-                        <View key={expense.id} style={styles.expenseCard}>
+                        <View
+                            key={expense.id}
+                            style={[
+                                styles.expenseCard,
+                                !expense.active && styles.expenseCardInactive,
+                            ]}
+                        >
                             <View style={styles.expenseHeader}>
                                 <View style={styles.expenseInfo}>
                                     <ThemedText type="defaultSemiBold">
@@ -860,12 +879,18 @@ export default function ExpensesScreen() {
                             </View>
                             <View style={styles.yearlyTotalBox}>
                                 <ThemedText style={styles.yearlyLabel}>
-                                    Yearly Total:
+                                    Yearly / Monthly:
                                 </ThemedText>
-                                <ThemedText style={styles.yearlyAmount}>
-                                    {currencySymbol}{" "}
-                                    {expense.yearlyTotal.toFixed(2)}
-                                </ThemedText>
+                                <View style={styles.expenseAmounts}>
+                                    <ThemedText style={styles.yearlyAmount}>
+                                        {currencySymbol}{" "}
+                                        {expense.yearlyTotal.toFixed(2)}
+                                    </ThemedText>
+                                    <ThemedText style={styles.monthlyAmount}>
+                                        {currencySymbol}{" "}
+                                        {(expense.yearlyTotal / 12).toFixed(2)}
+                                    </ThemedText>
+                                </View>
                             </View>
                         </View>
                     ))}

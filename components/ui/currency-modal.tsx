@@ -170,8 +170,8 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: "bold",
         width: 40,
-        height: 24,
-        lineHeight: 24,
+        height: 40,
+        lineHeight: 40,
     },
     currencyName: {
         fontSize: 16,

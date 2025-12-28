@@ -6,11 +6,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
+import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+    const { user } = useAuth();
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -19,13 +21,15 @@ export default function TabLayout() {
                     tabBarActiveTintColor: theme.tint,
                     headerShown: false,
                     tabBarButton: HapticTab,
-                    tabBarStyle: {
-                        height: Platform.select({
-                            ios: 90,
-                            android: 90,
-                            default: 70,
-                        }),
-                    },
+                    tabBarStyle: user
+                        ? {
+                              height: Platform.select({
+                                  ios: 90,
+                                  android: 90,
+                                  default: 70,
+                              }),
+                          }
+                        : { display: "none" },
                     tabBarItemStyle: {
                         paddingVertical: 18,
                     },
@@ -51,7 +55,7 @@ export default function TabLayout() {
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
-                                name="figure.play"
+                                name="graph.2d"
                                 color={color}
                             />
                         ),
@@ -64,7 +68,7 @@ export default function TabLayout() {
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
-                                name="paperplane.fill"
+                                name="basket.fill"
                                 color={color}
                             />
                         ),

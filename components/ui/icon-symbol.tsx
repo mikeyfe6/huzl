@@ -18,10 +18,10 @@ type IconSymbolName = keyof typeof MAPPING;
  */
 const MAPPING = {
     "house.fill": "home",
-    "paperplane.fill": "send",
+    "basket.fill": "shopping-bag",
     "chevron.left.forwardslash.chevron.right": "code",
     "chevron.right": "chevron-right",
-    "figure.play": "play-circle-filled",
+    "graph.2d": "graphic-eq",
     gear: "settings",
     "sun.righthalf.filled": "sunny",
 } as IconMapping;

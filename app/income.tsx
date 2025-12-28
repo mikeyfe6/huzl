@@ -44,7 +44,7 @@ export default function ModalScreen() {
                     maxWidth: Platform.select({
                         ios: undefined,
                         android: undefined,
-                        default: 600,
+                        default: 400,
                     }),
                 },
                 title: {
@@ -74,7 +74,7 @@ export default function ModalScreen() {
                     marginBottom: 24,
                 },
                 actions: {
-                    marginTop: 16,
+                    marginTop: 20,
                     gap: 12,
                 },
                 saveButton: {
@@ -89,7 +89,7 @@ export default function ModalScreen() {
                     fontSize: 16,
                 },
                 cancelLink: {
-                    marginTop: 8,
+                    paddingVertical: 8,
                     alignItems: "center",
                 },
             }),
