@@ -19,6 +19,7 @@ export default function TabLayout() {
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: theme.tint,
+                    tabBarShowLabel: true,
                     headerShown: false,
                     tabBarButton: HapticTab,
                     tabBarStyle: user
@@ -30,15 +31,15 @@ export default function TabLayout() {
                               }),
                           }
                         : { display: "none" },
-                    tabBarItemStyle: {
-                        paddingVertical: 18,
-                    },
+                    tabBarItemStyle: { paddingVertical: 8 },
                 }}
             >
                 <Tabs.Screen
                     name="index"
                     options={{
                         title: "Home",
+                        tabBarLabel: "Home",
+                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
@@ -52,6 +53,8 @@ export default function TabLayout() {
                     name="expenses"
                     options={{
                         title: "Expenses",
+                        tabBarLabel: "Expenses",
+                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
@@ -65,6 +68,8 @@ export default function TabLayout() {
                     name="budgets"
                     options={{
                         title: "Budgets",
+                        tabBarLabel: "Budgets",
+                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
@@ -78,6 +83,8 @@ export default function TabLayout() {
                     name="settings"
                     options={{
                         title: "Settings",
+                        tabBarLabel: "Settings",
+                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol size={28} name="gear" color={color} />
                         ),
