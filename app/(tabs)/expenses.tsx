@@ -32,7 +32,7 @@ import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 
 type Frequency = "daily" | "monthly" | "yearly";
-type Category = "personal" | "business";
+type Category = "personal" | "business" | "debts";
 interface ExpenseItem {
     id: string;
     name: string;
@@ -683,6 +683,17 @@ export default function ExpensesScreen() {
                     >
                         <ThemedText>Business</ThemedText>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.categoryOption,
+                            category === "debts" && styles.categoryOptionActive,
+                        ]}
+                        onPress={() => setCategory("debts")}
+                        accessibilityRole="radio"
+                        accessibilityState={{ selected: category === "debts" }}
+                    >
+                        <ThemedText>Debts</ThemedText>
+                    </TouchableOpacity>
                 </View>
 
                 <ThemedText style={styles.label}>Frequency</ThemedText>
@@ -799,6 +810,9 @@ export default function ExpensesScreen() {
                                             styles.frequencyLabel,
                                             expense.category === "business" && {
                                                 color: theme.specialLabel,
+                                            },
+                                            expense.category === "debts" && {
+                                                color: redColor,
                                             },
                                         ]}
                                     >
