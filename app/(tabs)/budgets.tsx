@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 import {
     ScrollView,
@@ -172,10 +173,18 @@ export default function BudgetsScreen() {
                     backgroundColor: theme.cardBackground,
                     borderColor: theme.borderColor,
                 },
+                budgetHeader: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                },
                 budgetAmount: {
                     fontSize: 14,
                     opacity: 0.8,
                     color: theme.label,
+                },
+                budgetTotalInline: {
+                    fontWeight: "600",
                 },
                 progressBar: {
                     height: 8,
@@ -212,6 +221,11 @@ export default function BudgetsScreen() {
                 },
                 expenseInfo: {
                     flex: 1,
+                },
+                expenseIcon: {
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    padding: 8,
                 },
                 deleteButton: {
                     color: redColor,
@@ -324,6 +338,28 @@ export default function BudgetsScreen() {
         }
     };
 
+    const handleDeleteBudget = async (budgetId: string) => {
+        if (!user) return;
+
+        setLoading(true);
+        try {
+            // Delete budget (cascade should delete expenses)
+            const { error } = await supabase
+                .from("budgets")
+                .delete()
+                .eq("id", budgetId);
+
+            if (!error) {
+                setBudgets(budgets.filter((b) => b.id !== budgetId));
+                if (selectedBudgetId === budgetId) {
+                    setSelectedBudgetId(null);
+                }
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleDeleteExpense = async (expenseId: string) => {
         if (!user) return;
 
@@ -409,21 +445,53 @@ export default function BudgetsScreen() {
                         Your Budgets
                     </ThemedText>
                     {budgets.map((budget) => (
-                        <TouchableOpacity
+                        <View
                             key={budget.id}
                             style={[
                                 styles.budgetCard,
                                 selectedBudgetId === budget.id &&
                                     styles.selectedCard,
                             ]}
-                            onPress={() => setSelectedBudgetId(budget.id)}
                         >
-                            <ThemedText type="defaultSemiBold">
-                                {budget.name}
-                            </ThemedText>
+                            <View style={styles.budgetHeader}>
+                                <TouchableOpacity
+                                    style={{ flex: 1 }}
+                                    onPress={() =>
+                                        setSelectedBudgetId(budget.id)
+                                    }
+                                >
+                                    <ThemedText type="defaultSemiBold">
+                                        {budget.name}
+                                    </ThemedText>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        handleDeleteBudget(budget.id)
+                                    }
+                                    style={[
+                                        styles.expenseIcon,
+                                        {
+                                            borderColor: redColor,
+                                        },
+                                    ]}
+                                >
+                                    <Ionicons
+                                        name="trash"
+                                        size={16}
+                                        color={redColor}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                             <ThemedText style={styles.budgetAmount}>
                                 {currencySymbol} {budget.spent.toFixed(2)} -{" "}
-                                {currencySymbol} {budget.total.toFixed(2)}
+                                <ThemedText
+                                    style={[
+                                        styles.budgetAmount,
+                                        styles.budgetTotalInline,
+                                    ]}
+                                >
+                                    {currencySymbol} {budget.total.toFixed(2)}
+                                </ThemedText>
                             </ThemedText>
                             <View style={styles.progressBar}>
                                 <View
@@ -439,7 +507,7 @@ export default function BudgetsScreen() {
                                     ]}
                                 />
                             </View>
-                        </TouchableOpacity>
+                        </View>
                     ))}
                 </ThemedView>
             )}
@@ -526,10 +594,18 @@ export default function BudgetsScreen() {
                                     onPress={() =>
                                         handleDeleteExpense(expense.id)
                                     }
+                                    style={[
+                                        styles.expenseIcon,
+                                        {
+                                            borderColor: redColor,
+                                        },
+                                    ]}
                                 >
-                                    <ThemedText style={styles.deleteButton}>
-                                        Delete
-                                    </ThemedText>
+                                    <Ionicons
+                                        name="trash"
+                                        size={16}
+                                        color={redColor}
+                                    />
                                 </TouchableOpacity>
                             </View>
                         ))
