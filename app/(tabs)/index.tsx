@@ -130,12 +130,6 @@ export default function HomeScreen() {
                     fontWeight: "bold",
                     textAlign: "center",
                 },
-                statTextPositive: {
-                    color: greenColor,
-                },
-                statTextNegative: {
-                    color: redColor,
-                },
                 greyText: {
                     color: mediumGreyColor,
                 },
@@ -242,6 +236,7 @@ export default function HomeScreen() {
                         placeholder="you@example.com"
                         autoCapitalize="none"
                         keyboardType="email-address"
+                        autoComplete="email"
                         value={email}
                         onChangeText={setEmail}
                         style={styles.input}
@@ -251,6 +246,7 @@ export default function HomeScreen() {
                         placeholder="password"
                         secureTextEntry
                         value={password}
+                        autoComplete="password"
                         onChangeText={setPassword}
                         style={styles.input}
                         placeholderTextColor={theme.placeholder}
@@ -336,14 +332,7 @@ export default function HomeScreen() {
                         <ThemedText style={styles.statLabel}>
                             Monthly Remaining
                         </ThemedText>
-                        <ThemedText
-                            style={[
-                                styles.statValue,
-                                monthlyDisposable >= 0
-                                    ? styles.statTextPositive
-                                    : styles.statTextNegative,
-                            ]}
-                        >
+                        <ThemedText style={styles.statValue}>
                             {currencySymbol} {monthlyDisposable.toFixed(2)}
                         </ThemedText>
                     </ThemedView>

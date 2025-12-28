@@ -69,7 +69,6 @@ export default function ExpensesScreen() {
                 container: {
                     flex: 1,
                     paddingHorizontal: 0,
-                    
                 },
                 inputSection: {
                     padding: 16,
@@ -286,8 +285,16 @@ export default function ExpensesScreen() {
                     marginTop: 24,
                     marginBottom: 16,
                     borderRadius: 12,
-                    backgroundColor: blueColor,
                     gap: 8,
+                },
+                dailyTab: {
+                    backgroundColor: "#0a7ea475",
+                },
+                monthlyTab: {
+                    backgroundColor: "#F59E0B50",
+                },
+                yearlyTab: {
+                    backgroundColor: "#133d2f",
                 },
                 totalDetails: {
                     flexDirection: "row",
@@ -303,6 +310,10 @@ export default function ExpensesScreen() {
                 },
                 totalLabel: {
                     color: whiteColor,
+                },
+                totalInlineAmount: {
+                    fontWeight: "700",
+                    paddingLeft: 8,
                 },
                 totalAmount: {
                     fontSize: 32,
@@ -863,7 +874,7 @@ export default function ExpensesScreen() {
 
             {expenses.length > 0 && (
                 <>
-                    <ThemedView style={styles.totalSection}>
+                    <ThemedView style={[styles.totalSection, styles.yearlyTab]}>
                         <ThemedText type="subtitle" style={styles.totalLabel}>
                             Total Yearly Spend
                         </ThemedText>
@@ -871,18 +882,28 @@ export default function ExpensesScreen() {
                             {currencySymbol} {totalYearlySpend.toFixed(2)}
                         </ThemedText>
                         <ThemedText style={styles.totalLabel}>
-                            Personal: {currencySymbol}{" "}
-                            {personalYearlySpend.toFixed(2)}
+                            Personal:{" "}
+                            <ThemedText style={styles.totalInlineAmount}>
+                                {currencySymbol}{" "}
+                                {personalYearlySpend.toFixed(2)}
+                            </ThemedText>
                         </ThemedText>
                         <ThemedText style={styles.totalLabel}>
-                            Business: {currencySymbol}{" "}
-                            {businessYearlySpend.toFixed(2)}
+                            Business:{" "}
+                            <ThemedText style={styles.totalInlineAmount}>
+                                {currencySymbol}{" "}
+                                {businessYearlySpend.toFixed(2)}
+                            </ThemedText>
                         </ThemedText>
                     </ThemedView>
 
                     <View style={styles.totalDetails}>
                         <ThemedView
-                            style={[styles.totalSection, styles.totalPeriod]}
+                            style={[
+                                styles.totalSection,
+                                styles.totalPeriod,
+                                styles.monthlyTab,
+                            ]}
                         >
                             <ThemedText
                                 type="defaultSemiBold"
@@ -898,7 +919,11 @@ export default function ExpensesScreen() {
                         </ThemedView>
 
                         <ThemedView
-                            style={[styles.totalSection, styles.totalPeriod]}
+                            style={[
+                                styles.totalSection,
+                                styles.totalPeriod,
+                                styles.dailyTab,
+                            ]}
                         >
                             <ThemedText
                                 type="defaultSemiBold"
