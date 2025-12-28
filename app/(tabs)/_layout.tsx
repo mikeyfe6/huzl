@@ -31,7 +31,7 @@ export default function TabLayout() {
                               }),
                           }
                         : { display: "none" },
-                    tabBarItemStyle: { paddingVertical: 8 },
+                    tabBarItemStyle: { paddingVertical: 18 },
                 }}
             >
                 <Tabs.Screen
