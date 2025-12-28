@@ -222,6 +222,9 @@ export default function BudgetsScreen() {
                 expenseInfo: {
                     flex: 1,
                 },
+                expenseTitle: {
+                    marginBottom: 4,
+                },
                 expenseIcon: {
                     borderWidth: 1,
                     borderRadius: 6,
@@ -515,7 +518,7 @@ export default function BudgetsScreen() {
             {/* Expense Input Section */}
             {selectedBudget && (
                 <ThemedView style={styles.expenseSection}>
-                    <ThemedText type="subtitle">
+                    <ThemedText type="subtitle" style={styles.expenseTitle}>
                         {selectedBudget.name}
                     </ThemedText>
                     <ThemedText style={styles.remainingText}>
