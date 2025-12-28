@@ -158,8 +158,11 @@ export default function BudgetsScreen() {
                 },
                 budgetListSection: {
                     paddingHorizontal: 16,
-                    paddingVertical: 12,
+                    paddingVertical: 24,
                     gap: 10,
+                },
+                budgetListTitle: {
+                    marginBottom: 8,
                 },
                 budgetCard: {
                     padding: 12,
@@ -402,7 +405,9 @@ export default function BudgetsScreen() {
             {/* Budget List */}
             {budgets.length > 0 && (
                 <ThemedView style={styles.budgetListSection}>
-                    <ThemedText type="subtitle">Your Budgets</ThemedText>
+                    <ThemedText type="subtitle" style={styles.budgetListTitle}>
+                        Your Budgets
+                    </ThemedText>
                     {budgets.map((budget) => (
                         <TouchableOpacity
                             key={budget.id}
