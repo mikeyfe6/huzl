@@ -5,7 +5,6 @@ import {
     greenColor,
     mediumGreyColor,
     redColor,
-    silverColor,
     whiteColor,
 } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
@@ -106,10 +105,10 @@ export default function HomeScreen() {
                     backgroundColor: theme.cardBackground,
                 },
                 statCardPositive: {
-                    backgroundColor: theme.statCardPositiveBackground,
+                    backgroundColor: theme.cardPositiveBackground,
                 },
                 statCardNegative: {
-                    backgroundColor: theme.statCardNegativeBackground,
+                    backgroundColor: theme.cardNegativeBackground,
                 },
                 statWrapper: {
                     flexDirection: "row",
@@ -119,7 +118,7 @@ export default function HomeScreen() {
                 },
                 statLabel: {
                     fontSize: 14,
-                    color: silverColor,
+                    color: theme.statLabel,
                     marginBottom: 8,
                     textAlign: "center",
                 },

@@ -21,7 +21,6 @@ import {
     blackColor,
     blueColor,
     Colors,
-    goldColor,
     greenColor,
     mediumGreyColor,
     redColor,
@@ -100,7 +99,7 @@ export default function ExpensesScreen() {
                 },
                 categoryOptionActive: {
                     borderColor: blueColor,
-                    backgroundColor: theme.cardBackground,
+                    backgroundColor: theme.selectedTab,
                 },
                 input: {
                     borderWidth: 1,
@@ -135,6 +134,7 @@ export default function ExpensesScreen() {
                 },
                 pickerInput: {
                     fontFamily: "System",
+                    borderColor: theme.inputBorder,
                     fontSize: Platform.select({
                         ios: 16,
                         android: 16,
@@ -168,6 +168,7 @@ export default function ExpensesScreen() {
                         android: 16,
                         default: 16,
                     }),
+                    color: theme.inputText,
                 },
                 pickerIcon: {
                     position: "absolute",
@@ -301,13 +302,13 @@ export default function ExpensesScreen() {
                     gap: 8,
                 },
                 dailyTab: {
-                    backgroundColor: "#0a7ea490",
+                    backgroundColor: theme.dailyTab,
                 },
                 monthlyTab: {
-                    backgroundColor: "#F59E0B75",
+                    backgroundColor: theme.monthlyTab,
                 },
                 yearlyTab: {
-                    backgroundColor: "#133d2f",
+                    backgroundColor: theme.yearlyTab,
                 },
                 totalDetails: {
                     flexDirection: "row",
@@ -322,7 +323,7 @@ export default function ExpensesScreen() {
                     marginBottom: 0,
                 },
                 totalLabel: {
-                    color: whiteColor,
+                    color: theme.text,
                 },
                 totalInlineAmount: {
                     fontWeight: "700",
@@ -331,7 +332,7 @@ export default function ExpensesScreen() {
                 totalAmount: {
                     fontSize: 32,
                     fontWeight: "bold",
-                    color: whiteColor,
+                    color: theme.text,
                     lineHeight: 40,
                 },
                 emptyState: {
@@ -797,7 +798,7 @@ export default function ExpensesScreen() {
                                         style={[
                                             styles.frequencyLabel,
                                             expense.category === "business" && {
-                                                color: goldColor,
+                                                color: theme.specialLabel,
                                             },
                                         ]}
                                     >

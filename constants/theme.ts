@@ -11,12 +11,14 @@ export const blackColor = "#000";
 export const greenColor = "#4caf50";
 export const redColor = "#f44336";
 export const blueColor = "#0c86c5";
-export const goldColor = "#FAAF41";
+export const goldColor = "#da9022ff";
 
-export const greenAlphaColorTrans = "#133d2f75";
-export const redAlphaColorTrans = "#3d1b1b75";
-export const greenAlphaColor = "#133d2f";
-export const redAlphaColor = "#3d1b1b";
+export const greenLightColor = "#4caf5080";
+export const redLightColor = "#f4433680";
+export const greenDarkColor = "#4caf5050";
+export const redDarkColor = "#f4433650";
+export const goldDarkColor = "#a0600075";
+export const linkDarkColor = "#0a7ea490";
 
 export const almostWhiteColor = "#f5f5f5";
 export const lightGreyColor = "#ddd";
@@ -26,26 +28,29 @@ export const veryDarkGreyColor = "#333";
 export const almostBlackColor = "#2a2a2a";
 export const nearBlackColor = "#1a1a1a";
 export const charcoalColor = "#151718";
-export const onyxColor = "#11181C";
 export const lightTextColor = "#ecedee";
 export const slateColor = "#687076";
 export const silverColor = "#9ba1a6";
 
 export const Colors = {
     light: {
-        text: onyxColor,
+        text: charcoalColor,
         background: whiteColor,
         tint: linkColor,
         icon: slateColor,
-        tabIconDefault: slateColor,
-        tabIconSelected: linkColor,
 
-        statCardPositiveBackground: greenAlphaColorTrans,
-        statCardNegativeBackground: redAlphaColorTrans,
+        cardPositiveBackground: greenLightColor,
+        cardNegativeBackground: redLightColor,
+        statLabel: darkGreyColor,
 
-        // Add your expense screen colors
-        screenBackground: almostWhiteColor,
-        cardBackground: lightGreyColor,
+        specialLabel: goldColor,
+        selectedTab: whiteColor,
+
+        dailyTab: linkDarkColor,
+        monthlyTab: goldColor,
+        yearlyTab: greenLightColor,
+
+        cardBackground: lightTextColor,
         inputBackground: whiteColor,
         inputBorder: lightGreyColor,
         inputText: nearBlackColor,
@@ -60,14 +65,18 @@ export const Colors = {
         background: charcoalColor,
         tint: linkColor,
         icon: silverColor,
-        tabIconDefault: silverColor,
-        tabIconSelected: linkColor,
 
-        statCardPositiveBackground: greenAlphaColor,
-        statCardNegativeBackground: redAlphaColor,
+        cardPositiveBackground: greenDarkColor,
+        cardNegativeBackground: redDarkColor,
+        statLabel: silverColor,
 
-        // Add your expense screen colors
-        screenBackground: nearBlackColor,
+        dailyTab: linkDarkColor,
+        monthlyTab: goldDarkColor,
+        yearlyTab: greenDarkColor,
+
+        specialLabel: goldColor,
+        selectedTab: almostBlackColor,
+
         cardBackground: almostBlackColor,
         inputBackground: almostBlackColor,
         inputBorder: veryDarkGreyColor,
