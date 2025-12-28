@@ -10,10 +10,13 @@ export const whiteColor = "#fff";
 export const blackColor = "#000";
 export const greenColor = "#4caf50";
 export const redColor = "#f44336";
-export const greenAlphaColor = "#133d2f";
-export const redAlphaColor = "#3d1b1b";
 export const blueColor = "#0c86c5";
 export const goldColor = "#FAAF41";
+
+export const greenAlphaColorTrans = "#133d2f75";
+export const redAlphaColorTrans = "#3d1b1b75";
+export const greenAlphaColor = "#133d2f";
+export const redAlphaColor = "#3d1b1b";
 
 export const almostWhiteColor = "#f5f5f5";
 export const lightGreyColor = "#ddd";
@@ -37,13 +40,16 @@ export const Colors = {
         tabIconDefault: slateColor,
         tabIconSelected: linkColor,
 
+        statCardPositiveBackground: greenAlphaColorTrans,
+        statCardNegativeBackground: redAlphaColorTrans,
+
         // Add your expense screen colors
         screenBackground: almostWhiteColor,
-        cardBackground: whiteColor,
+        cardBackground: lightGreyColor,
         inputBackground: whiteColor,
         inputBorder: lightGreyColor,
-        inputText: blackColor,
-        label: blackColor,
+        inputText: nearBlackColor,
+        label: nearBlackColor,
         placeholder: mediumGreyColor,
         emptyStateText: darkGreyColor,
         borderColor: lightGreyColor,
@@ -56,6 +62,9 @@ export const Colors = {
         icon: silverColor,
         tabIconDefault: silverColor,
         tabIconSelected: linkColor,
+
+        statCardPositiveBackground: greenAlphaColor,
+        statCardNegativeBackground: redAlphaColor,
 
         // Add your expense screen colors
         screenBackground: nearBlackColor,

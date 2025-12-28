@@ -8,13 +8,16 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
 import { AuthProvider } from "@/hooks/use-auth";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import {
+    ThemeProvider as CustomThemeProvider,
+    useColorScheme,
+} from "@/hooks/use-color-scheme";
 
 export const unstable_settings = {
     anchor: "(tabs)",
 };
 
-export default function RootLayout() {
+function RootContent() {
     const colorScheme = useColorScheme();
 
     return (
@@ -35,5 +38,13 @@ export default function RootLayout() {
                 <StatusBar style="auto" />
             </AuthProvider>
         </ThemeProvider>
+    );
+}
+
+export default function RootLayout() {
+    return (
+        <CustomThemeProvider>
+            <RootContent />
+        </CustomThemeProvider>
     );
 }

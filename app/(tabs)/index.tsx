@@ -2,10 +2,8 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import {
     Colors,
-    greenAlphaColor,
     greenColor,
     mediumGreyColor,
-    redAlphaColor,
     redColor,
     silverColor,
     whiteColor,
@@ -108,10 +106,10 @@ export default function HomeScreen() {
                     backgroundColor: theme.cardBackground,
                 },
                 statCardPositive: {
-                    backgroundColor: greenAlphaColor,
+                    backgroundColor: theme.statCardPositiveBackground,
                 },
                 statCardNegative: {
-                    backgroundColor: redAlphaColor,
+                    backgroundColor: theme.statCardNegativeBackground,
                 },
                 statWrapper: {
                     flexDirection: "row",

@@ -23,11 +23,13 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
+import { useThemePreference } from "@/hooks/use-theme-preference";
 import { supabase } from "@/utils/supabase";
 
 export default function SettingsScreen() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+    const { preference, updatePreference } = useThemePreference();
     const { user, refreshUser, signOut } = useAuth();
     const { symbol: currencySymbol, code: currencyCode } = useCurrency();
 
@@ -154,6 +156,29 @@ export default function SettingsScreen() {
                     fontWeight: "600",
                     fontSize: 16,
                 },
+                themeButton: {
+                    flex: 1,
+                    paddingVertical: 10,
+                    paddingHorizontal: 12,
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    borderColor: theme.inputBorder,
+                    backgroundColor: theme.inputBackground,
+                    alignItems: "center",
+                },
+                themeButtonActive: {
+                    backgroundColor: theme.tint,
+                    borderColor: theme.tint,
+                },
+                themeButtonText: {
+                    fontSize: 14,
+                    fontWeight: "500",
+                    color: theme.text,
+                },
+                themeButtonTextActive: {
+                    color: whiteColor,
+                    fontWeight: "600",
+                },
             }),
         [theme]
     );
@@ -220,9 +245,68 @@ export default function SettingsScreen() {
                         <ThemedText style={styles.settingLabel}>
                             Theme
                         </ThemedText>
-                        <ThemedText style={styles.settingValue}>
-                            {colorScheme === "dark" ? "Dark" : "Light"}
-                        </ThemedText>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                gap: 8,
+                                marginTop: 8,
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={[
+                                    styles.themeButton,
+                                    preference === "light" &&
+                                        styles.themeButtonActive,
+                                ]}
+                                onPress={() => updatePreference("light")}
+                            >
+                                <ThemedText
+                                    style={[
+                                        styles.themeButtonText,
+                                        preference === "light" &&
+                                            styles.themeButtonTextActive,
+                                    ]}
+                                >
+                                    Light
+                                </ThemedText>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[
+                                    styles.themeButton,
+                                    preference === "dark" &&
+                                        styles.themeButtonActive,
+                                ]}
+                                onPress={() => updatePreference("dark")}
+                            >
+                                <ThemedText
+                                    style={[
+                                        styles.themeButtonText,
+                                        preference === "dark" &&
+                                            styles.themeButtonTextActive,
+                                    ]}
+                                >
+                                    Dark
+                                </ThemedText>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[
+                                    styles.themeButton,
+                                    preference === "system" &&
+                                        styles.themeButtonActive,
+                                ]}
+                                onPress={() => updatePreference("system")}
+                            >
+                                <ThemedText
+                                    style={[
+                                        styles.themeButtonText,
+                                        preference === "system" &&
+                                            styles.themeButtonTextActive,
+                                    ]}
+                                >
+                                    System
+                                </ThemedText>
+                            </TouchableOpacity>
+                        </View>
                     </ThemedView>
                 </ThemedView>
 
