@@ -70,7 +70,7 @@ export default function ExpensesScreen() {
 
     const baseRadius = { borderRadius: 8 };
 
-    const baseborder = { borderWidth: 1 };
+    const baseBorder = { borderWidth: 1 };
 
     const baseCenter = {
         alignItems: "center" as const,
@@ -100,7 +100,7 @@ export default function ExpensesScreen() {
 
     const baseInput = {
         ...baseRadius,
-        ...baseborder,
+        ...baseBorder,
         borderColor: theme.inputBorder,
         backgroundColor: theme.inputBackground,
         outlineWidth: 0,
@@ -283,7 +283,7 @@ export default function ExpensesScreen() {
                     gap: 16,
                 },
                 expenseIcon: {
-                    ...baseborder,
+                    ...baseBorder,
                     borderRadius: 6,
                     padding: 8,
                 },

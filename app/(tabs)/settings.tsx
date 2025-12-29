@@ -77,7 +77,7 @@ export default function SettingsScreen() {
 
     const baseRadius = { borderRadius: 8 };
 
-    const baseborder = { borderWidth: 1 };
+    const baseBorder = { borderWidth: 1 };
 
     const baseCenter = {
         alignItems: "center" as const,
@@ -93,7 +93,7 @@ export default function SettingsScreen() {
 
     const baseInput = {
         ...baseRadius,
-        ...baseborder,
+        ...baseBorder,
         borderColor: theme.inputBorder,
         backgroundColor: theme.inputBackground,
         outlineWidth: 0,
@@ -185,7 +185,7 @@ export default function SettingsScreen() {
                     marginTop: 24,
                 },
                 logOutButton: {
-                    ...baseborder,
+                    ...baseBorder,
                     ...baseButton,
                     borderColor: redColor,
                 },

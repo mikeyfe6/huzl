@@ -32,69 +32,92 @@ export default function HomeScreen() {
     const [error, setError] = useState<string | null>(null);
     const [expenses, setExpenses] = useState<any[]>([]);
 
+    const baseGap = { gap: 12 };
+
+    const baseSpace = { gap: 8 };
+
+    const baseWeight = { fontWeight: "600" as const };
+
+    const baseRadius = { borderRadius: 8 };
+
+    const baseBorder = { borderWidth: 1 };
+
+    const baseCenter = {
+        alignItems: "center" as const,
+        justifyContent: "center" as const,
+    };
+
+    const baseInput = {
+        ...baseRadius,
+        ...baseBorder,
+        borderColor: theme.inputBorder,
+        backgroundColor: theme.inputBackground,
+        outlineWidth: 0,
+        minHeight: 44,
+    };
+
+    const baseSelect = {
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+    };
+
+    const baseButton = {
+        ...baseRadius,
+        ...baseCenter,
+        paddingVertical: 12,
+    };
+
     const styles = useMemo(
         () =>
             StyleSheet.create({
                 container: {
+                    ...baseSpace,
+                    ...baseCenter,
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 8,
                     padding: 16,
                 },
                 text: {
                     marginTop: 8,
                 },
-                inputSection: {
+                fieldset: {
+                    ...baseGap,
                     width: "100%",
                     marginTop: 16,
-                    gap: 12,
                     maxWidth: Platform.select({
                         ios: undefined,
                         android: undefined,
-                        default: 600,
+                        default: 500,
                     }),
                 },
                 input: {
+                    ...baseInput,
+                    ...baseSelect,
                     width: "100%",
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    fontSize: 16,
-                    borderColor: theme.inputBorder,
                     color: theme.inputText,
-                    backgroundColor: theme.inputBackground,
                 },
                 signInButton: {
+                    ...baseButton,
                     backgroundColor: greenColor,
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: "center",
                 },
                 signInText: {
+                    ...baseWeight,
                     color: whiteColor,
-                    fontWeight: "600",
-                    fontSize: 16,
                 },
                 signUpButton: {
-                    borderWidth: 1,
+                    ...baseButton,
+                    ...baseWeight,
+                    ...baseBorder,
                     borderColor: mediumGreyColor,
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    minWidth: 150,
-                    alignItems: "center",
                 },
                 signUpText: {
-                    fontWeight: "600",
-                    fontSize: 16,
+                    ...baseWeight,
                 },
                 errorStyle: {
                     color: "red",
                     textAlign: "center",
                 },
                 statsContainer: {
-                    gap: 12,
+                    ...baseGap,
                     width: "100%",
                     maxWidth: 400,
                     marginTop: 24,
@@ -111,9 +134,8 @@ export default function HomeScreen() {
                     backgroundColor: theme.cardNegativeBackground,
                 },
                 statWrapper: {
+                    ...baseCenter,
                     flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
                     gap: 4,
                 },
                 statLabel: {
@@ -228,7 +250,7 @@ export default function HomeScreen() {
             <ThemedView style={styles.container}>
                 <ThemedText type="title">Welcome at Huzl</ThemedText>
                 <ThemedText style={styles.text}>Sign in to continue</ThemedText>
-                <View style={styles.inputSection}>
+                <View style={styles.fieldset}>
                     <TextInput
                         placeholder="you@example.com"
                         autoCapitalize="none"

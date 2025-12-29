@@ -106,11 +106,13 @@ export default function BudgetsScreen() {
 
     const baseGap = { gap: 12 };
 
+    const baseSpace = { gap: 8 };
+
     const baseWeight = { fontWeight: "600" as const };
 
     const baseRadius = { borderRadius: 8 };
 
-    const baseborder = { borderWidth: 1 };
+    const baseBorder = { borderWidth: 1 };
 
     const baseCenter = {
         alignItems: "center" as const,
@@ -133,7 +135,7 @@ export default function BudgetsScreen() {
 
     const baseInput = {
         ...baseRadius,
-        ...baseborder,
+        ...baseBorder,
         borderColor: theme.inputBorder,
         backgroundColor: theme.inputBackground,
         outlineWidth: 0,
@@ -165,7 +167,7 @@ export default function BudgetsScreen() {
 
     const baseCard = {
         ...baseInput,
-        ...baseGap,
+        ...baseSpace,
         padding: 12,
         backgroundColor: theme.cardBackground,
         borderColor: theme.borderColor,
@@ -226,7 +228,7 @@ export default function BudgetsScreen() {
                     flex: 1,
                 },
                 budgetIcon: {
-                    ...baseborder,
+                    ...baseBorder,
                     borderRadius: 6,
                     padding: 8,
                 },
@@ -272,7 +274,13 @@ export default function BudgetsScreen() {
                     alignItems: "center",
                 },
                 expenseInfo: {
+                    ...baseSpace,
                     flex: 1,
+                },
+                expenseLabel: {
+                    fontSize: 14,
+                    opacity: 0.7,
+                    color: theme.label,
                 },
                 emptyState: {
                     ...baseCenter,
@@ -552,7 +560,7 @@ export default function BudgetsScreen() {
                         {selectedBudget.name}
                     </ThemedText>
                     <ThemedText style={styles.expenseRemaining}>
-                        Remaining: {currencySymbol}{" "}
+                        Remaining ({currencySymbol}):{" "}
                         <ThemedText
                             style={{
                                 color:
@@ -610,7 +618,7 @@ export default function BudgetsScreen() {
                                     <ThemedText type="defaultSemiBold">
                                         {expense.name}
                                     </ThemedText>
-                                    <ThemedText>
+                                    <ThemedText style={styles.expenseLabel}>
                                         {currencySymbol}{" "}
                                         {expense.amount.toFixed(2)}
                                     </ThemedText>
