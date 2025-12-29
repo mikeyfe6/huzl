@@ -21,9 +21,9 @@ import {
     blueColor,
     Colors,
     greenColor,
-    lightGreyColor,
     mediumGreyColor,
     redColor,
+    slateColor,
     whiteColor,
 } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
@@ -72,6 +72,8 @@ export default function ExpensesScreen() {
 
     const baseRadius = { borderRadius: 8 };
 
+    const baseborder = { borderWidth: 1 };
+
     const baseCenter = {
         alignItems: "center" as const,
         justifyContent: "center" as const,
@@ -100,7 +102,7 @@ export default function ExpensesScreen() {
 
     const baseInput = {
         ...baseRadius,
-        borderWidth: 1,
+        ...baseborder,
         borderColor: theme.inputBorder,
         backgroundColor: theme.inputBackground,
         outlineWidth: 0,
@@ -283,7 +285,7 @@ export default function ExpensesScreen() {
                     gap: 16,
                 },
                 expenseIcon: {
-                    borderWidth: 1,
+                    ...baseborder,
                     borderRadius: 6,
                     padding: 8,
                 },
@@ -297,7 +299,7 @@ export default function ExpensesScreen() {
                 },
                 expensePeriod: {
                     fontSize: 13,
-                    color: lightGreyColor,
+                    color: slateColor,
                 },
                 expenseYearly: {
                     ...baseWeight,

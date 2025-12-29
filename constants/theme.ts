@@ -11,14 +11,15 @@ export const blackColor = "#000";
 export const greenColor = "#4caf50";
 export const redColor = "#f44336";
 export const blueColor = "#0c86c5";
-export const goldColor = "#da902290";
-export const copperGoldColor = "#A0772A";
+export const copperColor = "#aa6600";
+export const goldColor = "#d1982eff";
 
 export const greenLightColor = "#4caf5080";
 export const redLightColor = "#f4433680";
 export const greenDarkColor = "#4caf5050";
 export const redDarkColor = "#f4433650";
-export const goldDarkColor = "#a0600075";
+export const copperDarkColor = "#a0600075";
+export const goldDarkColor = "#da902290";
 export const linkDarkColor = "#0a7ea490";
 
 export const almostWhiteColor = "#f5f5f5";
@@ -44,11 +45,11 @@ export const Colors = {
         cardNegativeBackground: redLightColor,
         statLabel: darkGreyColor,
 
-        specialLabel: copperGoldColor,
+        specialLabel: copperColor,
         selectedTab: whiteColor,
 
         dailyTab: linkDarkColor,
-        monthlyTab: goldColor,
+        monthlyTab: goldDarkColor,
         yearlyTab: greenLightColor,
 
         cardBackground: lightTextColor,
@@ -72,7 +73,7 @@ export const Colors = {
         statLabel: silverColor,
 
         dailyTab: linkDarkColor,
-        monthlyTab: goldDarkColor,
+        monthlyTab: copperDarkColor,
         yearlyTab: greenDarkColor,
 
         specialLabel: goldColor,

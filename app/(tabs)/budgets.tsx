@@ -107,84 +107,140 @@ export default function BudgetsScreen() {
         fetchBudgets();
     }, [user]);
 
+    const baseGap = { gap: 12 };
+
+    const baseWeight = { fontWeight: "600" as const };
+
+    const baseRadius = { borderRadius: 8 };
+
+    const baseborder = { borderWidth: 1 };
+
+    const baseCenter = {
+        alignItems: "center" as const,
+        justifyContent: "center" as const,
+    };
+
+    const baseMain = {
+        ...baseGap,
+        paddingHorizontal: 16,
+        paddingTop: 24,
+        paddingBottom: 16,
+    };
+
+    const baseLabel = {
+        ...baseWeight,
+        fontSize: 14,
+        marginTop: 8,
+        color: theme.label,
+    };
+
+    const baseInput = {
+        ...baseRadius,
+        ...baseborder,
+        borderColor: theme.inputBorder,
+        backgroundColor: theme.inputBackground,
+        outlineWidth: 0,
+        minHeight: 44,
+    };
+
+    const baseSelect = {
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+    };
+
+    const baseButton = {
+        ...baseRadius,
+        ...baseCenter,
+        paddingVertical: 12,
+        flex: 1,
+    };
+
+    const baseButtonText = {
+        ...baseWeight,
+        color: whiteColor,
+    };
+
+    const baseList = {
+        ...baseGap,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        paddingBottom: 20,
+    };
+
+    const baseCard = {
+        ...baseInput,
+        ...baseGap,
+        padding: 12,
+        backgroundColor: theme.cardBackground,
+        borderColor: theme.borderColor,
+    };
+
     const styles = useMemo(
         () =>
             StyleSheet.create({
                 container: {
-                    flex: 1,
-                    paddingHorizontal: 0,
+                    paddingBottom: 24,
                 },
                 inputSection: {
-                    padding: 16,
-                    paddingTop: 24,
-                    gap: 12,
+                    ...baseMain,
                 },
                 heading: {
                     marginBottom: 16,
                 },
                 label: {
-                    fontSize: 14,
-                    fontWeight: "600",
-                    marginTop: 8,
-                    color: theme.label,
+                    ...baseLabel,
                 },
                 input: {
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    fontSize: 16,
+                    ...baseInput,
+                    ...baseSelect,
                     color: theme.inputText,
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.inputBackground,
                 },
                 createButton: {
+                    ...baseButton,
                     backgroundColor: blueColor,
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: "center",
                     marginTop: 8,
                 },
                 addButton: {
+                    ...baseButton,
                     backgroundColor: greenColor,
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: "center",
                     marginTop: 8,
                 },
                 buttonText: {
-                    color: whiteColor,
-                    fontWeight: "600",
-                    fontSize: 16,
+                    ...baseButtonText,
                 },
-                budgetListSection: {
-                    paddingHorizontal: 16,
-                    paddingVertical: 24,
-                    gap: 10,
+                budgetList: {
+                    ...baseList,
                 },
-                budgetListTitle: {
+                budgetHeader: {
                     marginBottom: 8,
                 },
                 budgetCard: {
-                    padding: 12,
-                    borderRadius: 8,
-                    borderWidth: 2,
-                    gap: 8,
-                    backgroundColor: theme.cardBackground,
-                    borderColor: theme.borderColor,
+                    ...baseCard,
                 },
-                budgetHeader: {
+                budgetSelected: {
+                    borderColor: blueColor,
+                    backgroundColor: theme.cardBackground,
+                },
+                budgetTitle: {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
+                },
+                budgetInfo: {
+                    flex: 1,
+                },
+                budgetIcon: {
+                    ...baseborder,
+                    borderRadius: 6,
+                    padding: 8,
                 },
                 budgetAmount: {
                     fontSize: 14,
                     opacity: 0.8,
                     color: theme.label,
                 },
-                budgetTotalInline: {
-                    fontWeight: "600",
+                budgetInline: {
+                    ...baseWeight,
                 },
                 progressBar: {
                     height: 8,
@@ -198,46 +254,33 @@ export default function BudgetsScreen() {
                     backgroundColor: blueColor,
                 },
                 expenseSection: {
-                    paddingHorizontal: 16,
-                    paddingVertical: 16,
-                    gap: 12,
+                    ...baseList,
                 },
-                remainingText: {
+                expenseHeader: {
+                    marginBottom: 4,
+                },
+                expenseRemaining: {
                     fontSize: 16,
                     fontWeight: "500",
-                    marginBottom: 8,
+                    marginBottom: 12,
                     color: theme.label,
                 },
+                expenseList: {
+                    marginTop: 20,
+                    marginBottom: 10,
+                },
                 expenseItem: {
+                    ...baseCard,
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: 12,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    marginBottom: 8,
-                    backgroundColor: theme.cardBackground,
-                    borderColor: theme.borderColor,
                 },
                 expenseInfo: {
                     flex: 1,
                 },
-                expenseTitle: {
-                    marginBottom: 4,
-                },
-                expenseIcon: {
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    padding: 8,
-                },
-                deleteButton: {
-                    color: redColor,
-                    fontWeight: "600",
-                },
                 emptyState: {
+                    ...baseCenter,
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
                     paddingVertical: 60,
                 },
                 emptyStateText: {
@@ -245,10 +288,6 @@ export default function BudgetsScreen() {
                     opacity: 0.6,
                     textAlign: "center",
                     color: theme.emptyStateText,
-                },
-                selectedCard: {
-                    borderColor: blueColor,
-                    backgroundColor: theme.cardBackground,
                 },
             }),
         [theme, colorScheme]
@@ -402,8 +441,7 @@ export default function BudgetsScreen() {
         : 0;
 
     return (
-        <ScrollView style={styles.container}>
-            {/* Create Budget Section */}
+        <ScrollView contentContainerStyle={styles.container}>
             <ThemedView style={styles.inputSection}>
                 <ThemedText type="title" style={styles.heading}>
                     Budgets
@@ -441,10 +479,9 @@ export default function BudgetsScreen() {
                 </TouchableOpacity>
             </ThemedView>
 
-            {/* Budget List */}
             {budgets.length > 0 && (
-                <ThemedView style={styles.budgetListSection}>
-                    <ThemedText type="subtitle" style={styles.budgetListTitle}>
+                <ThemedView style={styles.budgetList}>
+                    <ThemedText type="subtitle" style={styles.budgetHeader}>
                         Your Budgets
                     </ThemedText>
                     {budgets.map((budget) => (
@@ -453,12 +490,12 @@ export default function BudgetsScreen() {
                             style={[
                                 styles.budgetCard,
                                 selectedBudgetId === budget.id &&
-                                    styles.selectedCard,
+                                    styles.budgetSelected,
                             ]}
                         >
-                            <View style={styles.budgetHeader}>
+                            <View style={styles.budgetTitle}>
                                 <TouchableOpacity
-                                    style={{ flex: 1 }}
+                                    style={styles.budgetInfo}
                                     onPress={() =>
                                         setSelectedBudgetId(budget.id)
                                     }
@@ -472,7 +509,7 @@ export default function BudgetsScreen() {
                                         handleDeleteBudget(budget.id)
                                     }
                                     style={[
-                                        styles.expenseIcon,
+                                        styles.budgetIcon,
                                         {
                                             borderColor: redColor,
                                         },
@@ -490,7 +527,7 @@ export default function BudgetsScreen() {
                                 <ThemedText
                                     style={[
                                         styles.budgetAmount,
-                                        styles.budgetTotalInline,
+                                        styles.budgetInline,
                                     ]}
                                 >
                                     {currencySymbol} {budget.total.toFixed(2)}
@@ -515,13 +552,12 @@ export default function BudgetsScreen() {
                 </ThemedView>
             )}
 
-            {/* Expense Input Section */}
             {selectedBudget && (
                 <ThemedView style={styles.expenseSection}>
-                    <ThemedText type="subtitle" style={styles.expenseTitle}>
+                    <ThemedText type="subtitle" style={styles.expenseHeader}>
                         {selectedBudget.name}
                     </ThemedText>
-                    <ThemedText style={styles.remainingText}>
+                    <ThemedText style={styles.expenseRemaining}>
                         Remaining: {currencySymbol}{" "}
                         <ThemedText
                             style={{
@@ -564,23 +600,15 @@ export default function BudgetsScreen() {
                         </ThemedText>
                     </TouchableOpacity>
 
-                    {/* Expenses List */}
-                    <ThemedText
-                        type="subtitle"
-                        style={{ marginTop: 20, marginBottom: 10 }}
-                    >
+                    <ThemedText type="subtitle" style={styles.expenseList}>
                         Expenses
                     </ThemedText>
                     {selectedBudget.expenses.length === 0 ? (
-                        <ThemedText
-                            style={{
-                                textAlign: "center",
-                                marginVertical: 20,
-                                opacity: 0.6,
-                            }}
-                        >
-                            No expenses yet
-                        </ThemedText>
+                        <ThemedView style={styles.emptyState}>
+                            <ThemedText style={styles.emptyStateText}>
+                                No expenses yet
+                            </ThemedText>
+                        </ThemedView>
                     ) : (
                         selectedBudget.expenses.map((expense) => (
                             <View key={expense.id} style={styles.expenseItem}>
@@ -598,7 +626,7 @@ export default function BudgetsScreen() {
                                         handleDeleteExpense(expense.id)
                                     }
                                     style={[
-                                        styles.expenseIcon,
+                                        styles.budgetIcon,
                                         {
                                             borderColor: redColor,
                                         },
