@@ -21,9 +21,18 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
+import { useRouter } from "expo-router";
 
 export default function BudgetsScreen() {
     const { user } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!user) {
+            router.replace("/");
+        }
+    }, [user]);
+
     const { symbol: currencySymbol } = useCurrency();
     const [budgetName, setBudgetName] = useState("");
     const [totalAmount, setTotalAmount] = useState("");

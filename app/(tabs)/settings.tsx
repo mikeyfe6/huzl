@@ -1,4 +1,3 @@
-import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
     Alert,
@@ -25,12 +24,21 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useThemePreference } from "@/hooks/use-theme-preference";
 import { supabase } from "@/utils/supabase";
+import { useRouter } from "expo-router";
 
 export default function SettingsScreen() {
+    const { user, refreshUser, signOut } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!user) {
+            router.replace("/");
+        }
+    }, [user]);
+
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { preference, updatePreference } = useThemePreference();
-    const { user, refreshUser, signOut } = useAuth();
     const { symbol: currencySymbol, code: currencyCode } = useCurrency();
 
     const [displayName, setDisplayName] = useState("");

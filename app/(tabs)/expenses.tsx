@@ -30,6 +30,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
+import { useRouter } from "expo-router";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business" | "debts";
@@ -44,6 +45,15 @@ interface ExpenseItem {
 }
 
 export default function ExpensesScreen() {
+    const { user } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!user) {
+            router.replace("/");
+        }
+    }, [user]);
+
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
     const [frequency, setFrequency] = useState<Frequency>("monthly");
@@ -56,7 +66,6 @@ export default function ExpensesScreen() {
     const [nameFocused, setNameFocused] = useState(false);
     const [amountFocused, setAmountFocused] = useState(false);
 
-    const { user } = useAuth();
     const { symbol: currencySymbol } = useCurrency();
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
