@@ -18,10 +18,10 @@ import {
     SortOption,
 } from "@/components/ui/sort-modal";
 import {
-    blackColor,
     blueColor,
     Colors,
     greenColor,
+    lightGreyColor,
     mediumGreyColor,
     redColor,
     whiteColor,
@@ -53,6 +53,8 @@ export default function ExpensesScreen() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption>("default");
     const [sortModalVisible, setSortModalVisible] = useState(false);
+    const [nameFocused, setNameFocused] = useState(false);
+    const [amountFocused, setAmountFocused] = useState(false);
 
     const { user } = useAuth();
     const { symbol: currencySymbol } = useCurrency();
@@ -62,59 +64,112 @@ export default function ExpensesScreen() {
     const nameInputRef = useRef<TextInput>(null);
     const scrollViewRef = useRef<ScrollView>(null);
 
+    // styles
+
+    const baseGap = { gap: 12 };
+
+    const baseSpace = { gap: 8 };
+
+    const baseRadius = { borderRadius: 8 };
+
+    const baseCenter = {
+        alignItems: "center" as const,
+        justifyContent: "center" as const,
+    };
+
+    const baseWeight = { fontWeight: "600" as const };
+
+    const baseButton = {
+        ...baseRadius,
+        ...baseCenter,
+        paddingVertical: 12,
+        flex: 1,
+    };
+
+    const baseButtonText = {
+        ...baseWeight,
+        color: whiteColor,
+    };
+
+    const baseLabel = {
+        ...baseWeight,
+        fontSize: 14,
+        marginTop: 8,
+        color: theme.label,
+    };
+
+    const baseInput = {
+        ...baseRadius,
+        borderWidth: 1,
+        borderColor: theme.inputBorder,
+        backgroundColor: theme.inputBackground,
+        outlineWidth: 0,
+        minHeight: 44,
+    };
+
+    const baseSelect = {
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+    };
+
+    const baseList = {
+        ...baseGap,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        paddingBottom: 20,
+    };
+
+    const baseCard = {
+        ...baseInput,
+        ...baseGap,
+        padding: 12,
+        backgroundColor: theme.cardBackground,
+        borderColor: theme.borderColor,
+    };
+
+    const baseMain = {
+        ...baseGap,
+        paddingHorizontal: 16,
+        paddingTop: 24,
+        paddingBottom: 16,
+    };
+
     const styles = useMemo(
         () =>
             StyleSheet.create({
                 container: {
-                    flex: 1,
-                    paddingHorizontal: 0,
+                    paddingBottom: 24,
                 },
                 inputSection: {
-                    padding: 16,
-                    paddingTop: 24,
-                    gap: 12,
+                    ...baseMain,
                 },
                 heading: {
                     marginBottom: 16,
                 },
                 label: {
-                    fontSize: 14,
-                    fontWeight: "600",
-                    marginTop: 8,
-                    color: theme.label,
+                    ...baseLabel,
+                },
+                input: {
+                    ...baseInput,
+                    ...baseSelect,
+                    color: theme.inputText,
                 },
                 categoryGroup: {
+                    ...baseGap,
                     flexDirection: "row",
-                    gap: 12,
-                    marginTop: 4,
                 },
                 categoryOption: {
+                    ...baseInput,
+                    ...baseCenter,
                     flex: 1,
-                    borderWidth: 1.5,
-                    borderRadius: 8,
-                    paddingVertical: 10,
-                    alignItems: "center",
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.inputBackground,
                 },
-                categoryOptionActive: {
+                categoryActive: {
                     borderColor: blueColor,
                     backgroundColor: theme.selectedTab,
                 },
-                input: {
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    fontSize: 16,
-                    color: theme.inputText,
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.inputBackground,
-                },
-                placeholderText: {
-                    color: theme.placeholder,
-                },
-                pickerContainer: {
+                select: {
+                    ...baseInput,
+                    justifyContent: "center",
                     overflow: Platform.select({
                         ios: "hidden",
                         android: "hidden",
@@ -125,31 +180,21 @@ export default function ExpensesScreen() {
                         android: undefined,
                         default: undefined,
                     }),
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    marginTop: 4,
-                    justifyContent: "center",
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.inputBackground,
                 },
-                pickerInput: {
+                selectInput: {
+                    ...baseInput,
+                    borderWidth: 0,
                     fontFamily: "System",
-                    borderColor: theme.inputBorder,
+                    color: theme.inputText,
                     fontSize: Platform.select({
                         ios: 16,
                         android: 16,
                         default: 16,
                     }),
-                    borderRadius: 8,
-                    color: Platform.select({
-                        ios: whiteColor,
-                        android: whiteColor,
-                        default: blackColor,
-                    }),
                     height: Platform.select({
                         ios: 216,
-                        android: 50,
-                        default: 50,
+                        android: 44,
+                        default: 44,
                     }),
                     paddingHorizontal: Platform.select({
                         ios: 0,
@@ -162,85 +207,65 @@ export default function ExpensesScreen() {
                         default: 10,
                     }),
                 },
-                pickerOption: {
+                selectOption: {
+                    color: theme.inputText,
                     fontSize: Platform.select({
                         ios: 16,
                         android: 16,
                         default: 16,
                     }),
-                    color: theme.inputText,
                 },
-                pickerIcon: {
+                selectIcon: {
                     position: "absolute",
                     right: 12,
                     top: "50%",
                     marginTop: -9,
                     pointerEvents: "none",
                 },
-                inputButtons: {
+                buttons: {
+                    ...baseGap,
                     flexDirection: "row",
-                    gap: 12,
                 },
-                inputButton: {
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: "center",
+                button: {
+                    ...baseButton,
                     marginTop: 8,
-                    flex: 1,
                 },
                 buttonText: {
-                    color: whiteColor,
-                    fontWeight: "600",
-                    fontSize: 16,
+                    ...baseButtonText,
                 },
                 expenseList: {
-                    paddingHorizontal: 16,
-                    paddingVertical: 12,
-                    gap: 10,
-                },
-                expenseTitle: {
-                    marginBottom: 12,
-                },
-                expenseAmounts: {
-                    flexDirection: "row",
-                    gap: 8,
-                    alignItems: "baseline",
-                },
-                sortHeader: {
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 12,
-                    gap: 8,
-                },
-                sortTrigger: {
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 8,
-                    paddingHorizontal: 12,
-                    paddingVertical: 8,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.cardBackground,
-                },
-                sortTriggerText: {
-                    color: theme.label,
-                    fontWeight: "600",
-                },
-                expenseCard: {
-                    padding: 12,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    marginBottom: 8,
-                    gap: 12,
-                    backgroundColor: theme.cardBackground,
-                    borderColor: theme.borderColor,
-                },
-                expenseCardInactive: {
-                    opacity: 0.5,
+                    ...baseList,
                 },
                 expenseHeader: {
+                    ...baseCenter,
+                    ...baseSpace,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginBottom: 12,
+                },
+                sortTrigger: {
+                    ...baseInput,
+                    ...baseCenter,
+                    ...baseSelect,
+                    ...baseSpace,
+                    flexDirection: "row",
+                },
+                sortTriggerText: {
+                    ...baseWeight,
+                    color: theme.label,
+                },
+                expenseAmounts: {
+                    ...baseCenter,
+                    ...baseSpace,
+                    flexDirection: "row",
+                },
+                expenseCard: {
+                    ...baseCard,
+                },
+                expenseInactive: {
+                    opacity: 0.5,
+                },
+                expenseTitle: {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -248,7 +273,7 @@ export default function ExpensesScreen() {
                 expenseInfo: {
                     flex: 1,
                 },
-                frequencyLabel: {
+                expenseLabel: {
                     fontSize: 13,
                     opacity: 0.7,
                     marginTop: 4,
@@ -262,15 +287,7 @@ export default function ExpensesScreen() {
                     borderRadius: 6,
                     padding: 8,
                 },
-                editButton: {
-                    color: blueColor,
-                    fontWeight: "600",
-                },
-                deleteButton: {
-                    color: redColor,
-                    fontWeight: "600",
-                },
-                yearlyTotalBox: {
+                expenseTotal: {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -278,56 +295,53 @@ export default function ExpensesScreen() {
                     borderTopWidth: 1,
                     borderTopColor: theme.dividerColor,
                 },
-                yearlyLabel: {
+                expensePeriod: {
                     fontSize: 13,
-                    fontWeight: "500",
+                    color: lightGreyColor,
                 },
-                yearlyAmount: {
+                expenseYearly: {
+                    ...baseWeight,
                     fontSize: 14,
-                    fontWeight: "600",
                     color: blueColor,
                 },
-                monthlyAmount: {
+                expenseMonthly: {
+                    ...baseWeight,
                     fontSize: 14,
-                    fontWeight: "600",
                     color: mediumGreyColor,
                 },
                 totalSection: {
+                    ...baseSpace,
                     paddingHorizontal: 16,
                     paddingVertical: 20,
                     marginHorizontal: 16,
                     marginTop: 24,
                     marginBottom: 16,
                     borderRadius: 12,
-                    gap: 8,
                 },
-                dailyTab: {
-                    backgroundColor: theme.dailyTab,
+                totalYear: {
+                    backgroundColor: theme.yearlyTab,
                 },
-                monthlyTab: {
+                totalMonth: {
                     backgroundColor: theme.monthlyTab,
                 },
-                yearlyTab: {
-                    backgroundColor: theme.yearlyTab,
+                totalDay: {
+                    backgroundColor: theme.dailyTab,
                 },
                 totalDetails: {
                     flexDirection: "row",
-                    gap: 12,
+                    gap: 16,
                     paddingHorizontal: 16,
                     marginBottom: 16,
+                },
+                totalInline: {
+                    fontWeight: "700",
+                    paddingLeft: 8,
                 },
                 totalPeriod: {
                     flex: 1,
                     marginHorizontal: 0,
                     marginTop: 0,
                     marginBottom: 0,
-                },
-                totalLabel: {
-                    color: theme.text,
-                },
-                totalInlineAmount: {
-                    fontWeight: "700",
-                    paddingLeft: 8,
                 },
                 totalAmount: {
                     fontSize: 32,
@@ -336,9 +350,8 @@ export default function ExpensesScreen() {
                     lineHeight: 40,
                 },
                 emptyState: {
+                    ...baseCenter,
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
                     paddingVertical: 60,
                 },
                 emptyStateText: {
@@ -623,8 +636,7 @@ export default function ExpensesScreen() {
     return (
         <ScrollView
             ref={scrollViewRef}
-            style={styles.container}
-            contentContainerStyle={{ paddingBottom: 24 }}
+            contentContainerStyle={styles.container}
         >
             <ThemedView style={styles.inputSection}>
                 <ThemedText type="title" style={styles.heading}>
@@ -634,23 +646,35 @@ export default function ExpensesScreen() {
                 <ThemedText style={styles.label}>Item Name</ThemedText>
                 <TextInput
                     ref={nameInputRef}
-                    style={styles.input}
+                    style={[
+                        styles.input,
+                        nameFocused && { borderColor: blueColor },
+                    ]}
                     placeholder="e.g., Spotify"
                     placeholderTextColor={theme.placeholder}
                     value={expenseName}
                     onChangeText={setExpenseName}
+                    onFocus={() => setNameFocused(true)}
+                    onBlur={() => setNameFocused(false)}
                 />
 
                 <ThemedText style={styles.label}>
                     Amount ({currencySymbol})
                 </ThemedText>
                 <TextInput
-                    style={styles.input}
+                    style={[
+                        styles.input,
+                        amountFocused && {
+                            borderColor: blueColor,
+                        },
+                    ]}
                     placeholder="0.00"
                     placeholderTextColor={theme.placeholder}
                     value={expenseAmount}
                     onChangeText={setExpenseAmount}
                     keyboardType="decimal-pad"
+                    onFocus={() => setAmountFocused(true)}
+                    onBlur={() => setAmountFocused(false)}
                 />
 
                 <ThemedText style={styles.label}>Category</ThemedText>
@@ -658,8 +682,7 @@ export default function ExpensesScreen() {
                     <TouchableOpacity
                         style={[
                             styles.categoryOption,
-                            category === "personal" &&
-                                styles.categoryOptionActive,
+                            category === "personal" && styles.categoryActive,
                         ]}
                         onPress={() => setCategory("personal")}
                         accessibilityRole="radio"
@@ -672,8 +695,7 @@ export default function ExpensesScreen() {
                     <TouchableOpacity
                         style={[
                             styles.categoryOption,
-                            category === "business" &&
-                                styles.categoryOptionActive,
+                            category === "business" && styles.categoryActive,
                         ]}
                         onPress={() => setCategory("business")}
                         accessibilityRole="radio"
@@ -686,7 +708,7 @@ export default function ExpensesScreen() {
                     <TouchableOpacity
                         style={[
                             styles.categoryOption,
-                            category === "debts" && styles.categoryOptionActive,
+                            category === "debts" && styles.categoryActive,
                         ]}
                         onPress={() => setCategory("debts")}
                         accessibilityRole="radio"
@@ -697,14 +719,14 @@ export default function ExpensesScreen() {
                 </View>
 
                 <ThemedText style={styles.label}>Frequency</ThemedText>
-                <View style={[styles.pickerContainer]}>
+                <View style={[styles.select]}>
                     <Picker
                         selectedValue={frequency}
                         onValueChange={(itemValue) =>
                             setFrequency(itemValue as Frequency)
                         }
                         style={[
-                            styles.pickerInput,
+                            styles.selectInput,
                             Platform.OS === "web"
                                 ? ([
                                       {
@@ -715,7 +737,7 @@ export default function ExpensesScreen() {
                                   ] as any)
                                 : null,
                         ]}
-                        itemStyle={styles.pickerOption}
+                        itemStyle={styles.selectOption}
                     >
                         <Picker.Item label="Daily" value="daily" />
                         <Picker.Item label="Monthly" value="monthly" />
@@ -725,18 +747,15 @@ export default function ExpensesScreen() {
                         <Ionicons
                             name="chevron-down"
                             size={18}
-                            color={blackColor}
-                            style={styles.pickerIcon}
+                            color={theme.inputText}
+                            style={styles.selectIcon}
                         />
                     )}
                 </View>
 
-                <View style={styles.inputButtons}>
+                <View style={styles.buttons}>
                     <TouchableOpacity
-                        style={[
-                            styles.inputButton,
-                            { backgroundColor: greenColor },
-                        ]}
+                        style={[styles.button, { backgroundColor: greenColor }]}
                         onPress={handleAddExpense}
                     >
                         <ThemedText style={styles.buttonText}>
@@ -746,7 +765,7 @@ export default function ExpensesScreen() {
                     {editingId && (
                         <TouchableOpacity
                             style={[
-                                styles.inputButton,
+                                styles.button,
                                 { backgroundColor: redColor },
                             ]}
                             onPress={handleCancelEdit}
@@ -761,7 +780,7 @@ export default function ExpensesScreen() {
 
             {expenses.length > 0 && (
                 <ThemedView style={styles.expenseList}>
-                    <View style={styles.sortHeader}>
+                    <View style={styles.expenseHeader}>
                         <ThemedText type="subtitle">Expenses List</ThemedText>
                         <TouchableOpacity
                             style={styles.sortTrigger}
@@ -797,17 +816,17 @@ export default function ExpensesScreen() {
                             key={expense.id}
                             style={[
                                 styles.expenseCard,
-                                !expense.active && styles.expenseCardInactive,
+                                !expense.active && styles.expenseInactive,
                             ]}
                         >
-                            <View style={styles.expenseHeader}>
+                            <View style={styles.expenseTitle}>
                                 <View style={styles.expenseInfo}>
                                     <ThemedText type="defaultSemiBold">
                                         {expense.name}
                                     </ThemedText>
                                     <ThemedText
                                         style={[
-                                            styles.frequencyLabel,
+                                            styles.expenseLabel,
                                             expense.category === "business" && {
                                                 color: theme.specialLabel,
                                             },
@@ -892,16 +911,16 @@ export default function ExpensesScreen() {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <View style={styles.yearlyTotalBox}>
-                                <ThemedText style={styles.yearlyLabel}>
+                            <View style={styles.expenseTotal}>
+                                <ThemedText style={styles.expensePeriod}>
                                     Yearly / Monthly:
                                 </ThemedText>
                                 <View style={styles.expenseAmounts}>
-                                    <ThemedText style={styles.yearlyAmount}>
+                                    <ThemedText style={styles.expenseYearly}>
                                         {currencySymbol}{" "}
                                         {expense.yearlyTotal.toFixed(2)}
                                     </ThemedText>
-                                    <ThemedText style={styles.monthlyAmount}>
+                                    <ThemedText style={styles.expenseMonthly}>
                                         {currencySymbol}{" "}
                                         {(expense.yearlyTotal / 12).toFixed(2)}
                                     </ThemedText>
@@ -914,23 +933,23 @@ export default function ExpensesScreen() {
 
             {expenses.length > 0 && (
                 <>
-                    <ThemedView style={[styles.totalSection, styles.yearlyTab]}>
-                        <ThemedText type="subtitle" style={styles.totalLabel}>
+                    <ThemedView style={[styles.totalSection, styles.totalYear]}>
+                        <ThemedText type="subtitle">
                             Total Yearly Spend
                         </ThemedText>
                         <ThemedText style={styles.totalAmount}>
                             {currencySymbol} {totalYearlySpend.toFixed(2)}
                         </ThemedText>
-                        <ThemedText style={styles.totalLabel}>
+                        <ThemedText>
                             Personal:{" "}
-                            <ThemedText style={styles.totalInlineAmount}>
+                            <ThemedText style={styles.totalInline}>
                                 {currencySymbol}{" "}
                                 {personalYearlySpend.toFixed(2)}
                             </ThemedText>
                         </ThemedText>
-                        <ThemedText style={styles.totalLabel}>
+                        <ThemedText>
                             Business:{" "}
-                            <ThemedText style={styles.totalInlineAmount}>
+                            <ThemedText style={styles.totalInline}>
                                 {currencySymbol}{" "}
                                 {businessYearlySpend.toFixed(2)}
                             </ThemedText>
@@ -942,17 +961,14 @@ export default function ExpensesScreen() {
                             style={[
                                 styles.totalSection,
                                 styles.totalPeriod,
-                                styles.monthlyTab,
+                                styles.totalMonth,
                             ]}
                         >
-                            <ThemedText
-                                type="defaultSemiBold"
-                                style={styles.totalLabel}
-                            >
+                            <ThemedText type="defaultSemiBold">
                                 Total Monthly Spend
                             </ThemedText>
                             <ThemedText
-                                style={[styles.totalAmount, { fontSize: 24 }]}
+                                style={[styles.totalAmount, { fontSize: 28 }]}
                             >
                                 {currencySymbol} {totalMonthlySpend.toFixed(2)}
                             </ThemedText>
@@ -962,17 +978,14 @@ export default function ExpensesScreen() {
                             style={[
                                 styles.totalSection,
                                 styles.totalPeriod,
-                                styles.dailyTab,
+                                styles.totalDay,
                             ]}
                         >
-                            <ThemedText
-                                type="defaultSemiBold"
-                                style={styles.totalLabel}
-                            >
+                            <ThemedText type="defaultSemiBold">
                                 Total Daily Spend
                             </ThemedText>
                             <ThemedText
-                                style={[styles.totalAmount, { fontSize: 24 }]}
+                                style={[styles.totalAmount, { fontSize: 28 }]}
                             >
                                 {currencySymbol} {totalDailySpend.toFixed(2)}
                             </ThemedText>

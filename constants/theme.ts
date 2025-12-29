@@ -11,7 +11,8 @@ export const blackColor = "#000";
 export const greenColor = "#4caf50";
 export const redColor = "#f44336";
 export const blueColor = "#0c86c5";
-export const goldColor = "#da9022ff";
+export const goldColor = "#da902290";
+export const copperGoldColor = "#A0772A";
 
 export const greenLightColor = "#4caf5080";
 export const redLightColor = "#f4433680";
@@ -43,7 +44,7 @@ export const Colors = {
         cardNegativeBackground: redLightColor,
         statLabel: darkGreyColor,
 
-        specialLabel: goldColor,
+        specialLabel: copperGoldColor,
         selectedTab: whiteColor,
 
         dailyTab: linkDarkColor,
