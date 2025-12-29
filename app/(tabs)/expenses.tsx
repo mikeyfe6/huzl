@@ -30,7 +30,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "expo-router";
+import { Redirect, useRootNavigationState } from "expo-router";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business" | "debts";
@@ -46,17 +46,10 @@ interface ExpenseItem {
 
 export default function ExpensesScreen() {
     const { user } = useAuth();
-    const router = useRouter();
+    const rootNavigationState = useRootNavigationState();
 
-    useEffect(() => {
-        let mounted = true;
-        if (mounted && !user) {
-            router.replace("/");
-        }
-        return () => {
-            mounted = false;
-        };
-    }, [user]);
+    if (!rootNavigationState?.key) return null;
+    if (!user) return <Redirect href="/" />;
 
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
@@ -144,6 +137,7 @@ export default function ExpensesScreen() {
         backgroundColor: theme.cardBackground,
         borderColor: theme.borderColor,
     };
+    // ...existing code...
 
     const baseMain = {
         ...baseGap,
@@ -263,7 +257,7 @@ export default function ExpensesScreen() {
                 },
                 expenseTitle: {
                     ...baseFlex,
-                    ...baseGap,
+                    ...baseSpace,
                 },
                 sortTrigger: {
                     ...baseInput,

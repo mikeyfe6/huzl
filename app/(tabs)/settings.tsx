@@ -24,21 +24,15 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useThemePreference } from "@/hooks/use-theme-preference";
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "expo-router";
+import { Redirect, useRootNavigationState, useRouter } from "expo-router";
 
 export default function SettingsScreen() {
     const { user, refreshUser, signOut } = useAuth();
+    const rootNavigationState = useRootNavigationState();
     const router = useRouter();
 
-    useEffect(() => {
-        let mounted = true;
-        if (mounted && !user) {
-            router.replace("/");
-        }
-        return () => {
-            mounted = false;
-        };
-    }, [user]);
+    if (!rootNavigationState?.key) return null;
+    if (!user) return <Redirect href="/" />;
 
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];

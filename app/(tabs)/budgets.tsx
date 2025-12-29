@@ -21,21 +21,14 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "expo-router";
+import { Redirect, useRootNavigationState } from "expo-router";
 
 export default function BudgetsScreen() {
     const { user } = useAuth();
-    const router = useRouter();
+    const rootNavigationState = useRootNavigationState();
 
-    useEffect(() => {
-        let mounted = true;
-        if (mounted && !user) {
-            router.replace("/");
-        }
-        return () => {
-            mounted = false;
-        };
-    }, [user]);
+    if (!rootNavigationState?.key) return null;
+    if (!user) return <Redirect href="/" />;
 
     const { symbol: currencySymbol } = useCurrency();
     const [budgetName, setBudgetName] = useState("");
