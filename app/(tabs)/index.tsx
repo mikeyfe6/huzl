@@ -92,7 +92,6 @@ export default function HomeScreen() {
                 input: {
                     ...baseInput,
                     ...baseSelect,
-                    width: "100%",
                     color: theme.inputText,
                 },
                 signInButton: {
@@ -116,6 +115,9 @@ export default function HomeScreen() {
                     color: "red",
                     textAlign: "center",
                 },
+                user: {
+                    color: mediumGreyColor,
+                },
                 statsContainer: {
                     ...baseGap,
                     width: "100%",
@@ -123,34 +125,31 @@ export default function HomeScreen() {
                     marginTop: 24,
                 },
                 statCard: {
+                    ...baseSpace,
                     padding: 16,
                     borderRadius: 12,
                     backgroundColor: theme.cardBackground,
                 },
-                statCardPositive: {
-                    backgroundColor: theme.cardPositiveBackground,
-                },
-                statCardNegative: {
-                    backgroundColor: theme.cardNegativeBackground,
+                statLabel: {
+                    fontSize: 14,
+                    color: theme.statLabel,
+                    textAlign: "center",
                 },
                 statWrapper: {
                     ...baseCenter,
                     flexDirection: "row",
                     gap: 4,
                 },
-                statLabel: {
-                    fontSize: 14,
-                    color: theme.statLabel,
-                    marginBottom: 8,
-                    textAlign: "center",
-                },
                 statValue: {
                     fontSize: 24,
                     fontWeight: "bold",
                     textAlign: "center",
                 },
-                greyText: {
-                    color: mediumGreyColor,
+                statCardPositive: {
+                    backgroundColor: theme.cardPositiveBackground,
+                },
+                statCardNegative: {
+                    backgroundColor: theme.cardNegativeBackground,
                 },
             }),
         [theme]
@@ -301,7 +300,7 @@ export default function HomeScreen() {
             <ThemedText type="title">Huzl</ThemedText>
             <ThemedText style={styles.text}>
                 Signed in as{" "}
-                <ThemedText style={styles.greyText}>{user.email}</ThemedText>
+                <ThemedText style={styles.user}>{user.email}</ThemedText>
             </ThemedText>
 
             <ThemedView style={styles.statsContainer}>
