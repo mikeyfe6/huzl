@@ -71,24 +71,66 @@ export default function SettingsScreen() {
         }
     };
 
+    const baseGap = { gap: 12 };
+
+    const baseWeight = { fontWeight: "600" as const };
+
+    const baseRadius = { borderRadius: 8 };
+
+    const baseborder = { borderWidth: 1 };
+
+    const baseCenter = {
+        alignItems: "center" as const,
+        justifyContent: "center" as const,
+    };
+
+    const baseMain = {
+        ...baseGap,
+        paddingHorizontal: 16,
+        paddingTop: 24,
+        paddingBottom: 16,
+    };
+
+    const baseInput = {
+        ...baseRadius,
+        ...baseborder,
+        borderColor: theme.inputBorder,
+        backgroundColor: theme.inputBackground,
+        outlineWidth: 0,
+        minHeight: 44,
+    };
+
+    const baseSelect = {
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+    };
+
+    const baseButton = {
+        ...baseRadius,
+        ...baseCenter,
+        paddingVertical: 12,
+    };
+
+    const baseButtonText = {
+        ...baseWeight,
+    };
+
     const styles = useMemo(
         () =>
             StyleSheet.create({
                 container: {
-                    flex: 1,
+                    paddingBottom: 24,
                 },
                 wrapper: {
-                    padding: 16,
-                    paddingTop: 24,
-                    gap: 12,
+                    ...baseMain,
                 },
                 heading: {
                     marginBottom: 16,
                 },
-                sectionTitle: {
+                settingTitle: {
+                    ...baseWeight,
                     marginTop: 8,
                     marginBottom: 8,
-                    fontWeight: "600",
                     color: silverColor,
                 },
                 settingItem: {
@@ -97,22 +139,26 @@ export default function SettingsScreen() {
                     borderBottomWidth: 1,
                     borderBottomColor: theme.dividerColor,
                 },
-                settingLink: {
-                    fontSize: 14,
-                },
                 settingItemNoBorder: {
                     borderBottomWidth: 0,
                 },
-                settingItemMargin: {
-                    marginBottom: 12,
-                },
                 settingLabel: {
+                    ...baseWeight,
                     fontSize: 14,
                     color: theme.label,
-                    fontWeight: "600",
                     marginBottom: 12,
                 },
-                settingLabelLink: {
+                settingBox: {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                },
+                settingWrapper: {
+                    flexDirection: "row",
+                    gap: 8,
+                    marginTop: 8,
+                },
+                settingLink: {
                     color: linkColor,
                 },
                 settingLabelNoMargin: {
@@ -123,61 +169,45 @@ export default function SettingsScreen() {
                     color: theme.placeholder,
                 },
                 input: {
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    fontSize: 16,
+                    ...baseInput,
+                    ...baseSelect,
                     color: theme.inputText,
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.inputBackground,
-                    marginTop: 4,
                 },
                 saveButton: {
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: "center",
+                    ...baseButton,
                     backgroundColor: greenColor,
                 },
                 saveButtonText: {
+                    ...baseButtonText,
                     color: whiteColor,
-                    fontWeight: "600",
-                    fontSize: 16,
+                },
+                logOut: {
+                    marginTop: 24,
                 },
                 logOutButton: {
-                    borderWidth: 1,
+                    ...baseborder,
+                    ...baseButton,
                     borderColor: redColor,
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: "center",
                 },
                 logOutButtonText: {
+                    ...baseButtonText,
                     color: redColor,
-                    fontWeight: "600",
-                    fontSize: 16,
                 },
                 themeButton: {
+                    ...baseInput,
+                    ...baseCenter,
                     flex: 1,
-                    paddingVertical: 10,
-                    paddingHorizontal: 12,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.inputBackground,
-                    alignItems: "center",
                 },
                 themeButtonActive: {
                     backgroundColor: theme.tint,
                     borderColor: theme.tint,
                 },
                 themeButtonText: {
-                    fontSize: 14,
-                    fontWeight: "500",
                     color: theme.text,
                 },
                 themeButtonTextActive: {
+                    ...baseWeight,
                     color: whiteColor,
-                    fontWeight: "600",
                 },
             }),
         [theme]
@@ -191,17 +221,14 @@ export default function SettingsScreen() {
     }, [user]);
 
     return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={{ paddingBottom: 24 }}
-        >
+        <ScrollView contentContainerStyle={styles.container}>
             <ThemedView style={styles.wrapper}>
                 <ThemedText type="title" style={styles.heading}>
                     Settings
                 </ThemedText>
 
                 <ThemedView>
-                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                    <ThemedText style={styles.settingTitle} type="subtitle">
                         Profile
                     </ThemedText>
                     <ThemedView style={styles.settingItem}>
@@ -238,20 +265,14 @@ export default function SettingsScreen() {
                 </ThemedView>
 
                 <ThemedView>
-                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                    <ThemedText style={styles.settingTitle} type="subtitle">
                         Appearance
                     </ThemedText>
                     <ThemedView style={styles.settingItem}>
                         <ThemedText style={styles.settingLabel}>
                             Theme
                         </ThemedText>
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                gap: 8,
-                                marginTop: 8,
-                            }}
-                        >
+                        <View style={styles.settingWrapper}>
                             <TouchableOpacity
                                 style={[
                                     styles.themeButton,
@@ -311,25 +332,19 @@ export default function SettingsScreen() {
                 </ThemedView>
 
                 <ThemedView>
-                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                    <ThemedText style={styles.settingTitle} type="subtitle">
                         Currency
                     </ThemedText>
                     <TouchableOpacity
                         style={styles.settingItem}
                         onPress={() => setCurrencyModalVisible(true)}
                     >
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
-                        >
+                        <View style={styles.settingBox}>
                             <ThemedText
                                 style={[
                                     styles.settingLabel,
                                     styles.settingLabelNoMargin,
-                                    styles.settingLabelLink,
+                                    styles.settingLink,
                                 ]}
                             >
                                 Currency Symbol
@@ -342,25 +357,19 @@ export default function SettingsScreen() {
                 </ThemedView>
 
                 <ThemedView>
-                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                    <ThemedText style={styles.settingTitle} type="subtitle">
                         Income
                     </ThemedText>
                     <TouchableOpacity
                         style={styles.settingItem}
                         onPress={() => router.push("/income")}
                     >
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
-                        >
+                        <View style={styles.settingBox}>
                             <ThemedText
                                 style={[
                                     styles.settingLabel,
                                     styles.settingLabelNoMargin,
-                                    styles.settingLabelLink,
+                                    styles.settingLink,
                                 ]}
                             >
                                 Monthly Income
@@ -375,7 +384,7 @@ export default function SettingsScreen() {
                 </ThemedView>
 
                 <ThemedView>
-                    <ThemedText style={styles.sectionTitle} type="subtitle">
+                    <ThemedText style={styles.settingTitle} type="subtitle">
                         About
                     </ThemedText>
                     <ThemedView style={[styles.settingItem]}>
@@ -388,7 +397,7 @@ export default function SettingsScreen() {
                     </ThemedView>
                 </ThemedView>
 
-                <ThemedView style={{ marginTop: 24 }}>
+                <ThemedView style={[styles.logOut]}>
                     <TouchableOpacity
                         style={[styles.logOutButton]}
                         onPress={async () => {

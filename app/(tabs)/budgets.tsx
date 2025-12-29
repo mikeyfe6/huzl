@@ -45,7 +45,6 @@ export default function BudgetsScreen() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
 
-    // Helper function to fetch and transform budget expenses
     const fetchBudgetExpenses = async (budgetId: string) => {
         const { data: expensesData } = await supabase
             .from("budget_expenses")
@@ -64,7 +63,6 @@ export default function BudgetsScreen() {
         };
     };
 
-    // Helper function to transform budget data
     const transformBudgetData = async (budget: any) => {
         const { expenses, spent } = await fetchBudgetExpenses(budget.id);
         return {
@@ -76,7 +74,6 @@ export default function BudgetsScreen() {
         };
     };
 
-    // Fetch budgets and their expenses on mount
     useEffect(() => {
         if (!user) return;
 
@@ -152,7 +149,6 @@ export default function BudgetsScreen() {
         ...baseRadius,
         ...baseCenter,
         paddingVertical: 12,
-        flex: 1,
     };
 
     const baseButtonText = {
@@ -163,7 +159,7 @@ export default function BudgetsScreen() {
     const baseList = {
         ...baseGap,
         paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingTop: 12,
         paddingBottom: 20,
     };
 
@@ -181,7 +177,7 @@ export default function BudgetsScreen() {
                 container: {
                     paddingBottom: 24,
                 },
-                inputSection: {
+                fieldset: {
                     ...baseMain,
                 },
                 heading: {
@@ -280,7 +276,6 @@ export default function BudgetsScreen() {
                 },
                 emptyState: {
                     ...baseCenter,
-                    flex: 1,
                     paddingVertical: 60,
                 },
                 emptyStateText: {
@@ -385,7 +380,6 @@ export default function BudgetsScreen() {
 
         setLoading(true);
         try {
-            // Delete budget (cascade should delete expenses)
             const { error } = await supabase
                 .from("budgets")
                 .delete()
@@ -442,7 +436,7 @@ export default function BudgetsScreen() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <ThemedView style={styles.inputSection}>
+            <ThemedView style={styles.fieldset}>
                 <ThemedText type="title" style={styles.heading}>
                     Budgets
                 </ThemedText>

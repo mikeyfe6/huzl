@@ -64,8 +64,6 @@ export default function ExpensesScreen() {
     const nameInputRef = useRef<TextInput>(null);
     const scrollViewRef = useRef<ScrollView>(null);
 
-    // styles
-
     const baseGap = { gap: 12 };
 
     const baseSpace = { gap: 8 };
@@ -117,7 +115,7 @@ export default function ExpensesScreen() {
     const baseList = {
         ...baseGap,
         paddingHorizontal: 16,
-        paddingVertical: 12,
+        paddingTop: 12,
         paddingBottom: 20,
     };
 
@@ -142,7 +140,7 @@ export default function ExpensesScreen() {
                 container: {
                     paddingBottom: 24,
                 },
-                inputSection: {
+                fieldset: {
                     ...baseMain,
                 },
                 heading: {
@@ -319,6 +317,7 @@ export default function ExpensesScreen() {
                     marginTop: 24,
                     marginBottom: 16,
                     borderRadius: 12,
+                    flex: 1,
                 },
                 totalYear: {
                     backgroundColor: theme.yearlyTab,
@@ -336,11 +335,10 @@ export default function ExpensesScreen() {
                     marginBottom: 16,
                 },
                 totalInline: {
-                    fontWeight: "700",
+                    fontWeight: "bold",
                     paddingLeft: 8,
                 },
                 totalPeriod: {
-                    flex: 1,
                     marginHorizontal: 0,
                     marginTop: 0,
                     marginBottom: 0,
@@ -353,7 +351,6 @@ export default function ExpensesScreen() {
                 },
                 emptyState: {
                     ...baseCenter,
-                    flex: 1,
                     paddingVertical: 60,
                 },
                 emptyStateText: {
@@ -389,7 +386,6 @@ export default function ExpensesScreen() {
         setLoading(true);
         try {
             if (editingId) {
-                // Update existing expense
                 const { data, error } = await supabase
                     .from("expenses")
                     .update({
@@ -437,7 +433,6 @@ export default function ExpensesScreen() {
                     setEditingId(null);
                 }
             } else {
-                // Create new expense
                 const { data, error } = await supabase
                     .from("expenses")
                     .insert({
@@ -640,7 +635,7 @@ export default function ExpensesScreen() {
             ref={scrollViewRef}
             contentContainerStyle={styles.container}
         >
-            <ThemedView style={styles.inputSection}>
+            <ThemedView style={styles.fieldset}>
                 <ThemedText type="title" style={styles.heading}>
                     Expenses
                 </ThemedText>
