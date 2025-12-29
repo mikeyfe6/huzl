@@ -25,21 +25,22 @@ export default function TabLayout() {
                     tabBarStyle: user
                         ? {
                               height: Platform.select({
-                                  ios: 90,
-                                  android: 90,
-                                  default: 70,
+                                  ios: 80,
+                                  android: 80,
+                                  default: 80,
                               }),
                           }
                         : { display: "none" },
-                    tabBarItemStyle: { paddingVertical: 18 },
+                    tabBarItemStyle: {
+                        paddingVertical: 14,
+                        height: 80,
+                    },
                 }}
             >
                 <Tabs.Screen
                     name="index"
                     options={{
                         title: "Home",
-                        tabBarLabel: "Home",
-                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
@@ -53,8 +54,6 @@ export default function TabLayout() {
                     name="expenses"
                     options={{
                         title: "Expenses",
-                        tabBarLabel: "Expenses",
-                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
@@ -68,8 +67,6 @@ export default function TabLayout() {
                     name="budgets"
                     options={{
                         title: "Budgets",
-                        tabBarLabel: "Budgets",
-                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol
                                 size={28}
@@ -83,8 +80,6 @@ export default function TabLayout() {
                     name="settings"
                     options={{
                         title: "Settings",
-                        tabBarLabel: "Settings",
-                        tabBarButton: user ? HapticTab : () => null,
                         tabBarIcon: ({ color }) => (
                             <IconSymbol size={28} name="gear" color={color} />
                         ),

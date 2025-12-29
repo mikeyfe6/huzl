@@ -13,13 +13,7 @@ import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
-import {
-    Platform,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
     const { user, loading, signIn, signUp } = useAuth();
@@ -83,11 +77,7 @@ export default function HomeScreen() {
                     ...baseGap,
                     width: "100%",
                     marginTop: 16,
-                    maxWidth: Platform.select({
-                        ios: undefined,
-                        android: undefined,
-                        default: 500,
-                    }),
+                    maxWidth: 500,
                 },
                 input: {
                     ...baseInput,

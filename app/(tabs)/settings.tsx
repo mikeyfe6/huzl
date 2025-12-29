@@ -31,9 +31,13 @@ export default function SettingsScreen() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!user) {
+        let mounted = true;
+        if (mounted && !user) {
             router.replace("/");
         }
+        return () => {
+            mounted = false;
+        };
     }, [user]);
 
     const colorScheme = useColorScheme();
@@ -162,8 +166,8 @@ export default function SettingsScreen() {
                     alignItems: "center",
                 },
                 settingWrapper: {
+                    ...baseGap,
                     flexDirection: "row",
-                    gap: 8,
                     marginTop: 8,
                 },
                 settingLink: {
@@ -410,11 +414,10 @@ export default function SettingsScreen() {
                         style={[styles.logOutButton]}
                         onPress={async () => {
                             await signOut();
-                            router.push("/");
                         }}
                     >
                         <ThemedText style={styles.logOutButtonText}>
-                            Sign Out
+                            Log Out
                         </ThemedText>
                     </TouchableOpacity>
                 </ThemedView>

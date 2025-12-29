@@ -49,9 +49,13 @@ export default function ExpensesScreen() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!user) {
+        let mounted = true;
+        if (mounted && !user) {
             router.replace("/");
         }
+        return () => {
+            mounted = false;
+        };
     }, [user]);
 
     const [expenseName, setExpenseName] = useState("");
@@ -84,6 +88,11 @@ export default function ExpensesScreen() {
     const baseCenter = {
         alignItems: "center" as const,
         justifyContent: "center" as const,
+    };
+
+    const baseFlex = {
+        flexDirection: "row" as const,
+        alignItems: "center" as const,
     };
 
     const baseWeight = { fontWeight: "600" as const };
@@ -252,6 +261,10 @@ export default function ExpensesScreen() {
                     justifyContent: "space-between",
                     marginBottom: 12,
                 },
+                expenseTitle: {
+                    ...baseFlex,
+                    ...baseGap,
+                },
                 sortTrigger: {
                     ...baseInput,
                     ...baseCenter,
@@ -274,10 +287,9 @@ export default function ExpensesScreen() {
                 expenseInactive: {
                     opacity: 0.5,
                 },
-                expenseTitle: {
-                    flexDirection: "row",
+                expenseItem: {
+                    ...baseFlex,
                     justifyContent: "space-between",
-                    alignItems: "center",
                 },
                 expenseInfo: {
                     flex: 1,
@@ -297,9 +309,8 @@ export default function ExpensesScreen() {
                     padding: 8,
                 },
                 expenseTotal: {
-                    flexDirection: "row",
+                    ...baseFlex,
                     justifyContent: "space-between",
-                    alignItems: "center",
                     paddingTop: 8,
                     borderTopWidth: 1,
                     borderTopColor: theme.dividerColor,
@@ -787,7 +798,14 @@ export default function ExpensesScreen() {
             {expenses.length > 0 && (
                 <ThemedView style={styles.expenseList}>
                     <View style={styles.expenseHeader}>
-                        <ThemedText type="subtitle">Expenses List</ThemedText>
+                        <View style={styles.expenseTitle}>
+                            <ThemedText type="subtitle">
+                                Expenses List
+                            </ThemedText>
+                            <ThemedText style={{ opacity: 0.6, fontSize: 16 }}>
+                                ({sortedExpenses.length})
+                            </ThemedText>
+                        </View>
                         <TouchableOpacity
                             style={styles.sortTrigger}
                             onPress={() => setSortModalVisible(true)}
@@ -825,7 +843,7 @@ export default function ExpensesScreen() {
                                 !expense.active && styles.expenseInactive,
                             ]}
                         >
-                            <View style={styles.expenseTitle}>
+                            <View style={styles.expenseItem}>
                                 <View style={styles.expenseInfo}>
                                     <ThemedText type="defaultSemiBold">
                                         {expense.name}

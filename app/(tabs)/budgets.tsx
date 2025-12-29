@@ -28,9 +28,13 @@ export default function BudgetsScreen() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!user) {
+        let mounted = true;
+        if (mounted && !user) {
             router.replace("/");
         }
+        return () => {
+            mounted = false;
+        };
     }, [user]);
 
     const { symbol: currencySymbol } = useCurrency();
