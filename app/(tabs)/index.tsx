@@ -249,7 +249,7 @@ export default function HomeScreen() {
                 width: 350,
                 height: 200,
                 resizeMode: "contain",
-                marginBottom: -32,
+                marginBottom: -12,
             }}
             accessible
             accessibilityLabel="Huzl logo"
@@ -319,6 +319,13 @@ export default function HomeScreen() {
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
             <ThemedView style={[styles.container, { flex: 1 }]}>
                 <HeaderImage />
+                <ThemedText type="title">
+                    Hello{" "}
+                    {typeof user.user_metadata.display_name === "string" &&
+                    user.user_metadata.display_name.trim().length > 0
+                        ? user.user_metadata.display_name.trim()
+                        : "!"}
+                </ThemedText>
                 <ThemedText style={styles.text}>
                     Signed in as{" "}
                     <ThemedText style={styles.user}>{user.email}</ThemedText>
