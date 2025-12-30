@@ -32,6 +32,7 @@ import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
+import { YearlyExpensesPie } from "@/components/ui/yearly-expenses-pie";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business" | "debts";
@@ -134,7 +135,6 @@ export default function ExpensesScreen() {
         backgroundColor: theme.cardBackground,
         borderColor: theme.borderColor,
     };
-    // ...existing code...
 
     const baseMain = {
         ...baseGap,
@@ -645,6 +645,64 @@ export default function ExpensesScreen() {
         };
     }, [user]);
 
+    const pieLabels = {
+        fontSize: 14,
+        fontWeight: "bold",
+        fontFamily: "System",
+        fill: theme.text,
+    };
+
+    const pieData = [
+        {
+            value: expenses
+                .filter((e) => e.active && e.category === "personal")
+                .reduce((sum, e) => sum + e.yearlyTotal, 0),
+            color: "#0c86c5db",
+            label: {
+                text: `Personal (${(
+                    (expenses
+                        .filter((e) => e.active && e.category === "personal")
+                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
+                        totalYearlySpend) *
+                    100
+                ).toFixed(1)}%)`,
+                ...pieLabels,
+            },
+        },
+        {
+            value: expenses
+                .filter((e) => e.active && e.category === "business")
+                .reduce((sum, e) => sum + e.yearlyTotal, 0),
+            color: "#55B467db",
+            label: {
+                text: `Business (${(
+                    (expenses
+                        .filter((e) => e.active && e.category === "business")
+                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
+                        totalYearlySpend) *
+                    100
+                ).toFixed(1)}%)`,
+                ...pieLabels,
+            },
+        },
+        {
+            value: expenses
+                .filter((e) => e.active && e.category === "debts")
+                .reduce((sum, e) => sum + e.yearlyTotal, 0),
+            color: "#e5533ddb",
+            label: {
+                text: `Debts (${(
+                    (expenses
+                        .filter((e) => e.active && e.category === "debts")
+                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
+                        totalYearlySpend) *
+                    100
+                ).toFixed(1)}%)`,
+                ...pieLabels,
+            },
+        },
+    ];
+
     return (
         <AuthGate>
             <ScrollView
@@ -1049,6 +1107,8 @@ export default function ExpensesScreen() {
                                 </ThemedText>
                             </ThemedView>
                         </View>
+
+                        <YearlyExpensesPie data={pieData} />
                     </>
                 )}
 
