@@ -587,6 +587,10 @@ export default function ExpensesScreen() {
         .filter((e) => e.active && e.category === "business")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
+    const debtsYearlySpend = expenses
+        .filter((e) => e.active && e.category === "debts")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
     const getFrequencyLabel = (freq: Frequency): string => {
         switch (freq) {
             case "daily":
@@ -991,6 +995,13 @@ export default function ExpensesScreen() {
                                 <ThemedText style={styles.totalInline}>
                                     {currencySymbol}{" "}
                                     {businessYearlySpend.toFixed(2)}
+                                </ThemedText>
+                            </ThemedText>
+                            <ThemedText>
+                                Depths:{" "}
+                                <ThemedText style={styles.totalInline}>
+                                    {currencySymbol}{" "}
+                                    {debtsYearlySpend.toFixed(2)}
                                 </ThemedText>
                             </ThemedText>
                         </ThemedView>
