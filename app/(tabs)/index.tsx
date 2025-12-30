@@ -30,8 +30,11 @@ export default function HomeScreen() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+
     const [expenses, setExpenses] = useState<any[]>([]);
+    const [isSignUp, setIsSignUp] = useState(false);
 
     const baseGap = { gap: 12 };
 
@@ -173,6 +176,12 @@ export default function HomeScreen() {
     };
 
     useEffect(() => {
+        if (!error) return;
+        const timeout = setTimeout(() => setError(null), 7000);
+        return () => clearTimeout(timeout);
+    }, [error]);
+
+    useEffect(() => {
         if (!user) return;
 
         let isMounted = true;
@@ -230,6 +239,14 @@ export default function HomeScreen() {
 
     const handleSignUp = async () => {
         setError(null);
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+        if (password.length < 6) {
+            setError("Password must be at least 6 characters");
+            return;
+        }
         const { error } = await signUp(email.trim(), password);
         if (error) setError(error);
     };
@@ -266,7 +283,9 @@ export default function HomeScreen() {
                     <HeaderImage />
                     <ThemedText type="title">Welcome !</ThemedText>
                     <ThemedText style={styles.text}>
-                        Sign in to continue
+                        {isSignUp
+                            ? "Create your account to get started"
+                            : "Sign in or create an account to continue"}
                     </ThemedText>
                     <View style={styles.fieldset}>
                         <TextInput
@@ -288,25 +307,59 @@ export default function HomeScreen() {
                             style={styles.input}
                             placeholderTextColor={theme.placeholder}
                         />
-                        <TouchableOpacity
-                            onPress={handleSignIn}
-                            style={styles.signInButton}
-                        >
-                            <ThemedText style={styles.signInText}>
-                                Sign In
-                            </ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={handleSignUp}
-                            style={styles.signUpButton}
-                        >
-                            <ThemedText style={styles.signUpText}>
-                                Create Account
-                            </ThemedText>
-                        </TouchableOpacity>
+                        {isSignUp && (
+                            <TextInput
+                                placeholder="confirm password"
+                                secureTextEntry
+                                value={confirmPassword}
+                                autoComplete="off"
+                                onChangeText={setConfirmPassword}
+                                style={styles.input}
+                                placeholderTextColor={theme.placeholder}
+                            />
+                        )}
+                        {isSignUp ? (
+                            <>
+                                <TouchableOpacity
+                                    onPress={handleSignUp}
+                                    style={styles.signInButton}
+                                >
+                                    <ThemedText style={styles.signInText}>
+                                        Create Account
+                                    </ThemedText>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => setIsSignUp(false)}
+                                    style={styles.signUpButton}
+                                >
+                                    <ThemedText style={styles.signUpText}>
+                                        Already have an account?
+                                    </ThemedText>
+                                </TouchableOpacity>
+                            </>
+                        ) : (
+                            <>
+                                <TouchableOpacity
+                                    onPress={handleSignIn}
+                                    style={styles.signInButton}
+                                >
+                                    <ThemedText style={styles.signInText}>
+                                        Sign In
+                                    </ThemedText>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => setIsSignUp(true)}
+                                    style={styles.signUpButton}
+                                >
+                                    <ThemedText style={styles.signUpText}>
+                                        Create Account
+                                    </ThemedText>
+                                </TouchableOpacity>
+                            </>
+                        )}
                         {error && (
                             <ThemedText style={styles.errorStyle}>
-                                {error}
+                                {error.charAt(0).toUpperCase() + error.slice(1)}
                             </ThemedText>
                         )}
                     </View>
