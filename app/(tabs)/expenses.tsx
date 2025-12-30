@@ -30,7 +30,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
-import { Redirect, useRootNavigationState } from "expo-router";
+
+import { AuthGate } from "@/components/loading";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business" | "debts";
@@ -46,7 +47,6 @@ interface ExpenseItem {
 
 export default function ExpensesScreen() {
     const { user } = useAuth();
-    const rootNavigationState = useRootNavigationState();
 
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
@@ -641,386 +641,416 @@ export default function ExpensesScreen() {
         };
     }, [user]);
 
-    if (!rootNavigationState?.key) return null;
-    if (!user) return <Redirect href="/" />;
-
     return (
-        <ScrollView
-            ref={scrollViewRef}
-            contentContainerStyle={styles.container}
-        >
-            <ThemedView style={styles.fieldset}>
-                <ThemedText type="title" style={styles.heading}>
-                    Expenses
-                </ThemedText>
+        <AuthGate>
+            <ScrollView
+                ref={scrollViewRef}
+                contentContainerStyle={styles.container}
+            >
+                <ThemedView style={styles.fieldset}>
+                    <ThemedText type="title" style={styles.heading}>
+                        Expenses
+                    </ThemedText>
 
-                <ThemedText style={styles.label}>Item Name</ThemedText>
-                <TextInput
-                    ref={nameInputRef}
-                    style={[
-                        styles.input,
-                        nameFocused && { borderColor: blueColor },
-                    ]}
-                    placeholder="e.g., Spotify"
-                    placeholderTextColor={theme.placeholder}
-                    value={expenseName}
-                    onChangeText={setExpenseName}
-                    onFocus={() => setNameFocused(true)}
-                    onBlur={() => setNameFocused(false)}
-                />
-
-                <ThemedText style={styles.label}>
-                    Amount ({currencySymbol})
-                </ThemedText>
-                <TextInput
-                    style={[
-                        styles.input,
-                        amountFocused && {
-                            borderColor: blueColor,
-                        },
-                    ]}
-                    placeholder="0.00"
-                    placeholderTextColor={theme.placeholder}
-                    value={expenseAmount}
-                    onChangeText={setExpenseAmount}
-                    keyboardType="decimal-pad"
-                    onFocus={() => setAmountFocused(true)}
-                    onBlur={() => setAmountFocused(false)}
-                />
-
-                <ThemedText style={styles.label}>Category</ThemedText>
-                <View style={styles.categoryGroup}>
-                    <TouchableOpacity
+                    <ThemedText style={styles.label}>Item Name</ThemedText>
+                    <TextInput
+                        ref={nameInputRef}
                         style={[
-                            styles.categoryOption,
-                            category === "personal" && styles.categoryActive,
+                            styles.input,
+                            nameFocused && { borderColor: blueColor },
                         ]}
-                        onPress={() => setCategory("personal")}
-                        accessibilityRole="radio"
-                        accessibilityState={{
-                            selected: category === "personal",
-                        }}
-                    >
-                        <ThemedText>Personal</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[
-                            styles.categoryOption,
-                            category === "business" && styles.categoryActive,
-                        ]}
-                        onPress={() => setCategory("business")}
-                        accessibilityRole="radio"
-                        accessibilityState={{
-                            selected: category === "business",
-                        }}
-                    >
-                        <ThemedText>Business</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[
-                            styles.categoryOption,
-                            category === "debts" && styles.categoryActive,
-                        ]}
-                        onPress={() => setCategory("debts")}
-                        accessibilityRole="radio"
-                        accessibilityState={{ selected: category === "debts" }}
-                    >
-                        <ThemedText>Debts</ThemedText>
-                    </TouchableOpacity>
-                </View>
+                        placeholder="e.g., Spotify"
+                        placeholderTextColor={theme.placeholder}
+                        value={expenseName}
+                        onChangeText={setExpenseName}
+                        onFocus={() => setNameFocused(true)}
+                        onBlur={() => setNameFocused(false)}
+                    />
 
-                <ThemedText style={styles.label}>Frequency</ThemedText>
-                <View style={[styles.select]}>
-                    <Picker
-                        selectedValue={frequency}
-                        onValueChange={(itemValue) =>
-                            setFrequency(itemValue as Frequency)
-                        }
+                    <ThemedText style={styles.label}>
+                        Amount ({currencySymbol})
+                    </ThemedText>
+                    <TextInput
                         style={[
-                            styles.selectInput,
-                            Platform.OS === "web"
-                                ? ([
-                                      {
-                                          appearance: "none",
-                                          WebkitAppearance: "none",
-                                          MozAppearance: "none",
-                                      } as any,
-                                  ] as any)
-                                : null,
+                            styles.input,
+                            amountFocused && {
+                                borderColor: blueColor,
+                            },
                         ]}
-                        itemStyle={styles.selectOption}
-                    >
-                        <Picker.Item label="Daily" value="daily" />
-                        <Picker.Item label="Monthly" value="monthly" />
-                        <Picker.Item label="Yearly" value="yearly" />
-                    </Picker>
-                    {Platform.OS === "web" && (
-                        <Ionicons
-                            name="chevron-down"
-                            size={18}
-                            color={theme.inputText}
-                            style={styles.selectIcon}
-                        />
-                    )}
-                </View>
+                        placeholder="0.00"
+                        placeholderTextColor={theme.placeholder}
+                        value={expenseAmount}
+                        onChangeText={setExpenseAmount}
+                        keyboardType="decimal-pad"
+                        onFocus={() => setAmountFocused(true)}
+                        onBlur={() => setAmountFocused(false)}
+                    />
 
-                <View style={styles.buttons}>
-                    <TouchableOpacity
-                        style={[styles.button, { backgroundColor: greenColor }]}
-                        onPress={handleAddExpense}
-                    >
-                        <ThemedText style={styles.buttonText}>
-                            {editingId ? "Update Expense" : "Add Expense"}
-                        </ThemedText>
-                    </TouchableOpacity>
-                    {editingId && (
+                    <ThemedText style={styles.label}>Category</ThemedText>
+                    <View style={styles.categoryGroup}>
+                        <TouchableOpacity
+                            style={[
+                                styles.categoryOption,
+                                category === "personal" &&
+                                    styles.categoryActive,
+                            ]}
+                            onPress={() => setCategory("personal")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "personal",
+                            }}
+                        >
+                            <ThemedText>Personal</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[
+                                styles.categoryOption,
+                                category === "business" &&
+                                    styles.categoryActive,
+                            ]}
+                            onPress={() => setCategory("business")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "business",
+                            }}
+                        >
+                            <ThemedText>Business</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[
+                                styles.categoryOption,
+                                category === "debts" && styles.categoryActive,
+                            ]}
+                            onPress={() => setCategory("debts")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "debts",
+                            }}
+                        >
+                            <ThemedText>Debts</ThemedText>
+                        </TouchableOpacity>
+                    </View>
+
+                    <ThemedText style={styles.label}>Frequency</ThemedText>
+                    <View style={[styles.select]}>
+                        <Picker
+                            selectedValue={frequency}
+                            onValueChange={(itemValue) =>
+                                setFrequency(itemValue as Frequency)
+                            }
+                            style={[
+                                styles.selectInput,
+                                Platform.OS === "web"
+                                    ? ([
+                                          {
+                                              appearance: "none",
+                                              WebkitAppearance: "none",
+                                              MozAppearance: "none",
+                                          } as any,
+                                      ] as any)
+                                    : null,
+                            ]}
+                            itemStyle={styles.selectOption}
+                        >
+                            <Picker.Item label="Daily" value="daily" />
+                            <Picker.Item label="Monthly" value="monthly" />
+                            <Picker.Item label="Yearly" value="yearly" />
+                        </Picker>
+                        {Platform.OS === "web" && (
+                            <Ionicons
+                                name="chevron-down"
+                                size={18}
+                                color={theme.inputText}
+                                style={styles.selectIcon}
+                            />
+                        )}
+                    </View>
+
+                    <View style={styles.buttons}>
                         <TouchableOpacity
                             style={[
                                 styles.button,
-                                { backgroundColor: redColor },
+                                { backgroundColor: greenColor },
                             ]}
-                            onPress={handleCancelEdit}
+                            onPress={handleAddExpense}
                         >
                             <ThemedText style={styles.buttonText}>
-                                Cancel
+                                {editingId ? "Update Expense" : "Add Expense"}
                             </ThemedText>
                         </TouchableOpacity>
-                    )}
-                </View>
-            </ThemedView>
-
-            {expenses.length > 0 && (
-                <ThemedView style={styles.expenseList}>
-                    <View style={styles.expenseHeader}>
-                        <View style={styles.expenseTitle}>
-                            <ThemedText type="subtitle">
-                                Expenses List
-                            </ThemedText>
-                            <ThemedText style={{ opacity: 0.6, fontSize: 16 }}>
-                                ({sortedExpenses.length})
-                            </ThemedText>
-                        </View>
-                        <TouchableOpacity
-                            style={styles.sortTrigger}
-                            onPress={() => setSortModalVisible(true)}
-                            accessibilityRole="button"
-                            accessibilityLabel="Open sort options"
-                        >
-                            <Ionicons
-                                name="swap-vertical"
-                                size={16}
-                                color={theme.label}
-                            />
-                            <ThemedText style={styles.sortTriggerText}>
-                                {getSortLabel(sortOption)}
-                            </ThemedText>
-                            <Ionicons
-                                name="chevron-down"
-                                size={16}
-                                color={theme.label}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <SortModal
-                        visible={sortModalVisible}
-                        sortOption={sortOption}
-                        onSelect={setSortAndClose}
-                        onRequestClose={() => setSortModalVisible(false)}
-                        theme={theme}
-                    />
-
-                    {sortedExpenses.map((expense) => (
-                        <View
-                            key={expense.id}
-                            style={[
-                                styles.expenseCard,
-                                !expense.active && styles.expenseInactive,
-                            ]}
-                        >
-                            <View style={styles.expenseItem}>
-                                <View style={styles.expenseInfo}>
-                                    <ThemedText type="defaultSemiBold">
-                                        {expense.name}
-                                    </ThemedText>
-                                    <ThemedText
-                                        style={[
-                                            styles.expenseLabel,
-                                            expense.category === "business" && {
-                                                color: theme.specialLabel,
-                                            },
-                                            expense.category === "debts" && {
-                                                color: redColor,
-                                            },
-                                        ]}
-                                    >
-                                        {currencySymbol}{" "}
-                                        {expense.amount.toFixed(2)} -{" "}
-                                        {getFrequencyLabel(expense.frequency)} -{" "}
-                                        {expense.category
-                                            .charAt(0)
-                                            .toUpperCase() +
-                                            expense.category.slice(1)}
-                                    </ThemedText>
-                                </View>
-                                <View style={styles.expenseIcons}>
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            handleToggleActive(
-                                                expense.id,
-                                                expense.active
-                                            )
-                                        }
-                                        style={[
-                                            styles.expenseIcon,
-                                            {
-                                                borderColor: expense.active
-                                                    ? greenColor
-                                                    : mediumGreyColor,
-                                            },
-                                        ]}
-                                    >
-                                        <Ionicons
-                                            name={
-                                                expense.active
-                                                    ? "eye"
-                                                    : "eye-off"
-                                            }
-                                            size={16}
-                                            color={
-                                                expense.active
-                                                    ? greenColor
-                                                    : mediumGreyColor
-                                            }
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            handleEditExpense(expense)
-                                        }
-                                        style={[
-                                            styles.expenseIcon,
-                                            {
-                                                borderColor: mediumGreyColor,
-                                            },
-                                        ]}
-                                    >
-                                        <Ionicons
-                                            name="pencil"
-                                            size={16}
-                                            color={mediumGreyColor}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            handleDeleteExpense(expense.id)
-                                        }
-                                        style={[
-                                            styles.expenseIcon,
-                                            {
-                                                borderColor: redColor,
-                                            },
-                                        ]}
-                                    >
-                                        <Ionicons
-                                            name="trash"
-                                            size={16}
-                                            color={redColor}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <View style={styles.expenseTotal}>
-                                <ThemedText style={styles.expensePeriod}>
-                                    Yearly / Monthly:
+                        {editingId && (
+                            <TouchableOpacity
+                                style={[
+                                    styles.button,
+                                    { backgroundColor: redColor },
+                                ]}
+                                onPress={handleCancelEdit}
+                            >
+                                <ThemedText style={styles.buttonText}>
+                                    Cancel
                                 </ThemedText>
-                                <View style={styles.expenseAmounts}>
-                                    <ThemedText style={styles.expenseYearly}>
-                                        {currencySymbol}{" "}
-                                        {expense.yearlyTotal.toFixed(2)}
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </ThemedView>
+
+                {expenses.length > 0 && (
+                    <ThemedView style={styles.expenseList}>
+                        <View style={styles.expenseHeader}>
+                            <View style={styles.expenseTitle}>
+                                <ThemedText type="subtitle">
+                                    Expenses List
+                                </ThemedText>
+                                <ThemedText
+                                    style={{ opacity: 0.6, fontSize: 16 }}
+                                >
+                                    ({sortedExpenses.length})
+                                </ThemedText>
+                            </View>
+                            <TouchableOpacity
+                                style={styles.sortTrigger}
+                                onPress={() => setSortModalVisible(true)}
+                                accessibilityRole="button"
+                                accessibilityLabel="Open sort options"
+                            >
+                                <Ionicons
+                                    name="swap-vertical"
+                                    size={16}
+                                    color={theme.label}
+                                />
+                                <ThemedText style={styles.sortTriggerText}>
+                                    {getSortLabel(sortOption)}
+                                </ThemedText>
+                                <Ionicons
+                                    name="chevron-down"
+                                    size={16}
+                                    color={theme.label}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <SortModal
+                            visible={sortModalVisible}
+                            sortOption={sortOption}
+                            onSelect={setSortAndClose}
+                            onRequestClose={() => setSortModalVisible(false)}
+                            theme={theme}
+                        />
+
+                        {sortedExpenses.map((expense) => (
+                            <View
+                                key={expense.id}
+                                style={[
+                                    styles.expenseCard,
+                                    !expense.active && styles.expenseInactive,
+                                ]}
+                            >
+                                <View style={styles.expenseItem}>
+                                    <View style={styles.expenseInfo}>
+                                        <ThemedText type="defaultSemiBold">
+                                            {expense.name}
+                                        </ThemedText>
+                                        <ThemedText
+                                            style={[
+                                                styles.expenseLabel,
+                                                expense.category ===
+                                                    "business" && {
+                                                    color: theme.specialLabel,
+                                                },
+                                                expense.category ===
+                                                    "debts" && {
+                                                    color: redColor,
+                                                },
+                                            ]}
+                                        >
+                                            {currencySymbol}{" "}
+                                            {expense.amount.toFixed(2)} -{" "}
+                                            {getFrequencyLabel(
+                                                expense.frequency
+                                            )}{" "}
+                                            -{" "}
+                                            {expense.category
+                                                .charAt(0)
+                                                .toUpperCase() +
+                                                expense.category.slice(1)}
+                                        </ThemedText>
+                                    </View>
+                                    <View style={styles.expenseIcons}>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                handleToggleActive(
+                                                    expense.id,
+                                                    expense.active
+                                                )
+                                            }
+                                            style={[
+                                                styles.expenseIcon,
+                                                {
+                                                    borderColor: expense.active
+                                                        ? greenColor
+                                                        : mediumGreyColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons
+                                                name={
+                                                    expense.active
+                                                        ? "eye"
+                                                        : "eye-off"
+                                                }
+                                                size={16}
+                                                color={
+                                                    expense.active
+                                                        ? greenColor
+                                                        : mediumGreyColor
+                                                }
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                handleEditExpense(expense)
+                                            }
+                                            style={[
+                                                styles.expenseIcon,
+                                                {
+                                                    borderColor:
+                                                        mediumGreyColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons
+                                                name="pencil"
+                                                size={16}
+                                                color={mediumGreyColor}
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                handleDeleteExpense(expense.id)
+                                            }
+                                            style={[
+                                                styles.expenseIcon,
+                                                {
+                                                    borderColor: redColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons
+                                                name="trash"
+                                                size={16}
+                                                color={redColor}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View style={styles.expenseTotal}>
+                                    <ThemedText style={styles.expensePeriod}>
+                                        Yearly / Monthly:
                                     </ThemedText>
-                                    <ThemedText style={styles.expenseMonthly}>
-                                        {currencySymbol}{" "}
-                                        {(expense.yearlyTotal / 12).toFixed(2)}
-                                    </ThemedText>
+                                    <View style={styles.expenseAmounts}>
+                                        <ThemedText
+                                            style={styles.expenseYearly}
+                                        >
+                                            {currencySymbol}{" "}
+                                            {expense.yearlyTotal.toFixed(2)}
+                                        </ThemedText>
+                                        <ThemedText
+                                            style={styles.expenseMonthly}
+                                        >
+                                            {currencySymbol}{" "}
+                                            {(expense.yearlyTotal / 12).toFixed(
+                                                2
+                                            )}
+                                        </ThemedText>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    ))}
-                </ThemedView>
-            )}
+                        ))}
+                    </ThemedView>
+                )}
 
-            {expenses.length > 0 && (
-                <>
-                    <ThemedView style={[styles.totalSection, styles.totalYear]}>
-                        <ThemedText type="subtitle">
-                            Total Yearly Spend
-                        </ThemedText>
-                        <ThemedText style={styles.totalAmount}>
-                            {currencySymbol} {totalYearlySpend.toFixed(2)}
-                        </ThemedText>
-                        <ThemedText>
-                            Personal:{" "}
-                            <ThemedText style={styles.totalInline}>
-                                {currencySymbol}{" "}
-                                {personalYearlySpend.toFixed(2)}
+                {expenses.length > 0 && (
+                    <>
+                        <ThemedView
+                            style={[styles.totalSection, styles.totalYear]}
+                        >
+                            <ThemedText type="subtitle">
+                                Total Yearly Spend
                             </ThemedText>
-                        </ThemedText>
-                        <ThemedText>
-                            Business:{" "}
-                            <ThemedText style={styles.totalInline}>
-                                {currencySymbol}{" "}
-                                {businessYearlySpend.toFixed(2)}
+                            <ThemedText style={styles.totalAmount}>
+                                {currencySymbol} {totalYearlySpend.toFixed(2)}
                             </ThemedText>
+                            <ThemedText>
+                                Personal:{" "}
+                                <ThemedText style={styles.totalInline}>
+                                    {currencySymbol}{" "}
+                                    {personalYearlySpend.toFixed(2)}
+                                </ThemedText>
+                            </ThemedText>
+                            <ThemedText>
+                                Business:{" "}
+                                <ThemedText style={styles.totalInline}>
+                                    {currencySymbol}{" "}
+                                    {businessYearlySpend.toFixed(2)}
+                                </ThemedText>
+                            </ThemedText>
+                        </ThemedView>
+
+                        <View style={styles.totalDetails}>
+                            <ThemedView
+                                style={[
+                                    styles.totalSection,
+                                    styles.totalPeriod,
+                                    styles.totalMonth,
+                                ]}
+                            >
+                                <ThemedText type="defaultSemiBold">
+                                    Total Monthly Spend
+                                </ThemedText>
+                                <ThemedText
+                                    style={[
+                                        styles.totalAmount,
+                                        { fontSize: 28 },
+                                    ]}
+                                >
+                                    {currencySymbol}{" "}
+                                    {totalMonthlySpend.toFixed(2)}
+                                </ThemedText>
+                            </ThemedView>
+
+                            <ThemedView
+                                style={[
+                                    styles.totalSection,
+                                    styles.totalPeriod,
+                                    styles.totalDay,
+                                ]}
+                            >
+                                <ThemedText type="defaultSemiBold">
+                                    Total Daily Spend
+                                </ThemedText>
+                                <ThemedText
+                                    style={[
+                                        styles.totalAmount,
+                                        { fontSize: 28 },
+                                    ]}
+                                >
+                                    {currencySymbol}{" "}
+                                    {totalDailySpend.toFixed(2)}
+                                </ThemedText>
+                            </ThemedView>
+                        </View>
+                    </>
+                )}
+
+                {expenses.length === 0 && !loading && (
+                    <ThemedView style={styles.emptyState}>
+                        <ThemedText style={styles.emptyStateText}>
+                            {user
+                                ? "Add your first expense!"
+                                : "Sign in to track your expenses."}
                         </ThemedText>
                     </ThemedView>
-
-                    <View style={styles.totalDetails}>
-                        <ThemedView
-                            style={[
-                                styles.totalSection,
-                                styles.totalPeriod,
-                                styles.totalMonth,
-                            ]}
-                        >
-                            <ThemedText type="defaultSemiBold">
-                                Total Monthly Spend
-                            </ThemedText>
-                            <ThemedText
-                                style={[styles.totalAmount, { fontSize: 28 }]}
-                            >
-                                {currencySymbol} {totalMonthlySpend.toFixed(2)}
-                            </ThemedText>
-                        </ThemedView>
-
-                        <ThemedView
-                            style={[
-                                styles.totalSection,
-                                styles.totalPeriod,
-                                styles.totalDay,
-                            ]}
-                        >
-                            <ThemedText type="defaultSemiBold">
-                                Total Daily Spend
-                            </ThemedText>
-                            <ThemedText
-                                style={[styles.totalAmount, { fontSize: 28 }]}
-                            >
-                                {currencySymbol} {totalDailySpend.toFixed(2)}
-                            </ThemedText>
-                        </ThemedView>
-                    </View>
-                </>
-            )}
-
-            {expenses.length === 0 && !loading && (
-                <ThemedView style={styles.emptyState}>
-                    <ThemedText style={styles.emptyStateText}>
-                        {user
-                            ? "Add your first expense!"
-                            : "Sign in to track your expenses."}
-                    </ThemedText>
-                </ThemedView>
-            )}
-        </ScrollView>
+                )}
+            </ScrollView>
+        </AuthGate>
     );
 }

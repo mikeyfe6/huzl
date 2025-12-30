@@ -21,11 +21,11 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
-import { Redirect, useRootNavigationState } from "expo-router";
+
+import { AuthGate } from "@/components/loading";
 
 export default function BudgetsScreen() {
     const { user } = useAuth();
-    const rootNavigationState = useRootNavigationState();
 
     const { symbol: currencySymbol } = useCurrency();
     const [budgetName, setBudgetName] = useState("");
@@ -445,220 +445,231 @@ export default function BudgetsScreen() {
         ? selectedBudget.total - selectedBudget.spent
         : 0;
 
-    if (!rootNavigationState?.key) return null;
-    if (!user) return <Redirect href="/" />;
-
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <ThemedView style={styles.fieldset}>
-                <ThemedText type="title" style={styles.heading}>
-                    Budgets
-                </ThemedText>
-
-                <ThemedText style={styles.label}>Budget Name</ThemedText>
-                <TextInput
-                    style={styles.input}
-                    placeholder="e.g., Groceries"
-                    placeholderTextColor={theme.placeholder}
-                    value={budgetName}
-                    onChangeText={setBudgetName}
-                />
-
-                <ThemedText style={styles.label}>
-                    Total Amount ({currencySymbol})
-                </ThemedText>
-                <TextInput
-                    style={styles.input}
-                    placeholder="0.00"
-                    placeholderTextColor={theme.placeholder}
-                    value={totalAmount}
-                    onChangeText={setTotalAmount}
-                    keyboardType="decimal-pad"
-                />
-
-                <TouchableOpacity
-                    style={styles.createButton}
-                    onPress={handleCreateBudget}
-                    disabled={loading}
-                >
-                    <ThemedText style={styles.buttonText}>
-                        {loading ? "Creating..." : "Create Budget"}
-                    </ThemedText>
-                </TouchableOpacity>
-            </ThemedView>
-
-            {budgets.length > 0 && (
-                <ThemedView style={styles.budgetList}>
-                    <ThemedText type="subtitle" style={styles.budgetHeader}>
-                        Your Budgets
-                    </ThemedText>
-                    {budgets.map((budget) => (
-                        <View
-                            key={budget.id}
-                            style={[
-                                styles.budgetCard,
-                                selectedBudgetId === budget.id &&
-                                    styles.budgetSelected,
-                            ]}
-                        >
-                            <View style={styles.budgetTitle}>
-                                <TouchableOpacity
-                                    style={styles.budgetInfo}
-                                    onPress={() =>
-                                        setSelectedBudgetId(budget.id)
-                                    }
-                                >
-                                    <ThemedText type="defaultSemiBold">
-                                        {budget.name}
-                                    </ThemedText>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        handleDeleteBudget(budget.id)
-                                    }
-                                    style={[
-                                        styles.budgetIcon,
-                                        {
-                                            borderColor: redColor,
-                                        },
-                                    ]}
-                                >
-                                    <Ionicons
-                                        name="trash"
-                                        size={16}
-                                        color={redColor}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <ThemedText style={styles.budgetAmount}>
-                                {currencySymbol} {budget.spent.toFixed(2)} -{" "}
-                                <ThemedText
-                                    style={[
-                                        styles.budgetAmount,
-                                        styles.budgetInline,
-                                    ]}
-                                >
-                                    {currencySymbol} {budget.total.toFixed(2)}
-                                </ThemedText>
-                            </ThemedText>
-                            <View style={styles.progressBar}>
-                                <View
-                                    style={[
-                                        styles.progressFill,
-                                        {
-                                            width: `${Math.min(
-                                                (budget.spent / budget.total) *
-                                                    100,
-                                                100
-                                            )}%`,
-                                        },
-                                    ]}
-                                />
-                            </View>
-                        </View>
-                    ))}
-                </ThemedView>
-            )}
-
-            {selectedBudget && (
-                <ThemedView style={styles.expenseSection}>
-                    <ThemedText type="subtitle" style={styles.expenseHeader}>
-                        {selectedBudget.name}
-                    </ThemedText>
-                    <ThemedText style={styles.expenseRemaining}>
-                        Remaining ({currencySymbol}):{" "}
-                        <ThemedText
-                            style={{
-                                color:
-                                    remainingAmount < 0 ? redColor : greenColor,
-                            }}
-                        >
-                            {remainingAmount.toFixed(2)}
-                        </ThemedText>
+        <AuthGate>
+            <ScrollView contentContainerStyle={styles.container}>
+                <ThemedView style={styles.fieldset}>
+                    <ThemedText type="title" style={styles.heading}>
+                        Budgets
                     </ThemedText>
 
-                    <ThemedText style={styles.label}>Expense Name</ThemedText>
+                    <ThemedText style={styles.label}>Budget Name</ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder="e.g., Apples"
+                        placeholder="e.g., Groceries"
                         placeholderTextColor={theme.placeholder}
-                        value={expenseName}
-                        onChangeText={setExpenseName}
+                        value={budgetName}
+                        onChangeText={setBudgetName}
                     />
 
                     <ThemedText style={styles.label}>
-                        Amount ({currencySymbol})
+                        Total Amount ({currencySymbol})
                     </ThemedText>
                     <TextInput
                         style={styles.input}
                         placeholder="0.00"
                         placeholderTextColor={theme.placeholder}
-                        value={expenseAmount}
-                        onChangeText={setExpenseAmount}
+                        value={totalAmount}
+                        onChangeText={setTotalAmount}
                         keyboardType="decimal-pad"
                     />
 
                     <TouchableOpacity
-                        style={styles.addButton}
-                        onPress={handleAddExpense}
+                        style={styles.createButton}
+                        onPress={handleCreateBudget}
                         disabled={loading}
                     >
                         <ThemedText style={styles.buttonText}>
-                            {loading ? "Adding..." : "Add Expense"}
+                            {loading ? "Creating..." : "Create Budget"}
                         </ThemedText>
                     </TouchableOpacity>
+                </ThemedView>
 
-                    <ThemedText type="subtitle" style={styles.expenseList}>
-                        Expenses
-                    </ThemedText>
-                    {selectedBudget.expenses.length === 0 ? (
-                        <ThemedView style={styles.emptyState}>
-                            <ThemedText style={styles.emptyStateText}>
-                                No expenses yet
-                            </ThemedText>
-                        </ThemedView>
-                    ) : (
-                        selectedBudget.expenses.map((expense) => (
-                            <View key={expense.id} style={styles.expenseItem}>
-                                <View style={styles.expenseInfo}>
-                                    <ThemedText type="defaultSemiBold">
-                                        {expense.name}
-                                    </ThemedText>
-                                    <ThemedText style={styles.expenseLabel}>
-                                        {currencySymbol}{" "}
-                                        {expense.amount.toFixed(2)}
-                                    </ThemedText>
+                {budgets.length > 0 && (
+                    <ThemedView style={styles.budgetList}>
+                        <ThemedText type="subtitle" style={styles.budgetHeader}>
+                            Your Budgets
+                        </ThemedText>
+                        {budgets.map((budget) => (
+                            <View
+                                key={budget.id}
+                                style={[
+                                    styles.budgetCard,
+                                    selectedBudgetId === budget.id &&
+                                        styles.budgetSelected,
+                                ]}
+                            >
+                                <View style={styles.budgetTitle}>
+                                    <TouchableOpacity
+                                        style={styles.budgetInfo}
+                                        onPress={() =>
+                                            setSelectedBudgetId(budget.id)
+                                        }
+                                    >
+                                        <ThemedText type="defaultSemiBold">
+                                            {budget.name}
+                                        </ThemedText>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            handleDeleteBudget(budget.id)
+                                        }
+                                        style={[
+                                            styles.budgetIcon,
+                                            {
+                                                borderColor: redColor,
+                                            },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name="trash"
+                                            size={16}
+                                            color={redColor}
+                                        />
+                                    </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        handleDeleteExpense(expense.id)
-                                    }
-                                    style={[
-                                        styles.budgetIcon,
-                                        {
-                                            borderColor: redColor,
-                                        },
-                                    ]}
-                                >
-                                    <Ionicons
-                                        name="trash"
-                                        size={16}
-                                        color={redColor}
+                                <ThemedText style={styles.budgetAmount}>
+                                    {currencySymbol} {budget.spent.toFixed(2)} -{" "}
+                                    <ThemedText
+                                        style={[
+                                            styles.budgetAmount,
+                                            styles.budgetInline,
+                                        ]}
+                                    >
+                                        {currencySymbol}{" "}
+                                        {budget.total.toFixed(2)}
+                                    </ThemedText>
+                                </ThemedText>
+                                <View style={styles.progressBar}>
+                                    <View
+                                        style={[
+                                            styles.progressFill,
+                                            {
+                                                width: `${Math.min(
+                                                    (budget.spent /
+                                                        budget.total) *
+                                                        100,
+                                                    100
+                                                )}%`,
+                                            },
+                                        ]}
                                     />
-                                </TouchableOpacity>
+                                </View>
                             </View>
-                        ))
-                    )}
-                </ThemedView>
-            )}
+                        ))}
+                    </ThemedView>
+                )}
 
-            {budgets.length === 0 && (
-                <ThemedView style={styles.emptyState}>
-                    <ThemedText style={styles.emptyStateText}>
-                        Create a budget to get started!
-                    </ThemedText>
-                </ThemedView>
-            )}
-        </ScrollView>
+                {selectedBudget && (
+                    <ThemedView style={styles.expenseSection}>
+                        <ThemedText
+                            type="subtitle"
+                            style={styles.expenseHeader}
+                        >
+                            {selectedBudget.name}
+                        </ThemedText>
+                        <ThemedText style={styles.expenseRemaining}>
+                            Remaining ({currencySymbol}):{" "}
+                            <ThemedText
+                                style={{
+                                    color:
+                                        remainingAmount < 0
+                                            ? redColor
+                                            : greenColor,
+                                }}
+                            >
+                                {remainingAmount.toFixed(2)}
+                            </ThemedText>
+                        </ThemedText>
+
+                        <ThemedText style={styles.label}>
+                            Expense Name
+                        </ThemedText>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="e.g., Apples"
+                            placeholderTextColor={theme.placeholder}
+                            value={expenseName}
+                            onChangeText={setExpenseName}
+                        />
+
+                        <ThemedText style={styles.label}>
+                            Amount ({currencySymbol})
+                        </ThemedText>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="0.00"
+                            placeholderTextColor={theme.placeholder}
+                            value={expenseAmount}
+                            onChangeText={setExpenseAmount}
+                            keyboardType="decimal-pad"
+                        />
+
+                        <TouchableOpacity
+                            style={styles.addButton}
+                            onPress={handleAddExpense}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.buttonText}>
+                                {loading ? "Adding..." : "Add Expense"}
+                            </ThemedText>
+                        </TouchableOpacity>
+
+                        <ThemedText type="subtitle" style={styles.expenseList}>
+                            Expenses
+                        </ThemedText>
+                        {selectedBudget.expenses.length === 0 ? (
+                            <ThemedView style={styles.emptyState}>
+                                <ThemedText style={styles.emptyStateText}>
+                                    No expenses yet
+                                </ThemedText>
+                            </ThemedView>
+                        ) : (
+                            selectedBudget.expenses.map((expense) => (
+                                <View
+                                    key={expense.id}
+                                    style={styles.expenseItem}
+                                >
+                                    <View style={styles.expenseInfo}>
+                                        <ThemedText type="defaultSemiBold">
+                                            {expense.name}
+                                        </ThemedText>
+                                        <ThemedText style={styles.expenseLabel}>
+                                            {currencySymbol}{" "}
+                                            {expense.amount.toFixed(2)}
+                                        </ThemedText>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            handleDeleteExpense(expense.id)
+                                        }
+                                        style={[
+                                            styles.budgetIcon,
+                                            {
+                                                borderColor: redColor,
+                                            },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name="trash"
+                                            size={16}
+                                            color={redColor}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            ))
+                        )}
+                    </ThemedView>
+                )}
+
+                {budgets.length === 0 && (
+                    <ThemedView style={styles.emptyState}>
+                        <ThemedText style={styles.emptyStateText}>
+                            Create a budget to get started!
+                        </ThemedText>
+                    </ThemedView>
+                )}
+            </ScrollView>
+        </AuthGate>
     );
 }

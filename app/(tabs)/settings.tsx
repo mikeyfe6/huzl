@@ -24,11 +24,12 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useThemePreference } from "@/hooks/use-theme-preference";
 import { supabase } from "@/utils/supabase";
-import { Redirect, useRootNavigationState, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+
+import { AuthGate } from "@/components/loading";
 
 export default function SettingsScreen() {
     const { user, refreshUser, signOut } = useAuth();
-    const rootNavigationState = useRootNavigationState();
     const router = useRouter();
 
     const colorScheme = useColorScheme();
@@ -223,205 +224,207 @@ export default function SettingsScreen() {
         return null;
     }, [user]);
 
-    if (!rootNavigationState?.key) return null;
-    if (!user) return <Redirect href="/" />;
-
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <ThemedView style={styles.wrapper}>
-                <ThemedText type="title" style={styles.heading}>
-                    Settings
-                </ThemedText>
-
-                <ThemedView>
-                    <ThemedText style={styles.settingTitle} type="subtitle">
-                        Profile
+        <AuthGate>
+            <ScrollView contentContainerStyle={styles.container}>
+                <ThemedView style={styles.wrapper}>
+                    <ThemedText type="title" style={styles.heading}>
+                        Settings
                     </ThemedText>
-                    <ThemedView style={styles.settingItem}>
-                        <ThemedText style={styles.settingLabel}>
-                            Email
-                        </ThemedText>
-                        <ThemedText style={styles.settingValue}>
-                            {user?.email || "Not set"}
-                        </ThemedText>
-                    </ThemedView>
-                    <ThemedView
-                        style={[styles.settingItem, styles.settingItemNoBorder]}
-                    >
-                        <ThemedText style={styles.settingLabel}>
-                            Display Name
-                        </ThemedText>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Your name"
-                            placeholderTextColor={theme.placeholder}
-                            value={displayName}
-                            onChangeText={setDisplayName}
-                        />
-                    </ThemedView>
-                    <TouchableOpacity
-                        style={styles.saveButton}
-                        onPress={handleSaveProfile}
-                        disabled={loading}
-                    >
-                        <ThemedText style={styles.saveButtonText}>
-                            {loading ? "Saving..." : "Save Profile"}
-                        </ThemedText>
-                    </TouchableOpacity>
-                </ThemedView>
 
-                <ThemedView>
-                    <ThemedText style={styles.settingTitle} type="subtitle">
-                        Appearance
-                    </ThemedText>
-                    <ThemedView style={styles.settingItem}>
-                        <ThemedText style={styles.settingLabel}>
-                            Theme
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
+                            Profile
                         </ThemedText>
-                        <View style={styles.settingWrapper}>
-                            <TouchableOpacity
-                                style={[
-                                    styles.themeButton,
-                                    preference === "light" &&
-                                        styles.themeButtonActive,
-                                ]}
-                                onPress={() => updatePreference("light")}
-                            >
-                                <ThemedText
+                        <ThemedView style={styles.settingItem}>
+                            <ThemedText style={styles.settingLabel}>
+                                Email
+                            </ThemedText>
+                            <ThemedText style={styles.settingValue}>
+                                {user?.email || "Not set"}
+                            </ThemedText>
+                        </ThemedView>
+                        <ThemedView
+                            style={[
+                                styles.settingItem,
+                                styles.settingItemNoBorder,
+                            ]}
+                        >
+                            <ThemedText style={styles.settingLabel}>
+                                Display Name
+                            </ThemedText>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Your name"
+                                placeholderTextColor={theme.placeholder}
+                                value={displayName}
+                                onChangeText={setDisplayName}
+                            />
+                        </ThemedView>
+                        <TouchableOpacity
+                            style={styles.saveButton}
+                            onPress={handleSaveProfile}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.saveButtonText}>
+                                {loading ? "Saving..." : "Save Profile"}
+                            </ThemedText>
+                        </TouchableOpacity>
+                    </ThemedView>
+
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
+                            Appearance
+                        </ThemedText>
+                        <ThemedView style={styles.settingItem}>
+                            <ThemedText style={styles.settingLabel}>
+                                Theme
+                            </ThemedText>
+                            <View style={styles.settingWrapper}>
+                                <TouchableOpacity
                                     style={[
-                                        styles.themeButtonText,
+                                        styles.themeButton,
                                         preference === "light" &&
-                                            styles.themeButtonTextActive,
+                                            styles.themeButtonActive,
                                     ]}
+                                    onPress={() => updatePreference("light")}
                                 >
-                                    Light
-                                </ThemedText>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[
-                                    styles.themeButton,
-                                    preference === "dark" &&
-                                        styles.themeButtonActive,
-                                ]}
-                                onPress={() => updatePreference("dark")}
-                            >
-                                <ThemedText
+                                    <ThemedText
+                                        style={[
+                                            styles.themeButtonText,
+                                            preference === "light" &&
+                                                styles.themeButtonTextActive,
+                                        ]}
+                                    >
+                                        Light
+                                    </ThemedText>
+                                </TouchableOpacity>
+                                <TouchableOpacity
                                     style={[
-                                        styles.themeButtonText,
+                                        styles.themeButton,
                                         preference === "dark" &&
-                                            styles.themeButtonTextActive,
+                                            styles.themeButtonActive,
                                     ]}
+                                    onPress={() => updatePreference("dark")}
                                 >
-                                    Dark
-                                </ThemedText>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[
-                                    styles.themeButton,
-                                    preference === "system" &&
-                                        styles.themeButtonActive,
-                                ]}
-                                onPress={() => updatePreference("system")}
-                            >
+                                    <ThemedText
+                                        style={[
+                                            styles.themeButtonText,
+                                            preference === "dark" &&
+                                                styles.themeButtonTextActive,
+                                        ]}
+                                    >
+                                        Dark
+                                    </ThemedText>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[
+                                        styles.themeButton,
+                                        preference === "system" &&
+                                            styles.themeButtonActive,
+                                    ]}
+                                    onPress={() => updatePreference("system")}
+                                >
+                                    <ThemedText
+                                        style={[
+                                            styles.themeButtonText,
+                                            preference === "system" &&
+                                                styles.themeButtonTextActive,
+                                        ]}
+                                    >
+                                        System
+                                    </ThemedText>
+                                </TouchableOpacity>
+                            </View>
+                        </ThemedView>
+                    </ThemedView>
+
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
+                            Currency
+                        </ThemedText>
+                        <TouchableOpacity
+                            style={styles.settingItem}
+                            onPress={() => setCurrencyModalVisible(true)}
+                        >
+                            <View style={styles.settingBox}>
                                 <ThemedText
                                     style={[
-                                        styles.themeButtonText,
-                                        preference === "system" &&
-                                            styles.themeButtonTextActive,
+                                        styles.settingLabel,
+                                        styles.settingLabelNoMargin,
+                                        styles.settingLink,
                                     ]}
                                 >
-                                    System
+                                    Currency Symbol
                                 </ThemedText>
-                            </TouchableOpacity>
-                        </View>
+                                <ThemedText style={styles.settingValue}>
+                                    {currencySymbol} ({currencyCode})
+                                </ThemedText>
+                            </View>
+                        </TouchableOpacity>
+                    </ThemedView>
+
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
+                            Income
+                        </ThemedText>
+                        <TouchableOpacity
+                            style={styles.settingItem}
+                            onPress={() => router.push("/income")}
+                        >
+                            <View style={styles.settingBox}>
+                                <ThemedText
+                                    style={[
+                                        styles.settingLabel,
+                                        styles.settingLabelNoMargin,
+                                        styles.settingLink,
+                                    ]}
+                                >
+                                    Monthly Income
+                                </ThemedText>
+                                <ThemedText style={styles.settingValue}>
+                                    {monthlyIncome === null
+                                        ? "Not set"
+                                        : monthlyIncome}
+                                </ThemedText>
+                            </View>
+                        </TouchableOpacity>
+                    </ThemedView>
+
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
+                            About
+                        </ThemedText>
+                        <ThemedView style={[styles.settingItem]}>
+                            <ThemedText style={styles.settingLabel}>
+                                Version
+                            </ThemedText>
+                            <ThemedText style={styles.settingValue}>
+                                1.0.0
+                            </ThemedText>
+                        </ThemedView>
+                    </ThemedView>
+
+                    <ThemedView style={[styles.logOut]}>
+                        <TouchableOpacity
+                            style={[styles.logOutButton]}
+                            onPress={async () => {
+                                await signOut();
+                            }}
+                        >
+                            <ThemedText style={styles.logOutButtonText}>
+                                Log Out
+                            </ThemedText>
+                        </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>
 
-                <ThemedView>
-                    <ThemedText style={styles.settingTitle} type="subtitle">
-                        Currency
-                    </ThemedText>
-                    <TouchableOpacity
-                        style={styles.settingItem}
-                        onPress={() => setCurrencyModalVisible(true)}
-                    >
-                        <View style={styles.settingBox}>
-                            <ThemedText
-                                style={[
-                                    styles.settingLabel,
-                                    styles.settingLabelNoMargin,
-                                    styles.settingLink,
-                                ]}
-                            >
-                                Currency Symbol
-                            </ThemedText>
-                            <ThemedText style={styles.settingValue}>
-                                {currencySymbol} ({currencyCode})
-                            </ThemedText>
-                        </View>
-                    </TouchableOpacity>
-                </ThemedView>
-
-                <ThemedView>
-                    <ThemedText style={styles.settingTitle} type="subtitle">
-                        Income
-                    </ThemedText>
-                    <TouchableOpacity
-                        style={styles.settingItem}
-                        onPress={() => router.push("/income")}
-                    >
-                        <View style={styles.settingBox}>
-                            <ThemedText
-                                style={[
-                                    styles.settingLabel,
-                                    styles.settingLabelNoMargin,
-                                    styles.settingLink,
-                                ]}
-                            >
-                                Monthly Income
-                            </ThemedText>
-                            <ThemedText style={styles.settingValue}>
-                                {monthlyIncome === null
-                                    ? "Not set"
-                                    : monthlyIncome}
-                            </ThemedText>
-                        </View>
-                    </TouchableOpacity>
-                </ThemedView>
-
-                <ThemedView>
-                    <ThemedText style={styles.settingTitle} type="subtitle">
-                        About
-                    </ThemedText>
-                    <ThemedView style={[styles.settingItem]}>
-                        <ThemedText style={styles.settingLabel}>
-                            Version
-                        </ThemedText>
-                        <ThemedText style={styles.settingValue}>
-                            1.0.0
-                        </ThemedText>
-                    </ThemedView>
-                </ThemedView>
-
-                <ThemedView style={[styles.logOut]}>
-                    <TouchableOpacity
-                        style={[styles.logOutButton]}
-                        onPress={async () => {
-                            await signOut();
-                        }}
-                    >
-                        <ThemedText style={styles.logOutButtonText}>
-                            Log Out
-                        </ThemedText>
-                    </TouchableOpacity>
-                </ThemedView>
-            </ThemedView>
-
-            <CurrencyPickerModal
-                visible={currencyModalVisible}
-                onClose={() => setCurrencyModalVisible(false)}
-                currentSymbol={currencySymbol}
-            />
-        </ScrollView>
+                <CurrencyPickerModal
+                    visible={currencyModalVisible}
+                    onClose={() => setCurrencyModalVisible(false)}
+                    currentSymbol={currencySymbol}
+                />
+            </ScrollView>
+        </AuthGate>
     );
 }
