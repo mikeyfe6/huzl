@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 import {
     Image,
+    ScrollView,
     StyleSheet,
     TextInput,
     TouchableOpacity,
@@ -119,6 +120,7 @@ export default function HomeScreen() {
                     width: "100%",
                     maxWidth: 400,
                     marginTop: 24,
+                    marginBottom: 64,
                 },
                 statCard: {
                     ...baseSpace,
@@ -240,137 +242,143 @@ export default function HomeScreen() {
         );
     }
 
+    const HeaderImage = () => (
+        <Image
+            source={require("../../assets/images/huzl-logo.png")}
+            style={{
+                width: 350,
+                height: 200,
+                resizeMode: "contain",
+                marginBottom: -32,
+            }}
+            accessible
+            accessibilityLabel="Huzl logo"
+        />
+    );
+
     if (!user) {
         return (
-            <ThemedView style={styles.container}>
-                <Image
-                    source={require("../../assets/images/huzl-logo.png")}
-                    style={{
-                        width: 440,
-                        height: 240,
-                        resizeMode: "contain",
-                    }}
-                    accessible
-                    accessibilityLabel="Huzl logo"
-                />
-                <ThemedText type="title">Welcome!</ThemedText>
-                <ThemedText style={styles.text}>Sign in to continue</ThemedText>
-                <View style={styles.fieldset}>
-                    <TextInput
-                        placeholder="you@example.com"
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                        autoComplete="email"
-                        value={email}
-                        onChangeText={setEmail}
-                        style={styles.input}
-                        placeholderTextColor={theme.placeholder}
-                    />
-                    <TextInput
-                        placeholder="password"
-                        secureTextEntry
-                        value={password}
-                        autoComplete="password"
-                        onChangeText={setPassword}
-                        style={styles.input}
-                        placeholderTextColor={theme.placeholder}
-                    />
-                    <TouchableOpacity
-                        onPress={handleSignIn}
-                        style={styles.signInButton}
-                    >
-                        <ThemedText style={styles.signInText}>
-                            Sign In
-                        </ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={handleSignUp}
-                        style={styles.signUpButton}
-                    >
-                        <ThemedText style={styles.signUpText}>
-                            Create Account
-                        </ThemedText>
-                    </TouchableOpacity>
-                    {error && (
-                        <ThemedText style={styles.errorStyle}>
-                            {error}
-                        </ThemedText>
-                    )}
-                </View>
-            </ThemedView>
+            <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={{ flexGrow: 1 }}
+            >
+                <ThemedView style={[styles.container, { flex: 1 }]}>
+                    <HeaderImage />
+                    <ThemedText type="title">Welcome !</ThemedText>
+                    <ThemedText style={styles.text}>
+                        Sign in to continue
+                    </ThemedText>
+                    <View style={styles.fieldset}>
+                        <TextInput
+                            placeholder="you@example.com"
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            autoComplete="email"
+                            value={email}
+                            onChangeText={setEmail}
+                            style={styles.input}
+                            placeholderTextColor={theme.placeholder}
+                        />
+                        <TextInput
+                            placeholder="password"
+                            secureTextEntry
+                            value={password}
+                            autoComplete="password"
+                            onChangeText={setPassword}
+                            style={styles.input}
+                            placeholderTextColor={theme.placeholder}
+                        />
+                        <TouchableOpacity
+                            onPress={handleSignIn}
+                            style={styles.signInButton}
+                        >
+                            <ThemedText style={styles.signInText}>
+                                Sign In
+                            </ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={handleSignUp}
+                            style={styles.signUpButton}
+                        >
+                            <ThemedText style={styles.signUpText}>
+                                Create Account
+                            </ThemedText>
+                        </TouchableOpacity>
+                        {error && (
+                            <ThemedText style={styles.errorStyle}>
+                                {error}
+                            </ThemedText>
+                        )}
+                    </View>
+                </ThemedView>
+            </ScrollView>
         );
     }
 
     return (
-        <ThemedView style={styles.container}>
-            <Image
-                source={require("../../assets/images/huzl-logo.png")}
-                style={{
-                    width: 440,
-                    height: 240,
-                    resizeMode: "contain",
-                }}
-                accessible
-                accessibilityLabel="Huzl logo"
-            />
-            <ThemedText style={styles.text}>
-                Signed in as{" "}
-                <ThemedText style={styles.user}>{user.email}</ThemedText>
-            </ThemedText>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+            <ThemedView style={[styles.container, { flex: 1 }]}>
+                <HeaderImage />
+                <ThemedText style={styles.text}>
+                    Signed in as{" "}
+                    <ThemedText style={styles.user}>{user.email}</ThemedText>
+                </ThemedText>
 
-            <ThemedView style={styles.statsContainer}>
-                {monthlyIncome !== null && (
+                <ThemedView style={styles.statsContainer}>
+                    {monthlyIncome !== null && (
+                        <ThemedView style={styles.statCard}>
+                            <ThemedText style={styles.statLabel}>
+                                Monthly Income
+                            </ThemedText>
+                            <View style={styles.statWrapper}>
+                                <Ionicons
+                                    name="add-outline"
+                                    size={16}
+                                    color={greenColor}
+                                />
+                                <ThemedText style={styles.statValue}>
+                                    {currencySymbol} {monthlyIncome.toFixed(2)}
+                                </ThemedText>
+                            </View>
+                        </ThemedView>
+                    )}
+
                     <ThemedView style={styles.statCard}>
                         <ThemedText style={styles.statLabel}>
-                            Monthly Income
+                            Monthly Costs
                         </ThemedText>
                         <View style={styles.statWrapper}>
                             <Ionicons
-                                name="add-outline"
+                                name="remove-outline"
                                 size={16}
-                                color={greenColor}
+                                color={redColor}
                             />
                             <ThemedText style={styles.statValue}>
-                                {currencySymbol} {monthlyIncome.toFixed(2)}
+                                {currencySymbol}{" "}
+                                {totals.monthlyTotal.toFixed(2)}
                             </ThemedText>
                         </View>
                     </ThemedView>
-                )}
 
-                <ThemedView style={styles.statCard}>
-                    <ThemedText style={styles.statLabel}>
-                        Monthly Costs
-                    </ThemedText>
-                    <View style={styles.statWrapper}>
-                        <Ionicons
-                            name="remove-outline"
-                            size={16}
-                            color={redColor}
-                        />
-                        <ThemedText style={styles.statValue}>
-                            {currencySymbol} {totals.monthlyTotal.toFixed(2)}
-                        </ThemedText>
-                    </View>
+                    {monthlyDisposable !== null && (
+                        <ThemedView
+                            style={[
+                                styles.statCard,
+                                monthlyDisposable >= 0
+                                    ? styles.statCardPositive
+                                    : styles.statCardNegative,
+                            ]}
+                        >
+                            <ThemedText style={styles.statLabel}>
+                                Monthly Remaining
+                            </ThemedText>
+                            <ThemedText style={styles.statValue}>
+                                {currencySymbol} {monthlyDisposable.toFixed(2)}
+                            </ThemedText>
+                        </ThemedView>
+                    )}
                 </ThemedView>
-
-                {monthlyDisposable !== null && (
-                    <ThemedView
-                        style={[
-                            styles.statCard,
-                            monthlyDisposable >= 0
-                                ? styles.statCardPositive
-                                : styles.statCardNegative,
-                        ]}
-                    >
-                        <ThemedText style={styles.statLabel}>
-                            Monthly Remaining
-                        </ThemedText>
-                        <ThemedText style={styles.statValue}>
-                            {currencySymbol} {monthlyDisposable.toFixed(2)}
-                        </ThemedText>
-                    </ThemedView>
-                )}
             </ThemedView>
-        </ThemedView>
+        </ScrollView>
     );
 }
