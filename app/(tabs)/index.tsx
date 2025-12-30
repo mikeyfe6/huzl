@@ -13,7 +13,13 @@ import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import {
+    Image,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 export default function HomeScreen() {
     const { user, loading, signIn, signUp } = useAuth();
@@ -237,7 +243,17 @@ export default function HomeScreen() {
     if (!user) {
         return (
             <ThemedView style={styles.container}>
-                <ThemedText type="title">Welcome at Huzl</ThemedText>
+                <Image
+                    source={require("../../assets/images/huzl-logo.png")}
+                    style={{
+                        width: 440,
+                        height: 240,
+                        resizeMode: "contain",
+                    }}
+                    accessible
+                    accessibilityLabel="Huzl logo"
+                />
+                <ThemedText type="title">Welcome!</ThemedText>
                 <ThemedText style={styles.text}>Sign in to continue</ThemedText>
                 <View style={styles.fieldset}>
                     <TextInput
@@ -287,7 +303,16 @@ export default function HomeScreen() {
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText type="title">Huzl</ThemedText>
+            <Image
+                source={require("../../assets/images/huzl-logo.png")}
+                style={{
+                    width: 440,
+                    height: 240,
+                    resizeMode: "contain",
+                }}
+                accessible
+                accessibilityLabel="Huzl logo"
+            />
             <ThemedText style={styles.text}>
                 Signed in as{" "}
                 <ThemedText style={styles.user}>{user.email}</ThemedText>
