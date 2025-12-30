@@ -27,9 +27,6 @@ export default function BudgetsScreen() {
     const { user } = useAuth();
     const rootNavigationState = useRootNavigationState();
 
-    if (!rootNavigationState?.key) return null;
-    if (!user) return <Redirect href="/" />;
-
     const { symbol: currencySymbol } = useCurrency();
     const [budgetName, setBudgetName] = useState("");
     const [totalAmount, setTotalAmount] = useState("");
@@ -447,6 +444,9 @@ export default function BudgetsScreen() {
     const remainingAmount = selectedBudget
         ? selectedBudget.total - selectedBudget.spent
         : 0;
+
+    if (!rootNavigationState?.key) return null;
+    if (!user) return <Redirect href="/" />;
 
     return (
         <ScrollView contentContainerStyle={styles.container}>

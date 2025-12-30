@@ -48,9 +48,6 @@ export default function ExpensesScreen() {
     const { user } = useAuth();
     const rootNavigationState = useRootNavigationState();
 
-    if (!rootNavigationState?.key) return null;
-    if (!user) return <Redirect href="/" />;
-
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
     const [frequency, setFrequency] = useState<Frequency>("monthly");
@@ -643,6 +640,9 @@ export default function ExpensesScreen() {
             isMounted = false;
         };
     }, [user]);
+
+    if (!rootNavigationState?.key) return null;
+    if (!user) return <Redirect href="/" />;
 
     return (
         <ScrollView

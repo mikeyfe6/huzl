@@ -31,9 +31,6 @@ export default function SettingsScreen() {
     const rootNavigationState = useRootNavigationState();
     const router = useRouter();
 
-    if (!rootNavigationState?.key) return null;
-    if (!user) return <Redirect href="/" />;
-
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { preference, updatePreference } = useThemePreference();
@@ -225,6 +222,9 @@ export default function SettingsScreen() {
         if (val) return Number.parseFloat(String(val));
         return null;
     }, [user]);
+
+    if (!rootNavigationState?.key) return null;
+    if (!user) return <Redirect href="/" />;
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
