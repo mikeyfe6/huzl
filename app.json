@@ -4,7 +4,7 @@
         "slug": "huzl",
         "version": "1.0.0",
         "orientation": "portrait",
-        "icon": "./assets/images/huzl-icon.png",
+        "icon": "./assets/images/huzl-square-icon.png",
         "scheme": "huzl",
         "userInterfaceStyle": "automatic",
         "newArchEnabled": true,

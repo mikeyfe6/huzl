@@ -80,6 +80,12 @@ export default function HomeScreen() {
                     flex: 1,
                     padding: 16,
                 },
+                image: {
+                    width: 350,
+                    height: 200,
+                    resizeMode: "contain",
+                    marginVertical: -12,
+                },
                 text: {
                     marginTop: 8,
                 },
@@ -88,6 +94,7 @@ export default function HomeScreen() {
                     width: "100%",
                     marginTop: 16,
                     maxWidth: 500,
+                    marginBottom: 64,
                 },
                 input: {
                     ...baseInput,
@@ -262,12 +269,7 @@ export default function HomeScreen() {
     const HeaderImage = () => (
         <Image
             source={require("../../assets/images/huzl-logo.png")}
-            style={{
-                width: 350,
-                height: 200,
-                resizeMode: "contain",
-                marginBottom: -12,
-            }}
+            style={styles.image}
             accessible
             accessibilityLabel="Huzl logo"
         />
