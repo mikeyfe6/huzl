@@ -1,24 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-    Alert,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { CurrencyPickerModal } from "@/components/ui/currency-modal";
-import {
-    Colors,
-    greenColor,
-    linkColor,
-    redColor,
-    silverColor,
-    whiteColor,
-} from "@/constants/theme";
+import { Colors, greenColor, linkColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
@@ -59,10 +45,7 @@ export default function SettingsScreen() {
             });
 
             if (error) {
-                Alert.alert(
-                    "Error",
-                    `Failed to update profile: ${error.message}`
-                );
+                Alert.alert("Error", `Failed to update profile: ${error.message}`);
             } else {
                 await refreshUser();
                 Alert.alert("Success", "Profile updated successfully");
@@ -237,22 +220,11 @@ export default function SettingsScreen() {
                             Profile
                         </ThemedText>
                         <ThemedView style={styles.settingItem}>
-                            <ThemedText style={styles.settingLabel}>
-                                Email
-                            </ThemedText>
-                            <ThemedText style={styles.settingValue}>
-                                {user?.email || "Not set"}
-                            </ThemedText>
+                            <ThemedText style={styles.settingLabel}>Email</ThemedText>
+                            <ThemedText style={styles.settingValue}>{user?.email || "Not set"}</ThemedText>
                         </ThemedView>
-                        <ThemedView
-                            style={[
-                                styles.settingItem,
-                                styles.settingItemNoBorder,
-                            ]}
-                        >
-                            <ThemedText style={styles.settingLabel}>
-                                Display Name
-                            </ThemedText>
+                        <ThemedView style={[styles.settingItem, styles.settingItemNoBorder]}>
+                            <ThemedText style={styles.settingLabel}>Display Name</ThemedText>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Your name"
@@ -261,11 +233,7 @@ export default function SettingsScreen() {
                                 onChangeText={setDisplayName}
                             />
                         </ThemedView>
-                        <TouchableOpacity
-                            style={styles.saveButton}
-                            onPress={handleSaveProfile}
-                            disabled={loading}
-                        >
+                        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile} disabled={loading}>
                             <ThemedText style={styles.saveButtonText}>
                                 {loading ? "Saving..." : "Save Profile"}
                             </ThemedText>
@@ -277,59 +245,42 @@ export default function SettingsScreen() {
                             Appearance
                         </ThemedText>
                         <ThemedView style={styles.settingItem}>
-                            <ThemedText style={styles.settingLabel}>
-                                Theme
-                            </ThemedText>
+                            <ThemedText style={styles.settingLabel}>Theme</ThemedText>
                             <View style={styles.settingWrapper}>
                                 <TouchableOpacity
-                                    style={[
-                                        styles.themeButton,
-                                        preference === "light" &&
-                                            styles.themeButtonActive,
-                                    ]}
+                                    style={[styles.themeButton, preference === "light" && styles.themeButtonActive]}
                                     onPress={() => updatePreference("light")}
                                 >
                                     <ThemedText
                                         style={[
                                             styles.themeButtonText,
-                                            preference === "light" &&
-                                                styles.themeButtonTextActive,
+                                            preference === "light" && styles.themeButtonTextActive,
                                         ]}
                                     >
                                         Light
                                     </ThemedText>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    style={[
-                                        styles.themeButton,
-                                        preference === "dark" &&
-                                            styles.themeButtonActive,
-                                    ]}
+                                    style={[styles.themeButton, preference === "dark" && styles.themeButtonActive]}
                                     onPress={() => updatePreference("dark")}
                                 >
                                     <ThemedText
                                         style={[
                                             styles.themeButtonText,
-                                            preference === "dark" &&
-                                                styles.themeButtonTextActive,
+                                            preference === "dark" && styles.themeButtonTextActive,
                                         ]}
                                     >
                                         Dark
                                     </ThemedText>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    style={[
-                                        styles.themeButton,
-                                        preference === "system" &&
-                                            styles.themeButtonActive,
-                                    ]}
+                                    style={[styles.themeButton, preference === "system" && styles.themeButtonActive]}
                                     onPress={() => updatePreference("system")}
                                 >
                                     <ThemedText
                                         style={[
                                             styles.themeButtonText,
-                                            preference === "system" &&
-                                                styles.themeButtonTextActive,
+                                            preference === "system" && styles.themeButtonTextActive,
                                         ]}
                                     >
                                         System
@@ -343,17 +294,10 @@ export default function SettingsScreen() {
                         <ThemedText style={styles.settingTitle} type="subtitle">
                             Currency
                         </ThemedText>
-                        <TouchableOpacity
-                            style={styles.settingItem}
-                            onPress={() => setCurrencyModalVisible(true)}
-                        >
+                        <TouchableOpacity style={styles.settingItem} onPress={() => setCurrencyModalVisible(true)}>
                             <View style={styles.settingBox}>
                                 <ThemedText
-                                    style={[
-                                        styles.settingLabel,
-                                        styles.settingLabelNoMargin,
-                                        styles.settingLink,
-                                    ]}
+                                    style={[styles.settingLabel, styles.settingLabelNoMargin, styles.settingLink]}
                                 >
                                     Currency Symbol
                                 </ThemedText>
@@ -368,24 +312,15 @@ export default function SettingsScreen() {
                         <ThemedText style={styles.settingTitle} type="subtitle">
                             Income
                         </ThemedText>
-                        <TouchableOpacity
-                            style={styles.settingItem}
-                            onPress={() => router.push("/income")}
-                        >
+                        <TouchableOpacity style={styles.settingItem} onPress={() => router.push("/income")}>
                             <View style={styles.settingBox}>
                                 <ThemedText
-                                    style={[
-                                        styles.settingLabel,
-                                        styles.settingLabelNoMargin,
-                                        styles.settingLink,
-                                    ]}
+                                    style={[styles.settingLabel, styles.settingLabelNoMargin, styles.settingLink]}
                                 >
                                     Monthly Income
                                 </ThemedText>
                                 <ThemedText style={styles.settingValue}>
-                                    {monthlyIncome === null
-                                        ? "Not set"
-                                        : monthlyIncome}
+                                    {monthlyIncome === null ? "Not set" : monthlyIncome}
                                 </ThemedText>
                             </View>
                         </TouchableOpacity>
@@ -396,12 +331,8 @@ export default function SettingsScreen() {
                             About
                         </ThemedText>
                         <ThemedView style={[styles.settingItem]}>
-                            <ThemedText style={styles.settingLabel}>
-                                Version
-                            </ThemedText>
-                            <ThemedText style={styles.settingValue}>
-                                1.0.0
-                            </ThemedText>
+                            <ThemedText style={styles.settingLabel}>Version</ThemedText>
+                            <ThemedText style={styles.settingValue}>1.0.0</ThemedText>
                         </ThemedView>
                     </ThemedView>
 
@@ -412,9 +343,7 @@ export default function SettingsScreen() {
                                 await signOut();
                             }}
                         >
-                            <ThemedText style={styles.logOutButtonText}>
-                                Log Out
-                            </ThemedText>
+                            <ThemedText style={styles.logOutButtonText}>Log Out</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>

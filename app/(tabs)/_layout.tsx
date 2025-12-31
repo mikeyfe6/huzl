@@ -41,61 +41,35 @@ export default function TabLayout() {
                     name="index"
                     options={{
                         title: "Home",
-                        tabBarIcon: ({ color }) => (
-                            <IconSymbol
-                                size={28}
-                                name="house.fill"
-                                color={color}
-                            />
-                        ),
+                        tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
                     }}
                 />
                 <Tabs.Screen
                     name="expenses"
                     options={{
                         title: "Expenses",
-                        tabBarIcon: ({ color }) => (
-                            <IconSymbol
-                                size={28}
-                                name="graph.2d"
-                                color={color}
-                            />
-                        ),
+                        tabBarIcon: ({ color }) => <IconSymbol size={28} name="graph.2d" color={color} />,
                     }}
                 />
                 <Tabs.Screen
                     name="budgets"
                     options={{
                         title: "Budgets",
-                        tabBarIcon: ({ color }) => (
-                            <IconSymbol
-                                size={28}
-                                name="basket.fill"
-                                color={color}
-                            />
-                        ),
+                        tabBarIcon: ({ color }) => <IconSymbol size={28} name="basket.fill" color={color} />,
                     }}
                 />
                 <Tabs.Screen
                     name="debts"
                     options={{
                         title: "Debts",
-                        tabBarIcon: ({ color }) => (
-                            <IconSymbol
-                                size={28}
-                                name="creditcard"
-                                color={color}
-                            />
-                        ),
+                        tabBarIcon: ({ color }) => <IconSymbol size={28} name="creditcard" color={color} />,
                     }}
                 />
                 <Tabs.Screen
                     name="settings"
                     options={{
                         title: "Settings",
-                        tabBarIcon: ({ color }) => (
-                            <IconSymbol size={28} name="gear" color={color} />
-                        ),
+                        tabBarIcon: ({ color }) => <IconSymbol size={28} name="gear" color={color} />,
                     }}
                 />
             </Tabs>

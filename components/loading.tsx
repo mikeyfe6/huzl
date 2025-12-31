@@ -18,7 +18,13 @@ export function AuthGate({ children }: { readonly children: React.ReactNode }) {
                     alignItems: "center",
                 }}
             >
-                <ThemedText>Loading…</ThemedText>
+                <ThemedText
+                    style={{
+                        fontWeight: "600",
+                    }}
+                >
+                    Loading …
+                </ThemedText>
             </ThemedView>
         );
     }

@@ -263,7 +263,13 @@ export default function HomeScreen() {
     if (loading) {
         return (
             <ThemedView style={styles.container}>
-                <ThemedText>Loading…</ThemedText>
+                <ThemedText
+                    style={{
+                        fontWeight: "600",
+                    }}
+                >
+                    Loading …
+                </ThemedText>
             </ThemedView>
         );
     }

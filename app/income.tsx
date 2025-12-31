@@ -1,11 +1,5 @@
 import { router } from "expo-router";
-import {
-    Alert,
-    Platform,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-} from "react-native";
+import { Alert, Platform, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -29,6 +23,34 @@ export default function ModalScreen() {
         return "";
     });
     const [saving, setSaving] = useState(false);
+
+    const handleSave = async () => {
+        if (!user) return;
+        const parsed = Number.parseFloat(income);
+        if (Number.isNaN(parsed) || parsed < 0) {
+            Alert.alert("Invalid amount", "Please enter a valid non-negative number.");
+            return;
+        }
+        setSaving(true);
+        try {
+            const { error } = await supabase.auth.updateUser({
+                data: { monthly_income: parsed },
+            });
+            if (error) {
+                Alert.alert("Error", `Failed to save income: ${error.message}`);
+                return;
+            }
+            await refreshUser();
+            Alert.alert("Saved", "Monthly income updated.");
+            router.back();
+        } catch (e) {
+            console.error("Save income error:", e);
+            const msg = e instanceof Error ? e.message : "An unexpected error occurred.";
+            Alert.alert("Error", msg);
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const styles = useMemo(
         () =>
@@ -96,52 +118,14 @@ export default function ModalScreen() {
         [theme]
     );
 
-    const handleSave = async () => {
-        if (!user) return;
-        const parsed = Number.parseFloat(income);
-        if (Number.isNaN(parsed) || parsed < 0) {
-            Alert.alert(
-                "Invalid amount",
-                "Please enter a valid non-negative number."
-            );
-            return;
-        }
-        setSaving(true);
-        try {
-            const { error } = await supabase.auth.updateUser({
-                data: { monthly_income: parsed },
-            });
-            if (error) {
-                Alert.alert("Error", `Failed to save income: ${error.message}`);
-                return;
-            }
-            await refreshUser();
-            Alert.alert("Saved", "Monthly income updated.");
-            router.back();
-        } catch (e) {
-            console.error("Save income error:", e);
-            const msg =
-                e instanceof Error
-                    ? e.message
-                    : "An unexpected error occurred.";
-            Alert.alert("Error", msg);
-        } finally {
-            setSaving(false);
-        }
-    };
-
     return (
         <ThemedView style={styles.outerContainer}>
             <ThemedView style={styles.container}>
                 <ThemedText type="title" style={styles.title}>
                     Set Monthly Income
                 </ThemedText>
-                <ThemedText style={styles.hint}>
-                    Used for budget and summaries.
-                </ThemedText>
-                <ThemedText style={styles.label}>
-                    Amount ({currencySymbol})
-                </ThemedText>
+                <ThemedText style={styles.hint}>Used for budget and summaries.</ThemedText>
+                <ThemedText style={styles.label}>Amount ({currencySymbol})</ThemedText>
                 <TextInput
                     style={styles.input}
                     placeholder="e.g. 2500"
@@ -151,19 +135,10 @@ export default function ModalScreen() {
                     onChangeText={setIncome}
                 />
                 <ThemedView style={styles.actions}>
-                    <TouchableOpacity
-                        style={styles.saveButton}
-                        disabled={saving}
-                        onPress={handleSave}
-                    >
-                        <ThemedText style={styles.saveButtonText}>
-                            {saving ? "Saving..." : "Save"}
-                        </ThemedText>
+                    <TouchableOpacity style={styles.saveButton} disabled={saving} onPress={handleSave}>
+                        <ThemedText style={styles.saveButtonText}>{saving ? "Saving..." : "Save"}</ThemedText>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.cancelLink}
-                        onPress={() => router.back()}
-                    >
+                    <TouchableOpacity style={styles.cancelLink} onPress={() => router.back()}>
                         <ThemedText type="danger">Cancel</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>

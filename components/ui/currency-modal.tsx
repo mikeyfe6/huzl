@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-    Alert,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { Alert, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -21,11 +14,7 @@ interface CurrencyPickerModalProps {
     readonly currentSymbol: string;
 }
 
-export function CurrencyPickerModal({
-    visible,
-    onClose,
-    currentSymbol,
-}: CurrencyPickerModalProps) {
+export function CurrencyPickerModal({ visible, onClose, currentSymbol }: CurrencyPickerModalProps) {
     const { refreshUser } = useAuth();
     const [saving, setSaving] = useState(false);
 
@@ -40,10 +29,7 @@ export function CurrencyPickerModal({
             });
 
             if (error) {
-                Alert.alert(
-                    "Error",
-                    `Failed to update currency: ${error.message}`
-                );
+                Alert.alert("Error", `Failed to update currency: ${error.message}`);
                 return;
             }
 
@@ -51,10 +37,7 @@ export function CurrencyPickerModal({
             onClose();
         } catch (e) {
             console.error("Currency update error:", e);
-            const msg =
-                e instanceof Error
-                    ? e.message
-                    : "An unexpected error occurred.";
+            const msg = e instanceof Error ? e.message : "An unexpected error occurred.";
             Alert.alert("Error", msg);
         } finally {
             setSaving(false);
@@ -62,12 +45,7 @@ export function CurrencyPickerModal({
     };
 
     return (
-        <Modal
-            visible={visible}
-            animationType="slide"
-            presentationStyle="pageSheet"
-            onRequestClose={onClose}
-        >
+        <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">Select Currency</ThemedText>
@@ -82,48 +60,24 @@ export function CurrencyPickerModal({
                         return (
                             <TouchableOpacity
                                 key={currency.code}
-                                style={[
-                                    styles.currencyItem,
-                                    isSelected && styles.currencyItemSelected,
-                                ]}
+                                style={[styles.currencyItem, isSelected && styles.currencyItemSelected]}
                                 onPress={() => handleSelect(currency)}
                                 disabled={saving}
                             >
                                 <View style={styles.currencyInfo}>
-                                    <ThemedText
-                                        style={[
-                                            styles.currencySymbol,
-                                            isSelected && styles.selectedText,
-                                        ]}
-                                    >
+                                    <ThemedText style={[styles.currencySymbol, isSelected && styles.selectedText]}>
                                         {currency.symbol}
                                     </ThemedText>
                                     <View>
-                                        <ThemedText
-                                            style={[
-                                                styles.currencyName,
-                                                isSelected &&
-                                                    styles.selectedText,
-                                            ]}
-                                        >
+                                        <ThemedText style={[styles.currencyName, isSelected && styles.selectedText]}>
                                             {currency.name}
                                         </ThemedText>
-                                        <ThemedText
-                                            style={[
-                                                styles.currencyCode,
-                                                isSelected &&
-                                                    styles.selectedText,
-                                            ]}
-                                        >
+                                        <ThemedText style={[styles.currencyCode, isSelected && styles.selectedText]}>
                                             {currency.code}
                                         </ThemedText>
                                     </View>
                                 </View>
-                                {isSelected && (
-                                    <ThemedText style={styles.checkmark}>
-                                        ✓
-                                    </ThemedText>
-                                )}
+                                {isSelected && <ThemedText style={styles.checkmark}>✓</ThemedText>}
                             </TouchableOpacity>
                         );
                     })}

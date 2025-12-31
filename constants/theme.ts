@@ -13,6 +13,7 @@ export const redColor = "#f44336";
 export const blueColor = "#0c86c5";
 export const copperColor = "#aa6600";
 export const goldColor = "#d1982eff";
+export const orangeColor = "#F49E0B";
 
 export const greenLightColor = "#4caf5080";
 export const redLightColor = "#f4433680";
@@ -115,8 +116,7 @@ export const Fonts = Platform.select({
     web: {
         sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         serif: "Georgia, 'Times New Roman', serif",
-        rounded:
-            "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
+        rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
         mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
     },
 });

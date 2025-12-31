@@ -17,12 +17,7 @@ export function PieDiagram({
 
     return (
         <View style={styles.container}>
-            <PieChart
-                widthAndHeight={responsiveSize}
-                series={data}
-                cover={cover}
-                style={{ overflow: "visible" }}
-            />
+            <PieChart widthAndHeight={responsiveSize} series={data} cover={cover} style={{ overflow: "visible" }} />
         </View>
     );
 }

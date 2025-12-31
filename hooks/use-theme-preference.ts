@@ -1,12 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, {
-    createContext,
-    ReactNode,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { useColorScheme as useSystemColorScheme } from "react-native";
 
 const THEME_PREFERENCE_KEY = "@huzl_theme_preference";
@@ -29,18 +22,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     // Load saved preference on mount
     useEffect(() => {
-        AsyncStorage.getItem(THEME_PREFERENCE_KEY).then(
-            (value: string | null) => {
-                if (
-                    value === "light" ||
-                    value === "dark" ||
-                    value === "system"
-                ) {
-                    setPreference(value);
-                }
-                setIsLoaded(true);
+        AsyncStorage.getItem(THEME_PREFERENCE_KEY).then((value: string | null) => {
+            if (value === "light" || value === "dark" || value === "system") {
+                setPreference(value);
             }
-        );
+            setIsLoaded(true);
+        });
     }, []);
 
     // Save preference when it changes
@@ -51,8 +38,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     // Determine the actual color scheme to use
     const colorScheme = useMemo(
-        () =>
-            preference === "system" ? systemColorScheme ?? "light" : preference,
+        () => (preference === "system" ? systemColorScheme ?? "light" : preference),
         [preference, systemColorScheme]
     );
 

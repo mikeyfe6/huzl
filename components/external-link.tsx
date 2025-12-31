@@ -1,8 +1,5 @@
 import { Href, Link } from "expo-router";
-import {
-    openBrowserAsync,
-    WebBrowserPresentationStyle,
-} from "expo-web-browser";
+import { openBrowserAsync, WebBrowserPresentationStyle } from "expo-web-browser";
 import { type ComponentProps } from "react";
 
 type Props = Omit<ComponentProps<typeof Link>, "href"> & {
@@ -21,8 +18,7 @@ export function ExternalLink({ href, ...rest }: Props) {
                     event.preventDefault();
                     // Open the link in an in-app browser.
                     await openBrowserAsync(href, {
-                        presentationStyle:
-                            WebBrowserPresentationStyle.AUTOMATIC,
+                        presentationStyle: WebBrowserPresentationStyle.AUTOMATIC,
                     });
                 }
             }}

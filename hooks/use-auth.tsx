@@ -13,9 +13,7 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({
-    children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -32,11 +30,9 @@ export function AuthProvider({
             .catch(() => setLoading(false));
 
         // Listen for auth changes
-        const { data: sub } = supabase.auth.onAuthStateChange(
-            (_event, session) => {
-                setUser(session?.user ?? null);
-            }
-        );
+        const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
 
         return () => {
             isMounted = false;
@@ -71,9 +67,7 @@ export function AuthProvider({
         [user, loading]
     );
 
-    return (
-        <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

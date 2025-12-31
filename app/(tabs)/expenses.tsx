@@ -1,22 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import {
-    getSortLabel,
-    SortModal,
-    SortOption,
-} from "@/components/ui/sort-modal";
+import { getSortLabel, SortModal, SortOption } from "@/components/ui/sort-modal";
 import {
     blueColor,
     businessColor,
@@ -71,28 +60,324 @@ export default function ExpensesScreen() {
     const nameInputRef = useRef<TextInput>(null);
     const scrollViewRef = useRef<ScrollView>(null);
 
+    const calculateYearlyTotal = (amount: number, freq: Frequency): number => {
+        const num = Number.parseFloat(amount.toString());
+        if (Number.isNaN(num)) return 0;
+
+        switch (freq) {
+            case "daily":
+                return num * 365;
+            case "monthly":
+                return num * 12;
+            case "yearly":
+                return num;
+            default:
+                return 0;
+        }
+    };
+
+    const handleAddExpense = async () => {
+        if (!user) return;
+        if (!expenseName.trim() || !expenseAmount.trim()) return;
+
+        setLoading(true);
+        try {
+            if (editingId) {
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .update({
+                        name: expenseName,
+                        amount: Number.parseFloat(expenseAmount),
+                        frequency,
+                        category,
+                    })
+                    .eq("id", editingId)
+                    .select()
+                    .single();
+
+                if (error) {
+                    console.error("Update error:", error);
+                    alert(`Failed to update expense: ${error.message}`);
+                    return;
+                }
+
+                if (data) {
+                    const amount = Number.parseFloat(String(data.amount));
+                    setExpenses((prev) =>
+                        prev.map((exp) =>
+                            exp.id === editingId
+                                ? {
+                                      id: data.id,
+                                      name: data.name,
+                                      amount,
+                                      frequency: data.frequency as Frequency,
+                                      category: (data.category as Category) ?? "personal",
+                                      yearlyTotal: calculateYearlyTotal(amount, data.frequency as Frequency),
+                                      active: data.active ?? true,
+                                  }
+                                : exp
+                        )
+                    );
+                    setExpenseName("");
+                    setExpenseAmount("");
+                    setFrequency("monthly");
+                    setCategory("personal");
+                    setEditingId(null);
+                }
+            } else {
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .insert({
+                        user_id: user.id,
+                        name: expenseName,
+                        amount: Number.parseFloat(expenseAmount),
+                        frequency,
+                        category,
+                        active: true,
+                    })
+                    .select()
+                    .single();
+
+                if (error) {
+                    console.error("Insert error:", error);
+                    alert(`Failed to add expense: ${error.message}`);
+                    return;
+                }
+
+                if (data) {
+                    const amount = Number.parseFloat(String(data.amount));
+                    const newExpense: ExpenseItem = {
+                        id: data.id,
+                        name: data.name,
+                        amount,
+                        frequency: data.frequency as Frequency,
+                        category: (data.category as Category) ?? "personal",
+                        yearlyTotal: calculateYearlyTotal(amount, data.frequency as Frequency),
+                        active: data.active ?? true,
+                    };
+                    setExpenses((prev) => [newExpense, ...prev]);
+                    setExpenseName("");
+                    setExpenseAmount("");
+                    setFrequency("monthly");
+                    setCategory("personal");
+                }
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEditExpense = (expense: ExpenseItem) => {
+        setExpenseName(expense.name);
+        setExpenseAmount(expense.amount.toString());
+        setFrequency(expense.frequency);
+        setCategory(expense.category);
+        setEditingId(expense.id);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        setTimeout(() => nameInputRef.current?.focus(), 100);
+    };
+
+    const handleCancelEdit = () => {
+        setExpenseName("");
+        setExpenseAmount("");
+        setFrequency("monthly");
+        setCategory("personal");
+        setEditingId(null);
+    };
+
+    const handleDeleteExpense = async (id: string) => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase.from("expenses").delete().eq("id", id);
+            if (!error) {
+                setExpenses((prev) => prev.filter((expense) => expense.id !== id));
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleToggleActive = async (id: string, currentActive: boolean) => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase.from("expenses").update({ active: !currentActive }).eq("id", id);
+            if (!error) {
+                setExpenses((prev) =>
+                    prev.map((expense) => (expense.id === id ? { ...expense, active: !currentActive } : expense))
+                );
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getSortedExpenses = (): ExpenseItem[] => {
+        const sorted = [...expenses];
+
+        switch (sortOption) {
+            case "alphabetic-asc":
+                return sorted.sort((a, b) => a.name.localeCompare(b.name));
+            case "alphabetic-desc":
+                return sorted.sort((a, b) => b.name.localeCompare(a.name));
+            case "cost-asc":
+                return sorted.sort((a, b) => a.yearlyTotal - b.yearlyTotal);
+            case "cost-desc":
+                return sorted.sort((a, b) => b.yearlyTotal - a.yearlyTotal);
+            case "default":
+            default:
+                return sorted;
+        }
+    };
+
+    const setSortAndClose = (opt: SortOption) => {
+        setSortOption(opt);
+        setSortModalVisible(false);
+    };
+
+    const sortedExpenses = getSortedExpenses();
+
+    const totalYearlySpend = expenses.filter((e) => e.active).reduce((sum, expense) => sum + expense.yearlyTotal, 0);
+
+    const totalMonthlySpend = totalYearlySpend / 12;
+    const totalDailySpend = totalYearlySpend / 365;
+
+    const personalYearlySpend = expenses
+        .filter((e) => e.active && e.category === "personal")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const businessYearlySpend = expenses
+        .filter((e) => e.active && e.category === "business")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const debtsYearlySpend = expenses
+        .filter((e) => e.active && e.category === "debts")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const getFrequencyLabel = (freq: Frequency): string => {
+        switch (freq) {
+            case "daily":
+                return "Daily";
+            case "monthly":
+                return "Monthly";
+            case "yearly":
+                return "Yearly";
+        }
+    };
+
+    useEffect(() => {
+        if (!user) {
+            setExpenses([]);
+            return;
+        }
+        let isMounted = true;
+        const fetchExpenses = async () => {
+            setLoading(true);
+            try {
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .select("id,name,amount,frequency,category,active")
+                    .order("created_at", { ascending: false });
+                if (!error && data) {
+                    const mapped: ExpenseItem[] = data.map((row: any) => {
+                        const amount = Number.parseFloat(String(row.amount));
+                        return {
+                            id: row.id,
+                            name: row.name,
+                            amount,
+                            frequency: row.frequency as Frequency,
+                            category: (row.category as Category) ?? "personal",
+                            yearlyTotal: calculateYearlyTotal(amount, row.frequency as Frequency),
+                            active: row.active ?? true,
+                        };
+                    });
+                    if (isMounted) setExpenses(mapped);
+                } else if (isMounted) {
+                    setExpenses([]);
+                }
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        };
+        fetchExpenses();
+        return () => {
+            isMounted = false;
+        };
+    }, [user]);
+
+    const pieLabels = {
+        fontSize: 14,
+        fontWeight: 600,
+        fontFamily: "System",
+        fill: theme.text,
+    };
+
+    const pieData = [
+        {
+            value: expenses
+                .filter((e) => e.active && e.category === "personal")
+                .reduce((sum, e) => sum + e.yearlyTotal, 0),
+            color: personalColor,
+            label: {
+                text: `Personal (${(
+                    (expenses
+                        .filter((e) => e.active && e.category === "personal")
+                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
+                        totalYearlySpend) *
+                    100
+                ).toFixed(1)}%)`,
+                ...pieLabels,
+            },
+        },
+        {
+            value: expenses
+                .filter((e) => e.active && e.category === "business")
+                .reduce((sum, e) => sum + e.yearlyTotal, 0),
+            color: businessColor,
+            label: {
+                text: `Business (${(
+                    (expenses
+                        .filter((e) => e.active && e.category === "business")
+                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
+                        totalYearlySpend) *
+                    100
+                ).toFixed(1)}%)`,
+                ...pieLabels,
+            },
+        },
+        {
+            value: expenses
+                .filter((e) => e.active && e.category === "debts")
+                .reduce((sum, e) => sum + e.yearlyTotal, 0),
+            color: debtsColor,
+            label: {
+                text: `Debts (${(
+                    (expenses
+                        .filter((e) => e.active && e.category === "debts")
+                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
+                        totalYearlySpend) *
+                    100
+                ).toFixed(1)}%)`,
+                ...pieLabels,
+            },
+        },
+    ];
+
     const baseGap = { gap: 12 };
-
     const baseSpace = { gap: 8 };
-
     const baseRadius = { borderRadius: 8 };
-
     const baseBorder = { borderWidth: 1 };
+    const baseWeight = { fontWeight: "600" as const };
 
     const baseFlex = (
-        justify:
-            | "flex-start"
-            | "center"
-            | "space-between"
-            | undefined = undefined,
+        justify: "flex-start" | "center" | "space-between" | undefined = undefined,
         align: "flex-start" | "center" | "flex-end" | undefined = undefined
     ) => ({
         flexDirection: "row" as const,
         justifyContent: justify,
         alignItems: align,
     });
-
-    const baseWeight = { fontWeight: "600" as const };
 
     const baseButton = {
         ...baseFlex("center", "center"),
@@ -240,10 +525,10 @@ export default function ExpensesScreen() {
                 buttons: {
                     ...baseFlex("center"),
                     ...baseGap,
+                    marginTop: 8,
                 },
                 button: {
                     ...baseButton,
-                    marginTop: 8,
                 },
                 buttonText: {
                     ...baseButtonText,
@@ -293,7 +578,7 @@ export default function ExpensesScreen() {
                 },
                 expenseIcons: {
                     ...baseFlex("center", "center"),
-                    gap: 12,
+                    ...baseGap,
                 },
                 expenseIcon: {
                     ...baseBorder,
@@ -419,341 +704,9 @@ export default function ExpensesScreen() {
         [theme]
     );
 
-    const calculateYearlyTotal = (amount: number, freq: Frequency): number => {
-        const num = Number.parseFloat(amount.toString());
-        if (Number.isNaN(num)) return 0;
-
-        switch (freq) {
-            case "daily":
-                return num * 365;
-            case "monthly":
-                return num * 12;
-            case "yearly":
-                return num;
-            default:
-                return 0;
-        }
-    };
-
-    const handleAddExpense = async () => {
-        if (!user) return;
-        if (!expenseName.trim() || !expenseAmount.trim()) return;
-
-        setLoading(true);
-        try {
-            if (editingId) {
-                const { data, error } = await supabase
-                    .from("expenses")
-                    .update({
-                        name: expenseName,
-                        amount: Number.parseFloat(expenseAmount),
-                        frequency,
-                        category,
-                    })
-                    .eq("id", editingId)
-                    .select()
-                    .single();
-
-                if (error) {
-                    console.error("Update error:", error);
-                    alert(`Failed to update expense: ${error.message}`);
-                    return;
-                }
-
-                if (data) {
-                    const amount = Number.parseFloat(String(data.amount));
-                    setExpenses((prev) =>
-                        prev.map((exp) =>
-                            exp.id === editingId
-                                ? {
-                                      id: data.id,
-                                      name: data.name,
-                                      amount,
-                                      frequency: data.frequency as Frequency,
-                                      category:
-                                          (data.category as Category) ??
-                                          "personal",
-                                      yearlyTotal: calculateYearlyTotal(
-                                          amount,
-                                          data.frequency as Frequency
-                                      ),
-                                      active: data.active ?? true,
-                                  }
-                                : exp
-                        )
-                    );
-                    setExpenseName("");
-                    setExpenseAmount("");
-                    setFrequency("monthly");
-                    setCategory("personal");
-                    setEditingId(null);
-                }
-            } else {
-                const { data, error } = await supabase
-                    .from("expenses")
-                    .insert({
-                        user_id: user.id,
-                        name: expenseName,
-                        amount: Number.parseFloat(expenseAmount),
-                        frequency,
-                        category,
-                        active: true,
-                    })
-                    .select()
-                    .single();
-
-                if (error) {
-                    console.error("Insert error:", error);
-                    alert(`Failed to add expense: ${error.message}`);
-                    return;
-                }
-
-                if (data) {
-                    const amount = Number.parseFloat(String(data.amount));
-                    const newExpense: ExpenseItem = {
-                        id: data.id,
-                        name: data.name,
-                        amount,
-                        frequency: data.frequency as Frequency,
-                        category: (data.category as Category) ?? "personal",
-                        yearlyTotal: calculateYearlyTotal(
-                            amount,
-                            data.frequency as Frequency
-                        ),
-                        active: data.active ?? true,
-                    };
-                    setExpenses((prev) => [newExpense, ...prev]);
-                    setExpenseName("");
-                    setExpenseAmount("");
-                    setFrequency("monthly");
-                    setCategory("personal");
-                }
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleEditExpense = (expense: ExpenseItem) => {
-        setExpenseName(expense.name);
-        setExpenseAmount(expense.amount.toString());
-        setFrequency(expense.frequency);
-        setCategory(expense.category);
-        setEditingId(expense.id);
-        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-        setTimeout(() => nameInputRef.current?.focus(), 100);
-    };
-
-    const handleCancelEdit = () => {
-        setExpenseName("");
-        setExpenseAmount("");
-        setFrequency("monthly");
-        setCategory("personal");
-        setEditingId(null);
-    };
-
-    const handleDeleteExpense = async (id: string) => {
-        if (!user) return;
-        setLoading(true);
-        try {
-            const { error } = await supabase
-                .from("expenses")
-                .delete()
-                .eq("id", id);
-            if (!error) {
-                setExpenses((prev) =>
-                    prev.filter((expense) => expense.id !== id)
-                );
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleToggleActive = async (id: string, currentActive: boolean) => {
-        if (!user) return;
-        setLoading(true);
-        try {
-            const { error } = await supabase
-                .from("expenses")
-                .update({ active: !currentActive })
-                .eq("id", id);
-            if (!error) {
-                setExpenses((prev) =>
-                    prev.map((expense) =>
-                        expense.id === id
-                            ? { ...expense, active: !currentActive }
-                            : expense
-                    )
-                );
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const getSortedExpenses = (): ExpenseItem[] => {
-        const sorted = [...expenses];
-
-        switch (sortOption) {
-            case "alphabetic-asc":
-                return sorted.sort((a, b) => a.name.localeCompare(b.name));
-            case "alphabetic-desc":
-                return sorted.sort((a, b) => b.name.localeCompare(a.name));
-            case "cost-asc":
-                return sorted.sort((a, b) => a.yearlyTotal - b.yearlyTotal);
-            case "cost-desc":
-                return sorted.sort((a, b) => b.yearlyTotal - a.yearlyTotal);
-            case "default":
-            default:
-                return sorted;
-        }
-    };
-
-    const setSortAndClose = (opt: SortOption) => {
-        setSortOption(opt);
-        setSortModalVisible(false);
-    };
-
-    const sortedExpenses = getSortedExpenses();
-
-    const totalYearlySpend = expenses
-        .filter((e) => e.active)
-        .reduce((sum, expense) => sum + expense.yearlyTotal, 0);
-
-    const totalMonthlySpend = totalYearlySpend / 12;
-    const totalDailySpend = totalYearlySpend / 365;
-
-    const personalYearlySpend = expenses
-        .filter((e) => e.active && e.category === "personal")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
-
-    const businessYearlySpend = expenses
-        .filter((e) => e.active && e.category === "business")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
-
-    const debtsYearlySpend = expenses
-        .filter((e) => e.active && e.category === "debts")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
-
-    const getFrequencyLabel = (freq: Frequency): string => {
-        switch (freq) {
-            case "daily":
-                return "Daily";
-            case "monthly":
-                return "Monthly";
-            case "yearly":
-                return "Yearly";
-        }
-    };
-
-    useEffect(() => {
-        if (!user) {
-            setExpenses([]);
-            return;
-        }
-        let isMounted = true;
-        const fetchExpenses = async () => {
-            setLoading(true);
-            try {
-                const { data, error } = await supabase
-                    .from("expenses")
-                    .select("id,name,amount,frequency,category,active")
-                    .order("created_at", { ascending: false });
-                if (!error && data) {
-                    const mapped: ExpenseItem[] = data.map((row: any) => {
-                        const amount = Number.parseFloat(String(row.amount));
-                        return {
-                            id: row.id,
-                            name: row.name,
-                            amount,
-                            frequency: row.frequency as Frequency,
-                            category: (row.category as Category) ?? "personal",
-                            yearlyTotal: calculateYearlyTotal(
-                                amount,
-                                row.frequency as Frequency
-                            ),
-                            active: row.active ?? true,
-                        };
-                    });
-                    if (isMounted) setExpenses(mapped);
-                } else if (isMounted) {
-                    setExpenses([]);
-                }
-            } finally {
-                if (isMounted) setLoading(false);
-            }
-        };
-        fetchExpenses();
-        return () => {
-            isMounted = false;
-        };
-    }, [user]);
-
-    const pieLabels = {
-        fontSize: 14,
-        fontWeight: 600,
-        fontFamily: "System",
-        fill: theme.text,
-    };
-
-    const pieData = [
-        {
-            value: expenses
-                .filter((e) => e.active && e.category === "personal")
-                .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: personalColor,
-            label: {
-                text: `Personal (${(
-                    (expenses
-                        .filter((e) => e.active && e.category === "personal")
-                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
-                        totalYearlySpend) *
-                    100
-                ).toFixed(1)}%)`,
-                ...pieLabels,
-            },
-        },
-        {
-            value: expenses
-                .filter((e) => e.active && e.category === "business")
-                .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: businessColor,
-            label: {
-                text: `Business (${(
-                    (expenses
-                        .filter((e) => e.active && e.category === "business")
-                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
-                        totalYearlySpend) *
-                    100
-                ).toFixed(1)}%)`,
-                ...pieLabels,
-            },
-        },
-        {
-            value: expenses
-                .filter((e) => e.active && e.category === "debts")
-                .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: debtsColor,
-            label: {
-                text: `Debts (${(
-                    (expenses
-                        .filter((e) => e.active && e.category === "debts")
-                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
-                        totalYearlySpend) *
-                    100
-                ).toFixed(1)}%)`,
-                ...pieLabels,
-            },
-        },
-    ];
-
     return (
         <AuthGate>
-            <ScrollView
-                ref={scrollViewRef}
-                contentContainerStyle={styles.container}
-            >
+            <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
                     <ThemedText type="title" style={styles.heading}>
                         Expenses
@@ -762,10 +715,7 @@ export default function ExpensesScreen() {
                     <ThemedText style={styles.label}>Item Name</ThemedText>
                     <TextInput
                         ref={nameInputRef}
-                        style={[
-                            styles.input,
-                            nameFocused && { borderColor: blueColor },
-                        ]}
+                        style={[styles.input, nameFocused && { borderColor: blueColor }]}
                         placeholder="e.g., Spotify"
                         placeholderTextColor={theme.placeholder}
                         value={expenseName}
@@ -774,9 +724,7 @@ export default function ExpensesScreen() {
                         onBlur={() => setNameFocused(false)}
                     />
 
-                    <ThemedText style={styles.label}>
-                        Amount ({currencySymbol})
-                    </ThemedText>
+                    <ThemedText style={styles.label}>Amount ({currencySymbol})</ThemedText>
                     <TextInput
                         style={[
                             styles.input,
@@ -796,11 +744,7 @@ export default function ExpensesScreen() {
                     <ThemedText style={styles.label}>Category</ThemedText>
                     <View style={styles.categoryGroup}>
                         <TouchableOpacity
-                            style={[
-                                styles.categoryOption,
-                                category === "personal" &&
-                                    styles.categoryActive,
-                            ]}
+                            style={[styles.categoryOption, category === "personal" && styles.categoryActive]}
                             onPress={() => setCategory("personal")}
                             accessibilityRole="radio"
                             accessibilityState={{
@@ -810,11 +754,7 @@ export default function ExpensesScreen() {
                             <ThemedText>Personal</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[
-                                styles.categoryOption,
-                                category === "business" &&
-                                    styles.categoryActive,
-                            ]}
+                            style={[styles.categoryOption, category === "business" && styles.categoryActive]}
                             onPress={() => setCategory("business")}
                             accessibilityRole="radio"
                             accessibilityState={{
@@ -824,10 +764,7 @@ export default function ExpensesScreen() {
                             <ThemedText>Business</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[
-                                styles.categoryOption,
-                                category === "debts" && styles.categoryActive,
-                            ]}
+                            style={[styles.categoryOption, category === "debts" && styles.categoryActive]}
                             onPress={() => setCategory("debts")}
                             accessibilityRole="radio"
                             accessibilityState={{
@@ -842,9 +779,7 @@ export default function ExpensesScreen() {
                     <View style={[styles.select]}>
                         <Picker
                             selectedValue={frequency}
-                            onValueChange={(itemValue) =>
-                                setFrequency(itemValue as Frequency)
-                            }
+                            onValueChange={(itemValue) => setFrequency(itemValue as Frequency)}
                             style={[
                                 styles.selectInput,
                                 Platform.OS === "web"
@@ -864,21 +799,13 @@ export default function ExpensesScreen() {
                             <Picker.Item label="Yearly" value="yearly" />
                         </Picker>
                         {Platform.OS === "web" && (
-                            <Ionicons
-                                name="chevron-down"
-                                size={18}
-                                color={theme.inputText}
-                                style={styles.selectIcon}
-                            />
+                            <Ionicons name="chevron-down" size={18} color={theme.inputText} style={styles.selectIcon} />
                         )}
                     </View>
 
                     <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[
-                                styles.button,
-                                { backgroundColor: greenColor },
-                            ]}
+                            style={[styles.button, { backgroundColor: greenColor }]}
                             onPress={handleAddExpense}
                         >
                             <ThemedText style={styles.buttonText}>
@@ -887,15 +814,10 @@ export default function ExpensesScreen() {
                         </TouchableOpacity>
                         {editingId && (
                             <TouchableOpacity
-                                style={[
-                                    styles.button,
-                                    { backgroundColor: redColor },
-                                ]}
+                                style={[styles.button, { backgroundColor: redColor }]}
                                 onPress={handleCancelEdit}
                             >
-                                <ThemedText style={styles.buttonText}>
-                                    Cancel
-                                </ThemedText>
+                                <ThemedText style={styles.buttonText}>Cancel</ThemedText>
                             </TouchableOpacity>
                         )}
                     </View>
@@ -905,12 +827,8 @@ export default function ExpensesScreen() {
                     <ThemedView style={styles.expenseList}>
                         <View style={styles.expenseHeader}>
                             <View style={styles.expenseTitle}>
-                                <ThemedText type="subtitle">
-                                    Expenses List
-                                </ThemedText>
-                                <ThemedText
-                                    style={{ opacity: 0.6, fontSize: 16 }}
-                                >
+                                <ThemedText type="subtitle">Expenses List</ThemedText>
+                                <ThemedText style={{ opacity: 0.6, fontSize: 16 }}>
                                     ({sortedExpenses.length})
                                 </ThemedText>
                             </View>
@@ -920,19 +838,9 @@ export default function ExpensesScreen() {
                                 accessibilityRole="button"
                                 accessibilityLabel="Open sort options"
                             >
-                                <Ionicons
-                                    name="swap-vertical"
-                                    size={16}
-                                    color={theme.label}
-                                />
-                                <ThemedText style={styles.sortTriggerText}>
-                                    {getSortLabel(sortOption)}
-                                </ThemedText>
-                                <Ionicons
-                                    name="chevron-down"
-                                    size={16}
-                                    color={theme.label}
-                                />
+                                <Ionicons name="swap-vertical" size={16} color={theme.label} />
+                                <ThemedText style={styles.sortTriggerText}>{getSortLabel(sortOption)}</ThemedText>
+                                <Ionicons name="chevron-down" size={16} color={theme.label} />
                             </TouchableOpacity>
                         </View>
                         <SortModal
@@ -946,94 +854,56 @@ export default function ExpensesScreen() {
                         {sortedExpenses.map((expense) => (
                             <View
                                 key={expense.id}
-                                style={[
-                                    styles.expenseCard,
-                                    !expense.active && styles.expenseInactive,
-                                ]}
+                                style={[styles.expenseCard, !expense.active && styles.expenseInactive]}
                             >
                                 <View style={styles.expenseItem}>
                                     <View style={styles.expenseInfo}>
-                                        <ThemedText type="defaultSemiBold">
-                                            {expense.name}
-                                        </ThemedText>
+                                        <ThemedText type="defaultSemiBold">{expense.name}</ThemedText>
                                         <ThemedText
                                             style={[
                                                 styles.expenseLabel,
-                                                expense.category ===
-                                                    "business" && {
+                                                expense.category === "business" && {
                                                     color: theme.specialLabel,
                                                 },
-                                                expense.category ===
-                                                    "debts" && {
+                                                expense.category === "debts" && {
                                                     color: redColor,
                                                 },
                                             ]}
                                         >
-                                            {currencySymbol}{" "}
-                                            {expense.amount.toFixed(2)} -{" "}
-                                            {getFrequencyLabel(
-                                                expense.frequency
-                                            )}{" "}
-                                            -{" "}
-                                            {expense.category
-                                                .charAt(0)
-                                                .toUpperCase() +
-                                                expense.category.slice(1)}
+                                            {currencySymbol} {expense.amount.toFixed(2)} -{" "}
+                                            {getFrequencyLabel(expense.frequency)} -{" "}
+                                            {expense.category.charAt(0).toUpperCase() + expense.category.slice(1)}
                                         </ThemedText>
                                     </View>
                                     <View style={styles.expenseIcons}>
                                         <TouchableOpacity
-                                            onPress={() =>
-                                                handleToggleActive(
-                                                    expense.id,
-                                                    expense.active
-                                                )
-                                            }
+                                            onPress={() => handleToggleActive(expense.id, expense.active)}
                                             style={[
                                                 styles.expenseIcon,
                                                 {
-                                                    borderColor: expense.active
-                                                        ? greenColor
-                                                        : mediumGreyColor,
+                                                    borderColor: expense.active ? greenColor : mediumGreyColor,
                                                 },
                                             ]}
                                         >
                                             <Ionicons
-                                                name={
-                                                    expense.active
-                                                        ? "eye"
-                                                        : "eye-off"
-                                                }
+                                                name={expense.active ? "eye" : "eye-off"}
                                                 size={16}
-                                                color={
-                                                    expense.active
-                                                        ? greenColor
-                                                        : mediumGreyColor
-                                                }
+                                                color={expense.active ? greenColor : mediumGreyColor}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            onPress={() =>
-                                                handleEditExpense(expense)
-                                            }
+                                            onPress={() => handleEditExpense(expense)}
                                             style={[
                                                 styles.expenseIcon,
                                                 {
-                                                    borderColor:
-                                                        mediumGreyColor,
+                                                    borderColor: mediumGreyColor,
                                                 },
                                             ]}
                                         >
-                                            <Ionicons
-                                                name="pencil"
-                                                size={16}
-                                                color={mediumGreyColor}
-                                            />
+                                            <Ionicons name="pencil" size={16} color={mediumGreyColor} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            onPress={() =>
-                                                handleDeleteExpense(expense.id)
-                                            }
+                                            onPress={() => handleDeleteExpense(expense.id)}
                                             style={[
                                                 styles.expenseIcon,
                                                 {
@@ -1041,32 +911,18 @@ export default function ExpensesScreen() {
                                                 },
                                             ]}
                                         >
-                                            <Ionicons
-                                                name="trash"
-                                                size={16}
-                                                color={redColor}
-                                            />
+                                            <Ionicons name="trash" size={16} color={redColor} />
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                                 <View style={styles.expenseTotal}>
-                                    <ThemedText style={styles.expensePeriod}>
-                                        Yearly / Monthly:
-                                    </ThemedText>
+                                    <ThemedText style={styles.expensePeriod}>Yearly / Monthly:</ThemedText>
                                     <View style={styles.expenseAmounts}>
-                                        <ThemedText
-                                            style={styles.expenseYearly}
-                                        >
-                                            {currencySymbol}{" "}
-                                            {expense.yearlyTotal.toFixed(2)}
+                                        <ThemedText style={styles.expenseYearly}>
+                                            {currencySymbol} {expense.yearlyTotal.toFixed(2)}
                                         </ThemedText>
-                                        <ThemedText
-                                            style={styles.expenseMonthly}
-                                        >
-                                            {currencySymbol}{" "}
-                                            {(expense.yearlyTotal / 12).toFixed(
-                                                2
-                                            )}
+                                        <ThemedText style={styles.expenseMonthly}>
+                                            {currencySymbol} {(expense.yearlyTotal / 12).toFixed(2)}
                                         </ThemedText>
                                     </View>
                                 </View>
@@ -1077,78 +933,43 @@ export default function ExpensesScreen() {
 
                 {expenses.length > 0 && (
                     <>
-                        <ThemedView
-                            style={[styles.totalSection, styles.totalYear]}
-                        >
-                            <ThemedText type="subtitle">
-                                Total Yearly Spend
-                            </ThemedText>
+                        <ThemedView style={[styles.totalSection, styles.totalYear]}>
+                            <ThemedText type="subtitle">Total Yearly Spend</ThemedText>
                             <ThemedText style={styles.totalAmount}>
                                 {currencySymbol} {totalYearlySpend.toFixed(2)}
                             </ThemedText>
                             <ThemedText>
                                 Personal:{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {currencySymbol}{" "}
-                                    {personalYearlySpend.toFixed(2)}
+                                    {currencySymbol} {personalYearlySpend.toFixed(2)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
                                 Business:{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {currencySymbol}{" "}
-                                    {businessYearlySpend.toFixed(2)}
+                                    {currencySymbol} {businessYearlySpend.toFixed(2)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
                                 Depths:{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {currencySymbol}{" "}
-                                    {debtsYearlySpend.toFixed(2)}
+                                    {currencySymbol} {debtsYearlySpend.toFixed(2)}
                                 </ThemedText>
                             </ThemedText>
                         </ThemedView>
 
                         <View style={styles.totalDetails}>
-                            <ThemedView
-                                style={[
-                                    styles.totalSection,
-                                    styles.totalPeriod,
-                                    styles.totalMonth,
-                                ]}
-                            >
-                                <ThemedText type="defaultSemiBold">
-                                    Total Monthly Spend
-                                </ThemedText>
-                                <ThemedText
-                                    style={[
-                                        styles.totalAmount,
-                                        { fontSize: 28 },
-                                    ]}
-                                >
-                                    {currencySymbol}{" "}
-                                    {totalMonthlySpend.toFixed(2)}
+                            <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalMonth]}>
+                                <ThemedText type="defaultSemiBold">Total Monthly Spend</ThemedText>
+                                <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
+                                    {currencySymbol} {totalMonthlySpend.toFixed(2)}
                                 </ThemedText>
                             </ThemedView>
 
-                            <ThemedView
-                                style={[
-                                    styles.totalSection,
-                                    styles.totalPeriod,
-                                    styles.totalDay,
-                                ]}
-                            >
-                                <ThemedText type="defaultSemiBold">
-                                    Total Daily Spend
-                                </ThemedText>
-                                <ThemedText
-                                    style={[
-                                        styles.totalAmount,
-                                        { fontSize: 28 },
-                                    ]}
-                                >
-                                    {currencySymbol}{" "}
-                                    {totalDailySpend.toFixed(2)}
+                            <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalDay]}>
+                                <ThemedText type="defaultSemiBold">Total Daily Spend</ThemedText>
+                                <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
+                                    {currencySymbol} {totalDailySpend.toFixed(2)}
                                 </ThemedText>
                             </ThemedView>
                         </View>
@@ -1157,26 +978,18 @@ export default function ExpensesScreen() {
                             <PieDiagram data={pieData} />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>
-                                    {(
-                                        [
-                                            "personal",
-                                            "business",
-                                            "debts",
-                                        ] as Category[]
-                                    ).map((cat) => {
+                                    {(["personal", "business", "debts"] as Category[]).map((cat) => {
                                         let btnBgColor = theme.inputBackground;
                                         let btnBorderColor = theme.inputBorder;
                                         if (category === cat) {
                                             switch (cat) {
                                                 case "personal":
                                                     btnBgColor = personalColor;
-                                                    btnBorderColor =
-                                                        personalColor;
+                                                    btnBorderColor = personalColor;
                                                     break;
                                                 case "business":
                                                     btnBgColor = businessColor;
-                                                    btnBorderColor =
-                                                        businessColor;
+                                                    btnBorderColor = businessColor;
                                                     break;
                                                 case "debts":
                                                     btnBgColor = debtsColor;
@@ -1194,72 +1007,37 @@ export default function ExpensesScreen() {
                                                 style={[
                                                     styles.chartButton,
                                                     {
-                                                        backgroundColor:
-                                                            btnBgColor,
-                                                        borderColor:
-                                                            btnBorderColor,
+                                                        backgroundColor: btnBgColor,
+                                                        borderColor: btnBorderColor,
                                                     },
                                                 ]}
                                             >
-                                                <ThemedText
-                                                    style={
-                                                        styles.chartButtonText
-                                                    }
-                                                >
-                                                    {cat
-                                                        .charAt(0)
-                                                        .toUpperCase() +
-                                                        cat.slice(1)}
+                                                <ThemedText style={styles.chartButtonText}>
+                                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
                                                 </ThemedText>
                                             </TouchableOpacity>
                                         );
                                     })}
                                 </View>
                                 <View style={styles.chartItems}>
-                                    {expenses.filter(
-                                        (e) =>
-                                            e.active && e.category === category
-                                    ).length === 0 ? (
-                                        <ThemedText>
-                                            No expenses in this category.
-                                        </ThemedText>
+                                    {expenses.filter((e) => e.active && e.category === category).length === 0 ? (
+                                        <ThemedText>No expenses in this category.</ThemedText>
                                     ) : (
                                         expenses
-                                            .filter(
-                                                (e) =>
-                                                    e.active &&
-                                                    e.category === category
-                                            )
+                                            .filter((e) => e.active && e.category === category)
                                             .map((e) => ({
                                                 ...e,
                                                 percent:
                                                     (e.yearlyTotal /
                                                         (expenses
-                                                            .filter(
-                                                                (x) => x.active
-                                                            )
-                                                            .reduce(
-                                                                (sum, x) =>
-                                                                    sum +
-                                                                    x.yearlyTotal,
-                                                                0
-                                                            ) || 1)) *
+                                                            .filter((x) => x.active)
+                                                            .reduce((sum, x) => sum + x.yearlyTotal, 0) || 1)) *
                                                     100,
                                             }))
-                                            .sort(
-                                                (a, b) => b.percent - a.percent
-                                            )
+                                            .sort((a, b) => b.percent - a.percent)
                                             .map((e) => (
-                                                <ThemedText
-                                                    key={e.id}
-                                                    style={styles.chartItem}
-                                                >
-                                                    <ThemedText
-                                                        key={e.id}
-                                                        style={
-                                                            styles.chartItemText
-                                                        }
-                                                    >
+                                                <ThemedText key={e.id} style={styles.chartItem}>
+                                                    <ThemedText key={e.id} style={styles.chartItemText}>
                                                         {e.name}{" "}
                                                     </ThemedText>
                                                     - {e.percent.toFixed(1)}%
@@ -1275,9 +1053,7 @@ export default function ExpensesScreen() {
                 {expenses.length === 0 && !loading && (
                     <ThemedView style={styles.emptyState}>
                         <ThemedText style={styles.emptyStateText}>
-                            {user
-                                ? "Add your first expense!"
-                                : "Sign in to track your expenses."}
+                            {user ? "Add your first expense!" : "Sign in to track your expenses."}
                         </ThemedText>
                     </ThemedView>
                 )}

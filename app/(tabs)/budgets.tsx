@@ -1,22 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
-import {
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import {
-    blueColor,
-    Colors,
-    greenColor,
-    redColor,
-    whiteColor,
-} from "@/constants/theme";
+import { blueColor, Colors, greenColor, redColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
@@ -24,24 +12,22 @@ import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
 
+type BudgetItem = {
+    id: string;
+    name: string;
+    total: number;
+    spent: number;
+    expenses: { id: string; name: string; amount: number }[];
+};
+
 export default function BudgetsScreen() {
     const { user } = useAuth();
 
     const { symbol: currencySymbol } = useCurrency();
     const [budgetName, setBudgetName] = useState("");
     const [totalAmount, setTotalAmount] = useState("");
-    const [budgets, setBudgets] = useState<
-        {
-            id: string;
-            name: string;
-            total: number;
-            spent: number;
-            expenses: { id: string; name: string; amount: number }[];
-        }[]
-    >([]);
-    const [selectedBudgetId, setSelectedBudgetId] = useState<string | null>(
-        null
-    );
+    const [budgets, setBudgets] = useState<BudgetItem[]>([]);
+    const [selectedBudgetId, setSelectedBudgetId] = useState<string | null>(null);
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
     const [loading, setLoading] = useState(false);
@@ -77,24 +63,149 @@ export default function BudgetsScreen() {
         };
     };
 
+    const handleCreateBudget = async () => {
+        if (!user || !budgetName.trim() || !totalAmount.trim()) return;
+
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from("budgets")
+                .insert({
+                    user_id: user.id,
+                    name: budgetName,
+                    total: Number.parseFloat(totalAmount),
+                })
+                .select()
+                .single();
+
+            if (error) {
+                console.error("Error creating budget:", error);
+                return;
+            }
+
+            if (data) {
+                setBudgets([
+                    ...budgets,
+                    {
+                        id: data.id,
+                        name: data.name,
+                        total: data.total,
+                        spent: 0,
+                        expenses: [],
+                    },
+                ]);
+                setBudgetName("");
+                setTotalAmount("");
+            }
+        } catch (err) {
+            console.error("Exception creating budget:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddExpense = async () => {
+        if (!user || !selectedBudgetId || !expenseName.trim() || !expenseAmount.trim()) return;
+
+        setLoading(true);
+        try {
+            const { data, error } = await supabase
+                .from("budget_expenses")
+                .insert({
+                    budget_id: selectedBudgetId,
+                    name: expenseName,
+                    amount: Number.parseFloat(expenseAmount),
+                })
+                .select()
+                .single();
+
+            if (!error && data) {
+                const updatedBudgets = budgets.map((budget) => {
+                    if (budget.id === selectedBudgetId) {
+                        const expense = {
+                            id: data.id,
+                            name: data.name,
+                            amount: data.amount,
+                        };
+                        return {
+                            ...budget,
+                            expenses: [...budget.expenses, expense],
+                            spent: budget.spent + data.amount,
+                        };
+                    }
+                    return budget;
+                });
+                setBudgets(updatedBudgets);
+                setExpenseName("");
+                setExpenseAmount("");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteBudget = async (budgetId: string) => {
+        if (!user) return;
+
+        setLoading(true);
+        try {
+            const { error } = await supabase.from("budgets").delete().eq("id", budgetId);
+
+            if (!error) {
+                setBudgets(budgets.filter((b) => b.id !== budgetId));
+                if (selectedBudgetId === budgetId) {
+                    setSelectedBudgetId(null);
+                }
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteExpense = async (expenseId: string) => {
+        if (!user) return;
+
+        setLoading(true);
+        try {
+            const { error } = await supabase.from("budget_expenses").delete().eq("id", expenseId);
+
+            if (!error) {
+                const updatedBudgets = budgets.map((budget) => {
+                    if (budget.id === selectedBudgetId) {
+                        const expense = budget.expenses.find((e) => e.id === expenseId);
+                        return {
+                            ...budget,
+                            expenses: budget.expenses.filter((e) => e.id !== expenseId),
+                            spent: budget.spent - (expense?.amount || 0),
+                        };
+                    }
+                    return budget;
+                });
+                setBudgets(updatedBudgets);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const selectedBudget = budgets.find((b) => b.id === selectedBudgetId);
+    const remainingAmount = selectedBudget ? selectedBudget.total - selectedBudget.spent : 0;
+
     useEffect(() => {
         if (!user) return;
 
         const fetchBudgets = async () => {
             setLoading(true);
             try {
-                const { data: budgetsData, error: budgetsError } =
-                    await supabase
-                        .from("budgets")
-                        .select("*")
-                        .eq("user_id", user.id)
-                        .order("created_at", { ascending: false });
+                const { data: budgetsData, error: budgetsError } = await supabase
+                    .from("budgets")
+                    .select("*")
+                    .eq("user_id", user.id)
+                    .order("created_at", { ascending: false });
 
                 if (budgetsError) throw budgetsError;
 
-                const budgetsWithExpenses = await Promise.all(
-                    (budgetsData || []).map(transformBudgetData)
-                );
+                const budgetsWithExpenses = await Promise.all((budgetsData || []).map(transformBudgetData));
 
                 setBudgets(budgetsWithExpenses);
             } catch (error) {
@@ -108,21 +219,13 @@ export default function BudgetsScreen() {
     }, [user]);
 
     const baseGap = { gap: 12 };
-
     const baseSpace = { gap: 8 };
-
     const baseWeight = { fontWeight: "600" as const };
-
     const baseRadius = { borderRadius: 8 };
-
     const baseBorder = { borderWidth: 1 };
 
     const baseFlex = (
-        justify:
-            | "flex-start"
-            | "center"
-            | "space-between"
-            | undefined = undefined,
+        justify: "flex-start" | "center" | "space-between" | undefined = undefined,
         align: "flex-start" | "center" | "flex-end" | undefined = undefined
     ) => ({
         flexDirection: "row" as const,
@@ -306,152 +409,6 @@ export default function BudgetsScreen() {
         [theme, colorScheme]
     );
 
-    const handleCreateBudget = async () => {
-        if (!user || !budgetName.trim() || !totalAmount.trim()) return;
-
-        setLoading(true);
-        try {
-            const { data, error } = await supabase
-                .from("budgets")
-                .insert({
-                    user_id: user.id,
-                    name: budgetName,
-                    total: Number.parseFloat(totalAmount),
-                })
-                .select()
-                .single();
-
-            if (error) {
-                console.error("Error creating budget:", error);
-                return;
-            }
-
-            if (data) {
-                setBudgets([
-                    ...budgets,
-                    {
-                        id: data.id,
-                        name: data.name,
-                        total: data.total,
-                        spent: 0,
-                        expenses: [],
-                    },
-                ]);
-                setBudgetName("");
-                setTotalAmount("");
-            }
-        } catch (err) {
-            console.error("Exception creating budget:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleAddExpense = async () => {
-        if (
-            !user ||
-            !selectedBudgetId ||
-            !expenseName.trim() ||
-            !expenseAmount.trim()
-        )
-            return;
-
-        setLoading(true);
-        try {
-            const { data, error } = await supabase
-                .from("budget_expenses")
-                .insert({
-                    budget_id: selectedBudgetId,
-                    name: expenseName,
-                    amount: Number.parseFloat(expenseAmount),
-                })
-                .select()
-                .single();
-
-            if (!error && data) {
-                const updatedBudgets = budgets.map((budget) => {
-                    if (budget.id === selectedBudgetId) {
-                        const expense = {
-                            id: data.id,
-                            name: data.name,
-                            amount: data.amount,
-                        };
-                        return {
-                            ...budget,
-                            expenses: [...budget.expenses, expense],
-                            spent: budget.spent + data.amount,
-                        };
-                    }
-                    return budget;
-                });
-                setBudgets(updatedBudgets);
-                setExpenseName("");
-                setExpenseAmount("");
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleDeleteBudget = async (budgetId: string) => {
-        if (!user) return;
-
-        setLoading(true);
-        try {
-            const { error } = await supabase
-                .from("budgets")
-                .delete()
-                .eq("id", budgetId);
-
-            if (!error) {
-                setBudgets(budgets.filter((b) => b.id !== budgetId));
-                if (selectedBudgetId === budgetId) {
-                    setSelectedBudgetId(null);
-                }
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleDeleteExpense = async (expenseId: string) => {
-        if (!user) return;
-
-        setLoading(true);
-        try {
-            const { error } = await supabase
-                .from("budget_expenses")
-                .delete()
-                .eq("id", expenseId);
-
-            if (!error) {
-                const updatedBudgets = budgets.map((budget) => {
-                    if (budget.id === selectedBudgetId) {
-                        const expense = budget.expenses.find(
-                            (e) => e.id === expenseId
-                        );
-                        return {
-                            ...budget,
-                            expenses: budget.expenses.filter(
-                                (e) => e.id !== expenseId
-                            ),
-                            spent: budget.spent - (expense?.amount || 0),
-                        };
-                    }
-                    return budget;
-                });
-                setBudgets(updatedBudgets);
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const selectedBudget = budgets.find((b) => b.id === selectedBudgetId);
-    const remainingAmount = selectedBudget
-        ? selectedBudget.total - selectedBudget.spent
-        : 0;
-
     return (
         <AuthGate>
             <ScrollView contentContainerStyle={styles.container}>
@@ -469,9 +426,7 @@ export default function BudgetsScreen() {
                         onChangeText={setBudgetName}
                     />
 
-                    <ThemedText style={styles.label}>
-                        Total Amount ({currencySymbol})
-                    </ThemedText>
+                    <ThemedText style={styles.label}>Total Amount ({currencySymbol})</ThemedText>
                     <TextInput
                         style={styles.input}
                         placeholder="0.00"
@@ -481,14 +436,8 @@ export default function BudgetsScreen() {
                         keyboardType="decimal-pad"
                     />
 
-                    <TouchableOpacity
-                        style={styles.createButton}
-                        onPress={handleCreateBudget}
-                        disabled={loading}
-                    >
-                        <ThemedText style={styles.buttonText}>
-                            {loading ? "Creating..." : "Create Budget"}
-                        </ThemedText>
+                    <TouchableOpacity style={styles.createButton} onPress={handleCreateBudget} disabled={loading}>
+                        <ThemedText style={styles.buttonText}>{loading ? "Creating..." : "Create Budget"}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
 
@@ -500,27 +449,17 @@ export default function BudgetsScreen() {
                         {budgets.map((budget) => (
                             <View
                                 key={budget.id}
-                                style={[
-                                    styles.budgetCard,
-                                    selectedBudgetId === budget.id &&
-                                        styles.budgetSelected,
-                                ]}
+                                style={[styles.budgetCard, selectedBudgetId === budget.id && styles.budgetSelected]}
                             >
                                 <View style={styles.budgetTitle}>
                                     <TouchableOpacity
                                         style={styles.budgetInfo}
-                                        onPress={() =>
-                                            setSelectedBudgetId(budget.id)
-                                        }
+                                        onPress={() => setSelectedBudgetId(budget.id)}
                                     >
-                                        <ThemedText type="defaultSemiBold">
-                                            {budget.name}
-                                        </ThemedText>
+                                        <ThemedText type="defaultSemiBold">{budget.name}</ThemedText>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        onPress={() =>
-                                            handleDeleteBudget(budget.id)
-                                        }
+                                        onPress={() => handleDeleteBudget(budget.id)}
                                         style={[
                                             styles.budgetIcon,
                                             {
@@ -528,23 +467,13 @@ export default function BudgetsScreen() {
                                             },
                                         ]}
                                     >
-                                        <Ionicons
-                                            name="trash"
-                                            size={16}
-                                            color={redColor}
-                                        />
+                                        <Ionicons name="trash" size={16} color={redColor} />
                                     </TouchableOpacity>
                                 </View>
                                 <ThemedText style={styles.budgetAmount}>
                                     {currencySymbol} {budget.spent.toFixed(2)} -{" "}
-                                    <ThemedText
-                                        style={[
-                                            styles.budgetAmount,
-                                            styles.budgetInline,
-                                        ]}
-                                    >
-                                        {currencySymbol}{" "}
-                                        {budget.total.toFixed(2)}
+                                    <ThemedText style={[styles.budgetAmount, styles.budgetInline]}>
+                                        {currencySymbol} {budget.total.toFixed(2)}
                                     </ThemedText>
                                 </ThemedText>
                                 <View style={styles.progressBar}>
@@ -552,12 +481,7 @@ export default function BudgetsScreen() {
                                         style={[
                                             styles.progressFill,
                                             {
-                                                width: `${Math.min(
-                                                    (budget.spent /
-                                                        budget.total) *
-                                                        100,
-                                                    100
-                                                )}%`,
+                                                width: `${Math.min((budget.spent / budget.total) * 100, 100)}%`,
                                             },
                                         ]}
                                     />
@@ -569,29 +493,21 @@ export default function BudgetsScreen() {
 
                 {selectedBudget && (
                     <ThemedView style={styles.expenseSection}>
-                        <ThemedText
-                            type="subtitle"
-                            style={styles.expenseHeader}
-                        >
+                        <ThemedText type="subtitle" style={styles.expenseHeader}>
                             {selectedBudget.name}
                         </ThemedText>
                         <ThemedText style={styles.expenseRemaining}>
                             Remaining ({currencySymbol}):{" "}
                             <ThemedText
                                 style={{
-                                    color:
-                                        remainingAmount < 0
-                                            ? redColor
-                                            : greenColor,
+                                    color: remainingAmount < 0 ? redColor : greenColor,
                                 }}
                             >
                                 {remainingAmount.toFixed(2)}
                             </ThemedText>
                         </ThemedText>
 
-                        <ThemedText style={styles.label}>
-                            Expense Name
-                        </ThemedText>
+                        <ThemedText style={styles.label}>Expense Name</ThemedText>
                         <TextInput
                             style={styles.input}
                             placeholder="e.g., Apples"
@@ -600,9 +516,7 @@ export default function BudgetsScreen() {
                             onChangeText={setExpenseName}
                         />
 
-                        <ThemedText style={styles.label}>
-                            Amount ({currencySymbol})
-                        </ThemedText>
+                        <ThemedText style={styles.label}>Amount ({currencySymbol})</ThemedText>
                         <TextInput
                             style={styles.input}
                             placeholder="0.00"
@@ -612,14 +526,8 @@ export default function BudgetsScreen() {
                             keyboardType="decimal-pad"
                         />
 
-                        <TouchableOpacity
-                            style={styles.addButton}
-                            onPress={handleAddExpense}
-                            disabled={loading}
-                        >
-                            <ThemedText style={styles.buttonText}>
-                                {loading ? "Adding..." : "Add Expense"}
-                            </ThemedText>
+                        <TouchableOpacity style={styles.addButton} onPress={handleAddExpense} disabled={loading}>
+                            <ThemedText style={styles.buttonText}>{loading ? "Adding..." : "Add Expense"}</ThemedText>
                         </TouchableOpacity>
 
                         <ThemedText type="subtitle" style={styles.expenseList}>
@@ -627,29 +535,19 @@ export default function BudgetsScreen() {
                         </ThemedText>
                         {selectedBudget.expenses.length === 0 ? (
                             <ThemedView style={styles.emptyState}>
-                                <ThemedText style={styles.emptyStateText}>
-                                    No expenses yet
-                                </ThemedText>
+                                <ThemedText style={styles.emptyStateText}>No expenses yet</ThemedText>
                             </ThemedView>
                         ) : (
                             selectedBudget.expenses.map((expense) => (
-                                <View
-                                    key={expense.id}
-                                    style={styles.expenseItem}
-                                >
+                                <View key={expense.id} style={styles.expenseItem}>
                                     <View style={styles.expenseInfo}>
-                                        <ThemedText type="defaultSemiBold">
-                                            {expense.name}
-                                        </ThemedText>
+                                        <ThemedText type="defaultSemiBold">{expense.name}</ThemedText>
                                         <ThemedText style={styles.expenseLabel}>
-                                            {currencySymbol}{" "}
-                                            {expense.amount.toFixed(2)}
+                                            {currencySymbol} {expense.amount.toFixed(2)}
                                         </ThemedText>
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() =>
-                                            handleDeleteExpense(expense.id)
-                                        }
+                                        onPress={() => handleDeleteExpense(expense.id)}
                                         style={[
                                             styles.budgetIcon,
                                             {
@@ -657,11 +555,7 @@ export default function BudgetsScreen() {
                                             },
                                         ]}
                                     >
-                                        <Ionicons
-                                            name="trash"
-                                            size={16}
-                                            color={redColor}
-                                        />
+                                        <Ionicons name="trash" size={16} color={redColor} />
                                     </TouchableOpacity>
                                 </View>
                             ))
@@ -671,9 +565,7 @@ export default function BudgetsScreen() {
 
                 {budgets.length === 0 && (
                     <ThemedView style={styles.emptyState}>
-                        <ThemedText style={styles.emptyStateText}>
-                            Create a budget to get started!
-                        </ThemedText>
+                        <ThemedText style={styles.emptyStateText}>Create a budget to get started!</ThemedText>
                     </ThemedView>
                 )}
             </ScrollView>

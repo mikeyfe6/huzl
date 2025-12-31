@@ -1,24 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMemo } from "react";
-import {
-    Modal,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { Colors, blueColor } from "@/constants/theme";
 
 type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
-export type SortOption =
-    | "default"
-    | "alphabetic-asc"
-    | "alphabetic-desc"
-    | "cost-asc"
-    | "cost-desc";
+export type SortOption = "default" | "alphabetic-asc" | "alphabetic-desc" | "cost-asc" | "cost-desc";
 
 const SORT_OPTIONS: Array<{
     value: SortOption;
@@ -45,13 +34,7 @@ type SortModalProps = Readonly<{
     theme: ThemeShape;
 }>;
 
-export function SortModal({
-    visible,
-    sortOption,
-    onSelect,
-    onRequestClose,
-    theme,
-}: SortModalProps) {
+export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme }: SortModalProps) {
     const styles = useMemo(
         () =>
             StyleSheet.create({
@@ -109,12 +92,7 @@ export function SortModal({
     );
 
     return (
-        <Modal
-            visible={visible}
-            transparent
-            animationType="fade"
-            onRequestClose={onRequestClose}
-        >
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={onRequestClose}>
             <View style={styles.backdrop}>
                 <View style={styles.sheet}>
                     <ThemedText type="subtitle" style={styles.header}>
@@ -123,36 +101,17 @@ export function SortModal({
                     {SORT_OPTIONS.map((option, index) => (
                         <TouchableOpacity
                             key={option.value}
-                            style={[
-                                styles.item,
-                                index < SORT_OPTIONS.length - 1 &&
-                                    styles.itemDivider,
-                            ]}
+                            style={[styles.item, index < SORT_OPTIONS.length - 1 && styles.itemDivider]}
                             onPress={() => onSelect(option.value)}
                         >
                             <View style={styles.itemLeft}>
-                                <Ionicons
-                                    name={option.icon}
-                                    size={18}
-                                    color={theme.label}
-                                />
-                                <ThemedText style={styles.itemText}>
-                                    {option.label}
-                                </ThemedText>
+                                <Ionicons name={option.icon} size={18} color={theme.label} />
+                                <ThemedText style={styles.itemText}>{option.label}</ThemedText>
                             </View>
-                            {sortOption === option.value && (
-                                <Ionicons
-                                    name="checkmark"
-                                    size={18}
-                                    color={blueColor}
-                                />
-                            )}
+                            {sortOption === option.value && <Ionicons name="checkmark" size={18} color={blueColor} />}
                         </TouchableOpacity>
                     ))}
-                    <TouchableOpacity
-                        style={styles.cancel}
-                        onPress={onRequestClose}
-                    >
+                    <TouchableOpacity style={styles.cancel} onPress={onRequestClose}>
                         <ThemedText type="danger" style={[styles.itemText]}>
                             Cancel
                         </ThemedText>
