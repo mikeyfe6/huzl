@@ -10,7 +10,6 @@ import {
     blueColor,
     businessColor,
     Colors,
-    debtsColor,
     greenColor,
     mediumGreyColor,
     personalColor,
@@ -27,7 +26,7 @@ import { AuthGate } from "@/components/loading";
 import { PieDiagram } from "@/components/ui/pie-chart";
 
 type Frequency = "daily" | "monthly" | "yearly";
-type Category = "personal" | "business" | "debts";
+type Category = "personal" | "business";
 interface ExpenseItem {
     id: string;
     name: string;
@@ -251,10 +250,6 @@ export default function ExpensesScreen() {
         .filter((e) => e.active && e.category === "business")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
-    const debtsYearlySpend = expenses
-        .filter((e) => e.active && e.category === "debts")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
-
     const getFrequencyLabel = (freq: Frequency): string => {
         switch (freq) {
             case "daily":
@@ -339,22 +334,6 @@ export default function ExpensesScreen() {
                 text: `Business (${(
                     (expenses
                         .filter((e) => e.active && e.category === "business")
-                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
-                        totalYearlySpend) *
-                    100
-                ).toFixed(1)}%)`,
-                ...pieLabels,
-            },
-        },
-        {
-            value: expenses
-                .filter((e) => e.active && e.category === "debts")
-                .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: debtsColor,
-            label: {
-                text: `Debts (${(
-                    (expenses
-                        .filter((e) => e.active && e.category === "debts")
                         .reduce((sum, e) => sum + e.yearlyTotal, 0) /
                         totalYearlySpend) *
                     100
@@ -763,16 +742,6 @@ export default function ExpensesScreen() {
                         >
                             <ThemedText>Business</ThemedText>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[styles.categoryOption, category === "debts" && styles.categoryActive]}
-                            onPress={() => setCategory("debts")}
-                            accessibilityRole="radio"
-                            accessibilityState={{
-                                selected: category === "debts",
-                            }}
-                        >
-                            <ThemedText>Debts</ThemedText>
-                        </TouchableOpacity>
                     </View>
 
                     <ThemedText style={styles.label}>Frequency</ThemedText>
@@ -865,9 +834,6 @@ export default function ExpensesScreen() {
                                                 expense.category === "business" && {
                                                     color: theme.specialLabel,
                                                 },
-                                                expense.category === "debts" && {
-                                                    color: redColor,
-                                                },
                                             ]}
                                         >
                                             {currencySymbol} {expense.amount.toFixed(2)} -{" "}
@@ -950,12 +916,6 @@ export default function ExpensesScreen() {
                                     {currencySymbol} {businessYearlySpend.toFixed(2)}
                                 </ThemedText>
                             </ThemedText>
-                            <ThemedText>
-                                Depths:{" "}
-                                <ThemedText style={styles.totalInline}>
-                                    {currencySymbol} {debtsYearlySpend.toFixed(2)}
-                                </ThemedText>
-                            </ThemedText>
                         </ThemedView>
 
                         <View style={styles.totalDetails}>
@@ -978,7 +938,7 @@ export default function ExpensesScreen() {
                             <PieDiagram data={pieData} />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>
-                                    {(["personal", "business", "debts"] as Category[]).map((cat) => {
+                                    {(["personal", "business"] as Category[]).map((cat) => {
                                         let btnBgColor = theme.inputBackground;
                                         let btnBorderColor = theme.inputBorder;
                                         if (category === cat) {
@@ -990,10 +950,6 @@ export default function ExpensesScreen() {
                                                 case "business":
                                                     btnBgColor = businessColor;
                                                     btnBorderColor = businessColor;
-                                                    break;
-                                                case "debts":
-                                                    btnBgColor = debtsColor;
-                                                    btnBorderColor = debtsColor;
                                                     break;
                                                 default:
                                                     btnBgColor = blueColor;

@@ -233,7 +233,7 @@ export default function HomeScreen() {
 
     const monthlyDebts = useMemo(() => {
         return debts
-            .filter((d) => d.pay_per_month && !isNaN(Number(d.pay_per_month)))
+            .filter((d) => d.pay_per_month && !Number.isNaN(Number(d.pay_per_month)))
             .reduce((sum, d) => sum + Number(d.pay_per_month), 0);
     }, [debts]);
 
