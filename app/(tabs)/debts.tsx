@@ -267,6 +267,8 @@ export default function DebtsScreen() {
                 },
                 itemAmount: {
                     ...baseFlex("space-between"),
+                    flexWrap: "wrap",
+                    gap: 4,
                     paddingTop: 8,
                     borderTopWidth: 1,
                     borderTopColor: theme.dividerColor,
@@ -278,7 +280,7 @@ export default function DebtsScreen() {
                 itemRemaining: {
                     ...baseWeight,
                     fontSize: 13,
-                    color: slateColor,
+                    opacity: 0.6,
                 },
                 emptyState: {
                     ...baseFlex("center", "center"),
@@ -418,7 +420,7 @@ export default function DebtsScreen() {
                                                     : (debt.amount % debt.pay_per_month).toFixed(2);
                                             return (
                                                 <ThemedText style={styles.itemRemaining}>
-                                                    Months Remaining: {months}{" "}
+                                                    Remaining: {months}{" "}
                                                     {months > 1
                                                         ? `(${months - 1} × ${currencySymbol} ${
                                                               debt.pay_per_month
