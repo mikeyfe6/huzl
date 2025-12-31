@@ -1,19 +1,12 @@
 import React from "react";
-import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import PieChart from "react-native-pie-chart";
 
 import type { Slice } from "react-native-pie-chart";
 
-const DEFAULT_COVER = Platform.select({
-    // TODO later nader checken
-    ios: 0.5,
-    android: 0.5,
-    default: 0.5,
-});
-
-export function YearlyExpensesPie({
+export function PieChartDiagram({
     data,
-    cover = DEFAULT_COVER,
+    cover = 0.5,
 }: Readonly<{
     data: Array<Slice>;
     widthAndHeight?: number;
