@@ -79,21 +79,24 @@ export default function ExpensesScreen() {
 
     const baseBorder = { borderWidth: 1 };
 
-    const baseCenter = {
-        alignItems: "center" as const,
-        justifyContent: "center" as const,
-    };
-
-    const baseFlex = {
+    const baseFlex = (
+        justify:
+            | "flex-start"
+            | "center"
+            | "space-between"
+            | undefined = undefined,
+        align: "flex-start" | "center" | "flex-end" | undefined = undefined
+    ) => ({
         flexDirection: "row" as const,
-        alignItems: "center" as const,
-    };
+        justifyContent: justify,
+        alignItems: align,
+    });
 
     const baseWeight = { fontWeight: "600" as const };
 
     const baseButton = {
+        ...baseFlex("center", "center"),
         ...baseRadius,
-        ...baseCenter,
         paddingVertical: 12,
         flex: 1,
     };
@@ -167,12 +170,12 @@ export default function ExpensesScreen() {
                     color: theme.inputText,
                 },
                 categoryGroup: {
+                    ...baseFlex("center"),
                     ...baseGap,
-                    flexDirection: "row",
                 },
                 categoryOption: {
+                    ...baseFlex("center", "center"),
                     ...baseInput,
-                    ...baseCenter,
                     flex: 1,
                 },
                 categoryActive: {
@@ -235,8 +238,8 @@ export default function ExpensesScreen() {
                     pointerEvents: "none",
                 },
                 buttons: {
+                    ...baseFlex("center"),
                     ...baseGap,
-                    flexDirection: "row",
                 },
                 button: {
                     ...baseButton,
@@ -249,31 +252,27 @@ export default function ExpensesScreen() {
                     ...baseList,
                 },
                 expenseHeader: {
-                    ...baseCenter,
+                    ...baseFlex("space-between", "center"),
                     ...baseSpace,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
                     marginBottom: 12,
                 },
                 expenseTitle: {
-                    ...baseFlex,
+                    ...baseFlex("center", "center"),
                     ...baseSpace,
                 },
                 sortTrigger: {
-                    ...baseInput,
-                    ...baseCenter,
-                    ...baseSelect,
+                    ...baseFlex("center", "center"),
                     ...baseSpace,
-                    flexDirection: "row",
+                    ...baseInput,
+                    ...baseSelect,
                 },
                 sortTriggerText: {
                     ...baseWeight,
                     color: theme.label,
                 },
                 expenseAmounts: {
-                    ...baseCenter,
+                    ...baseFlex("center"),
                     ...baseSpace,
-                    flexDirection: "row",
                 },
                 expenseCard: {
                     ...baseCard,
@@ -282,8 +281,7 @@ export default function ExpensesScreen() {
                     opacity: 0.5,
                 },
                 expenseItem: {
-                    ...baseFlex,
-                    justifyContent: "space-between",
+                    ...baseFlex("space-between"),
                 },
                 expenseInfo: {
                     flex: 1,
@@ -294,8 +292,8 @@ export default function ExpensesScreen() {
                     marginTop: 4,
                 },
                 expenseIcons: {
-                    flexDirection: "row",
-                    gap: 16,
+                    ...baseFlex("center", "center"),
+                    gap: 12,
                 },
                 expenseIcon: {
                     ...baseBorder,
@@ -303,8 +301,7 @@ export default function ExpensesScreen() {
                     padding: 8,
                 },
                 expenseTotal: {
-                    ...baseFlex,
-                    justifyContent: "space-between",
+                    ...baseFlex("space-between"),
                     paddingTop: 8,
                     borderTopWidth: 1,
                     borderTopColor: theme.dividerColor,
@@ -343,7 +340,7 @@ export default function ExpensesScreen() {
                     backgroundColor: theme.dailyTab,
                 },
                 totalDetails: {
-                    flexDirection: "row",
+                    ...baseFlex("space-between", "center"),
                     gap: 16,
                     paddingHorizontal: 16,
                     marginBottom: 16,
@@ -364,11 +361,11 @@ export default function ExpensesScreen() {
                     lineHeight: 40,
                 },
                 chartContainer: {
-                    flexDirection: "row",
-                    justifyContent: "center",
+                    ...baseFlex("center", "flex-start"),
+                    backgroundColor: theme.background,
                     flexWrap: "wrap",
-                    marginVertical: 48,
                     paddingHorizontal: 16,
+                    paddingVertical: 32,
                     gap: 48,
                 },
                 chartStats: {
@@ -377,38 +374,39 @@ export default function ExpensesScreen() {
                     gap: 24,
                 },
                 chartButtons: {
+                    ...baseFlex("center"),
                     ...baseGap,
-                    flexDirection: "row",
-                    justifyContent: "center",
+                    flexWrap: "wrap",
                 },
                 chartButton: {
+                    ...baseFlex("center", "center"),
+                    ...baseRadius,
+                    flex: 1,
                     outlineWidth: 0,
                     minHeight: 44,
                     paddingHorizontal: 18,
-                    paddingVertical: 10,
-                    borderRadius: 8,
-                    borderWidth: 1.5,
+                    borderWidth: 1,
                 },
                 chartButtonText: { fontWeight: "bold" },
                 chartItems: {
+                    ...baseFlex("center", "center"),
                     ...baseSpace,
-                    flexDirection: "row",
                     flexWrap: "wrap",
-                    justifyContent: "center",
                 },
                 chartItem: {
                     ...baseRadius,
                     paddingHorizontal: 12,
                     paddingTop: 6,
                     paddingBottom: 8,
+                    opacity: 0.9,
                     backgroundColor: theme.dividerColor,
                     borderColor: theme.borderColor,
                 },
                 chartItemText: {
-                    fontWeight: "600",
+                    ...baseWeight,
                 },
                 emptyState: {
-                    ...baseCenter,
+                    ...baseFlex("center", "center"),
                     paddingVertical: 60,
                 },
                 emptyStateText: {
@@ -438,7 +436,7 @@ export default function ExpensesScreen() {
     };
 
     const handleAddExpense = async () => {
-        if (!user) return; // require auth
+        if (!user) return;
         if (!expenseName.trim() || !expenseAmount.trim()) return;
 
         setLoading(true);
@@ -1264,7 +1262,7 @@ export default function ExpensesScreen() {
                                                     >
                                                         {e.name}{" "}
                                                     </ThemedText>
-                                                    ({e.percent.toFixed(1)}%)
+                                                    - {e.percent.toFixed(1)}%
                                                 </ThemedText>
                                             ))
                                     )}

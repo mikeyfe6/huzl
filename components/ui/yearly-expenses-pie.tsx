@@ -1,34 +1,31 @@
 import React from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import PieChart from "react-native-pie-chart";
 
 import type { Slice } from "react-native-pie-chart";
 
-const DEFAULT_SIZE = Platform.select({
-    ios: 350,
-    android: 350,
-    default: 450,
-});
-
 const DEFAULT_COVER = Platform.select({
-    ios: 0.4,
-    android: 0.4,
+    // TODO later nader checken
+    ios: 0.5,
+    android: 0.5,
     default: 0.5,
 });
 
 export function YearlyExpensesPie({
     data,
-    widthAndHeight = DEFAULT_SIZE,
     cover = DEFAULT_COVER,
 }: Readonly<{
     data: Array<Slice>;
     widthAndHeight?: number;
     cover?: number;
 }>) {
+    const { width: windowWidth } = useWindowDimensions();
+    const responsiveSize = Math.min(windowWidth * 0.9, 450);
+
     return (
         <View style={styles.container}>
             <PieChart
-                widthAndHeight={widthAndHeight}
+                widthAndHeight={responsiveSize}
                 series={data}
                 cover={cover}
                 style={{ overflow: "visible" }}
