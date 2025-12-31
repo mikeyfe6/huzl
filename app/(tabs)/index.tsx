@@ -1,12 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import {
-    Colors,
-    greenColor,
-    mediumGreyColor,
-    redColor,
-    whiteColor,
-} from "@/constants/theme";
+import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
@@ -14,14 +8,7 @@ import { useRefreshContext } from "@/hooks/use-refresh-context";
 import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
-import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
     const { user, loading, signIn, signUp } = useAuth();
@@ -36,6 +23,7 @@ export default function HomeScreen() {
     const [error, setError] = useState<string | null>(null);
 
     const [expenses, setExpenses] = useState<any[]>([]);
+    const [debts, setDebts] = useState<any[]>([]);
     const [isSignUp, setIsSignUp] = useState(false);
 
     const baseGap = { gap: 12 };
@@ -165,10 +153,7 @@ export default function HomeScreen() {
         [theme]
     );
 
-    const calculateYearlyTotal = (
-        amount: number,
-        freq: "daily" | "monthly" | "yearly"
-    ): number => {
+    const calculateYearlyTotal = (amount: number, freq: "daily" | "monthly" | "yearly"): number => {
         const num = Number.parseFloat(amount.toString());
         if (Number.isNaN(num)) return 0;
 
@@ -207,8 +192,19 @@ export default function HomeScreen() {
                 console.error("Error fetching expenses:", err);
             }
         };
+        const fetchDebts = async () => {
+            try {
+                const { data, error } = await supabase.from("debts").select("pay_per_month,active").eq("active", true);
+                if (!error && data && isMounted) {
+                    setDebts(data);
+                }
+            } catch (err) {
+                console.error("Error fetching debts:", err);
+            }
+        };
 
         fetchExpenses();
+        fetchDebts();
         return () => {
             isMounted = false;
         };
@@ -235,10 +231,16 @@ export default function HomeScreen() {
         return { monthlyTotal, yearlyTotal };
     }, [expenses]);
 
+    const monthlyDebts = useMemo(() => {
+        return debts
+            .filter((d) => d.pay_per_month && !isNaN(Number(d.pay_per_month)))
+            .reduce((sum, d) => sum + Number(d.pay_per_month), 0);
+    }, [debts]);
+
     const monthlyDisposable = useMemo(() => {
         if (monthlyIncome === null) return null;
-        return monthlyIncome - totals.monthlyTotal;
-    }, [monthlyIncome, totals]);
+        return monthlyIncome - totals.monthlyTotal - monthlyDebts;
+    }, [monthlyIncome, totals, monthlyDebts]);
 
     const handleSignIn = async () => {
         setError(null);
@@ -285,17 +287,12 @@ export default function HomeScreen() {
 
     if (!user) {
         return (
-            <ScrollView
-                style={{ flex: 1 }}
-                contentContainerStyle={{ flexGrow: 1 }}
-            >
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
                 <ThemedView style={[styles.container, { flex: 1 }]}>
                     <HeaderImage />
                     <ThemedText type="title">Welcome !</ThemedText>
                     <ThemedText style={styles.text}>
-                        {isSignUp
-                            ? "Create your account to get started"
-                            : "Sign in or create an account to continue"}
+                        {isSignUp ? "Create your account to get started" : "Sign in or create an account to continue"}
                     </ThemedText>
                     <View style={styles.fieldset}>
                         <TextInput
@@ -330,40 +327,20 @@ export default function HomeScreen() {
                         )}
                         {isSignUp ? (
                             <>
-                                <TouchableOpacity
-                                    onPress={handleSignUp}
-                                    style={styles.signInButton}
-                                >
-                                    <ThemedText style={styles.signInText}>
-                                        Create Account
-                                    </ThemedText>
+                                <TouchableOpacity onPress={handleSignUp} style={styles.signInButton}>
+                                    <ThemedText style={styles.signInText}>Create Account</ThemedText>
                                 </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => setIsSignUp(false)}
-                                    style={styles.signUpButton}
-                                >
-                                    <ThemedText style={styles.signUpText}>
-                                        Already have an account?
-                                    </ThemedText>
+                                <TouchableOpacity onPress={() => setIsSignUp(false)} style={styles.signUpButton}>
+                                    <ThemedText style={styles.signUpText}>Already have an account?</ThemedText>
                                 </TouchableOpacity>
                             </>
                         ) : (
                             <>
-                                <TouchableOpacity
-                                    onPress={handleSignIn}
-                                    style={styles.signInButton}
-                                >
-                                    <ThemedText style={styles.signInText}>
-                                        Sign In
-                                    </ThemedText>
+                                <TouchableOpacity onPress={handleSignIn} style={styles.signInButton}>
+                                    <ThemedText style={styles.signInText}>Sign In</ThemedText>
                                 </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => setIsSignUp(true)}
-                                    style={styles.signUpButton}
-                                >
-                                    <ThemedText style={styles.signUpText}>
-                                        Create Account
-                                    </ThemedText>
+                                <TouchableOpacity onPress={() => setIsSignUp(true)} style={styles.signUpButton}>
+                                    <ThemedText style={styles.signUpText}>Create Account</ThemedText>
                                 </TouchableOpacity>
                             </>
                         )}
@@ -390,22 +367,15 @@ export default function HomeScreen() {
                         : "!"}
                 </ThemedText>
                 <ThemedText style={styles.text}>
-                    Signed in as{" "}
-                    <ThemedText style={styles.user}>{user.email}</ThemedText>
+                    Signed in as <ThemedText style={styles.user}>{user.email}</ThemedText>
                 </ThemedText>
 
                 <ThemedView style={styles.statsContainer}>
                     {monthlyIncome !== null && (
                         <ThemedView style={styles.statCard}>
-                            <ThemedText style={styles.statLabel}>
-                                Monthly Income
-                            </ThemedText>
+                            <ThemedText style={styles.statLabel}>Monthly Income</ThemedText>
                             <View style={styles.statWrapper}>
-                                <Ionicons
-                                    name="add-outline"
-                                    size={16}
-                                    color={greenColor}
-                                />
+                                <Ionicons name="add-outline" size={16} color={greenColor} />
                                 <ThemedText style={styles.statValue}>
                                     {currencySymbol} {monthlyIncome.toFixed(2)}
                                 </ThemedText>
@@ -414,34 +384,32 @@ export default function HomeScreen() {
                     )}
 
                     <ThemedView style={styles.statCard}>
-                        <ThemedText style={styles.statLabel}>
-                            Monthly Costs
-                        </ThemedText>
+                        <ThemedText style={styles.statLabel}>Monthly Costs</ThemedText>
                         <View style={styles.statWrapper}>
-                            <Ionicons
-                                name="remove-outline"
-                                size={16}
-                                color={redColor}
-                            />
+                            <Ionicons name="remove-outline" size={16} color={redColor} />
                             <ThemedText style={styles.statValue}>
-                                {currencySymbol}{" "}
-                                {totals.monthlyTotal.toFixed(2)}
+                                {currencySymbol} {totals.monthlyTotal.toFixed(2)}
                             </ThemedText>
                         </View>
                     </ThemedView>
 
+                    <ThemedView style={styles.statCard}>
+                        <ThemedText style={styles.statLabel}>Monthly Debts</ThemedText>
+                        <View style={styles.statWrapper}>
+                            <Ionicons name="alert" size={16} color={orangeColor} />
+                            <ThemedText style={styles.statValue}>
+                                {currencySymbol} {monthlyDebts.toFixed(2)}
+                            </ThemedText>
+                        </View>
+                    </ThemedView>
                     {monthlyDisposable !== null && (
                         <ThemedView
                             style={[
                                 styles.statCard,
-                                monthlyDisposable >= 0
-                                    ? styles.statCardPositive
-                                    : styles.statCardNegative,
+                                monthlyDisposable >= 0 ? styles.statCardPositive : styles.statCardNegative,
                             ]}
                         >
-                            <ThemedText style={styles.statLabel}>
-                                Monthly Remaining
-                            </ThemedText>
+                            <ThemedText style={styles.statLabel}>Monthly Remaining</ThemedText>
                             <ThemedText style={styles.statValue}>
                                 {currencySymbol} {monthlyDisposable.toFixed(2)}
                             </ThemedText>
