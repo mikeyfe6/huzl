@@ -373,7 +373,7 @@ export default function ExpensesScreen() {
                 },
                 chartStats: {
                     width: "100%",
-                    maxWidth: 600,
+                    maxWidth: 800,
                     gap: 24,
                 },
                 chartButtons: {
