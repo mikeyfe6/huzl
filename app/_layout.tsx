@@ -12,6 +12,7 @@ import {
     ThemeProvider as CustomThemeProvider,
     useColorScheme,
 } from "@/hooks/use-color-scheme";
+import { RefreshProvider } from "@/hooks/use-refresh-context";
 
 export const unstable_settings = {
     anchor: "(tabs)",
@@ -25,17 +26,19 @@ function RootContent() {
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
             <AuthProvider>
-                <Stack>
-                    <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="income"
-                        options={{ presentation: "modal", title: "Income" }}
-                    />
-                </Stack>
-                <StatusBar style="auto" />
+                <RefreshProvider>
+                    <Stack>
+                        <Stack.Screen
+                            name="(tabs)"
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="income"
+                            options={{ presentation: "modal", title: "Income" }}
+                        />
+                    </Stack>
+                    <StatusBar style="auto" />
+                </RefreshProvider>
             </AuthProvider>
         </ThemeProvider>
     );

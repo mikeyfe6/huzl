@@ -10,6 +10,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
+import { useRefreshContext } from "@/hooks/use-refresh-context";
 import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
@@ -24,6 +25,7 @@ import {
 
 export default function HomeScreen() {
     const { user, loading, signIn, signUp } = useAuth();
+    const { refreshFlag } = useRefreshContext();
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { symbol: currencySymbol } = useCurrency();
@@ -210,7 +212,7 @@ export default function HomeScreen() {
         return () => {
             isMounted = false;
         };
-    }, [user]);
+    }, [user, refreshFlag]);
 
     const monthlyIncome = useMemo(() => {
         const val = (user?.user_metadata as any)?.monthly_income;
