@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
+import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, slateColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
@@ -18,7 +18,7 @@ type DebtItem = {
     user_id: string;
     name: string;
     amount: number;
-    installments: number;
+    pay_per_month?: number | null;
     active: boolean;
     created_at?: string;
 };
@@ -30,7 +30,7 @@ export default function DebtsScreen() {
     const [debts, setDebts] = useState<DebtItem[]>([]);
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
-    const [installments, setInstallments] = useState("");
+    const [payPerMonth, setPayPerMonth] = useState("");
     const [editingId, setEditingId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -43,7 +43,7 @@ export default function DebtsScreen() {
     const handleEditDebt = (debt: DebtItem) => {
         setName(debt.name);
         setAmount(debt.amount.toString());
-        setInstallments(debt.installments?.toString() || "");
+        setPayPerMonth(debt.pay_per_month?.toString() || "");
         setEditingId(debt.id);
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
@@ -52,7 +52,7 @@ export default function DebtsScreen() {
     const handleCancelEdit = () => {
         setName("");
         setAmount("");
-        setInstallments("");
+        setPayPerMonth("");
         setEditingId(null);
     };
 
@@ -81,23 +81,23 @@ export default function DebtsScreen() {
     };
 
     const handleAddOrUpdateDebt = async () => {
-        if (!user || !name.trim() || !amount.trim() || !installments.trim()) return;
+        if (!user || !name.trim() || !amount.trim()) return;
         setLoading(true);
         try {
+            const payPerMonthValue = payPerMonth.trim() ? Number.parseFloat(payPerMonth) : null;
             if (editingId) {
                 const { data, error } = await supabase
                     .from("debts")
                     .update({
                         name,
                         amount: Number.parseFloat(amount),
-                        installments: Number.parseInt(installments, 10),
+                        pay_per_month: payPerMonthValue,
                     })
                     .eq("id", editingId)
                     .eq("user_id", user.id)
-                    .select()
-                    .single();
-                if (!error && data) {
-                    setDebts((prev) => prev.map((d) => (d.id === editingId ? { ...d, ...data } : d)));
+                    .select();
+                if (!error && Array.isArray(data) && data.length > 0) {
+                    setDebts((prev) => prev.map((d) => (d.id === editingId ? { ...d, ...data[0] } : d)));
                     handleCancelEdit();
                 }
             } else {
@@ -107,7 +107,7 @@ export default function DebtsScreen() {
                         user_id: user.id,
                         name,
                         amount: Number.parseFloat(amount),
-                        installments: Number.parseInt(installments, 10),
+                        pay_per_month: payPerMonthValue,
                         active: true,
                     })
                     .select()
@@ -116,7 +116,7 @@ export default function DebtsScreen() {
                     setDebts((prev) => [data as DebtItem, ...prev]);
                     setName("");
                     setAmount("");
-                    setInstallments("");
+                    setPayPerMonth("");
                 }
             }
         } finally {
@@ -140,7 +140,6 @@ export default function DebtsScreen() {
     }, [user]);
 
     const baseGap = { gap: 12 };
-    const baseSpace = { gap: 8 };
     const baseWeight = { fontWeight: "600" as const };
     const baseRadius = { borderRadius: 8 };
     const baseBorder = { borderWidth: 1 };
@@ -240,29 +239,47 @@ export default function DebtsScreen() {
                 },
                 buttonText: { ...baseButtonText },
                 list: { ...baseList },
-                title: {
-                    ...baseFlex("space-between", "center"),
-                    ...baseSpace,
+                header: {
+                    marginBottom: 8,
                 },
-                icons: {
+                item: {
+                    ...baseCard,
+                },
+                itemHeader: {
+                    ...baseFlex("space-between"),
+                },
+                itemTitle: {
+                    flex: 1,
+                },
+                itemLabel: {
+                    fontSize: 13,
+                    opacity: 0.7,
+                    marginTop: 4,
+                },
+                itemIcons: {
                     ...baseFlex("center", "center"),
                     ...baseGap,
                 },
-                icon: {
+                itemIcon: {
                     ...baseBorder,
                     borderRadius: 6,
                     padding: 8,
                 },
-                info: {
+                itemAmount: {
                     ...baseFlex("space-between"),
                     paddingTop: 8,
                     borderTopWidth: 1,
                     borderTopColor: theme.dividerColor,
                 },
-                item: {
-                    ...baseCard,
+                itemPayment: {
+                    fontSize: 13,
+                    color: slateColor,
                 },
-                amount: { fontSize: 13, opacity: 0.7, marginTop: 4 },
+                itemRemaining: {
+                    ...baseWeight,
+                    fontSize: 13,
+                    color: slateColor,
+                },
                 emptyState: {
                     ...baseFlex("center", "center"),
                     paddingVertical: 60,
@@ -302,14 +319,14 @@ export default function DebtsScreen() {
                         onChangeText={setAmount}
                         keyboardType="decimal-pad"
                     />
-                    <ThemedText style={styles.label}>Installments (months)</ThemedText>
+                    <ThemedText style={styles.label}>Monthly Payment ({currencySymbol})</ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder="e.g., 12"
+                        placeholder="e.g., 200"
                         placeholderTextColor={theme.placeholder}
-                        value={installments}
-                        onChangeText={setInstallments}
-                        keyboardType="number-pad"
+                        value={payPerMonth}
+                        onChangeText={setPayPerMonth}
+                        keyboardType="decimal-pad"
                     />
                     <View style={styles.buttons}>
                         <TouchableOpacity
@@ -331,6 +348,9 @@ export default function DebtsScreen() {
                     </View>
                 </ThemedView>
                 <ThemedView style={styles.list}>
+                    <ThemedText type="subtitle" style={styles.header}>
+                        Your Debts
+                    </ThemedText>
                     {debts.length === 0 ? (
                         <ThemedView style={styles.emptyState}>
                             <ThemedText style={styles.emptyStateText}>No debts (hooray!)</ThemedText>
@@ -338,13 +358,18 @@ export default function DebtsScreen() {
                     ) : (
                         debts.map((debt) => (
                             <ThemedView key={debt.id} style={[styles.item, !debt.active && { opacity: 0.5 }]}>
-                                <View style={styles.title}>
-                                    <ThemedText type="defaultSemiBold">{debt.name}</ThemedText>
-                                    <View style={styles.icons}>
+                                <View style={styles.itemHeader}>
+                                    <View style={styles.itemTitle}>
+                                        <ThemedText type="defaultSemiBold">{debt.name}</ThemedText>
+                                        <ThemedText style={styles.itemLabel}>
+                                            Remaining: {currencySymbol} {debt.amount}
+                                        </ThemedText>
+                                    </View>
+                                    <View style={styles.itemIcons}>
                                         <TouchableOpacity
                                             onPress={() => handleToggleActive(debt.id, debt.active)}
                                             style={[
-                                                styles.icon,
+                                                styles.itemIcon,
                                                 {
                                                     borderColor: debt.active ? greenColor : mediumGreyColor,
                                                 },
@@ -359,7 +384,7 @@ export default function DebtsScreen() {
                                         <TouchableOpacity
                                             onPress={() => handleEditDebt(debt)}
                                             style={[
-                                                styles.icon,
+                                                styles.itemIcon,
                                                 {
                                                     borderColor: mediumGreyColor,
                                                 },
@@ -370,7 +395,7 @@ export default function DebtsScreen() {
                                         <TouchableOpacity
                                             onPress={() => handleDeleteDebt(debt.id)}
                                             style={[
-                                                styles.icon,
+                                                styles.itemIcon,
                                                 {
                                                     borderColor: redColor,
                                                 },
@@ -380,14 +405,31 @@ export default function DebtsScreen() {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={styles.info}>
-                                    <ThemedText style={styles.amount}>
-                                        Remaining: {currencySymbol} {debt.amount}
+                                <View style={styles.itemAmount}>
+                                    <ThemedText style={styles.itemPayment}>
+                                        Monthly: {debt.pay_per_month ? `${currencySymbol} ${debt.pay_per_month}` : "—"}
                                     </ThemedText>
-
-                                    <ThemedText style={styles.amount}>
-                                        Installments: {debt.installments} months
-                                    </ThemedText>
+                                    {debt.pay_per_month && debt.pay_per_month > 0 ? (
+                                        (() => {
+                                            const months = Math.ceil(debt.amount / debt.pay_per_month);
+                                            const lastPayment =
+                                                debt.amount % debt.pay_per_month === 0
+                                                    ? debt.pay_per_month
+                                                    : (debt.amount % debt.pay_per_month).toFixed(2);
+                                            return (
+                                                <ThemedText style={styles.itemRemaining}>
+                                                    Months Remaining: {months}{" "}
+                                                    {months > 1
+                                                        ? `(${months - 1} × ${currencySymbol} ${
+                                                              debt.pay_per_month
+                                                          }, last: ${currencySymbol} ${lastPayment})`
+                                                        : ""}
+                                                </ThemedText>
+                                            );
+                                        })()
+                                    ) : (
+                                        <ThemedText style={styles.itemRemaining}>Months Remaining: —</ThemedText>
+                                    )}
                                 </View>
                             </ThemedView>
                         ))
