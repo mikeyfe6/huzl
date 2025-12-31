@@ -19,9 +19,12 @@ import {
 } from "@/components/ui/sort-modal";
 import {
     blueColor,
+    businessColor,
     Colors,
+    debtsColor,
     greenColor,
     mediumGreyColor,
+    personalColor,
     redColor,
     slateColor,
     whiteColor,
@@ -360,6 +363,50 @@ export default function ExpensesScreen() {
                     color: theme.text,
                     lineHeight: 40,
                 },
+                chartContainer: {
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    marginVertical: 48,
+                    paddingHorizontal: 16,
+                    gap: 48,
+                },
+                chartStats: {
+                    width: "100%",
+                    maxWidth: 600,
+                    gap: 24,
+                },
+                chartButtons: {
+                    ...baseGap,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                },
+                chartButton: {
+                    outlineWidth: 0,
+                    minHeight: 44,
+                    paddingHorizontal: 18,
+                    paddingVertical: 10,
+                    borderRadius: 8,
+                    borderWidth: 1.5,
+                },
+                chartButtonText: { fontWeight: "bold" },
+                chartItems: {
+                    ...baseSpace,
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                },
+                chartItem: {
+                    ...baseRadius,
+                    paddingHorizontal: 12,
+                    paddingTop: 6,
+                    paddingBottom: 8,
+                    backgroundColor: theme.dividerColor,
+                    borderColor: theme.borderColor,
+                },
+                chartItemText: {
+                    fontWeight: "600",
+                },
                 emptyState: {
                     ...baseCenter,
                     paddingVertical: 60,
@@ -647,7 +694,7 @@ export default function ExpensesScreen() {
 
     const pieLabels = {
         fontSize: 14,
-        fontWeight: "bold",
+        fontWeight: 600,
         fontFamily: "System",
         fill: theme.text,
     };
@@ -657,7 +704,7 @@ export default function ExpensesScreen() {
             value: expenses
                 .filter((e) => e.active && e.category === "personal")
                 .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: "#0c86c5db",
+            color: personalColor,
             label: {
                 text: `Personal (${(
                     (expenses
@@ -673,7 +720,7 @@ export default function ExpensesScreen() {
             value: expenses
                 .filter((e) => e.active && e.category === "business")
                 .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: "#55B467db",
+            color: businessColor,
             label: {
                 text: `Business (${(
                     (expenses
@@ -689,7 +736,7 @@ export default function ExpensesScreen() {
             value: expenses
                 .filter((e) => e.active && e.category === "debts")
                 .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: "#e5533ddb",
+            color: debtsColor,
             label: {
                 text: `Debts (${(
                     (expenses
@@ -1108,7 +1155,122 @@ export default function ExpensesScreen() {
                             </ThemedView>
                         </View>
 
-                        <YearlyExpensesPie data={pieData} />
+                        <View style={styles.chartContainer}>
+                            <YearlyExpensesPie data={pieData} />
+                            <View style={styles.chartStats}>
+                                <View style={styles.chartButtons}>
+                                    {(
+                                        [
+                                            "personal",
+                                            "business",
+                                            "debts",
+                                        ] as Category[]
+                                    ).map((cat) => {
+                                        let btnBgColor = theme.inputBackground;
+                                        let btnBorderColor = theme.inputBorder;
+                                        if (category === cat) {
+                                            switch (cat) {
+                                                case "personal":
+                                                    btnBgColor = personalColor;
+                                                    btnBorderColor =
+                                                        personalColor;
+                                                    break;
+                                                case "business":
+                                                    btnBgColor = businessColor;
+                                                    btnBorderColor =
+                                                        businessColor;
+                                                    break;
+                                                case "debts":
+                                                    btnBgColor = debtsColor;
+                                                    btnBorderColor = debtsColor;
+                                                    break;
+                                                default:
+                                                    btnBgColor = blueColor;
+                                                    btnBorderColor = blueColor;
+                                            }
+                                        }
+                                        return (
+                                            <TouchableOpacity
+                                                key={cat}
+                                                onPress={() => setCategory(cat)}
+                                                style={[
+                                                    styles.chartButton,
+                                                    {
+                                                        backgroundColor:
+                                                            btnBgColor,
+                                                        borderColor:
+                                                            btnBorderColor,
+                                                    },
+                                                ]}
+                                            >
+                                                <ThemedText
+                                                    style={
+                                                        styles.chartButtonText
+                                                    }
+                                                >
+                                                    {cat
+                                                        .charAt(0)
+                                                        .toUpperCase() +
+                                                        cat.slice(1)}
+                                                </ThemedText>
+                                            </TouchableOpacity>
+                                        );
+                                    })}
+                                </View>
+                                <View style={styles.chartItems}>
+                                    {expenses.filter(
+                                        (e) =>
+                                            e.active && e.category === category
+                                    ).length === 0 ? (
+                                        <ThemedText>
+                                            No expenses in this category.
+                                        </ThemedText>
+                                    ) : (
+                                        expenses
+                                            .filter(
+                                                (e) =>
+                                                    e.active &&
+                                                    e.category === category
+                                            )
+                                            .map((e) => ({
+                                                ...e,
+                                                percent:
+                                                    (e.yearlyTotal /
+                                                        (expenses
+                                                            .filter(
+                                                                (x) => x.active
+                                                            )
+                                                            .reduce(
+                                                                (sum, x) =>
+                                                                    sum +
+                                                                    x.yearlyTotal,
+                                                                0
+                                                            ) || 1)) *
+                                                    100,
+                                            }))
+                                            .sort(
+                                                (a, b) => b.percent - a.percent
+                                            )
+                                            .map((e) => (
+                                                <ThemedText
+                                                    key={e.id}
+                                                    style={styles.chartItem}
+                                                >
+                                                    <ThemedText
+                                                        key={e.id}
+                                                        style={
+                                                            styles.chartItemText
+                                                        }
+                                                    >
+                                                        {e.name}{" "}
+                                                    </ThemedText>
+                                                    ({e.percent.toFixed(1)}%)
+                                                </ThemedText>
+                                            ))
+                                    )}
+                                </View>
+                            </View>
+                        </View>
                     </>
                 )}
 

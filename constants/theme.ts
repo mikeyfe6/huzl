@@ -22,6 +22,10 @@ export const copperDarkColor = "#a0600075";
 export const goldDarkColor = "#da902290";
 export const linkDarkColor = "#0a7ea490";
 
+export const personalColor = "#9ba1a650";
+export const businessColor = "#da902250";
+export const debtsColor = "#e5533d75";
+
 export const almostWhiteColor = "#f5f5f5";
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";
