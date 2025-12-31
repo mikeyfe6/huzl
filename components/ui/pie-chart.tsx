@@ -4,7 +4,7 @@ import PieChart from "react-native-pie-chart";
 
 import type { Slice } from "react-native-pie-chart";
 
-export function PieChartDiagram({
+export function PieDiagram({
     data,
     cover = 0.5,
 }: Readonly<{

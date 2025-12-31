@@ -35,7 +35,7 @@ import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
-import { PieChartDiagram } from "@/components/ui/pie-chart";
+import { PieDiagram } from "@/components/ui/pie-chart";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business" | "debts";
@@ -1154,7 +1154,7 @@ export default function ExpensesScreen() {
                         </View>
 
                         <View style={styles.chartContainer}>
-                            <PieChartDiagram data={pieData} />
+                            <PieDiagram data={pieData} />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>
                                     {(
