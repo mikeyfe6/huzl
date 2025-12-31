@@ -117,10 +117,18 @@ export default function BudgetsScreen() {
 
     const baseBorder = { borderWidth: 1 };
 
-    const baseCenter = {
-        alignItems: "center" as const,
-        justifyContent: "center" as const,
-    };
+    const baseFlex = (
+        justify:
+            | "flex-start"
+            | "center"
+            | "space-between"
+            | undefined = undefined,
+        align: "flex-start" | "center" | "flex-end" | undefined = undefined
+    ) => ({
+        flexDirection: "row" as const,
+        justifyContent: justify,
+        alignItems: align,
+    });
 
     const baseMain = {
         ...baseGap,
@@ -152,7 +160,8 @@ export default function BudgetsScreen() {
 
     const baseButton = {
         ...baseRadius,
-        ...baseCenter,
+        ...baseFlex("center", "center"),
+        marginTop: 8,
         paddingVertical: 12,
     };
 
@@ -199,12 +208,10 @@ export default function BudgetsScreen() {
                 createButton: {
                     ...baseButton,
                     backgroundColor: blueColor,
-                    marginTop: 8,
                 },
                 addButton: {
                     ...baseButton,
                     backgroundColor: greenColor,
-                    marginTop: 8,
                 },
                 buttonText: {
                     ...baseButtonText,
@@ -286,7 +293,7 @@ export default function BudgetsScreen() {
                     color: theme.label,
                 },
                 emptyState: {
-                    ...baseCenter,
+                    ...baseFlex("center", "center"),
                     paddingVertical: 60,
                 },
                 emptyStateText: {

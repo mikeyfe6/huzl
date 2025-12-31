@@ -24,6 +24,7 @@ const MAPPING = {
     "graph.2d": "graphic-eq",
     gear: "settings",
     "sun.righthalf.filled": "sunny",
+    creditcard: "payment",
 } as IconMapping;
 
 /**
