@@ -14,6 +14,7 @@ export const blueColor = "#0c86c5";
 export const copperColor = "#aa6600";
 export const goldColor = "#d1982eff";
 export const orangeColor = "#F49E0B";
+export const fuchsiaColor = "#d53fefff";
 
 export const greenLightColor = "#4caf5080";
 export const redLightColor = "#f4433680";
@@ -26,6 +27,7 @@ export const linkDarkColor = "#0a7ea490";
 export const personalColor = "#9ba1a650";
 export const businessColor = "#da902250";
 export const debtsColor = "#e5533d75";
+export const familyColor = "#9c27b075";
 
 export const almostWhiteColor = "#f5f5f5";
 export const lightGreyColor = "#ddd";

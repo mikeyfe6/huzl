@@ -124,7 +124,9 @@ export default function HomeScreen() {
                 },
                 statCard: {
                     ...baseSpace,
-                    padding: 16,
+                    paddingHorizontal: 16,
+                    paddingTop: 14,
+                    paddingBottom: 18,
                     borderRadius: 12,
                     backgroundColor: theme.cardBackground,
                 },
