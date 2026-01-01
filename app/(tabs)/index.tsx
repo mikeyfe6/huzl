@@ -26,14 +26,119 @@ export default function HomeScreen() {
     const [debts, setDebts] = useState<any[]>([]);
     const [isSignUp, setIsSignUp] = useState(false);
 
+    const handleSignIn = async () => {
+        setError(null);
+        const { error } = await signIn(email.trim(), password);
+        if (error) setError(error);
+    };
+
+    const handleSignUp = async () => {
+        setError(null);
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+        if (password.length < 6) {
+            setError("Password must be at least 6 characters");
+            return;
+        }
+        const { error } = await signUp(email.trim(), password);
+        if (error) setError(error);
+    };
+
+    const calculateYearlyTotal = (amount: number, freq: "daily" | "monthly" | "yearly"): number => {
+        const num = Number.parseFloat(amount.toString());
+        if (Number.isNaN(num)) return 0;
+
+        switch (freq) {
+            case "daily":
+                return num * 365;
+            case "monthly":
+                return num * 12;
+            case "yearly":
+                return num;
+            default:
+                return 0;
+        }
+    };
+
+    const monthlyIncome = useMemo(() => {
+        const val = (user?.user_metadata as any)?.monthly_income;
+        if (typeof val === "number") return val;
+        if (val) return Number.parseFloat(String(val));
+        return null;
+    }, [user]);
+
+    const totals = useMemo(() => {
+        let monthlyTotal = 0;
+        let yearlyTotal = 0;
+
+        expenses.forEach((expense) => {
+            const amount = Number.parseFloat(String(expense.amount));
+            const yearly = calculateYearlyTotal(amount, expense.frequency);
+            yearlyTotal += yearly;
+            monthlyTotal += yearly / 12;
+        });
+
+        return { monthlyTotal, yearlyTotal };
+    }, [expenses]);
+
+    const monthlyDebts = useMemo(() => {
+        return debts
+            .filter((d) => d.pay_per_month && !Number.isNaN(Number(d.pay_per_month)))
+            .reduce((sum, d) => sum + Number(d.pay_per_month), 0);
+    }, [debts]);
+
+    const monthlyDisposable = useMemo(() => {
+        if (monthlyIncome === null) return null;
+        return monthlyIncome - totals.monthlyTotal - monthlyDebts;
+    }, [monthlyIncome, totals, monthlyDebts]);
+
+    useEffect(() => {
+        if (!error) return;
+        const timeout = setTimeout(() => setError(null), 7000);
+        return () => clearTimeout(timeout);
+    }, [error]);
+
+    useEffect(() => {
+        if (!user) return;
+
+        let isMounted = true;
+        const fetchExpenses = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("expenses")
+                    .select("amount,frequency,active")
+                    .eq("active", true);
+                if (!error && data && isMounted) {
+                    setExpenses(data);
+                }
+            } catch (err) {
+                console.error("Error fetching expenses:", err);
+            }
+        };
+        const fetchDebts = async () => {
+            try {
+                const { data, error } = await supabase.from("debts").select("pay_per_month,active").eq("active", true);
+                if (!error && data && isMounted) {
+                    setDebts(data);
+                }
+            } catch (err) {
+                console.error("Error fetching debts:", err);
+            }
+        };
+
+        fetchExpenses();
+        fetchDebts();
+        return () => {
+            isMounted = false;
+        };
+    }, [user, refreshFlag]);
+
     const baseGap = { gap: 12 };
-
     const baseSpace = { gap: 8 };
-
     const baseWeight = { fontWeight: "600" as const };
-
     const baseRadius = { borderRadius: 8 };
-
     const baseBorder = { borderWidth: 1 };
 
     const baseCenter = {
@@ -155,114 +260,14 @@ export default function HomeScreen() {
         [theme]
     );
 
-    const calculateYearlyTotal = (amount: number, freq: "daily" | "monthly" | "yearly"): number => {
-        const num = Number.parseFloat(amount.toString());
-        if (Number.isNaN(num)) return 0;
-
-        switch (freq) {
-            case "daily":
-                return num * 365;
-            case "monthly":
-                return num * 12;
-            case "yearly":
-                return num;
-            default:
-                return 0;
-        }
-    };
-
-    useEffect(() => {
-        if (!error) return;
-        const timeout = setTimeout(() => setError(null), 7000);
-        return () => clearTimeout(timeout);
-    }, [error]);
-
-    useEffect(() => {
-        if (!user) return;
-
-        let isMounted = true;
-        const fetchExpenses = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("expenses")
-                    .select("amount,frequency,active")
-                    .eq("active", true);
-                if (!error && data && isMounted) {
-                    setExpenses(data);
-                }
-            } catch (err) {
-                console.error("Error fetching expenses:", err);
-            }
-        };
-        const fetchDebts = async () => {
-            try {
-                const { data, error } = await supabase.from("debts").select("pay_per_month,active").eq("active", true);
-                if (!error && data && isMounted) {
-                    setDebts(data);
-                }
-            } catch (err) {
-                console.error("Error fetching debts:", err);
-            }
-        };
-
-        fetchExpenses();
-        fetchDebts();
-        return () => {
-            isMounted = false;
-        };
-    }, [user, refreshFlag]);
-
-    const monthlyIncome = useMemo(() => {
-        const val = (user?.user_metadata as any)?.monthly_income;
-        if (typeof val === "number") return val;
-        if (val) return Number.parseFloat(String(val));
-        return null;
-    }, [user]);
-
-    const totals = useMemo(() => {
-        let monthlyTotal = 0;
-        let yearlyTotal = 0;
-
-        expenses.forEach((expense) => {
-            const amount = Number.parseFloat(String(expense.amount));
-            const yearly = calculateYearlyTotal(amount, expense.frequency);
-            yearlyTotal += yearly;
-            monthlyTotal += yearly / 12;
-        });
-
-        return { monthlyTotal, yearlyTotal };
-    }, [expenses]);
-
-    const monthlyDebts = useMemo(() => {
-        return debts
-            .filter((d) => d.pay_per_month && !Number.isNaN(Number(d.pay_per_month)))
-            .reduce((sum, d) => sum + Number(d.pay_per_month), 0);
-    }, [debts]);
-
-    const monthlyDisposable = useMemo(() => {
-        if (monthlyIncome === null) return null;
-        return monthlyIncome - totals.monthlyTotal - monthlyDebts;
-    }, [monthlyIncome, totals, monthlyDebts]);
-
-    const handleSignIn = async () => {
-        setError(null);
-        const { error } = await signIn(email.trim(), password);
-        if (error) setError(error);
-    };
-
-    const handleSignUp = async () => {
-        setError(null);
-        if (password !== confirmPassword) {
-            setError("Passwords do not match");
-            return;
-        }
-        if (password.length < 6) {
-            setError("Password must be at least 6 characters");
-            return;
-        }
-        const { error } = await signUp(email.trim(), password);
-        if (error) setError(error);
-    };
+    const HeaderImage = () => (
+        <Image
+            source={require("../../assets/images/huzl-logo.png")}
+            style={styles.image}
+            accessible
+            accessibilityLabel="Huzl logo"
+        />
+    );
 
     if (loading) {
         return (
@@ -277,15 +282,6 @@ export default function HomeScreen() {
             </ThemedView>
         );
     }
-
-    const HeaderImage = () => (
-        <Image
-            source={require("../../assets/images/huzl-logo.png")}
-            style={styles.image}
-            accessible
-            accessibilityLabel="Huzl logo"
-        />
-    );
 
     if (!user) {
         return (
@@ -359,7 +355,7 @@ export default function HomeScreen() {
 
     return (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
-            <ThemedView style={[styles.container, { flex: 1 }]}>
+            <ThemedView style={styles.container}>
                 <HeaderImage />
                 <ThemedText type="title">
                     Hello{" "}
