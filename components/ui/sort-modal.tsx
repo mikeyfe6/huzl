@@ -79,13 +79,11 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                     alignItems: "center",
                     gap: 10,
                 },
-                itemText: {
-                    fontSize: 16,
-                },
                 cancel: {
                     paddingHorizontal: 16,
                     paddingVertical: 12,
                     alignItems: "center",
+                    fontSize: 16,
                 },
             }),
         [theme]
@@ -106,15 +104,13 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                         >
                             <View style={styles.itemLeft}>
                                 <Ionicons name={option.icon} size={18} color={theme.label} />
-                                <ThemedText style={styles.itemText}>{option.label}</ThemedText>
+                                <ThemedText>{option.label}</ThemedText>
                             </View>
                             {sortOption === option.value && <Ionicons name="checkmark" size={18} color={blueColor} />}
                         </TouchableOpacity>
                     ))}
                     <TouchableOpacity style={styles.cancel} onPress={onRequestClose}>
-                        <ThemedText type="danger" style={[styles.itemText]}>
-                            Cancel
-                        </ThemedText>
+                        <ThemedText type="danger">Cancel</ThemedText>
                     </TouchableOpacity>
                 </View>
             </View>

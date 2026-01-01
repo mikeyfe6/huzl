@@ -52,6 +52,8 @@ export default function ModalScreen() {
         }
     };
 
+    // TODO: refactoring styles...
+
     const styles = useMemo(
         () =>
             StyleSheet.create({

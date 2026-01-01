@@ -140,6 +140,7 @@ export default function HomeScreen() {
     const baseWeight = { fontWeight: "600" as const };
     const baseRadius = { borderRadius: 8 };
     const baseBorder = { borderWidth: 1 };
+    const baseSize = { fontSize: 16 };
 
     const baseCenter = {
         alignItems: "center" as const,
@@ -149,6 +150,7 @@ export default function HomeScreen() {
     const baseInput = {
         ...baseRadius,
         ...baseBorder,
+        ...baseSize,
         borderColor: theme.inputBorder,
         backgroundColor: theme.inputBackground,
         outlineWidth: 0,

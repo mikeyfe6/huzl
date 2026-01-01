@@ -223,6 +223,7 @@ export default function BudgetsScreen() {
     const baseWeight = { fontWeight: "600" as const };
     const baseRadius = { borderRadius: 8 };
     const baseBorder = { borderWidth: 1 };
+    const baseSize = { fontSize: 16 };
 
     const baseFlex = (
         justify: "flex-start" | "center" | "space-between" | undefined = undefined,
@@ -250,6 +251,7 @@ export default function BudgetsScreen() {
     const baseInput = {
         ...baseRadius,
         ...baseBorder,
+        ...baseSize,
         borderColor: theme.inputBorder,
         backgroundColor: theme.inputBackground,
         outlineWidth: 0,

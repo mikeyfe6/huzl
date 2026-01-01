@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
         color: linkColor,
     },
     danger: {
+        fontSize: 16,
         color: redColor,
     },
     label: {
