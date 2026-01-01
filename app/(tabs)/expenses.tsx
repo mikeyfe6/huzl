@@ -592,7 +592,8 @@ export default function ExpensesScreen() {
                     backgroundColor: theme.background,
                     flexWrap: "wrap",
                     paddingHorizontal: 16,
-                    paddingVertical: 32,
+                    paddingTop: 32,
+                    paddingBottom: 64,
                     gap: 32,
                 },
                 chartStats: {
