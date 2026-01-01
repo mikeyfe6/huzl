@@ -593,7 +593,7 @@ export default function ExpensesScreen() {
                     flexWrap: "wrap",
                     paddingHorizontal: 16,
                     paddingTop: 32,
-                    paddingBottom: 48,
+                    paddingBottom: 40,
                     rowGap: 32,
                     columnGap: 64,
                 },
