@@ -1,5 +1,5 @@
 import { TouchableOpacity } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import Svg, { Circle, Path } from "react-native-svg";
 
 import { businessColor, familyColor, personalColor } from "@/constants/theme";
 
@@ -73,6 +73,14 @@ export function ExpensePieChart({ expenses, selectedCategory, onCategorySelect }
     const familyStartAngle = businessEndAngle;
     const familyEndAngle = 360;
 
+    const getStrokeColor = (category: Category): string => {
+        if (category === "personal") return personalColor;
+        if (category === "business") return businessColor;
+        return familyColor;
+    };
+
+    const strokeColor = getStrokeColor(selectedCategory);
+
     return (
         <TouchableOpacity
             activeOpacity={1}
@@ -82,20 +90,28 @@ export function ExpensePieChart({ expenses, selectedCategory, onCategorySelect }
                 <Path
                     d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
                     fill={personalColor}
-                    opacity={selectedCategory === "personal" ? 1 : 0.7}
+                    opacity={selectedCategory === "personal" ? 1 : 0.6}
                     onPress={() => onCategorySelect("personal")}
                 />
                 <Path
                     d={getPieSlicePath(businessStartAngle, businessEndAngle, chartRadius, 0)}
                     fill={businessColor}
-                    opacity={selectedCategory === "business" ? 1 : 0.7}
+                    opacity={selectedCategory === "business" ? 1 : 0.6}
                     onPress={() => onCategorySelect("business")}
                 />
                 <Path
                     d={getPieSlicePath(familyStartAngle, familyEndAngle, chartRadius, 0)}
                     fill={familyColor}
-                    opacity={selectedCategory === "family" ? 1 : 0.7}
+                    opacity={selectedCategory === "family" ? 1 : 0.6}
                     onPress={() => onCategorySelect("family")}
+                />
+                <Circle
+                    cx={chartCenterX}
+                    cy={chartCenterY}
+                    r={chartRadius}
+                    fill="none"
+                    stroke={strokeColor}
+                    strokeWidth={0.75}
                 />
             </Svg>
         </TouchableOpacity>

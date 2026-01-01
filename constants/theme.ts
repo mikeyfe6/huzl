@@ -14,20 +14,23 @@ export const blueColor = "#0c86c5";
 export const copperColor = "#aa6600";
 export const goldColor = "#d1982eff";
 export const orangeColor = "#F49E0B";
-export const fuchsiaColor = "#d53fefff";
+export const fuchsiaColor = "#bd38d5ff";
+
+export const steelLightColor = "#3f5e90";
+export const steelDarkColor = "#819fd2ff";
 
 export const greenLightColor = "#4caf5080";
 export const redLightColor = "#f4433680";
 export const greenDarkColor = "#4caf5050";
 export const redDarkColor = "#f4433650";
-export const copperDarkColor = "#a0600075";
-export const goldDarkColor = "#da902290";
-export const linkDarkColor = "#0a7ea490";
 
-export const personalColor = "#9ba1a650";
-export const businessColor = "#da902250";
-export const debtsColor = "#e5533d75";
+export const personalColor = "#8296B666";
+export const businessColor = "#da902266";
 export const familyColor = "#9c27b075";
+
+export const dailyColor = "#0c86c530";
+export const monthlyColor = "#f49e0b30";
+export const yearlyColor = "#4caf5030";
 
 export const almostWhiteColor = "#f5f5f5";
 export const lightGreyColor = "#ddd";
@@ -52,12 +55,15 @@ export const Colors = {
         cardNegativeBackground: redLightColor,
         statLabel: darkGreyColor,
 
-        specialLabel: copperColor,
+        personalLabel: steelLightColor,
+        businessLabel: copperColor,
+        familyLabel: fuchsiaColor,
+
         selectedTab: whiteColor,
 
-        dailyTab: linkDarkColor,
-        monthlyTab: goldDarkColor,
-        yearlyTab: greenLightColor,
+        dailyTab: whiteColor,
+        monthlyTab: whiteColor,
+        yearlyTab: whiteColor,
 
         cardBackground: lightTextColor,
         inputBackground: whiteColor,
@@ -79,12 +85,15 @@ export const Colors = {
         cardNegativeBackground: redDarkColor,
         statLabel: silverColor,
 
-        dailyTab: linkDarkColor,
-        monthlyTab: copperDarkColor,
-        yearlyTab: greenDarkColor,
+        personalLabel: steelDarkColor,
+        businessLabel: goldColor,
+        familyLabel: fuchsiaColor,
 
-        specialLabel: goldColor,
         selectedTab: almostBlackColor,
+
+        dailyTab: charcoalColor,
+        monthlyTab: charcoalColor,
+        yearlyTab: charcoalColor,
 
         cardBackground: almostBlackColor,
         inputBackground: almostBlackColor,

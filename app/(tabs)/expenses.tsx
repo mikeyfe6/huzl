@@ -12,7 +12,6 @@ import {
     businessColor,
     Colors,
     familyColor,
-    fuchsiaColor,
     greenColor,
     mediumGreyColor,
     personalColor,
@@ -549,14 +548,14 @@ export default function ExpensesScreen() {
                     color: mediumGreyColor,
                 },
                 totalSection: {
+                    ...baseBorder,
                     ...baseSpace,
+                    ...baseRadius,
+                    margin: 16,
                     paddingHorizontal: 16,
                     paddingVertical: 20,
-                    marginHorizontal: 16,
-                    marginTop: 24,
-                    marginBottom: 16,
-                    borderRadius: 12,
                     flex: 1,
+                    borderColor: theme.inputBorder,
                 },
                 totalYear: {
                     backgroundColor: theme.yearlyTab,
@@ -594,7 +593,7 @@ export default function ExpensesScreen() {
                     flexWrap: "wrap",
                     paddingHorizontal: 16,
                     paddingVertical: 32,
-                    gap: 48,
+                    gap: 32,
                 },
                 chartStats: {
                     width: "100%",
@@ -820,11 +819,14 @@ export default function ExpensesScreen() {
                                         <ThemedText
                                             style={[
                                                 styles.expenseLabel,
+                                                expense.category === "personal" && {
+                                                    color: theme.personalLabel,
+                                                },
                                                 expense.category === "business" && {
-                                                    color: theme.specialLabel,
+                                                    color: theme.businessLabel,
                                                 },
                                                 expense.category === "family" && {
-                                                    color: fuchsiaColor,
+                                                    color: theme.familyLabel,
                                                 },
                                             ]}
                                         >
