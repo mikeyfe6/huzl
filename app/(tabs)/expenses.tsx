@@ -5,6 +5,7 @@ import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } f
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { ExpensePieChart } from "@/components/ui/expense-pie-chart";
 import { getSortLabel, SortModal, SortOption } from "@/components/ui/sort-modal";
 import {
     blueColor,
@@ -25,7 +26,6 @@ import { useCurrency } from "@/hooks/use-currency";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
-import { PieDiagram } from "@/components/ui/pie-chart";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business" | "family";
@@ -306,64 +306,6 @@ export default function ExpensesScreen() {
             isMounted = false;
         };
     }, [user]);
-
-    const pieLabels = {
-        fontSize: 14,
-        fontWeight: 600,
-        fontFamily: "System",
-        fill: theme.text,
-    };
-
-    const pieData = [
-        {
-            value: expenses
-                .filter((e) => e.active && e.category === "personal")
-                .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: personalColor,
-            label: {
-                text: `Personal (${(
-                    (expenses
-                        .filter((e) => e.active && e.category === "personal")
-                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
-                        totalYearlySpend) *
-                    100
-                ).toFixed(1)}%)`,
-                ...pieLabels,
-            },
-        },
-        {
-            value: expenses
-                .filter((e) => e.active && e.category === "business")
-                .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: businessColor,
-            label: {
-                text: `Business (${(
-                    (expenses
-                        .filter((e) => e.active && e.category === "business")
-                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
-                        totalYearlySpend) *
-                    100
-                ).toFixed(1)}%)`,
-                ...pieLabels,
-            },
-        },
-        {
-            value: expenses
-                .filter((e) => e.active && e.category === "family")
-                .reduce((sum, e) => sum + e.yearlyTotal, 0),
-            color: familyColor,
-            label: {
-                text: `Family (${(
-                    (expenses
-                        .filter((e) => e.active && e.category === "family")
-                        .reduce((sum, e) => sum + e.yearlyTotal, 0) /
-                        totalYearlySpend) *
-                    100
-                ).toFixed(1)}%)`,
-                ...pieLabels,
-            },
-        },
-    ];
 
     const baseGap = { gap: 12 };
     const baseSpace = { gap: 8 };
@@ -665,31 +607,46 @@ export default function ExpensesScreen() {
                     flexWrap: "wrap",
                 },
                 chartButton: {
-                    ...baseFlex("center", "center"),
+                    ...baseFlex("space-between", "center"),
                     ...baseRadius,
                     flex: 1,
+                    flexBasis: 225,
                     outlineWidth: 0,
                     minHeight: 44,
                     paddingHorizontal: 18,
                     borderWidth: 1,
                 },
-                chartButtonText: { fontWeight: "bold" },
+                chartButtonDot: {
+                    width: 12,
+                    height: 12,
+                    borderRadius: 25,
+                },
+                chartButtonText: { fontWeight: "600" },
+                chartButtonLabel: {
+                    fontSize: 14,
+                    color: theme.statLabel,
+                },
                 chartItems: {
                     ...baseFlex("center", "center"),
-                    ...baseSpace,
                     flexWrap: "wrap",
+                    rowGap: 10,
+                    columnGap: 8,
                 },
                 chartItem: {
                     ...baseRadius,
                     paddingHorizontal: 12,
-                    paddingTop: 6,
-                    paddingBottom: 8,
-                    opacity: 0.9,
+                    paddingTop: 3,
+                    paddingBottom: 4,
+                    opacity: 0.75,
                     backgroundColor: theme.dividerColor,
                     borderColor: theme.borderColor,
                 },
                 chartItemText: {
                     ...baseWeight,
+                },
+                chartItemLabel: {
+                    fontSize: 13,
+                    color: theme.statLabel,
                 },
                 emptyState: {
                     ...baseFlex("center", "center"),
@@ -976,31 +933,48 @@ export default function ExpensesScreen() {
                         </View>
 
                         <View style={styles.chartContainer}>
-                            <PieDiagram data={pieData} />
+                            <ExpensePieChart
+                                expenses={expenses}
+                                selectedCategory={category}
+                                onCategorySelect={setCategory}
+                            />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>
                                     {(["personal", "business", "family"] as Category[]).map((cat) => {
                                         let btnBgColor = theme.inputBackground;
                                         let btnBorderColor = theme.inputBorder;
-                                        if (category === cat) {
-                                            switch (cat) {
-                                                case "personal":
-                                                    btnBgColor = personalColor;
-                                                    btnBorderColor = personalColor;
-                                                    break;
-                                                case "business":
-                                                    btnBgColor = businessColor;
-                                                    btnBorderColor = businessColor;
-                                                    break;
-                                                case "family":
-                                                    btnBgColor = familyColor;
-                                                    btnBorderColor = familyColor;
-                                                    break;
-                                                default:
-                                                    btnBgColor = blueColor;
-                                                    btnBorderColor = blueColor;
-                                            }
+                                        let dotColor = slateColor;
+                                        let percent = 0;
+
+                                        switch (cat) {
+                                            case "personal":
+                                                dotColor = personalColor;
+                                                percent =
+                                                    totalYearlySpend > 0
+                                                        ? (personalYearlySpend / totalYearlySpend) * 100
+                                                        : 0;
+                                                break;
+                                            case "business":
+                                                dotColor = businessColor;
+                                                percent =
+                                                    totalYearlySpend > 0
+                                                        ? (businessYearlySpend / totalYearlySpend) * 100
+                                                        : 0;
+                                                break;
+                                            case "family":
+                                                dotColor = familyColor;
+                                                percent =
+                                                    totalYearlySpend > 0
+                                                        ? (familyYearlySpend / totalYearlySpend) * 100
+                                                        : 0;
+                                                break;
                                         }
+
+                                        if (category === cat) {
+                                            btnBgColor = dotColor;
+                                            btnBorderColor = dotColor;
+                                        }
+
                                         return (
                                             <TouchableOpacity
                                                 key={cat}
@@ -1013,8 +987,19 @@ export default function ExpensesScreen() {
                                                     },
                                                 ]}
                                             >
+                                                <View
+                                                    style={[
+                                                        styles.chartButtonDot,
+                                                        {
+                                                            backgroundColor: dotColor,
+                                                        },
+                                                    ]}
+                                                />
                                                 <ThemedText style={styles.chartButtonText}>
                                                     {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                                </ThemedText>
+                                                <ThemedText style={[styles.chartButtonText, styles.chartButtonLabel]}>
+                                                    {percent.toFixed(1)}%
                                                 </ThemedText>
                                             </TouchableOpacity>
                                         );
@@ -1038,10 +1023,10 @@ export default function ExpensesScreen() {
                                             .sort((a, b) => b.percent - a.percent)
                                             .map((e) => (
                                                 <ThemedText key={e.id} style={styles.chartItem}>
-                                                    <ThemedText key={e.id} style={styles.chartItemText}>
-                                                        {e.name}{" "}
+                                                    <ThemedText style={styles.chartItemText}>{e.name} </ThemedText>
+                                                    <ThemedText style={styles.chartItemLabel}>
+                                                        - {e.percent.toFixed(1)}%
                                                     </ThemedText>
-                                                    - {e.percent.toFixed(1)}%
                                                 </ThemedText>
                                             ))
                                     )}
