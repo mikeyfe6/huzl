@@ -594,11 +594,12 @@ export default function ExpensesScreen() {
                     paddingHorizontal: 16,
                     paddingTop: 32,
                     paddingBottom: 64,
-                    gap: 32,
+                    rowGap: 32,
+                    columnGap: 64,
                 },
                 chartStats: {
                     width: "100%",
-                    maxWidth: 800,
+                    maxWidth: 700,
                     gap: 24,
                 },
                 chartButtons: {

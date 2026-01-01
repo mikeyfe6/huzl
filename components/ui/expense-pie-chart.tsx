@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, useWindowDimensions } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
 import { businessColor, familyColor, personalColor } from "@/constants/theme";
@@ -22,6 +22,8 @@ interface ExpensePieChartProps {
 }
 
 export function ExpensePieChart({ expenses, selectedCategory, onCategorySelect }: ExpensePieChartProps) {
+    const { width: windowWidth } = useWindowDimensions();
+
     // Calculate totals
     const totalYearlySpend = expenses.filter((e) => e.active).reduce((sum, expense) => sum + expense.yearlyTotal, 0);
 
@@ -33,8 +35,9 @@ export function ExpensePieChart({ expenses, selectedCategory, onCategorySelect }
         .filter((e) => e.active && e.category === "business")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
-    // Pie chart calculations
-    const chartRadius = 130;
+    // Pie chart calculations - responsive
+    const responsiveSize = Math.min(windowWidth * 0.9, 450);
+    const chartRadius = 145;
     const chartCenterX = 150;
     const chartCenterY = 150;
 
@@ -84,9 +87,9 @@ export function ExpensePieChart({ expenses, selectedCategory, onCategorySelect }
     return (
         <TouchableOpacity
             activeOpacity={1}
-            style={{ width: 400, height: 400, justifyContent: "center", alignItems: "center" }}
+            style={{ width: responsiveSize, height: responsiveSize, justifyContent: "center", alignItems: "center" }}
         >
-            <Svg width="400" height="400" viewBox="0 0 300 300">
+            <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300">
                 <Path
                     d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
                     fill={personalColor}
