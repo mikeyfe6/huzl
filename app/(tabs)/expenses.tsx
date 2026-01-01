@@ -592,15 +592,15 @@ export default function ExpensesScreen() {
                     backgroundColor: theme.background,
                     flexWrap: "wrap",
                     paddingHorizontal: 16,
-                    paddingTop: 32,
-                    paddingBottom: 40,
-                    rowGap: 32,
+                    paddingVertical: 32,
+                    rowGap: 24,
                     columnGap: 64,
                 },
                 chartStats: {
                     width: "100%",
                     maxWidth: 700,
                     gap: 24,
+                    marginVertical: 8,
                 },
                 chartButtons: {
                     ...baseFlex("center"),
@@ -610,12 +610,11 @@ export default function ExpensesScreen() {
                 chartButton: {
                     ...baseFlex("space-between", "center"),
                     ...baseRadius,
+                    ...baseBorder,
                     flex: 1,
                     flexBasis: 225,
-                    outlineWidth: 0,
                     minHeight: 44,
                     paddingHorizontal: 18,
-                    borderWidth: 1,
                 },
                 chartButtonDot: {
                     width: 12,
