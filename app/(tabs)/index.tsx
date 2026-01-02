@@ -263,7 +263,7 @@ export default function HomeScreen() {
     if (!user) {
         return (
             <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
-                <ThemedView style={[styles.container, { flex: 1 }]}>
+                <ThemedView style={styles.container}>
                     <HeaderImage />
                     <ThemedText type="title">Welcome !</ThemedText>
                     <ThemedText style={styles.text}>
