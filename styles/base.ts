@@ -1,3 +1,5 @@
+import { whiteColor } from "@/constants/theme";
+
 export const baseGap = { gap: 12 };
 export const baseSpace = { gap: 8 };
 export const baseWeight = { fontWeight: "600" as const };
@@ -40,4 +42,38 @@ export const baseButton = {
     ...baseRadius,
     paddingVertical: 12,
     flex: 1,
+};
+
+export const baseButtonText = {
+    ...baseWeight,
+    color: whiteColor,
+};
+
+export const baseLabel = (theme: any) => ({
+    ...baseWeight,
+    fontSize: 14,
+    marginTop: 8,
+    color: theme.label,
+});
+
+export const baseList = {
+    ...baseGap,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 20,
+};
+
+export const baseCard = (theme: any) => ({
+    ...baseInput(theme),
+    ...baseGap,
+    padding: 12,
+    backgroundColor: theme.cardBackground,
+    borderColor: theme.borderColor,
+});
+
+export const baseMain = {
+    ...baseGap,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+    paddingBottom: 16,
 };

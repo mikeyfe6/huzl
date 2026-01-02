@@ -3,10 +3,18 @@ import { Picker } from "@react-native-picker/picker";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
+import { useAuth } from "@/hooks/use-auth";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useCurrency } from "@/hooks/use-currency";
+
+import { supabase } from "@/utils/supabase";
+
+import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { ExpensePieChart } from "@/components/ui/expense-pie-chart";
 import { getSortLabel, SortModal, SortOption } from "@/components/ui/sort-modal";
+
 import {
     blueColor,
     businessColor,
@@ -17,14 +25,24 @@ import {
     personalColor,
     redColor,
     slateColor,
-    whiteColor,
 } from "@/constants/theme";
-import { useAuth } from "@/hooks/use-auth";
-import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useCurrency } from "@/hooks/use-currency";
-import { supabase } from "@/utils/supabase";
-
-import { AuthGate } from "@/components/loading";
+import {
+    baseBorder,
+    baseButton,
+    baseButtonText,
+    baseCard,
+    baseFlex,
+    baseGap,
+    baseInput,
+    baseLabel,
+    baseList,
+    baseMain,
+    baseRadius,
+    baseSelect,
+    baseSize,
+    baseSpace,
+    baseWeight,
+} from "@/styles/base";
 
 type Frequency = "daily" | "monthly" | "yearly";
 type Category = "personal" | "business" | "family";
@@ -306,78 +324,6 @@ export default function ExpensesScreen() {
         };
     }, [user]);
 
-    const baseGap = { gap: 12 };
-    const baseSpace = { gap: 8 };
-    const baseRadius = { borderRadius: 8 };
-    const baseBorder = { borderWidth: 1 };
-    const baseWeight = { fontWeight: "600" as const };
-    const baseSize = { fontSize: 16 };
-
-    const baseFlex = (
-        justify: "flex-start" | "center" | "space-between" | undefined = undefined,
-        align: "flex-start" | "center" | "flex-end" | undefined = undefined
-    ) => ({
-        flexDirection: "row" as const,
-        justifyContent: justify,
-        alignItems: align,
-    });
-
-    const baseButton = {
-        ...baseFlex("center", "center"),
-        ...baseRadius,
-        paddingVertical: 12,
-        flex: 1,
-    };
-
-    const baseButtonText = {
-        ...baseWeight,
-        color: whiteColor,
-    };
-
-    const baseLabel = {
-        ...baseWeight,
-        fontSize: 14,
-        marginTop: 8,
-        color: theme.label,
-    };
-
-    const baseInput = {
-        ...baseRadius,
-        ...baseBorder,
-        ...baseSize,
-        borderColor: theme.inputBorder,
-        backgroundColor: theme.inputBackground,
-        outlineWidth: 0,
-        minHeight: 44,
-    };
-
-    const baseSelect = {
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-    };
-
-    const baseList = {
-        ...baseGap,
-        paddingHorizontal: 16,
-        paddingTop: 12,
-        paddingBottom: 20,
-    };
-
-    const baseCard = {
-        ...baseInput,
-        ...baseGap,
-        padding: 12,
-        backgroundColor: theme.cardBackground,
-        borderColor: theme.borderColor,
-    };
-
-    const baseMain = {
-        ...baseGap,
-        paddingHorizontal: 16,
-        paddingTop: 24,
-        paddingBottom: 16,
-    };
-
     const styles = useMemo(
         () =>
             StyleSheet.create({
@@ -394,9 +340,8 @@ export default function ExpensesScreen() {
                     ...baseLabel,
                 },
                 input: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     ...baseSelect,
-                    color: theme.inputText,
                 },
                 categoryGroup: {
                     ...baseFlex("center"),
@@ -404,7 +349,7 @@ export default function ExpensesScreen() {
                 },
                 categoryOption: {
                     ...baseFlex("center", "center"),
-                    ...baseInput,
+                    ...baseInput(theme),
                     flex: 1,
                 },
                 categoryActive: {
@@ -412,7 +357,7 @@ export default function ExpensesScreen() {
                     backgroundColor: theme.selectedTab,
                 },
                 select: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     justifyContent: "center",
                     overflow: Platform.select({
                         ios: "hidden",
@@ -426,7 +371,7 @@ export default function ExpensesScreen() {
                     }),
                 },
                 selectInput: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     borderWidth: 0,
                     fontFamily: "System",
                     color: theme.inputText,
@@ -489,10 +434,14 @@ export default function ExpensesScreen() {
                     ...baseFlex("center", "center"),
                     ...baseSpace,
                 },
+                expenseNumber: {
+                    ...baseSize,
+                    opacity: 0.6,
+                },
                 sortTrigger: {
                     ...baseFlex("center", "center"),
+                    ...baseInput(theme),
                     ...baseSpace,
-                    ...baseInput,
                     ...baseSelect,
                 },
                 sortTriggerText: {
@@ -504,7 +453,7 @@ export default function ExpensesScreen() {
                     ...baseSpace,
                 },
                 expenseCard: {
-                    ...baseCard,
+                    ...baseCard(theme),
                 },
                 expenseInactive: {
                     opacity: 0.5,
@@ -788,9 +737,7 @@ export default function ExpensesScreen() {
                         <View style={styles.expenseHeader}>
                             <View style={styles.expenseTitle}>
                                 <ThemedText type="subtitle">Expenses List</ThemedText>
-                                <ThemedText style={{ opacity: 0.6, fontSize: 16 }}>
-                                    ({sortedExpenses.length})
-                                </ThemedText>
+                                <ThemedText style={styles.expenseNumber}>({sortedExpenses.length})</ThemedText>
                             </View>
                             <TouchableOpacity
                                 style={styles.sortTrigger}

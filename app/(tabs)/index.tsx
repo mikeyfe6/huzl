@@ -1,15 +1,18 @@
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
-import { useAuth } from "@/hooks/use-auth";
-import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useCurrency } from "@/hooks/use-currency";
-import { useRefreshContext } from "@/hooks/use-refresh-context";
-import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
+import { useAuth } from "@/hooks/use-auth";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useCurrency } from "@/hooks/use-currency";
+import { useRefreshContext } from "@/hooks/use-refresh-context";
+
+import { supabase } from "@/utils/supabase";
+
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+
+import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import {
     baseBorder,
     baseButton,
