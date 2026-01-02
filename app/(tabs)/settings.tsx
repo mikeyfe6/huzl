@@ -1,18 +1,32 @@
+import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { CurrencyPickerModal } from "@/components/ui/currency-modal";
-import { Colors, greenColor, linkColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useThemePreference } from "@/hooks/use-theme-preference";
+
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "expo-router";
 
 import { AuthGate } from "@/components/loading";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { CurrencyPickerModal } from "@/components/ui/currency-modal";
+
+import { Colors, greenColor, linkColor, redColor, silverColor, whiteColor } from "@/constants/theme";
+import {
+    baseBorder,
+    baseButton,
+    baseButtonText,
+    baseCenter,
+    baseFlex,
+    baseGap,
+    baseInput,
+    baseMain,
+    baseSelect,
+    baseWeight,
+} from "@/styles/base";
 
 export default function SettingsScreen() {
     const { user, refreshUser, signOut } = useAuth();
@@ -58,49 +72,6 @@ export default function SettingsScreen() {
         }
     };
 
-    const baseGap = { gap: 12 };
-    const baseWeight = { fontWeight: "600" as const };
-    const baseRadius = { borderRadius: 8 };
-    const baseBorder = { borderWidth: 1 };
-    const baseSize = { fontSize: 16 };
-
-    const baseCenter = {
-        alignItems: "center" as const,
-        justifyContent: "center" as const,
-    };
-
-    const baseMain = {
-        ...baseGap,
-        paddingHorizontal: 16,
-        paddingTop: 24,
-        paddingBottom: 16,
-    };
-
-    const baseInput = {
-        ...baseRadius,
-        ...baseBorder,
-        ...baseSize,
-        borderColor: theme.inputBorder,
-        backgroundColor: theme.inputBackground,
-        outlineWidth: 0,
-        minHeight: 44,
-    };
-
-    const baseSelect = {
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-    };
-
-    const baseButton = {
-        ...baseRadius,
-        ...baseCenter,
-        paddingVertical: 12,
-    };
-
-    const baseButtonText = {
-        ...baseWeight,
-    };
-
     const styles = useMemo(
         () =>
             StyleSheet.create({
@@ -135,9 +106,7 @@ export default function SettingsScreen() {
                     marginBottom: 12,
                 },
                 settingBox: {
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    ...baseFlex("space-between", "center"),
                 },
                 settingWrapper: {
                     ...baseGap,
@@ -155,9 +124,8 @@ export default function SettingsScreen() {
                     color: theme.placeholder,
                 },
                 input: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     ...baseSelect,
-                    color: theme.inputText,
                 },
                 saveButton: {
                     ...baseButton,
@@ -180,7 +148,7 @@ export default function SettingsScreen() {
                     color: redColor,
                 },
                 themeButton: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     ...baseCenter,
                     flex: 1,
                 },
