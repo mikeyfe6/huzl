@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -12,13 +12,14 @@ import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { blueColor, Colors, greenColor, redColor } from "@/constants/theme";
+import { blueColor, Colors, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import {
     baseBorder,
     baseButton,
     baseButtonText,
     baseCard,
     baseFlex,
+    baseGap,
     baseInput,
     baseLabel,
     baseList,
@@ -33,7 +34,8 @@ type BudgetItem = {
     name: string;
     total: number;
     spent: number;
-    expenses: { id: string; name: string; amount: number }[];
+    active: boolean;
+    expenses: { id: string; name: string; amount: number; active: boolean }[];
 };
 
 export default function BudgetsScreen() {
@@ -46,9 +48,15 @@ export default function BudgetsScreen() {
     const [selectedBudgetId, setSelectedBudgetId] = useState<string | null>(null);
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+
+    const nameInputRef = useRef<TextInput>(null);
+    const expenseNameInputRef = useRef<TextInput>(null);
+    const scrollViewRef = useRef<ScrollView>(null);
 
     const fetchBudgetExpenses = async (budgetId: string) => {
         const { data: expensesData } = await supabase
@@ -63,6 +71,7 @@ export default function BudgetsScreen() {
                 id: exp.id,
                 name: exp.name,
                 amount: exp.amount,
+                active: exp.active ?? true,
             })),
             spent: expenses.reduce((sum, exp) => sum + exp.amount, 0),
         };
@@ -75,8 +84,77 @@ export default function BudgetsScreen() {
             name: budget.name,
             total: budget.total,
             spent,
+            active: budget.active ?? true,
             expenses,
         };
+    };
+
+    const handleEditBudget = (budget: BudgetItem) => {
+        setBudgetName(budget.name);
+        setTotalAmount(budget.total.toString());
+        setEditingId(budget.id);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        setTimeout(() => nameInputRef.current?.focus(), 100);
+    };
+
+    const handleCancelEdit = () => {
+        setBudgetName("");
+        setTotalAmount("");
+        setEditingId(null);
+    };
+
+    const handleEditExpense = (expense: { id: string; name: string; amount: number; active: boolean }) => {
+        setExpenseName(expense.name);
+        setExpenseAmount(expense.amount.toString());
+        setEditingExpenseId(expense.id);
+        setTimeout(() => expenseNameInputRef.current?.focus(), 100);
+    };
+
+    const handleCancelExpenseEdit = () => {
+        setExpenseName("");
+        setExpenseAmount("");
+        setEditingExpenseId(null);
+    };
+
+    const handleToggleActive = async (budgetId: string, currentActive: boolean) => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase.from("budgets").update({ active: !currentActive }).eq("id", budgetId);
+            if (!error) {
+                setBudgets((prev) => prev.map((b) => (b.id === budgetId ? { ...b, active: !currentActive } : b)));
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleToggleExpenseActive = async (expenseId: string, currentActive: boolean) => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from("budget_expenses")
+                .update({ active: !currentActive })
+                .eq("id", expenseId);
+            if (!error) {
+                setBudgets((prev) =>
+                    prev.map((b) => {
+                        if (b.id === selectedBudgetId) {
+                            return {
+                                ...b,
+                                expenses: b.expenses.map((e) =>
+                                    e.id === expenseId ? { ...e, active: !currentActive } : e
+                                ),
+                            };
+                        }
+                        return b;
+                    })
+                );
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleCreateBudget = async () => {
@@ -84,34 +162,52 @@ export default function BudgetsScreen() {
 
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from("budgets")
-                .insert({
-                    user_id: user.id,
-                    name: budgetName,
-                    total: Number.parseFloat(totalAmount),
-                })
-                .select()
-                .single();
+            if (editingId) {
+                const { data, error } = await supabase
+                    .from("budgets")
+                    .update({
+                        name: budgetName,
+                        total: Number.parseFloat(totalAmount),
+                    })
+                    .eq("id", editingId)
+                    .select();
 
-            if (error) {
-                console.error("Error creating budget:", error);
-                return;
-            }
+                if (!error && Array.isArray(data) && data.length > 0) {
+                    setBudgets((prev) => prev.map((b) => (b.id === editingId ? { ...b, ...data[0] } : b)));
+                    handleCancelEdit();
+                }
+            } else {
+                const { data, error } = await supabase
+                    .from("budgets")
+                    .insert({
+                        user_id: user.id,
+                        name: budgetName,
+                        total: Number.parseFloat(totalAmount),
+                        active: true,
+                    })
+                    .select()
+                    .single();
 
-            if (data) {
-                setBudgets([
-                    ...budgets,
-                    {
-                        id: data.id,
-                        name: data.name,
-                        total: data.total,
-                        spent: 0,
-                        expenses: [],
-                    },
-                ]);
-                setBudgetName("");
-                setTotalAmount("");
+                if (error) {
+                    console.error("Error creating budget:", error);
+                    return;
+                }
+
+                if (data) {
+                    setBudgets([
+                        ...budgets,
+                        {
+                            id: data.id,
+                            name: data.name,
+                            total: data.total,
+                            spent: 0,
+                            active: true,
+                            expenses: [],
+                        },
+                    ]);
+                    setBudgetName("");
+                    setTotalAmount("");
+                }
             }
         } catch (err) {
             console.error("Exception creating budget:", err);
@@ -125,35 +221,68 @@ export default function BudgetsScreen() {
 
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from("budget_expenses")
-                .insert({
-                    budget_id: selectedBudgetId,
-                    name: expenseName,
-                    amount: Number.parseFloat(expenseAmount),
-                })
-                .select()
-                .single();
+            if (editingExpenseId) {
+                const { data, error } = await supabase
+                    .from("budget_expenses")
+                    .update({
+                        name: expenseName,
+                        amount: Number.parseFloat(expenseAmount),
+                    })
+                    .eq("id", editingExpenseId)
+                    .select()
+                    .single();
 
-            if (!error && data) {
-                const updatedBudgets = budgets.map((budget) => {
-                    if (budget.id === selectedBudgetId) {
-                        const expense = {
-                            id: data.id,
-                            name: data.name,
-                            amount: data.amount,
-                        };
-                        return {
-                            ...budget,
-                            expenses: [...budget.expenses, expense],
-                            spent: budget.spent + data.amount,
-                        };
-                    }
-                    return budget;
-                });
-                setBudgets(updatedBudgets);
-                setExpenseName("");
-                setExpenseAmount("");
+                if (!error && data) {
+                    const updatedBudgets = budgets.map((budget) => {
+                        if (budget.id === selectedBudgetId) {
+                            const oldExpense = budget.expenses.find((e) => e.id === editingExpenseId);
+                            const amountDiff = data.amount - (oldExpense?.amount || 0);
+                            return {
+                                ...budget,
+                                expenses: budget.expenses.map((e) =>
+                                    e.id === editingExpenseId ? { ...e, name: data.name, amount: data.amount } : e
+                                ),
+                                spent: budget.spent + amountDiff,
+                            };
+                        }
+                        return budget;
+                    });
+                    setBudgets(updatedBudgets);
+                    handleCancelExpenseEdit();
+                }
+            } else {
+                const { data, error } = await supabase
+                    .from("budget_expenses")
+                    .insert({
+                        budget_id: selectedBudgetId,
+                        name: expenseName,
+                        amount: Number.parseFloat(expenseAmount),
+                        active: true,
+                    })
+                    .select()
+                    .single();
+
+                if (!error && data) {
+                    const updatedBudgets = budgets.map((budget) => {
+                        if (budget.id === selectedBudgetId) {
+                            const expense = {
+                                id: data.id,
+                                name: data.name,
+                                amount: data.amount,
+                                active: true,
+                            };
+                            return {
+                                ...budget,
+                                expenses: [...budget.expenses, expense],
+                                spent: budget.spent + data.amount,
+                            };
+                        }
+                        return budget;
+                    });
+                    setBudgets(updatedBudgets);
+                    setExpenseName("");
+                    setExpenseAmount("");
+                }
             }
         } finally {
             setLoading(false);
@@ -202,6 +331,19 @@ export default function BudgetsScreen() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const confirmDeleteExpense = (id: string, name: string) => {
+        if (Platform.OS === "web") {
+            const ok = globalThis.confirm(`Delete "${name}"?`);
+            if (ok) handleDeleteExpense(id);
+            return;
+        }
+
+        Alert.alert("Delete expense", `Are you sure you want to delete "${name}"?`, [
+            { text: "Cancel", style: "cancel" },
+            { text: "Delete", style: "destructive", onPress: () => handleDeleteExpense(id) },
+        ]);
     };
 
     const selectedBudget = budgets.find((b) => b.id === selectedBudgetId);
@@ -298,6 +440,15 @@ export default function BudgetsScreen() {
                 budgetInline: {
                     ...baseWeight,
                 },
+                budgetIcons: {
+                    ...baseFlex("center", "center"),
+                    ...baseGap,
+                },
+                budgetItemIcon: {
+                    ...baseBorder,
+                    borderRadius: 6,
+                    padding: 8,
+                },
                 progressBar: {
                     height: 8,
                     backgroundColor: theme.inputBorder,
@@ -354,7 +505,7 @@ export default function BudgetsScreen() {
 
     return (
         <AuthGate>
-            <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
                     <ThemedText type="title" style={styles.heading}>
                         Budgets
@@ -362,6 +513,7 @@ export default function BudgetsScreen() {
 
                     <ThemedText style={styles.label}>Budget Name</ThemedText>
                     <TextInput
+                        ref={nameInputRef}
                         style={styles.input}
                         placeholder="e.g., Groceries"
                         placeholderTextColor={theme.placeholder}
@@ -379,9 +531,26 @@ export default function BudgetsScreen() {
                         keyboardType="decimal-pad"
                     />
 
-                    <TouchableOpacity style={styles.createButton} onPress={handleCreateBudget} disabled={loading}>
-                        <ThemedText style={styles.buttonText}>{loading ? "Creating..." : "Create Budget"}</ThemedText>
-                    </TouchableOpacity>
+                    <View style={{ flexDirection: "row", gap: 12, marginTop: 8 }}>
+                        <TouchableOpacity
+                            style={[styles.createButton, { flex: editingId ? 1 : undefined }]}
+                            onPress={handleCreateBudget}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.buttonText}>
+                                {editingId ? "Update Budget" : "Create Budget"}
+                            </ThemedText>
+                        </TouchableOpacity>
+                        {editingId && (
+                            <TouchableOpacity
+                                style={[styles.createButton, { backgroundColor: redColor, flex: 1 }]}
+                                onPress={handleCancelEdit}
+                                disabled={loading}
+                            >
+                                <ThemedText style={styles.buttonText}>Cancel</ThemedText>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </ThemedView>
 
                 {budgets.length > 0 && (
@@ -392,7 +561,11 @@ export default function BudgetsScreen() {
                         {budgets.map((budget) => (
                             <View
                                 key={budget.id}
-                                style={[styles.budgetCard, selectedBudgetId === budget.id && styles.budgetSelected]}
+                                style={[
+                                    styles.budgetCard,
+                                    selectedBudgetId === budget.id && styles.budgetSelected,
+                                    !budget.active && { opacity: 0.5 },
+                                ]}
                             >
                                 <View style={styles.budgetTitle}>
                                     <TouchableOpacity
@@ -401,17 +574,45 @@ export default function BudgetsScreen() {
                                     >
                                         <ThemedText type="defaultSemiBold">{budget.name}</ThemedText>
                                     </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => handleDeleteBudget(budget.id)}
-                                        style={[
-                                            styles.budgetIcon,
-                                            {
-                                                borderColor: redColor,
-                                            },
-                                        ]}
-                                    >
-                                        <Ionicons name="trash" size={16} color={redColor} />
-                                    </TouchableOpacity>
+                                    <View style={styles.budgetIcons}>
+                                        <TouchableOpacity
+                                            onPress={() => handleToggleActive(budget.id, budget.active)}
+                                            style={[
+                                                styles.budgetItemIcon,
+                                                {
+                                                    borderColor: budget.active ? greenColor : mediumGreyColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons
+                                                name={budget.active ? "eye" : "eye-off"}
+                                                size={16}
+                                                color={budget.active ? greenColor : mediumGreyColor}
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => handleEditBudget(budget)}
+                                            style={[
+                                                styles.budgetItemIcon,
+                                                {
+                                                    borderColor: mediumGreyColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons name="pencil" size={16} color={mediumGreyColor} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => handleDeleteBudget(budget.id)}
+                                            style={[
+                                                styles.budgetItemIcon,
+                                                {
+                                                    borderColor: redColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons name="trash" size={16} color={redColor} />
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                                 <ThemedText style={styles.budgetAmount}>
                                     {currencySymbol} {budget.spent.toFixed(2)} -{" "}
@@ -452,6 +653,7 @@ export default function BudgetsScreen() {
 
                         <ThemedText style={styles.label}>Expense Name</ThemedText>
                         <TextInput
+                            ref={expenseNameInputRef}
                             style={styles.input}
                             placeholder="e.g., Apples"
                             placeholderTextColor={theme.placeholder}
@@ -469,9 +671,26 @@ export default function BudgetsScreen() {
                             keyboardType="decimal-pad"
                         />
 
-                        <TouchableOpacity style={styles.addButton} onPress={handleAddExpense} disabled={loading}>
-                            <ThemedText style={styles.buttonText}>{loading ? "Adding..." : "Add Expense"}</ThemedText>
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: "row", gap: 12 }}>
+                            <TouchableOpacity
+                                style={[styles.addButton, { flex: editingExpenseId ? 1 : undefined }]}
+                                onPress={handleAddExpense}
+                                disabled={loading}
+                            >
+                                <ThemedText style={styles.buttonText}>
+                                    {editingExpenseId ? "Update Expense" : "Add Expense"}
+                                </ThemedText>
+                            </TouchableOpacity>
+                            {editingExpenseId && (
+                                <TouchableOpacity
+                                    style={[styles.addButton, { backgroundColor: redColor, flex: 1 }]}
+                                    onPress={handleCancelExpenseEdit}
+                                    disabled={loading}
+                                >
+                                    <ThemedText style={styles.buttonText}>Cancel</ThemedText>
+                                </TouchableOpacity>
+                            )}
+                        </View>
 
                         <ThemedText type="subtitle" style={styles.expenseList}>
                             Expenses
@@ -482,24 +701,55 @@ export default function BudgetsScreen() {
                             </ThemedView>
                         ) : (
                             selectedBudget.expenses.map((expense) => (
-                                <View key={expense.id} style={styles.expenseItem}>
+                                <View
+                                    key={expense.id}
+                                    style={[styles.expenseItem, !expense.active && { opacity: 0.5 }]}
+                                >
                                     <View style={styles.expenseInfo}>
                                         <ThemedText type="defaultSemiBold">{expense.name}</ThemedText>
                                         <ThemedText style={styles.expenseLabel}>
                                             {currencySymbol} {expense.amount.toFixed(2)}
                                         </ThemedText>
                                     </View>
-                                    <TouchableOpacity
-                                        onPress={() => handleDeleteExpense(expense.id)}
-                                        style={[
-                                            styles.budgetIcon,
-                                            {
-                                                borderColor: redColor,
-                                            },
-                                        ]}
-                                    >
-                                        <Ionicons name="trash" size={16} color={redColor} />
-                                    </TouchableOpacity>
+                                    <View style={styles.budgetIcons}>
+                                        <TouchableOpacity
+                                            onPress={() => handleToggleExpenseActive(expense.id, expense.active)}
+                                            style={[
+                                                styles.budgetItemIcon,
+                                                {
+                                                    borderColor: expense.active ? greenColor : mediumGreyColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons
+                                                name={expense.active ? "eye" : "eye-off"}
+                                                size={16}
+                                                color={expense.active ? greenColor : mediumGreyColor}
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => handleEditExpense(expense)}
+                                            style={[
+                                                styles.budgetItemIcon,
+                                                {
+                                                    borderColor: mediumGreyColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons name="pencil" size={16} color={mediumGreyColor} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => confirmDeleteExpense(expense.id, expense.name)}
+                                            style={[
+                                                styles.budgetItemIcon,
+                                                {
+                                                    borderColor: redColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons name="trash" size={16} color={redColor} />
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             ))
                         )}

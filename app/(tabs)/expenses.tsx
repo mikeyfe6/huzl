@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -216,6 +216,19 @@ export default function ExpensesScreen() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const confirmDeleteExpense = (id: string, name: string) => {
+        if (Platform.OS === "web") {
+            const ok = globalThis.confirm(`Delete "${name}"?`);
+            if (ok) handleDeleteExpense(id);
+            return;
+        }
+
+        Alert.alert("Delete expense", `Are you sure you want to delete "${name}"?`, [
+            { text: "Cancel", style: "cancel" },
+            { text: "Delete", style: "destructive", onPress: () => handleDeleteExpense(id) },
+        ]);
     };
 
     const handleToggleActive = async (id: string, currentActive: boolean) => {
@@ -811,7 +824,7 @@ export default function ExpensesScreen() {
                                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            onPress={() => handleDeleteExpense(expense.id)}
+                                            onPress={() => confirmDeleteExpense(expense.id, expense.name)}
                                             style={[
                                                 styles.expenseIcon,
                                                 {
