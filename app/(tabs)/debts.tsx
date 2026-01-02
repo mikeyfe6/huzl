@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -80,6 +80,13 @@ export default function DebtsScreen() {
             setDebts((prev) => prev.filter((d) => d.id !== id));
         }
         setLoading(false);
+    };
+
+    const confirmDeleteDebt = (id: string) => {
+        Alert.alert("Delete debt", "Are you sure you want to delete this debt?", [
+            { text: "Cancel", style: "cancel" },
+            { text: "Delete", style: "destructive", onPress: () => handleDeleteDebt(id) },
+        ]);
     };
 
     const handleToggleActive = async (id: string, currentActive: boolean) => {
@@ -336,7 +343,7 @@ export default function DebtsScreen() {
                                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            onPress={() => handleDeleteDebt(debt.id)}
+                                            onPress={() => confirmDeleteDebt(debt.id)}
                                             style={[
                                                 styles.itemIcon,
                                                 {
