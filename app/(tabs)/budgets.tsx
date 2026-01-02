@@ -2,15 +2,31 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { blueColor, Colors, greenColor, redColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
+
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+
+import { blueColor, Colors, greenColor, redColor } from "@/constants/theme";
+import {
+    baseBorder,
+    baseButton,
+    baseButtonText,
+    baseCard,
+    baseFlex,
+    baseInput,
+    baseLabel,
+    baseList,
+    baseMain,
+    baseSelect,
+    baseSpace,
+    baseWeight,
+} from "@/styles/base";
 
 type BudgetItem = {
     id: string;
@@ -218,78 +234,6 @@ export default function BudgetsScreen() {
         fetchBudgets();
     }, [user]);
 
-    const baseGap = { gap: 12 };
-    const baseSpace = { gap: 8 };
-    const baseWeight = { fontWeight: "600" as const };
-    const baseRadius = { borderRadius: 8 };
-    const baseBorder = { borderWidth: 1 };
-    const baseSize = { fontSize: 16 };
-
-    const baseFlex = (
-        justify: "flex-start" | "center" | "space-between" | undefined = undefined,
-        align: "flex-start" | "center" | "flex-end" | undefined = undefined
-    ) => ({
-        flexDirection: "row" as const,
-        justifyContent: justify,
-        alignItems: align,
-    });
-
-    const baseMain = {
-        ...baseGap,
-        paddingHorizontal: 16,
-        paddingTop: 24,
-        paddingBottom: 16,
-    };
-
-    const baseLabel = {
-        ...baseWeight,
-        fontSize: 14,
-        marginTop: 8,
-        color: theme.label,
-    };
-
-    const baseInput = {
-        ...baseRadius,
-        ...baseBorder,
-        ...baseSize,
-        borderColor: theme.inputBorder,
-        backgroundColor: theme.inputBackground,
-        outlineWidth: 0,
-        minHeight: 44,
-    };
-
-    const baseSelect = {
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-    };
-
-    const baseButton = {
-        ...baseRadius,
-        ...baseFlex("center", "center"),
-        marginTop: 8,
-        paddingVertical: 12,
-    };
-
-    const baseButtonText = {
-        ...baseWeight,
-        color: whiteColor,
-    };
-
-    const baseList = {
-        ...baseGap,
-        paddingHorizontal: 16,
-        paddingTop: 12,
-        paddingBottom: 20,
-    };
-
-    const baseCard = {
-        ...baseInput,
-        ...baseSpace,
-        padding: 12,
-        backgroundColor: theme.cardBackground,
-        borderColor: theme.borderColor,
-    };
-
     const styles = useMemo(
         () =>
             StyleSheet.create({
@@ -303,20 +247,21 @@ export default function BudgetsScreen() {
                     marginBottom: 16,
                 },
                 label: {
-                    ...baseLabel,
+                    ...baseLabel(theme),
                 },
                 input: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     ...baseSelect,
-                    color: theme.inputText,
                 },
                 createButton: {
                     ...baseButton,
                     backgroundColor: blueColor,
+                    marginTop: 8,
                 },
                 addButton: {
                     ...baseButton,
                     backgroundColor: greenColor,
+                    marginTop: 8,
                 },
                 buttonText: {
                     ...baseButtonText,
@@ -328,16 +273,14 @@ export default function BudgetsScreen() {
                     marginBottom: 8,
                 },
                 budgetCard: {
-                    ...baseCard,
+                    ...baseCard(theme),
                 },
                 budgetSelected: {
                     borderColor: blueColor,
                     backgroundColor: theme.cardBackground,
                 },
                 budgetTitle: {
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    ...baseFlex("space-between", "center"),
                 },
                 budgetInfo: {
                     flex: 1,
@@ -383,10 +326,8 @@ export default function BudgetsScreen() {
                     marginBottom: 10,
                 },
                 expenseItem: {
-                    ...baseCard,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    ...baseFlex("space-between", "center"),
+                    ...baseCard(theme),
                 },
                 expenseInfo: {
                     ...baseSpace,

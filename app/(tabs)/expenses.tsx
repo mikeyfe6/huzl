@@ -339,7 +339,7 @@ export default function ExpensesScreen() {
                     marginBottom: 16,
                 },
                 label: {
-                    ...baseLabel,
+                    ...baseLabel(theme),
                 },
                 input: {
                     ...baseInput(theme),

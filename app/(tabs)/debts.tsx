@@ -27,7 +27,6 @@ import {
     baseList,
     baseMain,
     baseSelect,
-    baseWeight,
 } from "@/styles/base";
 
 type DebtItem = {
@@ -169,12 +168,11 @@ export default function DebtsScreen() {
                     marginBottom: 16,
                 },
                 label: {
-                    ...baseLabel,
+                    ...baseLabel(theme),
                 },
                 input: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     ...baseSelect,
-                    color: theme.inputText,
                 },
                 buttons: {
                     ...baseFlex("center"),
@@ -190,7 +188,7 @@ export default function DebtsScreen() {
                     marginBottom: 8,
                 },
                 item: {
-                    ...baseCard,
+                    ...baseCard(theme),
                 },
                 itemHeader: {
                     ...baseFlex("space-between"),
@@ -225,7 +223,7 @@ export default function DebtsScreen() {
                     color: slateColor,
                 },
                 itemRemaining: {
-                    ...baseWeight,
+                    fontWeight: "500",
                     fontSize: 13,
                     opacity: 0.6,
                 },
