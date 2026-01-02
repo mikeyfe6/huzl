@@ -395,15 +395,14 @@ export default function BudgetsScreen() {
                     ...baseInput(theme),
                     ...baseSelect,
                 },
-                createButton: {
-                    ...baseButton,
-                    backgroundColor: blueColor,
+                buttons: {
+                    ...baseFlex("center"),
+                    ...baseGap,
                     marginTop: 8,
                 },
-                addButton: {
+                button: {
                     ...baseButton,
-                    backgroundColor: greenColor,
-                    marginTop: 8,
+                    backgroundColor: blueColor,
                 },
                 buttonText: {
                     ...baseButtonText,
@@ -467,8 +466,7 @@ export default function BudgetsScreen() {
                     marginBottom: 4,
                 },
                 expenseRemaining: {
-                    fontSize: 16,
-                    fontWeight: "500",
+                    ...baseWeight,
                     marginBottom: 12,
                     color: theme.label,
                 },
@@ -531,9 +529,9 @@ export default function BudgetsScreen() {
                         keyboardType="decimal-pad"
                     />
 
-                    <View style={{ flexDirection: "row", gap: 12, marginTop: 8 }}>
+                    <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.createButton, { flex: editingId ? 1 : undefined }]}
+                            style={[styles.button, { backgroundColor: blueColor }]}
                             onPress={handleCreateBudget}
                             disabled={loading}
                         >
@@ -543,7 +541,7 @@ export default function BudgetsScreen() {
                         </TouchableOpacity>
                         {editingId && (
                             <TouchableOpacity
-                                style={[styles.createButton, { backgroundColor: redColor, flex: 1 }]}
+                                style={[styles.button, { backgroundColor: redColor }]}
                                 onPress={handleCancelEdit}
                                 disabled={loading}
                             >
@@ -671,9 +669,9 @@ export default function BudgetsScreen() {
                             keyboardType="decimal-pad"
                         />
 
-                        <View style={{ flexDirection: "row", gap: 12 }}>
+                        <View style={styles.buttons}>
                             <TouchableOpacity
-                                style={[styles.addButton, { flex: editingExpenseId ? 1 : undefined }]}
+                                style={[styles.button, { backgroundColor: greenColor }]}
                                 onPress={handleAddExpense}
                                 disabled={loading}
                             >
@@ -683,7 +681,7 @@ export default function BudgetsScreen() {
                             </TouchableOpacity>
                             {editingExpenseId && (
                                 <TouchableOpacity
-                                    style={[styles.addButton, { backgroundColor: redColor, flex: 1 }]}
+                                    style={[styles.button, { backgroundColor: redColor }]}
                                     onPress={handleCancelExpenseEdit}
                                     disabled={loading}
                                 >
