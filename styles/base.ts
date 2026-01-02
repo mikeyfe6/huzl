@@ -51,9 +51,9 @@ export const baseButtonText = {
 
 export const baseLabel = (theme: any) => ({
     ...baseWeight,
+    color: theme.label,
     fontSize: 14,
     marginTop: 8,
-    color: theme.label,
 });
 
 export const baseList = {
@@ -66,9 +66,9 @@ export const baseList = {
 export const baseCard = (theme: any) => ({
     ...baseInput(theme),
     ...baseGap,
-    padding: 12,
     backgroundColor: theme.cardBackground,
     borderColor: theme.borderColor,
+    padding: 12,
 });
 
 export const baseMain = {
@@ -77,3 +77,15 @@ export const baseMain = {
     paddingTop: 24,
     paddingBottom: 16,
 };
+
+export const baseEmpty = {
+    ...baseFlex("center", "center"),
+    paddingVertical: 60,
+};
+
+export const baseEmptyText = (theme: any) => ({
+    color: theme.emptyStateText,
+    textAlign: "center" as const,
+    fontSize: 18,
+    opacity: 0.6,
+});

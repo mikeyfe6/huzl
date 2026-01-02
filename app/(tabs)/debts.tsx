@@ -1,17 +1,34 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-
 import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, slateColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
+
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+
+import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, slateColor } from "@/constants/theme";
+import {
+    baseBorder,
+    baseButton,
+    baseButtonText,
+    baseCard,
+    baseEmpty,
+    baseEmptyText,
+    baseFlex,
+    baseGap,
+    baseInput,
+    baseLabel,
+    baseList,
+    baseMain,
+    baseSelect,
+    baseWeight,
+} from "@/styles/base";
 
 type DebtItem = {
     id: string;
@@ -139,78 +156,6 @@ export default function DebtsScreen() {
         fetchDebts();
     }, [user]);
 
-    const baseGap = { gap: 12 };
-    const baseWeight = { fontWeight: "600" as const };
-    const baseRadius = { borderRadius: 8 };
-    const baseBorder = { borderWidth: 1 };
-    const baseSize = { fontSize: 16 };
-
-    const baseFlex = (
-        justify: "flex-start" | "center" | "space-between" | undefined = undefined,
-        align: "flex-start" | "center" | "flex-end" | undefined = undefined
-    ) => ({
-        flexDirection: "row" as const,
-        justifyContent: justify,
-        alignItems: align,
-    });
-
-    const baseMain = {
-        ...baseGap,
-        paddingHorizontal: 16,
-        paddingTop: 24,
-        paddingBottom: 16,
-    };
-
-    const baseLabel = {
-        ...baseWeight,
-        fontSize: 14,
-        marginTop: 8,
-        color: theme.label,
-    };
-
-    const baseInput = {
-        ...baseRadius,
-        ...baseBorder,
-        ...baseSize,
-        borderColor: theme.inputBorder,
-        backgroundColor: theme.inputBackground,
-        outlineWidth: 0,
-        minHeight: 44,
-    };
-
-    const baseSelect = {
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-    };
-
-    const baseButton = {
-        ...baseFlex("center", "center"),
-        ...baseRadius,
-        paddingVertical: 12,
-        flex: 1,
-    };
-
-    const baseButtonText = {
-        ...baseWeight,
-        color: whiteColor,
-    };
-
-    const baseList = {
-        ...baseGap,
-        paddingHorizontal: 16,
-        paddingTop: 12,
-        paddingBottom: 20,
-    };
-
-    const baseCard = {
-        ...baseInput,
-        // ...baseGap,
-        gap: 16,
-        padding: 12,
-        backgroundColor: theme.cardBackground,
-        borderColor: theme.borderColor,
-    };
-
     const styles = useMemo(
         () =>
             StyleSheet.create({
@@ -285,14 +230,10 @@ export default function DebtsScreen() {
                     opacity: 0.6,
                 },
                 emptyState: {
-                    ...baseFlex("center", "center"),
-                    paddingVertical: 60,
+                    ...baseEmpty,
                 },
                 emptyStateText: {
-                    fontSize: 18,
-                    opacity: 0.6,
-                    textAlign: "center",
-                    color: theme.emptyStateText,
+                    ...baseEmptyText(theme),
                 },
             }),
         [theme, colorScheme]

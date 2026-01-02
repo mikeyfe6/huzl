@@ -31,6 +31,8 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
+    baseEmpty,
+    baseEmptyText,
     baseFlex,
     baseGap,
     baseInput,
@@ -600,14 +602,10 @@ export default function ExpensesScreen() {
                     color: theme.statLabel,
                 },
                 emptyState: {
-                    ...baseFlex("center", "center"),
-                    paddingVertical: 60,
+                    ...baseEmpty,
                 },
                 emptyStateText: {
-                    fontSize: 18,
-                    opacity: 0.6,
-                    textAlign: "center",
-                    color: theme.emptyStateText,
+                    ...baseEmptyText(theme),
                 },
             }),
         [theme]
