@@ -32,24 +32,21 @@ export const dailyColor = "#0c86c530";
 export const monthlyColor = "#f49e0b30";
 export const yearlyColor = "#4caf5030";
 
-export const almostWhiteColor = "#f5f5f5";
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";
 export const darkGreyColor = "#666";
 export const veryDarkGreyColor = "#333";
 export const almostBlackColor = "#2a2a2a";
-export const nearBlackColor = "#1a1a1a";
 export const charcoalColor = "#151718";
 export const lightTextColor = "#ecedee";
 export const slateColor = "#687076";
 export const silverColor = "#9ba1a6";
 
-
 // TODO: text color fixen voor zwarte text
 
 export const Colors = {
     light: {
-        text: charcoalColor,
+        text: almostBlackColor,
         background: whiteColor,
         tint: linkColor,
         icon: slateColor,
@@ -71,8 +68,8 @@ export const Colors = {
         cardBackground: lightTextColor,
         inputBackground: whiteColor,
         inputBorder: lightGreyColor,
-        inputText: nearBlackColor,
-        label: nearBlackColor,
+        inputText: almostBlackColor,
+        label: almostBlackColor,
         placeholder: mediumGreyColor,
         emptyStateText: darkGreyColor,
         borderColor: lightGreyColor,

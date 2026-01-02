@@ -129,6 +129,18 @@ export default function BudgetsScreen() {
         }
     };
 
+    const updateExpenseActive = (b: BudgetItem, expenseId: string, newActive: boolean): BudgetItem => {
+        if (b.id === selectedBudgetId) {
+            return {
+                ...b,
+                expenses: b.expenses.map((e) =>
+                    e.id === expenseId ? { ...e, active: newActive } : e
+                ),
+            };
+        }
+        return b;
+    };
+
     const handleToggleExpenseActive = async (expenseId: string, currentActive: boolean) => {
         if (!user) return;
         setLoading(true);
@@ -139,17 +151,7 @@ export default function BudgetsScreen() {
                 .eq("id", expenseId);
             if (!error) {
                 setBudgets((prev) =>
-                    prev.map((b) => {
-                        if (b.id === selectedBudgetId) {
-                            return {
-                                ...b,
-                                expenses: b.expenses.map((e) =>
-                                    e.id === expenseId ? { ...e, active: !currentActive } : e
-                                ),
-                            };
-                        }
-                        return b;
-                    })
+                    prev.map((b) => updateExpenseActive(b, expenseId, !currentActive))
                 );
             }
         } finally {
@@ -333,16 +335,24 @@ export default function BudgetsScreen() {
         }
     };
 
-    const confirmDeleteExpense = (id: string, name: string) => {
+    const confirmDelete = (id: string, name: string, type: "budget" | "expense") => {
         if (Platform.OS === "web") {
             const ok = globalThis.confirm(`Delete "${name}"?`);
-            if (ok) handleDeleteExpense(id);
+            if (ok) {
+                type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
+            }
             return;
         }
 
-        Alert.alert("Delete expense", `Are you sure you want to delete "${name}"?`, [
+        Alert.alert(`Delete ${type}`, `Are you sure you want to delete "${name}"?`, [
             { text: "Cancel", style: "cancel" },
-            { text: "Delete", style: "destructive", onPress: () => handleDeleteExpense(id) },
+            {
+                text: "Delete",
+                style: "destructive",
+                onPress: () => {
+                    type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
+                },
+            },
         ]);
     };
 
@@ -600,7 +610,7 @@ export default function BudgetsScreen() {
                                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            onPress={() => handleDeleteBudget(budget.id)}
+                                            onPress={() => confirmDelete(budget.id, budget.name, "budget")}
                                             style={[
                                                 styles.budgetItemIcon,
                                                 {
@@ -737,7 +747,7 @@ export default function BudgetsScreen() {
                                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            onPress={() => confirmDeleteExpense(expense.id, expense.name)}
+                                            onPress={() => confirmDelete(expense.id, expense.name, "expense")}
                                             style={[
                                                 styles.budgetItemIcon,
                                                 {
