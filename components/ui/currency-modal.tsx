@@ -6,6 +6,7 @@ import { ThemedView } from "@/components/themed-view";
 import { blueColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { AVAILABLE_CURRENCIES, type Currency } from "@/hooks/use-currency";
+import { baseFlex, baseWeight } from "@/styles/base";
 import { supabase } from "@/utils/supabase";
 
 interface CurrencyPickerModalProps {
@@ -93,9 +94,7 @@ const styles = StyleSheet.create({
         paddingTop: 60,
     },
     header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        ...baseFlex("space-between", "center"),
         paddingHorizontal: 20,
         paddingBottom: 20,
     },
@@ -104,9 +103,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     currencyItem: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+        ...baseFlex("space-between", "center"),
         paddingVertical: 16,
         paddingHorizontal: 16,
         borderRadius: 12,
@@ -116,8 +113,7 @@ const styles = StyleSheet.create({
         backgroundColor: blueColor,
     },
     currencyInfo: {
-        flexDirection: "row",
-        alignItems: "center",
+        ...baseFlex("space-between", "center"),
         gap: 16,
     },
     currencySymbol: {
@@ -128,8 +124,7 @@ const styles = StyleSheet.create({
         lineHeight: 40,
     },
     currencyName: {
-        fontSize: 16,
-        fontWeight: "600",
+        ...baseWeight,
     },
     currencyCode: {
         fontSize: 13,

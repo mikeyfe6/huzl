@@ -1,14 +1,18 @@
 import { router } from "expo-router";
+import { useMemo, useState } from "react";
 import { Alert, Platform, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { Colors, greenColor, silverColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
+
 import { supabase } from "@/utils/supabase";
-import { useMemo, useState } from "react";
+
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+
+import { Colors, greenColor, silverColor } from "@/constants/theme";
+import { baseButton, baseButtonText, baseFlex, baseGap, baseInput, baseSelect, baseWeight } from "@/styles/base";
 
 export default function ModalScreen() {
     const colorScheme = useColorScheme();
@@ -58,9 +62,8 @@ export default function ModalScreen() {
         () =>
             StyleSheet.create({
                 outerContainer: {
+                    ...baseFlex("center", "center"),
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
                     padding: 20,
                 },
                 container: {
@@ -76,21 +79,14 @@ export default function ModalScreen() {
                     textAlign: "center",
                 },
                 label: {
+                    ...baseWeight,
                     fontSize: 14,
                     color: theme.label,
-                    fontWeight: "600",
                     marginBottom: 12,
                 },
                 input: {
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    fontSize: 16,
-                    color: theme.inputText,
-                    borderColor: theme.inputBorder,
-                    backgroundColor: theme.inputBackground,
-                    marginTop: 4,
+                    ...baseInput(theme),
+                    ...baseSelect,
                 },
                 hint: {
                     color: silverColor,
@@ -98,19 +94,15 @@ export default function ModalScreen() {
                     marginBottom: 24,
                 },
                 actions: {
+                    ...baseGap,
                     marginTop: 20,
-                    gap: 12,
                 },
                 saveButton: {
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    alignItems: "center",
+                    ...baseButton,
                     backgroundColor: greenColor,
                 },
                 saveButtonText: {
-                    color: whiteColor,
-                    fontWeight: "600",
-                    fontSize: 16,
+                    ...baseButtonText,
                 },
                 cancelLink: {
                     paddingVertical: 8,

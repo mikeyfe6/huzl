@@ -5,6 +5,8 @@ import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-nativ
 import { ThemedText } from "@/components/themed-text";
 import { Colors, blueColor } from "@/constants/theme";
 
+import { baseBorder, baseFlex } from "@/styles/base";
+
 type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
 export type SortOption = "default" | "alphabetic-asc" | "alphabetic-desc" | "cost-asc" | "cost-desc";
@@ -39,13 +41,13 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
         () =>
             StyleSheet.create({
                 backdrop: {
+                    ...baseFlex("center", "center"),
                     flex: 1,
                     backgroundColor: "rgba(0,0,0,0.4)",
-                    justifyContent: "center",
-                    alignItems: "center",
                     paddingHorizontal: 24,
                 },
                 sheet: {
+                    ...baseBorder,
                     width: "100%",
                     maxWidth: Platform.select({
                         ios: undefined,
@@ -54,7 +56,6 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                     }),
                     borderRadius: 12,
                     backgroundColor: theme.cardBackground,
-                    borderWidth: 2,
                     borderColor: theme.borderColor,
                     paddingVertical: 8,
                 },
@@ -64,9 +65,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                     color: theme.label,
                 },
                 item: {
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    ...baseFlex("space-between", "center"),
                     paddingHorizontal: 16,
                     paddingVertical: 12,
                 },
@@ -83,7 +82,6 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                     paddingHorizontal: 16,
                     paddingVertical: 12,
                     alignItems: "center",
-                    fontSize: 16,
                 },
             }),
         [theme]
