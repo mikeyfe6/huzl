@@ -10,6 +10,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
+import {
+    baseBorder,
+    baseButton,
+    baseCenter,
+    baseFlex,
+    baseGap,
+    baseInput,
+    baseSelect,
+    baseSpace,
+    baseWeight,
+} from "@/styles/base";
+
 export default function HomeScreen() {
     const { user, loading, signIn, signUp } = useAuth();
     const { refreshFlag } = useRefreshContext();
@@ -135,45 +147,12 @@ export default function HomeScreen() {
         };
     }, [user, refreshFlag]);
 
-    const baseGap = { gap: 12 };
-    const baseSpace = { gap: 8 };
-    const baseWeight = { fontWeight: "600" as const };
-    const baseRadius = { borderRadius: 8 };
-    const baseBorder = { borderWidth: 1 };
-    const baseSize = { fontSize: 16 };
-
-    const baseCenter = {
-        alignItems: "center" as const,
-        justifyContent: "center" as const,
-    };
-
-    const baseInput = {
-        ...baseRadius,
-        ...baseBorder,
-        ...baseSize,
-        borderColor: theme.inputBorder,
-        backgroundColor: theme.inputBackground,
-        outlineWidth: 0,
-        minHeight: 44,
-    };
-
-    const baseSelect = {
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-    };
-
-    const baseButton = {
-        ...baseRadius,
-        ...baseCenter,
-        paddingVertical: 12,
-    };
-
     const styles = useMemo(
         () =>
             StyleSheet.create({
                 container: {
-                    ...baseSpace,
                     ...baseCenter,
+                    ...baseSpace,
                     flex: 1,
                     padding: 16,
                 },
@@ -194,7 +173,7 @@ export default function HomeScreen() {
                     marginBottom: 64,
                 },
                 input: {
-                    ...baseInput,
+                    ...baseInput(theme),
                     ...baseSelect,
                     color: theme.inputText,
                 },
@@ -243,8 +222,7 @@ export default function HomeScreen() {
                     textAlign: "center",
                 },
                 statWrapper: {
-                    ...baseCenter,
-                    flexDirection: "row",
+                    ...baseFlex("center", "center"),
                     gap: 4,
                 },
                 statValue: {
@@ -274,13 +252,7 @@ export default function HomeScreen() {
     if (loading) {
         return (
             <ThemedView style={styles.container}>
-                <ThemedText
-                    style={{
-                        fontWeight: "600",
-                    }}
-                >
-                    Loading …
-                </ThemedText>
+                <ThemedText style={baseWeight}>Loading …</ThemedText>
             </ThemedView>
         );
     }

@@ -1,0 +1,43 @@
+export const baseGap = { gap: 12 };
+export const baseSpace = { gap: 8 };
+export const baseWeight = { fontWeight: "600" as const };
+export const baseRadius = { borderRadius: 8 };
+export const baseBorder = { borderWidth: 1 };
+export const baseSize = { fontSize: 16 };
+
+export const baseFlex = (
+    justify: "flex-start" | "center" | "space-between" | undefined = undefined,
+    align: "flex-start" | "center" | "flex-end" | undefined = undefined
+) => ({
+    flexDirection: "row" as const,
+    justifyContent: justify,
+    alignItems: align,
+});
+
+export const baseCenter = {
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+};
+
+export const baseInput = (theme: any) => ({
+    ...baseRadius,
+    ...baseBorder,
+    ...baseSize,
+    borderColor: theme.inputBorder,
+    backgroundColor: theme.inputBackground,
+    color: theme.inputText,
+    outlineWidth: 0,
+    minHeight: 44,
+});
+
+export const baseSelect = {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+};
+
+export const baseButton = {
+    ...baseFlex("center", "center"),
+    ...baseRadius,
+    paddingVertical: 12,
+    flex: 1,
+};

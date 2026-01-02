@@ -44,6 +44,9 @@ export const lightTextColor = "#ecedee";
 export const slateColor = "#687076";
 export const silverColor = "#9ba1a6";
 
+
+// TODO: text color fixen voor zwarte text
+
 export const Colors = {
     light: {
         text: charcoalColor,
