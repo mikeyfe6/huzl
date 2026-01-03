@@ -432,7 +432,8 @@ export default function BudgetsScreen() {
                     backgroundColor: theme.cardBackground,
                 },
                 budgetTitle: {
-                    ...baseFlex("space-between", "center"),
+                    ...baseFlex("space-between", "flex-start"),
+                    ...baseGap,
                 },
                 budgetInfo: {
                     flex: 1,

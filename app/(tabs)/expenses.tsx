@@ -479,7 +479,8 @@ export default function ExpensesScreen() {
                     opacity: 0.5,
                 },
                 expenseItem: {
-                    ...baseFlex("space-between"),
+                    ...baseFlex("space-between", "flex-start"),
+                    ...baseGap,
                 },
                 expenseInfo: {
                     flex: 1,

@@ -100,8 +100,8 @@ export const baseIcon = {
     ...baseFlex("center", "center"),
     ...baseBorder,
     borderRadius: 6,
-    width: 36,
-    height: 36,
+    width: 32,
+    height: 32,
 };
 
 export const baseEllipsis = {

@@ -208,7 +208,7 @@ export default function DebtsScreen() {
                     ...baseCard(theme),
                 },
                 itemHeader: {
-                    ...baseFlex("space-between"),
+                    ...baseFlex("space-between", "flex-start"),
                     ...baseGap,
                 },
                 itemTitle: {
