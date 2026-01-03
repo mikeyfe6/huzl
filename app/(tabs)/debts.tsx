@@ -8,6 +8,8 @@ import { useCurrency } from "@/hooks/use-currency";
 
 import { supabase } from "@/utils/supabase";
 
+import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
+
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -59,8 +61,8 @@ export default function DebtsScreen() {
 
     const handleEditDebt = (debt: DebtItem) => {
         setName(debt.name);
-        setAmount(debt.amount.toString());
-        setPayPerMonth(debt.pay_per_month?.toString() || "");
+        setAmount(debt.amount.toFixed(2));
+        setPayPerMonth(debt.pay_per_month?.toFixed(2) || "");
         setEditingId(debt.id);
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
@@ -270,7 +272,7 @@ export default function DebtsScreen() {
                         placeholder="e.g., 5000"
                         placeholderTextColor={theme.placeholder}
                         value={amount}
-                        onChangeText={setAmount}
+                        onChangeText={(text) => setAmount(formatNumber(text))}
                         keyboardType="decimal-pad"
                     />
                     <ThemedText style={styles.label}>Monthly Payment ({currencySymbol})</ThemedText>
@@ -279,7 +281,7 @@ export default function DebtsScreen() {
                         placeholder="e.g., 200"
                         placeholderTextColor={theme.placeholder}
                         value={payPerMonth}
-                        onChangeText={setPayPerMonth}
+                        onChangeText={(text) => setPayPerMonth(formatNumber(text))}
                         keyboardType="decimal-pad"
                     />
                     <View style={styles.buttons}>
@@ -316,7 +318,7 @@ export default function DebtsScreen() {
                                     <View style={styles.itemTitle}>
                                         <ThemedText type="defaultSemiBold">{debt.name}</ThemedText>
                                         <ThemedText style={styles.itemLabel}>
-                                            Remaining: {currencySymbol} {debt.amount}
+                                            Remaining: {currencySymbol} {formatAmount(debt.amount)}
                                         </ThemedText>
                                     </View>
                                     <View style={styles.itemIcons}>
@@ -361,22 +363,25 @@ export default function DebtsScreen() {
                                 </View>
                                 <View style={styles.itemAmount}>
                                     <ThemedText style={styles.itemPayment}>
-                                        Monthly: {debt.pay_per_month ? `${currencySymbol} ${debt.pay_per_month}` : "—"}
+                                        Monthly:{" "}
+                                        {debt.pay_per_month
+                                            ? `${formatCurrency(debt.pay_per_month, currencySymbol)}`
+                                            : "—"}
                                     </ThemedText>
                                     {debt.pay_per_month && debt.pay_per_month > 0 ? (
                                         (() => {
                                             const months = Math.ceil(debt.amount / debt.pay_per_month);
                                             const lastPayment =
                                                 debt.amount % debt.pay_per_month === 0
-                                                    ? debt.pay_per_month
-                                                    : (debt.amount % debt.pay_per_month).toFixed(2);
+                                                    ? formatAmount(debt.pay_per_month)
+                                                    : formatCurrency(debt.amount % debt.pay_per_month, currencySymbol);
                                             return (
                                                 <ThemedText style={styles.itemRemaining}>
                                                     Remaining: {months}{" "}
                                                     {months > 1
-                                                        ? `(${months - 1} × ${currencySymbol} ${
+                                                        ? `(${months - 1} × ${currencySymbol} ${formatAmount(
                                                               debt.pay_per_month
-                                                          }, last: ${currencySymbol} ${lastPayment})`
+                                                          )}, last: ${currencySymbol} ${lastPayment})`
                                                         : ""}
                                                 </ThemedText>
                                             );

@@ -352,7 +352,7 @@ export default function HomeScreen() {
                             <View style={styles.statWrapper}>
                                 <Ionicons name="add-outline" size={16} color={greenColor} />
                                 <ThemedText style={styles.statValue}>
-                                    {currencySymbol} {monthlyIncome.toFixed(2)}
+                                    {currencySymbol} {monthlyIncome.toFixed(2).replace(".", ",")}
                                 </ThemedText>
                             </View>
                         </ThemedView>
@@ -363,7 +363,7 @@ export default function HomeScreen() {
                         <View style={styles.statWrapper}>
                             <Ionicons name="remove-outline" size={16} color={redColor} />
                             <ThemedText style={styles.statValue}>
-                                {currencySymbol} {totals.monthlyTotal.toFixed(2)}
+                                {currencySymbol} {totals.monthlyTotal.toFixed(2).replace(".", ",")}
                             </ThemedText>
                         </View>
                     </ThemedView>
@@ -373,7 +373,7 @@ export default function HomeScreen() {
                         <View style={styles.statWrapper}>
                             <Ionicons name="alert" size={16} color={orangeColor} />
                             <ThemedText style={styles.statValue}>
-                                {currencySymbol} {monthlyDebts.toFixed(2)}
+                                {currencySymbol} {monthlyDebts.toFixed(2).replace(".", ",")}
                             </ThemedText>
                         </View>
                     </ThemedView>
@@ -386,7 +386,7 @@ export default function HomeScreen() {
                         >
                             <ThemedText style={styles.statLabel}>Monthly Remaining</ThemedText>
                             <ThemedText style={styles.statValue}>
-                                {currencySymbol} {monthlyDisposable.toFixed(2)}
+                                {currencySymbol} {monthlyDisposable.toFixed(2).replace(".", ",")}
                             </ThemedText>
                         </ThemedView>
                     )}

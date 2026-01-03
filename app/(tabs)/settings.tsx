@@ -9,6 +9,8 @@ import { useThemePreference } from "@/hooks/use-theme-preference";
 
 import { supabase } from "@/utils/supabase";
 
+import { formatAmount } from "@/utils/helpers";
+
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -287,7 +289,7 @@ export default function SettingsScreen() {
                                     Monthly Income
                                 </ThemedText>
                                 <ThemedText style={styles.settingValue}>
-                                    {monthlyIncome === null ? "Not set" : monthlyIncome}
+                                    {monthlyIncome === null ? "Not set" : formatAmount(monthlyIncome)}
                                 </ThemedText>
                             </View>
                         </TouchableOpacity>

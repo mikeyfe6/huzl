@@ -8,6 +8,8 @@ import { useCurrency } from "@/hooks/use-currency";
 
 import { supabase } from "@/utils/supabase";
 
+import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
+
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -93,7 +95,7 @@ export default function BudgetsScreen() {
 
     const handleEditBudget = (budget: BudgetItem) => {
         setBudgetName(budget.name);
-        setTotalAmount(budget.total.toString());
+        setTotalAmount(budget.total.toFixed(2));
         setEditingId(budget.id);
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
@@ -107,7 +109,7 @@ export default function BudgetsScreen() {
 
     const handleEditExpense = (expense: { id: string; name: string; amount: number; active: boolean }) => {
         setExpenseName(expense.name);
-        setExpenseAmount(expense.amount.toString());
+        setExpenseAmount(expense.amount.toFixed(2));
         setEditingExpenseId(expense.id);
         setTimeout(() => expenseNameInputRef.current?.focus(), 100);
     };
@@ -530,7 +532,7 @@ export default function BudgetsScreen() {
                         placeholder="0.00"
                         placeholderTextColor={theme.placeholder}
                         value={totalAmount}
-                        onChangeText={setTotalAmount}
+                        onChangeText={(text) => setTotalAmount(formatNumber(text))}
                         keyboardType="decimal-pad"
                     />
 
@@ -618,9 +620,9 @@ export default function BudgetsScreen() {
                                     </View>
                                 </View>
                                 <ThemedText style={styles.budgetAmount}>
-                                    {currencySymbol} {budget.spent.toFixed(2)} -{" "}
+                                    {formatCurrency(budget.spent, currencySymbol)} -{" "}
                                     <ThemedText style={[styles.budgetAmount, styles.budgetInline]}>
-                                        {currencySymbol} {budget.total.toFixed(2)}
+                                        {formatCurrency(budget.total, currencySymbol)}
                                     </ThemedText>
                                 </ThemedText>
                                 <View style={styles.progressBar}>
@@ -650,7 +652,7 @@ export default function BudgetsScreen() {
                                     color: remainingAmount < 0 ? redColor : greenColor,
                                 }}
                             >
-                                {remainingAmount.toFixed(2)}
+                                {formatAmount(remainingAmount)}
                             </ThemedText>
                         </ThemedText>
 
@@ -670,7 +672,7 @@ export default function BudgetsScreen() {
                             placeholder="0.00"
                             placeholderTextColor={theme.placeholder}
                             value={expenseAmount}
-                            onChangeText={setExpenseAmount}
+                            onChangeText={(text) => setExpenseAmount(formatNumber(text))}
                             keyboardType="decimal-pad"
                         />
 
@@ -711,7 +713,7 @@ export default function BudgetsScreen() {
                                     <View style={styles.expenseInfo}>
                                         <ThemedText type="defaultSemiBold">{expense.name}</ThemedText>
                                         <ThemedText style={styles.expenseLabel}>
-                                            {currencySymbol} {expense.amount.toFixed(2)}
+                                            {formatCurrency(expense.amount, currencySymbol)}
                                         </ThemedText>
                                     </View>
                                     <View style={styles.budgetIcons}>

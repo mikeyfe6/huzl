@@ -9,6 +9,8 @@ import { useCurrency } from "@/hooks/use-currency";
 
 import { supabase } from "@/utils/supabase";
 
+import { formatCapitalize, formatCurrency, formatNumber } from "@/utils/helpers";
+
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -191,7 +193,7 @@ export default function ExpensesScreen() {
 
     const handleEditExpense = (expense: ExpenseItem) => {
         setExpenseName(expense.name);
-        setExpenseAmount(expense.amount.toString());
+        setExpenseAmount(expense.amount.toFixed(2));
         setFrequency(expense.frequency);
         setCategory(expense.category);
         setEditingId(expense.id);
@@ -619,7 +621,7 @@ export default function ExpensesScreen() {
                     height: 12,
                     borderRadius: 25,
                 },
-                chartButtonText: { fontWeight: "600" },
+                chartButtonText: { ...baseWeight },
                 chartButtonLabel: {
                     fontSize: 14,
                     color: theme.statLabel,
@@ -687,7 +689,7 @@ export default function ExpensesScreen() {
                         placeholder="0.00"
                         placeholderTextColor={theme.placeholder}
                         value={expenseAmount}
-                        onChangeText={setExpenseAmount}
+                        onChangeText={(text) => setExpenseAmount(formatNumber(text))}
                         keyboardType="decimal-pad"
                         onFocus={() => setAmountFocused(true)}
                         onBlur={() => setAmountFocused(false)}
@@ -812,7 +814,7 @@ export default function ExpensesScreen() {
                                         <View style={styles.expenseMeta}>
                                             <ThemedText style={styles.expenseLabel}>
                                                 <ThemedText style={styles.expenseAmount}>
-                                                    {currencySymbol} {expense.amount.toFixed(2)}
+                                                    {formatCurrency(expense.amount, currencySymbol)}
                                                 </ThemedText>{" "}
                                                 - {getFrequencyLabel(expense.frequency)}
                                             </ThemedText>
@@ -825,8 +827,7 @@ export default function ExpensesScreen() {
                                                 ]}
                                             >
                                                 <ThemedText style={styles.badgeText}>
-                                                    {expense.category.charAt(0).toUpperCase() +
-                                                        expense.category.slice(1)}
+                                                    {formatCapitalize(expense.category)}
                                                 </ThemedText>
                                             </View>
                                         </View>
@@ -875,10 +876,10 @@ export default function ExpensesScreen() {
                                     <ThemedText style={styles.expensePeriod}>Yearly / Monthly:</ThemedText>
                                     <View style={styles.expenseAmounts}>
                                         <ThemedText style={styles.expenseYearly}>
-                                            {currencySymbol} {expense.yearlyTotal.toFixed(2)}
+                                            {formatCurrency(expense.yearlyTotal, currencySymbol)}
                                         </ThemedText>
                                         <ThemedText style={styles.expenseMonthly}>
-                                            {currencySymbol} {(expense.yearlyTotal / 12).toFixed(2)}
+                                            {formatCurrency(expense.yearlyTotal / 12, currencySymbol)}
                                         </ThemedText>
                                     </View>
                                 </View>
@@ -892,24 +893,24 @@ export default function ExpensesScreen() {
                         <ThemedView style={[styles.totalSection, styles.totalYear]}>
                             <ThemedText type="subtitle">Total Yearly Spend</ThemedText>
                             <ThemedText style={styles.totalAmount}>
-                                {currencySymbol} {totalYearlySpend.toFixed(2)}
+                                {formatCurrency(totalYearlySpend, currencySymbol)}
                             </ThemedText>
                             <ThemedText>
                                 Personal:{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {currencySymbol} {personalYearlySpend.toFixed(2)}
+                                    {formatCurrency(personalYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
                                 Business:{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {currencySymbol} {businessYearlySpend.toFixed(2)}
+                                    {formatCurrency(businessYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
                                 Family:{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {currencySymbol} {familyYearlySpend.toFixed(2)}
+                                    {formatCurrency(familyYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                         </ThemedView>
@@ -918,14 +919,14 @@ export default function ExpensesScreen() {
                             <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalMonth]}>
                                 <ThemedText type="defaultSemiBold">Total Monthly Spend</ThemedText>
                                 <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
-                                    {currencySymbol} {totalMonthlySpend.toFixed(2)}
+                                    {formatCurrency(totalMonthlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedView>
 
                             <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalDay]}>
                                 <ThemedText type="defaultSemiBold">Total Daily Spend</ThemedText>
                                 <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
-                                    {currencySymbol} {totalDailySpend.toFixed(2)}
+                                    {formatCurrency(totalDailySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedView>
                         </View>

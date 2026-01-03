@@ -22,8 +22,11 @@ export default function ModalScreen() {
 
     const [income, setIncome] = useState<string>(() => {
         const val = (user?.user_metadata as any)?.monthly_income;
-        if (typeof val === "number") return String(val);
-        if (typeof val === "string") return val;
+        if (typeof val === "number") return val.toFixed(2);
+        if (typeof val === "string" && val) {
+            const parsed = Number.parseFloat(val);
+            return Number.isNaN(parsed) ? val : parsed.toFixed(2);
+        }
         return "";
     });
     const [saving, setSaving] = useState(false);
@@ -120,11 +123,11 @@ export default function ModalScreen() {
                 <ThemedText style={styles.label}>Amount ({currencySymbol})</ThemedText>
                 <TextInput
                     style={styles.input}
-                    placeholder="e.g. 2500"
+                    placeholder="0.00"
                     placeholderTextColor={theme.placeholder}
-                    keyboardType="numeric"
+                    keyboardType="decimal-pad"
                     value={income}
-                    onChangeText={setIncome}
+                    onChangeText={(text) => setIncome(text)}
                 />
                 <ThemedView style={styles.actions}>
                     <TouchableOpacity style={styles.saveButton} disabled={saving} onPress={handleSave}>
