@@ -40,6 +40,7 @@ export const baseSelect = {
 export const baseButton = {
     ...baseFlex("center", "center"),
     ...baseRadius,
+    minHeight: 44,
     paddingVertical: 12,
     flex: 1,
 };

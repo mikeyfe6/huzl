@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useMemo, useState } from "react";
-import { Alert, Platform, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -69,15 +69,16 @@ export default function ModalScreen() {
                 },
                 container: {
                     width: "100%",
-                    maxWidth: Platform.select({
-                        ios: undefined,
-                        android: undefined,
-                        default: 400,
-                    }),
+                    maxWidth: 500,
                 },
                 title: {
-                    marginBottom: 16,
+                    marginBottom: 12,
                     textAlign: "center",
+                },
+                hint: {
+                    color: silverColor,
+                    textAlign: "center",
+                    marginBottom: 48,
                 },
                 label: {
                     ...baseWeight,
@@ -88,11 +89,6 @@ export default function ModalScreen() {
                 input: {
                     ...baseInput(theme),
                     ...baseSelect,
-                },
-                hint: {
-                    color: silverColor,
-                    textAlign: "center",
-                    marginBottom: 24,
                 },
                 actions: {
                     ...baseGap,
