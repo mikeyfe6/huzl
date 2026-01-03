@@ -318,7 +318,7 @@ export default function DebtsScreen() {
                                     <View style={styles.itemTitle}>
                                         <ThemedText type="defaultSemiBold">{debt.name}</ThemedText>
                                         <ThemedText style={styles.itemLabel}>
-                                            Remaining: {currencySymbol} {formatAmount(debt.amount)}
+                                            Total: {formatCurrency(debt.amount, currencySymbol)}
                                         </ThemedText>
                                     </View>
                                     <View style={styles.itemIcons}>
@@ -374,7 +374,7 @@ export default function DebtsScreen() {
                                             const lastPayment =
                                                 debt.amount % debt.pay_per_month === 0
                                                     ? formatAmount(debt.pay_per_month)
-                                                    : formatCurrency(debt.amount % debt.pay_per_month, currencySymbol);
+                                                    : formatAmount(debt.amount % debt.pay_per_month);
                                             return (
                                                 <ThemedText style={styles.itemRemaining}>
                                                     Remaining: {months}{" "}
