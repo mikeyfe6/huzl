@@ -14,7 +14,6 @@ import { ThemedView } from "@/components/themed-view";
 
 import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, slateColor } from "@/constants/theme";
 import {
-    baseBorder,
     baseButton,
     baseButtonText,
     baseCard,
@@ -22,6 +21,8 @@ import {
     baseEmptyText,
     baseFlex,
     baseGap,
+    baseIcon,
+    baseIcons,
     baseInput,
     baseLabel,
     baseList,
@@ -215,13 +216,10 @@ export default function DebtsScreen() {
                     marginTop: 4,
                 },
                 itemIcons: {
-                    ...baseFlex("center", "center"),
-                    ...baseGap,
+                    ...baseIcons,
                 },
                 itemIcon: {
-                    ...baseBorder,
-                    borderRadius: 6,
-                    padding: 8,
+                    ...baseIcon,
                 },
                 itemAmount: {
                     ...baseFlex("space-between"),
@@ -384,7 +382,7 @@ export default function DebtsScreen() {
                                             );
                                         })()
                                     ) : (
-                                        <ThemedText style={styles.itemRemaining}>Months Remaining: —</ThemedText>
+                                        <ThemedText style={styles.itemRemaining}>Remaining: —</ThemedText>
                                     )}
                                 </View>
                             </ThemedView>

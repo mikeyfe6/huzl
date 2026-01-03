@@ -20,6 +20,8 @@ import {
     baseCard,
     baseFlex,
     baseGap,
+    baseIcon,
+    baseIcons,
     baseInput,
     baseLabel,
     baseList,
@@ -133,9 +135,7 @@ export default function BudgetsScreen() {
         if (b.id === selectedBudgetId) {
             return {
                 ...b,
-                expenses: b.expenses.map((e) =>
-                    e.id === expenseId ? { ...e, active: newActive } : e
-                ),
+                expenses: b.expenses.map((e) => (e.id === expenseId ? { ...e, active: newActive } : e)),
             };
         }
         return b;
@@ -150,9 +150,7 @@ export default function BudgetsScreen() {
                 .update({ active: !currentActive })
                 .eq("id", expenseId);
             if (!error) {
-                setBudgets((prev) =>
-                    prev.map((b) => updateExpenseActive(b, expenseId, !currentActive))
-                );
+                setBudgets((prev) => prev.map((b) => updateExpenseActive(b, expenseId, !currentActive)));
             }
         } finally {
             setLoading(false);
@@ -450,13 +448,10 @@ export default function BudgetsScreen() {
                     ...baseWeight,
                 },
                 budgetIcons: {
-                    ...baseFlex("center", "center"),
-                    ...baseGap,
+                    ...baseIcons,
                 },
                 budgetItemIcon: {
-                    ...baseBorder,
-                    borderRadius: 6,
-                    padding: 8,
+                    ...baseIcon,
                 },
                 progressBar: {
                     height: 8,
