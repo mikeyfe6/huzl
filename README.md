@@ -1,50 +1,47 @@
-# Welcome to your Expo app 👋
+<!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<p align="center">
+  <a href="https://huzl.expo.app/" rel="noopener noreferrer"
+              target="_blank">
+    <img alt="Huzl Logo" src="https://huzl.expo.app/assets/assets/images/huzl-logo.ee431dee0d3709c6c6f0d7a9cf264e37.png" width="750" />
+  </a>
+</p>
 
-## Get started
+<br>
 
-1. Install dependencies
+# Huzl
 
-    ```bash
-    npm install
-    ```
+<br>
 
-2. Start the app
+Huzl is een moneymanagement crossplatform applicatie, opgericht door [Michael Fransman](https://www.linkedin.com/in/michaelfransman/).
 
-    ```bash
-    npx expo start
-    ```
+Met Huzl beheer je je persoonlijke financiën eenvoudig: bijhouden van inkomsten, uitgaven, budgetten en schulden, allemaal in één overzichtelijk dashboard.
 
-In the output, you'll find options to open the app in a
+-   _Meer weten? Bekijk de app / check the app: [Huzl](https://huzl.expo.app)_
 
--   [development build](https://docs.expo.dev/develop/development-builds/introduction/)
--   [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
--   [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
--   [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+<br>
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+<br>
 
-When you're ready, run:
+**Deze app is gebouwd met React Native, Expo & Supabase.**
 
-```bash
-npm run reset-project
-```
+Powered by [Menefex](https://menefex.nl) ✨
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+<br>
 
-## Learn more
+## Licence ✒️
 
-To learn more about developing your project with Expo, look at the following resources:
+0BSD, all rights reserved, Huzl 2026 ©
 
--   [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
--   [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+<br>
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+<!-- [![Netlify Status](https://api.netlify.com/api/v1/badges/cf1dfb50-594c-44db-a0b2-aa9c139b7a97/deploy-status)](https://app.netlify.com/sites/afrodiasphere/deploys) <br><br> -->
 
--   [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
--   [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+👨🏾‍💻 <ins>...this project</ins> <br> [![wakatime](https://wakatime.com/badge/user/172a37f5-1ff4-4cf8-9d08-5ccbe681726b/project/1dfc22c0-93ef-4530-a3e8-9f206bcf2b6b.svg)](https://wakatime.com/badge/user/172a37f5-1ff4-4cf8-9d08-5ccbe681726b/project/1dfc22c0-93ef-4530-a3e8-9f206bcf2b6b) <br>
+👨🏾‍💻 <ins>...all projects</ins> <br> [![wakatime](https://wakatime.com/badge/user/172a37f5-1ff4-4cf8-9d08-5ccbe681726b.svg)](https://wakatime.com/@172a37f5-1ff4-4cf8-9d08-5ccbe681726b)
+
+<!-- AUTO-GENERATED-CONTENT:END -->
