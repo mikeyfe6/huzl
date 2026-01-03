@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-import { Colors, blueColor } from "@/constants/theme";
+import { Colors, linkColor } from "@/constants/theme";
 
 import { baseBorder, baseFlex } from "@/styles/base";
 
@@ -104,7 +104,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                                 <Ionicons name={option.icon} size={18} color={theme.label} />
                                 <ThemedText>{option.label}</ThemedText>
                             </View>
-                            {sortOption === option.value && <Ionicons name="checkmark" size={18} color={blueColor} />}
+                            {sortOption === option.value && <Ionicons name="checkmark" size={18} color={linkColor} />}
                         </TouchableOpacity>
                     ))}
                     <TouchableOpacity style={styles.cancel} onPress={onRequestClose}>

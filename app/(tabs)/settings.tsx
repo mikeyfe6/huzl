@@ -156,7 +156,7 @@ export default function SettingsScreen() {
                 linksContainer: {
                     ...baseFlex("center", "center"),
                     ...baseGap,
-                    marginTop: 24,
+                    marginTop: 20,
                 },
                 linkText: {
                     fontSize: 14,
