@@ -21,6 +21,8 @@ function RootContent() {
                     <Stack>
                         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                         <Stack.Screen name="income" options={{ presentation: "modal", title: "Income" }} />
+                        <Stack.Screen name="terms" options={{ presentation: "modal", title: "Terms of Service" }} />
+                        <Stack.Screen name="privacy" options={{ presentation: "modal", title: "Privacy Policy" }} />
                     </Stack>
                     <StatusBar style="auto" />
                 </RefreshProvider>

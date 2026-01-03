@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
         lineHeight: 30,
         fontSize: 16,
         color: linkColor,
+        textDecorationLine: "underline",
     },
     danger: {
         fontSize: 16,

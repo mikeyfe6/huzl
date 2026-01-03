@@ -18,11 +18,11 @@ import { ExpensePieChart } from "@/components/ui/expense-pie-chart";
 import { getSortLabel, SortModal, SortOption } from "@/components/ui/sort-modal";
 
 import {
-    blueColor,
     businessColor,
     Colors,
     familyColor,
     greenColor,
+    linkColor,
     mediumGreyColor,
     personalColor,
     redColor,
@@ -373,7 +373,7 @@ export default function ExpensesScreen() {
                     flex: 1,
                 },
                 categoryActive: {
-                    borderColor: blueColor,
+                    borderColor: linkColor,
                     backgroundColor: theme.selectedTab,
                 },
                 select: {
@@ -670,7 +670,7 @@ export default function ExpensesScreen() {
                     <ThemedText style={styles.label}>Item Name</ThemedText>
                     <TextInput
                         ref={nameInputRef}
-                        style={[styles.input, nameFocused && { borderColor: blueColor }]}
+                        style={[styles.input, nameFocused && { borderColor: linkColor }]}
                         placeholder="e.g., Spotify"
                         placeholderTextColor={theme.placeholder}
                         value={expenseName}
@@ -684,7 +684,7 @@ export default function ExpensesScreen() {
                         style={[
                             styles.input,
                             amountFocused && {
-                                borderColor: blueColor,
+                                borderColor: linkColor,
                             },
                         ]}
                         placeholder="0.00"

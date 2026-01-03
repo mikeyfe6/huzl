@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -137,18 +137,6 @@ export default function SettingsScreen() {
                     ...baseButtonText,
                     color: whiteColor,
                 },
-                logOut: {
-                    marginTop: 24,
-                },
-                logOutButton: {
-                    ...baseBorder,
-                    ...baseButton,
-                    borderColor: redColor,
-                },
-                logOutButtonText: {
-                    ...baseButtonText,
-                    color: redColor,
-                },
                 themeButton: {
                     ...baseInput(theme),
                     ...baseCenter,
@@ -164,6 +152,24 @@ export default function SettingsScreen() {
                 themeButtonTextActive: {
                     ...baseWeight,
                     color: whiteColor,
+                },
+                linksContainer: {
+                    ...baseFlex("center", "center"),
+                    ...baseGap,
+                    marginTop: 24,
+                },
+                linkText: {
+                    fontSize: 14,
+                },
+                logOutButton: {
+                    marginTop: 12,
+                    ...baseBorder,
+                    ...baseButton,
+                    borderColor: redColor,
+                },
+                logOutButtonText: {
+                    ...baseButtonText,
+                    color: redColor,
                 },
             }),
         [theme]
@@ -303,18 +309,33 @@ export default function SettingsScreen() {
                             <ThemedText style={styles.settingLabel}>Version</ThemedText>
                             <ThemedText style={styles.settingValue}>1.0.0</ThemedText>
                         </ThemedView>
+                        <View style={styles.linksContainer}>
+                            <Link href="/terms" asChild>
+                                <TouchableOpacity>
+                                    <ThemedText type="link" style={styles.linkText}>
+                                        Voorwaarden
+                                    </ThemedText>
+                                </TouchableOpacity>
+                            </Link>
+                            <ThemedText type="label">•</ThemedText>
+                            <Link href="/privacy" asChild>
+                                <TouchableOpacity>
+                                    <ThemedText type="link" style={styles.linkText}>
+                                        Privacy
+                                    </ThemedText>
+                                </TouchableOpacity>
+                            </Link>
+                        </View>
                     </ThemedView>
 
-                    <ThemedView style={[styles.logOut]}>
-                        <TouchableOpacity
-                            style={[styles.logOutButton]}
-                            onPress={async () => {
-                                await signOut();
-                            }}
-                        >
-                            <ThemedText style={styles.logOutButtonText}>Log Out</ThemedText>
-                        </TouchableOpacity>
-                    </ThemedView>
+                    <TouchableOpacity
+                        style={[styles.logOutButton]}
+                        onPress={async () => {
+                            await signOut();
+                        }}
+                    >
+                        <ThemedText style={styles.logOutButtonText}>Log Out</ThemedText>
+                    </TouchableOpacity>
                 </ThemedView>
 
                 <CurrencyPickerModal

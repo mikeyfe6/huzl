@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -197,6 +198,18 @@ export default function HomeScreen() {
                 signUpText: {
                     ...baseWeight,
                 },
+                termsText: {
+                    color: mediumGreyColor,
+                    fontSize: 12.5,
+                    marginTop: 12,
+                    marginHorizontal: "auto",
+                    textAlign: "center",
+                    maxWidth: "75%",
+                    lineHeight: 22,
+                },
+                termsLink: {
+                    fontSize: 12,
+                },
                 errorStyle: {
                     color: "red",
                     textAlign: "center",
@@ -319,6 +332,21 @@ export default function HomeScreen() {
                                 </TouchableOpacity>
                             </>
                         )}
+                        <ThemedText style={styles.termsText}>
+                            Wanneer je doorgaat met e-mail ga je automatisch akkoord met Huzl's{" "}
+                            <Link href="/terms">
+                                <ThemedText type="link" style={styles.termsLink}>
+                                    Servicevoorwaarden
+                                </ThemedText>
+                            </Link>{" "}
+                            en{" "}
+                            <Link href="/privacy">
+                                <ThemedText type="link" style={styles.termsLink}>
+                                    Privacybeleid
+                                </ThemedText>
+                            </Link>
+                            .
+                        </ThemedText>
                         {error && (
                             <ThemedText style={styles.errorStyle}>
                                 {error.charAt(0).toUpperCase() + error.slice(1)}
@@ -384,7 +412,7 @@ export default function HomeScreen() {
                                 monthlyDisposable >= 0 ? styles.statCardPositive : styles.statCardNegative,
                             ]}
                         >
-                            <ThemedText style={styles.statLabel}>Monthly Remaining</ThemedText>
+                            <ThemedText style={styles.statLabel}>Monthly Disposable</ThemedText>
                             <ThemedText style={styles.statValue}>
                                 {currencySymbol} {monthlyDisposable.toFixed(2).replace(".", ",")}
                             </ThemedText>

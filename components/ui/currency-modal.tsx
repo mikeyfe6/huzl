@@ -3,7 +3,7 @@ import { Alert, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "re
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { blueColor, whiteColor } from "@/constants/theme";
+import { linkColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { AVAILABLE_CURRENCIES, type Currency } from "@/hooks/use-currency";
 import { baseFlex, baseWeight } from "@/styles/base";
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     currencyItemSelected: {
-        backgroundColor: blueColor,
+        backgroundColor: linkColor,
     },
     currencyInfo: {
         ...baseFlex("space-between", "center"),
