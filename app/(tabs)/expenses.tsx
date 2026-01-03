@@ -482,7 +482,40 @@ export default function ExpensesScreen() {
                 expenseLabel: {
                     fontSize: 13,
                     opacity: 0.7,
-                    marginTop: 4,
+                },
+                expenseAmount: {
+                    ...baseWeight,
+                    fontSize: 13,
+                },
+                expenseMeta: {
+                    ...baseFlex("flex-start", "center"),
+                    ...baseGap,
+                    marginTop: 8,
+                },
+                badge: {
+                    ...baseBorder,
+                    paddingHorizontal: 8,
+                    paddingVertical: 3,
+                    opacity: 0.7,
+                    borderRadius: 12,
+                },
+                badgePersonal: {
+                    backgroundColor: personalColor,
+                    borderColor: personalColor,
+                },
+                badgeBusiness: {
+                    backgroundColor: businessColor,
+                    borderColor: businessColor,
+                },
+                badgeFamily: {
+                    backgroundColor: familyColor,
+                    borderColor: familyColor,
+                },
+                badgeText: {
+                    ...baseWeight,
+                    fontSize: 11,
+                    lineHeight: 11,
+                    color: theme.text,
                 },
                 expenseIcons: {
                     ...baseFlex("center", "center"),
@@ -777,24 +810,27 @@ export default function ExpensesScreen() {
                                 <View style={styles.expenseItem}>
                                     <View style={styles.expenseInfo}>
                                         <ThemedText type="defaultSemiBold">{expense.name}</ThemedText>
-                                        <ThemedText
-                                            style={[
-                                                styles.expenseLabel,
-                                                expense.category === "personal" && {
-                                                    color: theme.personalLabel,
-                                                },
-                                                expense.category === "business" && {
-                                                    color: theme.businessLabel,
-                                                },
-                                                expense.category === "family" && {
-                                                    color: theme.familyLabel,
-                                                },
-                                            ]}
-                                        >
-                                            {currencySymbol} {expense.amount.toFixed(2)} -{" "}
-                                            {getFrequencyLabel(expense.frequency)} -{" "}
-                                            {expense.category.charAt(0).toUpperCase() + expense.category.slice(1)}
-                                        </ThemedText>
+                                        <View style={styles.expenseMeta}>
+                                            <ThemedText style={styles.expenseLabel}>
+                                                <ThemedText style={styles.expenseAmount}>
+                                                    {currencySymbol} {expense.amount.toFixed(2)}
+                                                </ThemedText>{" "}
+                                                - {getFrequencyLabel(expense.frequency)}
+                                            </ThemedText>
+                                            <View
+                                                style={[
+                                                    styles.badge,
+                                                    expense.category === "personal" && styles.badgePersonal,
+                                                    expense.category === "business" && styles.badgeBusiness,
+                                                    expense.category === "family" && styles.badgeFamily,
+                                                ]}
+                                            >
+                                                <ThemedText style={styles.badgeText}>
+                                                    {expense.category.charAt(0).toUpperCase() +
+                                                        expense.category.slice(1)}
+                                                </ThemedText>
+                                            </View>
+                                        </View>
                                     </View>
                                     <View style={styles.expenseIcons}>
                                         <TouchableOpacity
