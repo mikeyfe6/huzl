@@ -381,7 +381,7 @@ export default function DebtsScreen() {
                                                     {months > 1
                                                         ? `(${months - 1} × ${currencySymbol} ${formatAmount(
                                                               debt.pay_per_month
-                                                          )}, last: ${currencySymbol} ${lastPayment})`
+                                                          )} — last: ${currencySymbol} ${lastPayment})`
                                                         : ""}
                                                 </ThemedText>
                                             );
