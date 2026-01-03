@@ -19,6 +19,7 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
+    baseEllipsis,
     baseEmpty,
     baseEmptyText,
     baseFlex,
@@ -208,6 +209,7 @@ export default function DebtsScreen() {
                 },
                 itemHeader: {
                     ...baseFlex("space-between"),
+                    ...baseGap,
                 },
                 itemTitle: {
                     flex: 1,
@@ -232,12 +234,12 @@ export default function DebtsScreen() {
                     borderTopColor: theme.dividerColor,
                 },
                 itemPayment: {
+                    fontWeight: "500",
                     fontSize: 13,
                     color: slateColor,
                 },
                 itemRemaining: {
-                    fontWeight: "500",
-                    fontSize: 13,
+                    fontSize: 12.5,
                     opacity: 0.6,
                 },
                 emptyState: {
@@ -316,7 +318,9 @@ export default function DebtsScreen() {
                             <ThemedView key={debt.id} style={[styles.item, !debt.active && { opacity: 0.5 }]}>
                                 <View style={styles.itemHeader}>
                                     <View style={styles.itemTitle}>
-                                        <ThemedText type="defaultSemiBold">{debt.name}</ThemedText>
+                                        <ThemedText type="defaultSemiBold" style={baseEllipsis}>
+                                            {debt.name}
+                                        </ThemedText>
                                         <ThemedText style={styles.itemLabel}>
                                             Total: {formatCurrency(debt.amount, currencySymbol)}
                                         </ThemedText>
@@ -377,7 +381,7 @@ export default function DebtsScreen() {
                                                     : formatAmount(debt.amount % debt.pay_per_month);
                                             return (
                                                 <ThemedText style={styles.itemRemaining}>
-                                                    Remaining: {months}{" "}
+                                                    Terms: {months}{" "}
                                                     {months > 1
                                                         ? `(${months - 1} × ${currencySymbol} ${formatAmount(
                                                               debt.pay_per_month

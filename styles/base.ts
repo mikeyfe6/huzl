@@ -102,3 +102,9 @@ export const baseIcon = {
     width: 36,
     height: 36,
 };
+
+export const baseEllipsis = {
+    whiteSpace: "nowrap" as const,
+    overflow: "hidden" as const,
+    textOverflow: "ellipsis" as const,
+};

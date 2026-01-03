@@ -33,6 +33,7 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
+    baseEllipsis,
     baseEmpty,
     baseEmptyText,
     baseFlex,
@@ -493,7 +494,7 @@ export default function ExpensesScreen() {
                 },
                 expenseMeta: {
                     ...baseFlex("flex-start", "center"),
-                    ...baseGap,
+                    ...baseSpace,
                     marginTop: 6,
                 },
                 badge: {
@@ -810,7 +811,9 @@ export default function ExpensesScreen() {
                             >
                                 <View style={styles.expenseItem}>
                                     <View style={styles.expenseInfo}>
-                                        <ThemedText type="defaultSemiBold">{expense.name}</ThemedText>
+                                        <ThemedText type="defaultSemiBold" style={baseEllipsis}>
+                                            {expense.name}
+                                        </ThemedText>
                                         <View style={styles.expenseMeta}>
                                             <ThemedText style={styles.expenseLabel}>
                                                 <ThemedText style={styles.expenseAmount}>
