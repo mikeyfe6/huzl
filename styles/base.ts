@@ -89,3 +89,16 @@ export const baseEmptyText = (theme: any) => ({
     fontSize: 18,
     opacity: 0.6,
 });
+
+export const baseIcons = {
+    ...baseFlex("center", "center"),
+    gap: 10,
+};
+
+export const baseIcon = {
+    ...baseFlex("center", "center"),
+    ...baseBorder,
+    borderRadius: 6,
+    width: 36,
+    height: 36,
+};

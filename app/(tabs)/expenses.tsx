@@ -35,6 +35,8 @@ import {
     baseEmptyText,
     baseFlex,
     baseGap,
+    baseIcon,
+    baseIcons,
     baseInput,
     baseLabel,
     baseList,
@@ -490,7 +492,7 @@ export default function ExpensesScreen() {
                 expenseMeta: {
                     ...baseFlex("flex-start", "center"),
                     ...baseGap,
-                    marginTop: 8,
+                    marginTop: 6,
                 },
                 badge: {
                     ...baseBorder,
@@ -518,13 +520,10 @@ export default function ExpensesScreen() {
                     color: theme.text,
                 },
                 expenseIcons: {
-                    ...baseFlex("center", "center"),
-                    ...baseGap,
+                    ...baseIcons,
                 },
                 expenseIcon: {
-                    ...baseBorder,
-                    borderRadius: 6,
-                    padding: 8,
+                    ...baseIcon,
                 },
                 expenseTotal: {
                     ...baseFlex("space-between"),
@@ -539,7 +538,7 @@ export default function ExpensesScreen() {
                 expenseYearly: {
                     ...baseWeight,
                     fontSize: 14,
-                    color: blueColor,
+                    color: theme.text,
                 },
                 expenseMonthly: {
                     ...baseWeight,
