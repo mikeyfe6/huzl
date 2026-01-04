@@ -37,6 +37,7 @@ export default function HomeScreen() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
     const [expenses, setExpenses] = useState<any[]>([]);
     const [debts, setDebts] = useState<any[]>([]);
@@ -50,6 +51,7 @@ export default function HomeScreen() {
 
     const handleSignUp = async () => {
         setError(null);
+        setRegistrationSuccess(false);
         if (password !== confirmPassword) {
             setError("Passwords do not match");
             return;
@@ -58,8 +60,15 @@ export default function HomeScreen() {
             setError("Password must be at least 6 characters");
             return;
         }
-        const { error } = await signUp(email.trim(), password);
-        if (error) setError(error);
+        const { error, success } = await signUp(email.trim(), password);
+        if (error) {
+            setError(error);
+        } else if (success) {
+            setRegistrationSuccess(true);
+            setIsSignUp(false);
+            setPassword("");
+            setConfirmPassword("");
+        }
     };
 
     const calculateYearlyTotal = (amount: number, freq: "daily" | "monthly" | "yearly"): number => {
@@ -115,6 +124,12 @@ export default function HomeScreen() {
         const timeout = setTimeout(() => setError(null), 7000);
         return () => clearTimeout(timeout);
     }, [error]);
+
+    useEffect(() => {
+        if (!registrationSuccess) return;
+        const timeout = setTimeout(() => setRegistrationSuccess(false), 10000);
+        return () => clearTimeout(timeout);
+    }, [registrationSuccess]);
 
     useEffect(() => {
         if (!user) return;
@@ -231,6 +246,12 @@ export default function HomeScreen() {
                     fontSize: 15,
                     color: "red",
                     textAlign: "center",
+                },
+                successText: {
+                    fontSize: 14,
+                    color: greenColor,
+                    textAlign: "center",
+                    fontWeight: "500",
                 },
                 errorHidden: {
                     opacity: 0,
@@ -369,9 +390,15 @@ export default function HomeScreen() {
                             .
                         </ThemedText>
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
-                            <ThemedText style={[styles.errorText, !error && styles.errorHidden]}>
-                                {error ? error.charAt(0).toUpperCase() + error.slice(1) : " "}
-                            </ThemedText>
+                            {registrationSuccess ? (
+                                <ThemedText style={styles.successText}>
+                                    ✓ Account created! Please check your email to confirm your account.
+                                </ThemedText>
+                            ) : (
+                                <ThemedText style={[styles.errorText, !error && styles.errorHidden]}>
+                                    {error ? error.charAt(0).toUpperCase() + error.slice(1) : " "}
+                                </ThemedText>
+                            )}
                         </View>
                     </View>
                 </ThemedView>
