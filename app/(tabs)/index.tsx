@@ -214,9 +214,18 @@ export default function HomeScreen() {
                 termsLink: {
                     fontSize: 13,
                 },
-                errorStyle: {
+                errorContainer: {
+                    minHeight: 24,
+                    justifyContent: "center",
+                    alignItems: "center",
+                },
+                errorText: {
+                    fontSize: 15,
                     color: "red",
                     textAlign: "center",
+                },
+                errorHidden: {
+                    opacity: 0,
                 },
                 user: {
                     color: mediumGreyColor,
@@ -351,11 +360,11 @@ export default function HomeScreen() {
                             </Link>
                             .
                         </ThemedText>
-                        {error && (
-                            <ThemedText style={styles.errorStyle}>
-                                {error.charAt(0).toUpperCase() + error.slice(1)}
+                        <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
+                            <ThemedText style={[styles.errorText, !error && styles.errorHidden]}>
+                                {error ? error.charAt(0).toUpperCase() + error.slice(1) : " "}
                             </ThemedText>
-                        )}
+                        </View>
                     </View>
                 </ThemedView>
             </ScrollView>
