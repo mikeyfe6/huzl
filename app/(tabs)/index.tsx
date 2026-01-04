@@ -200,7 +200,6 @@ export default function HomeScreen() {
                 },
                 termsText: {
                     color: mediumGreyColor,
-                    fontSize: 13,
                     marginTop: 12,
                     marginHorizontal: "auto",
                     textAlign: "center",
@@ -210,9 +209,18 @@ export default function HomeScreen() {
                         android: 26,
                         default: 20,
                     }),
+                    fontSize: Platform.select({
+                        ios: 14,
+                        android: 14,
+                        default: 12,
+                    }),
                 },
                 termsLink: {
-                    fontSize: 13,
+                    fontSize: Platform.select({
+                        ios: 14,
+                        android: 14,
+                        default: 12,
+                    }),
                 },
                 errorContainer: {
                     minHeight: 24,
