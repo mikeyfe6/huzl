@@ -103,11 +103,14 @@ export default function SettingsScreen() {
                 settingItem: {
                     paddingTop: 12,
                     paddingBottom: 20,
-                    borderBottomWidth: 1,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
                     borderBottomColor: theme.dividerColor,
                 },
                 settingItemNoBorder: {
                     borderBottomWidth: 0,
+                },
+                settingItemLessPadding: {
+                    paddingBottom: 8,
                 },
                 settingLabel: {
                     ...baseWeight,
@@ -217,7 +220,9 @@ export default function SettingsScreen() {
                         <ThemedText style={styles.settingTitle} type="subtitle">
                             Profile
                         </ThemedText>
-                        <ThemedView style={[styles.settingItem, styles.settingItemNoBorder]}>
+                        <ThemedView
+                            style={[styles.settingItem, styles.settingItemNoBorder, styles.settingItemLessPadding]}
+                        >
                             <ThemedText style={styles.settingLabel}>Email</ThemedText>
                             <TextInput
                                 style={styles.input}

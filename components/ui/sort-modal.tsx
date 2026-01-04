@@ -70,7 +70,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                     paddingVertical: 12,
                 },
                 itemDivider: {
-                    borderBottomWidth: 1,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
                     borderBottomColor: theme.dividerColor,
                 },
                 itemLeft: {
