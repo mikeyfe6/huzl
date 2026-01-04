@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -200,15 +200,19 @@ export default function HomeScreen() {
                 },
                 termsText: {
                     color: mediumGreyColor,
-                    fontSize: 12.5,
+                    fontSize: 13,
                     marginTop: 12,
                     marginHorizontal: "auto",
                     textAlign: "center",
-                    maxWidth: "75%",
-                    lineHeight: 22,
+                    maxWidth: "90%",
+                    lineHeight: Platform.select({
+                        ios: 26,
+                        android: 26,
+                        default: 20,
+                    }),
                 },
                 termsLink: {
-                    fontSize: 12,
+                    fontSize: 13,
                 },
                 errorStyle: {
                     color: "red",

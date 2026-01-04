@@ -147,16 +147,15 @@ export default function TermsScreen() {
                     10. Contact
                 </ThemedText>
                 <ThemedText style={styles.paragraph}>
-                    Voor vragen over deze servicevoorwaarden kun je contact opnemen met Menefex via de website{" "}
-                    <ExternalLink href="https://menefex.nl">
-                        <ThemedText type="link">menefex.nl</ThemedText>
-                    </ExternalLink>{" "}
-                    of per e-mail via de contactgegevens op de website.
+                    Voor vragen over deze servicevoorwaarden kun je contact opnemen met Menefex via de website of per
+                    e-mail via de contactgegevens op de website.
                 </ThemedText>
 
                 <ThemedText style={[styles.paragraph, styles.updated]}>
                     Menefex{"\n"}
                     KVK-nummer: 76045315{"\n"}
+                    E-mail: info@menefex.nl{"\n"}
+                    Website:{" "}
                     <ExternalLink href="https://menefex.nl">
                         <ThemedText type="link">menefex.nl</ThemedText>
                     </ExternalLink>
