@@ -39,13 +39,15 @@ export default function SettingsScreen() {
     const { preference, updatePreference } = useThemePreference();
     const { symbol: currencySymbol, code: currencyCode } = useCurrency();
 
+    const [email, setEmail] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
     const [currencyModalVisible, setCurrencyModalVisible] = useState(false);
 
     useEffect(() => {
-        if (user?.user_metadata) {
-            setDisplayName(user.user_metadata.display_name || "");
+        if (user) {
+            setEmail(user.email || "");
+            setDisplayName(user.user_metadata?.display_name || "");
         }
     }, [user]);
 
@@ -54,11 +56,17 @@ export default function SettingsScreen() {
 
         setLoading(true);
         try {
-            const { error } = await supabase.auth.updateUser({
+            const updateData: any = {
                 data: {
                     display_name: displayName,
                 },
-            });
+            };
+
+            if (email !== user.email) {
+                updateData.email = email;
+            }
+
+            const { error } = await supabase.auth.updateUser(updateData);
 
             if (error) {
                 Alert.alert("Error", `Failed to update profile: ${error.message}`);
@@ -133,6 +141,14 @@ export default function SettingsScreen() {
                     ...baseButton,
                     backgroundColor: greenColor,
                 },
+                saveButtonDisabled: {
+                    opacity: 0.5,
+                },
+                hr: {
+                    borderBottomColor: theme.dividerColor,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    marginTop: 16,
+                },
                 saveButtonText: {
                     ...baseButtonText,
                     color: whiteColor,
@@ -182,6 +198,13 @@ export default function SettingsScreen() {
         return null;
     }, [user]);
 
+    const hasProfileChanges = useMemo(() => {
+        const baseEmail = user?.email || "";
+        const baseDisplayName = user?.user_metadata?.display_name || "";
+
+        return email.trim() !== baseEmail || displayName.trim() !== baseDisplayName;
+    }, [user, email, displayName]);
+
     return (
         <AuthGate>
             <ScrollView contentContainerStyle={styles.container}>
@@ -194,9 +217,18 @@ export default function SettingsScreen() {
                         <ThemedText style={styles.settingTitle} type="subtitle">
                             Profile
                         </ThemedText>
-                        <ThemedView style={styles.settingItem}>
+                        <ThemedView style={[styles.settingItem, styles.settingItemNoBorder]}>
                             <ThemedText style={styles.settingLabel}>Email</ThemedText>
-                            <ThemedText style={styles.settingValue}>{user?.email || "Not set"}</ThemedText>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="your@email.com"
+                                placeholderTextColor={theme.placeholder}
+                                value={email}
+                                onChangeText={setEmail}
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                                autoComplete="email"
+                            />
                         </ThemedView>
                         <ThemedView style={[styles.settingItem, styles.settingItemNoBorder]}>
                             <ThemedText style={styles.settingLabel}>Display Name</ThemedText>
@@ -208,12 +240,18 @@ export default function SettingsScreen() {
                                 onChangeText={setDisplayName}
                             />
                         </ThemedView>
-                        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile} disabled={loading}>
+                        <TouchableOpacity
+                            style={[styles.saveButton, (!hasProfileChanges || loading) && styles.saveButtonDisabled]}
+                            onPress={handleSaveProfile}
+                            disabled={loading || !hasProfileChanges}
+                        >
                             <ThemedText style={styles.saveButtonText}>
                                 {loading ? "Saving..." : "Save Profile"}
                             </ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
+
+                    <View style={styles.hr} />
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">

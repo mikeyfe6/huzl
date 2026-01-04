@@ -532,7 +532,7 @@ export default function ExpensesScreen() {
                 expenseTotal: {
                     ...baseFlex("space-between"),
                     paddingTop: 8,
-                    borderTopWidth: 1,
+                    borderTopWidth: StyleSheet.hairlineWidth,
                     borderTopColor: theme.dividerColor,
                 },
                 expensePeriod: {

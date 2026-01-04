@@ -230,7 +230,7 @@ export default function DebtsScreen() {
                     flexWrap: "wrap",
                     gap: 4,
                     paddingTop: 8,
-                    borderTopWidth: 1,
+                    borderTopWidth: StyleSheet.hairlineWidth,
                     borderTopColor: theme.dividerColor,
                 },
                 itemPayment: {

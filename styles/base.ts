@@ -1,10 +1,11 @@
 import { whiteColor } from "@/constants/theme";
+import { StyleSheet } from "react-native";
 
 export const baseGap = { gap: 12 };
 export const baseSpace = { gap: 8 };
 export const baseWeight = { fontWeight: "600" as const };
 export const baseRadius = { borderRadius: 8 };
-export const baseBorder = { borderWidth: 1 };
+export const baseBorder = { borderWidth: StyleSheet.hairlineWidth };
 export const baseSize = { fontSize: 16 };
 
 export const baseFlex = (

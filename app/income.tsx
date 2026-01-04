@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -20,7 +20,7 @@ export default function ModalScreen() {
     const { user, refreshUser } = useAuth();
     const { symbol: currencySymbol } = useCurrency();
 
-    const [income, setIncome] = useState<string>(() => {
+    const baseIncomeString = useMemo(() => {
         const val = (user?.user_metadata as any)?.monthly_income;
         if (typeof val === "number") return val.toFixed(2);
         if (typeof val === "string" && val) {
@@ -28,8 +28,14 @@ export default function ModalScreen() {
             return Number.isNaN(parsed) ? val : parsed.toFixed(2);
         }
         return "";
-    });
+    }, [user]);
+
+    const [income, setIncome] = useState<string>(baseIncomeString);
     const [saving, setSaving] = useState(false);
+
+    const hasIncomeChanges = useMemo(() => {
+        return income.trim() !== baseIncomeString.trim();
+    }, [income, baseIncomeString]);
 
     const handleSave = async () => {
         if (!user) return;
@@ -58,6 +64,10 @@ export default function ModalScreen() {
             setSaving(false);
         }
     };
+
+    useEffect(() => {
+        setIncome(baseIncomeString);
+    }, [baseIncomeString]);
 
     const styles = useMemo(
         () =>
@@ -98,6 +108,9 @@ export default function ModalScreen() {
                     ...baseButton,
                     backgroundColor: greenColor,
                 },
+                saveButtonDisabled: {
+                    opacity: 0.5,
+                },
                 saveButtonText: {
                     ...baseButtonText,
                 },
@@ -126,7 +139,11 @@ export default function ModalScreen() {
                     onChangeText={(text) => setIncome(text)}
                 />
                 <ThemedView style={styles.actions}>
-                    <TouchableOpacity style={styles.saveButton} disabled={saving} onPress={handleSave}>
+                    <TouchableOpacity
+                        style={[styles.saveButton, (saving || !hasIncomeChanges) && styles.saveButtonDisabled]}
+                        disabled={saving || !hasIncomeChanges}
+                        onPress={handleSave}
+                    >
                         <ThemedText style={styles.saveButtonText}>{saving ? "Saving..." : "Save"}</ThemedText>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.cancelLink} onPress={() => router.back()}>
