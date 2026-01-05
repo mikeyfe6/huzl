@@ -447,7 +447,7 @@ export default function DebtsScreen() {
                                             );
                                         })()
                                     ) : (
-                                        <ThemedText style={styles.itemRemaining}>Remaining: —</ThemedText>
+                                        <ThemedText style={styles.itemRemaining}>Terms: —</ThemedText>
                                     )}
                                 </View>
                                 {paymentId === debt.id && (
