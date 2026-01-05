@@ -286,7 +286,7 @@ export default function HomeScreen() {
                 statsContainer: {
                     ...baseGap,
                     width: "100%",
-                    maxWidth: 400,
+                    maxWidth: 500,
                     marginTop: 24,
                     marginBottom: 64,
                 },
