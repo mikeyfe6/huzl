@@ -1,7 +1,7 @@
 {
     "common": {
         "welcome": "Welkom!",
-        "loading": "Laden..."
+        "loading": "Laden …"
     },
     "auth": {
         "getStarted": "Maak een account aan om aan de slag te gaan",
@@ -39,9 +39,44 @@
         "monthlyDebts": "Maandelijkse Schulden",
         "monthlyDisposable": "Maandelijks Beschikbaar"
     },
+    "expenses": {
+        "title": "Uitgaven",
+        "name": "Naam",
+        "namePlaceholder": "Bijv. Spotify",
+        "amount": "Bedrag",
+        "category": "Categorie",
+        "personal": "Persoonlijk",
+        "business": "Zakelijk",
+        "family": "Familie",
+        "frequency": "Frequentie",
+        "daily": "Dagelijks",
+        "monthly": "Maandelijks",
+        "yearly": "Jaarlijks",
+        "addExpense": "Uitgave Toevoegen",
+        "updateExpense": "Uitgave Bijwerken",
+        "cancel": "Annuleren",
+        "yourExpenses": "Jouw Uitgaven",
+        "period": "Per jaar / maand",
+        "noExpenses": "Nog geen uitgaven",
+        "yearlySpend": "Totale Jaarlijkse Uitgaven",
+        "monthlySpend": "Totale Maandelijkse Uitgaven",
+        "dailySpend": "Totale Dagelijkse Uitgaven",
+        "delete": "Verwijder",
+        "deleteExpense": "Verwijder uitgave"
+    },
+    "sorting": {
+        "sortBy": "Sorteren op",
+        "dateAdded": "Datum Toegevoegd",
+        "nameAToZ": "Naam A tot Z",
+        "nameZToA": "Naam Z tot A",
+        "amountLowToHigh": "Bedrag Laag naar Hoog",
+        "amountHighToLow": "Bedrag Hoog naar Laag",
+        "cancel": "Annuleren"
+    },
     "debts": {
         "title": "Schulden",
         "name": "Naam",
+        "namePlacholder": "Bijv. Studielening",
         "maxAmount": "Maximaal Bedrag",
         "monthlyPayment": "Maandelijke Betaling",
         "addDebt": "Schuld Toevoegen",
@@ -57,16 +92,6 @@
         "deleteConfirm": "Weet je zeker dat je wilt verwijderen",
         "delete": "Verwijderen",
         "amountPaid": "Betaald bedrag"
-    },
-    "expenses": {
-        "title": "Uitgaven",
-        "addExpense": "Uitgave Toevoegen",
-        "updateExpense": "Uitgave Bijwerken",
-        "yourExpenses": "Jouw Uitgaven",
-        "noExpenses": "Nog geen uitgaven",
-        "daily": "Dagelijks",
-        "monthly": "Maandelijks",
-        "yearly": "Jaarlijks"
     },
     "budgets": {
         "title": "Budgetten",

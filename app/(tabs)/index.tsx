@@ -334,7 +334,7 @@ export default function HomeScreen() {
     if (loading) {
         return (
             <ThemedView style={styles.container}>
-                <ThemedText style={baseWeight}>Loading …</ThemedText>
+                <ThemedText style={baseWeight}>{t("common.loading")}</ThemedText>
             </ThemedView>
         );
     }

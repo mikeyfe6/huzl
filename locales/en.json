@@ -1,7 +1,7 @@
 {
     "common": {
         "welcome": "Welcome!",
-        "loading": "Loading..."
+        "loading": "Loading …"
     },
     "auth": {
         "getStarted": "Create your account to get started",
@@ -39,9 +39,44 @@
         "monthlyDebts": "Monthly Debts",
         "monthlyDisposable": "Monthly Disposable"
     },
+    "expenses": {
+        "title": "Expenses",
+        "name": "Name",
+        "namePlaceholder": "e.g. Spotify",
+        "amount": "Amount",
+        "category": "Category",
+        "personal": "Personal",
+        "business": "Business",
+        "family": "Family",
+        "frequency": "Frequency",
+        "daily": "Daily",
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "addExpense": "Add Expense",
+        "updateExpense": "Update Expense",
+        "cancel": "Cancel",
+        "yourExpenses": "Your Expenses",
+        "period": "Yearly / Monthly",
+        "noExpenses": "No expenses yet",
+        "yearlySpend": "Total Yearly Spend",
+        "monthlySpend": "Total Monthly Spend",
+        "dailySpend": "Total Daily Spend",
+        "delete": "Delete",
+        "deleteExpense": "Delete expense"
+    },
+    "sorting": {
+        "sortBy": "Sort By",
+        "dateAdded": "Date Added",
+        "nameAToZ": "Name A to Z",
+        "nameZToA": "Name Z to A",
+        "amountLowToHigh": "Amount Low to High",
+        "amountHighToLow": "Amount High to Low",
+        "cancel": "Cancel"
+    },
     "debts": {
         "title": "Debts",
         "name": "Name",
+        "namePlaceholder": "e.g. Student Loan",
         "maxAmount": "Max Amount",
         "monthlyPayment": "Monthly Payment",
         "addDebt": "Add Debt",
@@ -57,16 +92,6 @@
         "deleteConfirm": "Are you sure you want to delete",
         "delete": "Delete",
         "amountPaid": "Amount paid"
-    },
-    "expenses": {
-        "title": "Expenses",
-        "addExpense": "Add Expense",
-        "updateExpense": "Update Expense",
-        "yourExpenses": "Your Expenses",
-        "noExpenses": "No expenses yet",
-        "daily": "Daily",
-        "monthly": "Monthly",
-        "yearly": "Yearly"
     },
     "budgets": {
         "title": "Budgets",

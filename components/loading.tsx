@@ -3,8 +3,10 @@ import { ThemedView } from "@/components/themed-view";
 import { useAuth } from "@/hooks/use-auth";
 import { Redirect, useRootNavigationState } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export function AuthGate({ children }: { readonly children: React.ReactNode }) {
+    const { t } = useTranslation();
     const { user, loading: authLoading } = useAuth();
     const rootNavigationState = useRootNavigationState();
 
@@ -23,7 +25,7 @@ export function AuthGate({ children }: { readonly children: React.ReactNode }) {
                         fontWeight: "600",
                     }}
                 >
-                    Loading …
+                    {t("common.loading")}
                 </ThemedText>
             </ThemedView>
         );

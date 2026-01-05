@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -43,6 +44,7 @@ type DebtItem = {
 };
 
 export default function DebtsScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
 
     const { symbol: currencySymbol } = useCurrency();
@@ -299,9 +301,9 @@ export default function DebtsScreen() {
             <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
                     <ThemedText type="title" style={styles.heading}>
-                        Debts
+                        {t("debts.title")}
                     </ThemedText>
-                    <ThemedText style={styles.label}>Name</ThemedText>
+                    <ThemedText style={styles.label}>{t("debts.name")}</ThemedText>
                     <TextInput
                         ref={nameInputRef}
                         style={styles.input}

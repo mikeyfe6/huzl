@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -15,7 +16,7 @@ import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { ExpensePieChart } from "@/components/ui/expense-pie-chart";
-import { getSortLabel, SortModal, SortOption } from "@/components/ui/sort-modal";
+import { SORT_OPTIONS, SortModal, SortOption } from "@/components/ui/sort-modal";
 
 import {
     businessColor,
@@ -63,6 +64,7 @@ interface ExpenseItem {
 }
 
 export default function ExpensesScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
 
     const [expenseName, setExpenseName] = useState("");
@@ -224,14 +226,14 @@ export default function ExpensesScreen() {
 
     const confirmDeleteExpense = (id: string, name: string) => {
         if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`Delete "${name}"?`);
+            const ok = globalThis.confirm(`${t("expenses.delete")} "${name}"?`);
             if (ok) handleDeleteExpense(id);
             return;
         }
 
-        Alert.alert("Delete expense", `Are you sure you want to delete "${name}"?`, [
-            { text: "Cancel", style: "cancel" },
-            { text: "Delete", style: "destructive", onPress: () => handleDeleteExpense(id) },
+        Alert.alert(t("expenses.deleteExpense"), `${t("expenses.delete")} "${name}"?`, [
+            { text: t("expenses.cancel"), style: "cancel" },
+            { text: t("expenses.delete"), style: "destructive", onPress: () => handleDeleteExpense(id) },
         ]);
     };
 
@@ -249,6 +251,20 @@ export default function ExpensesScreen() {
             setLoading(false);
         }
     };
+
+    const sortLabelMap = useMemo(
+        () => Object.fromEntries(SORT_OPTIONS.map((option) => [option.value, t(option.labelKey)])),
+        [t]
+    );
+
+    const categoryLabelMap = useMemo(
+        () => ({
+            personal: t("expenses.personal"),
+            business: t("expenses.business"),
+            family: t("expenses.family"),
+        }),
+        [t]
+    );
 
     const getSortedExpenses = (): ExpenseItem[] => {
         const sorted = [...expenses];
@@ -295,11 +311,11 @@ export default function ExpensesScreen() {
     const getFrequencyLabel = (freq: Frequency): string => {
         switch (freq) {
             case "daily":
-                return "Daily";
+                return t("expenses.daily");
             case "monthly":
-                return "Monthly";
+                return t("expenses.monthly");
             case "yearly":
-                return "Yearly";
+                return t("expenses.yearly");
         }
     };
 
@@ -664,14 +680,14 @@ export default function ExpensesScreen() {
             <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
                     <ThemedText type="title" style={styles.heading}>
-                        Expenses
+                        {t("expenses.title")}
                     </ThemedText>
 
-                    <ThemedText style={styles.label}>Item Name</ThemedText>
+                    <ThemedText style={styles.label}>{t("expenses.name")}</ThemedText>
                     <TextInput
                         ref={nameInputRef}
                         style={[styles.input, nameFocused && { borderColor: linkColor }]}
-                        placeholder="e.g., Spotify"
+                        placeholder={t("expenses.namePlaceholder")}
                         placeholderTextColor={theme.placeholder}
                         value={expenseName}
                         onChangeText={setExpenseName}
@@ -679,7 +695,9 @@ export default function ExpensesScreen() {
                         onBlur={() => setNameFocused(false)}
                     />
 
-                    <ThemedText style={styles.label}>Amount ({currencySymbol})</ThemedText>
+                    <ThemedText style={styles.label}>
+                        {t("expenses.amount")} ({currencySymbol})
+                    </ThemedText>
                     <TextInput
                         style={[
                             styles.input,
@@ -696,7 +714,7 @@ export default function ExpensesScreen() {
                         onBlur={() => setAmountFocused(false)}
                     />
 
-                    <ThemedText style={styles.label}>Category</ThemedText>
+                    <ThemedText style={styles.label}>{t("expenses.category")}</ThemedText>
                     <View style={styles.categoryGroup}>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "personal" && styles.categoryActive]}
@@ -706,7 +724,7 @@ export default function ExpensesScreen() {
                                 selected: category === "personal",
                             }}
                         >
-                            <ThemedText>Personal</ThemedText>
+                            <ThemedText>{t("expenses.personal")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "business" && styles.categoryActive]}
@@ -716,7 +734,7 @@ export default function ExpensesScreen() {
                                 selected: category === "business",
                             }}
                         >
-                            <ThemedText>Business</ThemedText>
+                            <ThemedText>{t("expenses.business")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "family" && styles.categoryActive]}
@@ -726,11 +744,11 @@ export default function ExpensesScreen() {
                                 selected: category === "family",
                             }}
                         >
-                            <ThemedText>Family</ThemedText>
+                            <ThemedText>{t("expenses.family")}</ThemedText>
                         </TouchableOpacity>
                     </View>
 
-                    <ThemedText style={styles.label}>Frequency</ThemedText>
+                    <ThemedText style={styles.label}>{t("expenses.frequency")}</ThemedText>
                     <View style={[styles.select]}>
                         <Picker
                             selectedValue={frequency}
@@ -749,9 +767,9 @@ export default function ExpensesScreen() {
                             ]}
                             itemStyle={styles.selectOption}
                         >
-                            <Picker.Item label="Daily" value="daily" />
-                            <Picker.Item label="Monthly" value="monthly" />
-                            <Picker.Item label="Yearly" value="yearly" />
+                            <Picker.Item label={t("expenses.daily")} value="daily" />
+                            <Picker.Item label={t("expenses.monthly")} value="monthly" />
+                            <Picker.Item label={t("expenses.yearly")} value="yearly" />
                         </Picker>
                         {Platform.OS === "web" && (
                             <Ionicons name="chevron-down" size={18} color={theme.inputText} style={styles.selectIcon} />
@@ -764,7 +782,7 @@ export default function ExpensesScreen() {
                             onPress={handleAddExpense}
                         >
                             <ThemedText style={styles.buttonText}>
-                                {editingId ? "Update Expense" : "Add Expense"}
+                                {editingId ? t("expenses.updateExpense") : t("expenses.addExpense")}
                             </ThemedText>
                         </TouchableOpacity>
                         {editingId && (
@@ -772,7 +790,7 @@ export default function ExpensesScreen() {
                                 style={[styles.button, { backgroundColor: redColor }]}
                                 onPress={handleCancelEdit}
                             >
-                                <ThemedText style={styles.buttonText}>Cancel</ThemedText>
+                                <ThemedText style={styles.buttonText}>{t("expenses.cancel")}</ThemedText>
                             </TouchableOpacity>
                         )}
                     </View>
@@ -782,7 +800,7 @@ export default function ExpensesScreen() {
                     <ThemedView style={styles.expenseList}>
                         <View style={styles.expenseHeader}>
                             <View style={styles.expenseTitle}>
-                                <ThemedText type="subtitle">Expenses List</ThemedText>
+                                <ThemedText type="subtitle">{t("expenses.yourExpenses")}</ThemedText>
                                 <ThemedText style={styles.expenseNumber}>({sortedExpenses.length})</ThemedText>
                             </View>
                             <TouchableOpacity
@@ -792,10 +810,11 @@ export default function ExpensesScreen() {
                                 accessibilityLabel="Open sort options"
                             >
                                 <Ionicons name="swap-vertical" size={16} color={theme.label} />
-                                <ThemedText style={styles.sortTriggerText}>{getSortLabel(sortOption)}</ThemedText>
+                                <ThemedText style={styles.sortTriggerText}>{sortLabelMap[sortOption]}</ThemedText>
                                 <Ionicons name="chevron-down" size={16} color={theme.label} />
                             </TouchableOpacity>
                         </View>
+
                         <SortModal
                             visible={sortModalVisible}
                             sortOption={sortOption}
@@ -876,7 +895,7 @@ export default function ExpensesScreen() {
                                     </View>
                                 </View>
                                 <View style={styles.expenseTotal}>
-                                    <ThemedText style={styles.expensePeriod}>Yearly / Monthly:</ThemedText>
+                                    <ThemedText style={styles.expensePeriod}>{t("expenses.period")}:</ThemedText>
                                     <View style={styles.expenseAmounts}>
                                         <ThemedText style={styles.expenseYearly}>
                                             {formatCurrency(expense.yearlyTotal, currencySymbol)}
@@ -894,24 +913,24 @@ export default function ExpensesScreen() {
                 {expenses.length > 0 && (
                     <>
                         <ThemedView style={[styles.totalSection, styles.totalYear]}>
-                            <ThemedText type="subtitle">Total Yearly Spend</ThemedText>
+                            <ThemedText type="subtitle">{t("expenses.yearlySpend")}</ThemedText>
                             <ThemedText style={styles.totalAmount}>
                                 {formatCurrency(totalYearlySpend, currencySymbol)}
                             </ThemedText>
                             <ThemedText>
-                                Personal:{" "}
+                                {t("expenses.personal")}:{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(personalYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
-                                Business:{" "}
+                                {t("expenses.business")}:{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(businessYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
-                                Family:{" "}
+                                {t("expenses.family")}:{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(familyYearlySpend, currencySymbol)}
                                 </ThemedText>
@@ -920,14 +939,14 @@ export default function ExpensesScreen() {
 
                         <View style={styles.totalDetails}>
                             <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalMonth]}>
-                                <ThemedText type="defaultSemiBold">Total Monthly Spend</ThemedText>
+                                <ThemedText type="defaultSemiBold">{t("expenses.monthlySpend")}</ThemedText>
                                 <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
                                     {formatCurrency(totalMonthlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedView>
 
                             <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalDay]}>
-                                <ThemedText type="defaultSemiBold">Total Daily Spend</ThemedText>
+                                <ThemedText type="defaultSemiBold">{t("expenses.dailySpend")}</ThemedText>
                                 <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
                                     {formatCurrency(totalDailySpend, currencySymbol)}
                                 </ThemedText>
@@ -998,7 +1017,7 @@ export default function ExpensesScreen() {
                                                     ]}
                                                 />
                                                 <ThemedText style={styles.chartButtonText}>
-                                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                                    {categoryLabelMap[cat]}
                                                 </ThemedText>
                                                 <ThemedText style={[styles.chartButtonText, styles.chartButtonLabel]}>
                                                     {percent.toFixed(1)}%
