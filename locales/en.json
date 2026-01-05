@@ -10,6 +10,11 @@
         "budgets": "Budgets",
         "settings": "Settings"
     },
+    "modal": {
+        "income": "Income",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+    },
     "auth": {
         "getStarted": "Create your account to get started",
         "signInOrCreate": "Sign in or create an account to continue",
@@ -166,8 +171,135 @@
         "chf": "Swiss Franc",
         "sek": "Swedish Krona"
     },
+    "income": {
+        "setIncome": "Set your monthly income",
+        "setIncomeLabel": "Used for budgets and summaries.",
+        "amount": "Amount",
+        "saving": "Saving …",
+        "saveIncome": "Save Income",
+        "cancel": "Cancel"
+    },
     "language": {
         "selectLanguage": "Select Language",
         "close": "Close"
+    },
+    "privacy": {
+        "title": "Privacy Policy",
+        "updated": "Last updated: January 3, 2026",
+        "back": "Back",
+        "section1": {
+            "title": "1. Introduction",
+            "content": "Menefex, owner of Huzl, greatly values the protection of your privacy and personal data. This privacy policy explains what data we collect, how we use it, and what rights you have."
+        },
+        "section2": {
+            "title": "2. What Data Do We Collect?",
+            "accountData": "Account Data",
+            "accountDataDesc": "Email address, password (stored encrypted), and optional profile information such as your name.",
+            "financialData": "Financial Data",
+            "financialDataDesc": "The income, expenses, budgets, and debts you enter in the application. This data remains private and is only visible to you.",
+            "usageData": "Usage Data",
+            "usageDataDesc": "Information about how you use the application, such as login data and technical information (device type, operating system)."
+        },
+        "section3": {
+            "title": "3. Why Do We Use Your Data?",
+            "content": "• Providing and improving our service\n• Managing your account and authentication\n• Storing and presenting your financial overviews\n• Sending important updates about the application\n• Ensuring the security and reliability of the application"
+        },
+        "section4": {
+            "title": "4. How Do We Store Your Data?",
+            "content": "Your data is securely stored via Supabase, a renowned cloud database provider with servers in the European Union. All connections are encrypted via HTTPS. Passwords are never stored in plain text but always encrypted (hashed)."
+        },
+        "section5": {
+            "title": "5. Do We Share Your Data?",
+            "content": "No. We do not sell, rent, or share your personal data with third parties for marketing or commercial purposes. Your financial data is strictly private and only accessible to you.\n\nWe use Supabase for hosting and database management. Supabase has access to the infrastructure but not to the contents of your data for purposes other than providing their service."
+        },
+        "section6": {
+            "title": "6. Your Rights (GDPR)",
+            "intro": "Under the General Data Protection Regulation (GDPR), you have the following rights:",
+            "right1": "Right to Access",
+            "right1Desc": "You can request what data we have about you",
+            "right2": "Right to Rectification",
+            "right2Desc": "You can have incorrect data corrected",
+            "right3": "Right to Erasure",
+            "right3Desc": "You can have your account and all associated data deleted",
+            "right4": "Right to Data Portability",
+            "right4Desc": "You can request your data in a structured format",
+            "right5": "Right to Object",
+            "right5Desc": "You can object to the processing of your data"
+        },
+        "section7": {
+            "title": "7. Cookies and Tracking",
+            "content": "Huzl uses only technically necessary cookies for authentication and application functionality. We do not use tracking cookies for advertising or marketing purposes."
+        },
+        "section8": {
+            "title": "8. Retention Period",
+            "content": "We retain your data as long as you have an active account. If you delete your account, all your data will be permanently removed from our systems within 30 days."
+        },
+        "section9": {
+            "title": "9. Security",
+            "content": "We take reasonable technical and organizational measures to protect your data against loss, misuse, and unauthorized access. All communication takes place via encrypted connections (HTTPS/SSL)."
+        },
+        "section10": {
+            "title": "10. Minors",
+            "content": "Huzl is intended for individuals 16 years of age and older. We do not knowingly collect data from persons under 16 years of age."
+        },
+        "section11": {
+            "title": "11. Changes to This Policy",
+            "content": "We may update this privacy policy from time to time. Changes will be published in the application. We recommend you review this policy regularly."
+        },
+        "section12": {
+            "title": "12. Contact",
+            "content": "For questions about this privacy policy or to exercise your rights, you can contact us at:"
+        }
+    },
+    "terms": {
+        "title": "Terms of Service",
+        "updated": "Last updated: January 3, 2026",
+        "back": "Back",
+        "section1": {
+            "title": "1. Acceptance of Terms",
+            "content": "By using Huzl, a product of Menefex, you agree to these terms of service. If you do not agree with these terms, you may not use the application."
+        },
+        "section2": {
+            "title": "2. Description of Service",
+            "content": "Huzl is a financial management tool that allows individuals and entrepreneurs to track their income, expenses, budgets, and debts. The application provides insight into your financial situation through overviews and charts."
+        },
+        "section3": {
+            "title": "3. User Account",
+            "content": "You are responsible for securing your account and password. You are fully responsible for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account."
+        },
+        "section4": {
+            "title": "4. Accuracy of Data",
+            "content": "Huzl is a tool for tracking your finances. The information you enter and the calculations the application makes are based on your input. Menefex is not responsible for inaccuracies in the data you enter or decisions you make based on information in the application."
+        },
+        "section5": {
+            "title": "5. Intellectual Property",
+            "content": "All rights to the application, including but not limited to software, design, logos, and text, are held by Menefex. It is not permitted to copy, modify, or distribute these without prior written permission."
+        },
+        "section6": {
+            "title": "6. Limitation of Liability",
+            "content": "Huzl is offered \"as is\" without any warranty. Menefex is not liable for any direct, indirect, incidental, or consequential damages arising from the use or inability to use the application, including but not limited to financial losses or loss of data."
+        },
+        "section7": {
+            "title": "7. Termination",
+            "content": "We reserve the right to terminate or suspend your access to the application at any time, with or without reason, with or without notice. Upon termination, all provisions that are intended to survive termination shall remain in effect."
+        },
+        "section8": {
+            "title": "8. Changes",
+            "content": "We reserve the right to modify these terms at any time. Changes take effect as soon as they are published in the application. Your use of the application after changes means you accept the new terms."
+        },
+        "section9": {
+            "title": "9. Applicable Law",
+            "content": "These terms are governed by Dutch law. Disputes will be submitted to the competent court in the Netherlands."
+        },
+        "section10": {
+            "title": "10. Contact",
+            "content": "For questions about these terms of service, you can contact Menefex via the website or by email at the contact details on the website."
+        },
+        "contact": {
+            "name": "Menefex",
+            "kvk": "Chamber of Commerce number: 76045315",
+            "email": "Email: info@menefex.nl",
+            "website": "Website:"
+        }
     }
 }

@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -15,6 +16,7 @@ import { Colors, greenColor, silverColor } from "@/constants/theme";
 import { baseButton, baseButtonText, baseFlex, baseGap, baseInput, baseSelect, baseWeight } from "@/styles/base";
 
 export default function ModalScreen() {
+    const { t } = useTranslation();
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { user, refreshUser } = useAuth();
@@ -126,10 +128,12 @@ export default function ModalScreen() {
         <ThemedView style={styles.outerContainer}>
             <ThemedView style={styles.container}>
                 <ThemedText type="title" style={styles.title}>
-                    Set Monthly Income
+                    {t("income.setIncome")}
                 </ThemedText>
-                <ThemedText style={styles.hint}>Used for budget and summaries.</ThemedText>
-                <ThemedText style={styles.label}>Amount ({currencySymbol})</ThemedText>
+                <ThemedText style={styles.hint}>{t("income.setIncomeLabel")}</ThemedText>
+                <ThemedText style={styles.label}>
+                    {t("income.amount")} ({currencySymbol})
+                </ThemedText>
                 <TextInput
                     style={styles.input}
                     placeholder="0.00"
@@ -144,10 +148,12 @@ export default function ModalScreen() {
                         disabled={saving || !hasIncomeChanges}
                         onPress={handleSave}
                     >
-                        <ThemedText style={styles.saveButtonText}>{saving ? "Saving..." : "Save"}</ThemedText>
+                        <ThemedText style={styles.saveButtonText}>
+                            {saving ? t("income.saving") : t("income.saveIncome")}
+                        </ThemedText>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.cancelLink} onPress={() => router.back()}>
-                        <ThemedText type="danger">Cancel</ThemedText>
+                        <ThemedText type="danger">{t("income.cancel")}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
             </ThemedView>

@@ -10,6 +10,11 @@
         "budgets": "Budgetten",
         "settings": "Instellingen"
     },
+    "modal": {
+        "income": "Inkomen",
+        "terms": "Servicevoorwaarden",
+        "privacy": "Privacybeleid"
+    },
     "auth": {
         "getStarted": "Maak een account aan om aan de slag te gaan",
         "signInOrCreate": "Meld je aan of maak een account om door te gaan",
@@ -166,8 +171,135 @@
         "chf": "Zwitserse Frank",
         "sek": "Zweedse Kroon"
     },
+    "income": {
+        "setIncome": "Stel je maandelijkse inkomen in",
+        "setIncomeLabel": "Wordt gebruikt voor budgetten en overzichten.",
+        "amount": "Bedrag",
+        "saving": "Opslaan …",
+        "saveIncome": "Inkomen opslaan",
+        "cancel": "Annuleren"
+    },
     "language": {
         "selectLanguage": "Selecteer Taal",
         "close": "Sluiten"
+    },
+    "privacy": {
+        "title": "Privacybeleid",
+        "updated": "Laatst bijgewerkt: 3 januari 2026",
+        "back": "Terug",
+        "section1": {
+            "title": "1. Inleiding",
+            "content": "Menefex, eigenaar van Huzl, hecht veel waarde aan de bescherming van je privacy en persoonlijke gegevens. Dit privacybeleid legt uit welke gegevens we verzamelen, hoe we deze gebruiken en welke rechten je hebt."
+        },
+        "section2": {
+            "title": "2. Welke Gegevens Verzamelen We?",
+            "accountData": "Accountgegevens",
+            "accountDataDesc": "E-mailadres, wachtwoord (versleuteld opgeslagen), en optionele profielinformatie zoals je naam.",
+            "financialData": "Financiële gegevens",
+            "financialDataDesc": "De inkomsten, uitgaven, budgetten en schulden die je invoert in de applicatie. Deze gegevens blijven privé en worden alleen door jou ingezien.",
+            "usageData": "Gebruiksgegevens",
+            "usageDataDesc": "Informatie over hoe je de applicatie gebruikt, zoals inloggegevens en technische informatie (apparaattype, besturingssysteem)."
+        },
+        "section3": {
+            "title": "3. Waarvoor Gebruiken We Je Gegevens?",
+            "content": "• Het leveren en verbeteren van onze dienst\n• Het beheren van je account en authenticatie\n• Het opslaan en presenteren van je financiële overzichten\n• Het versturen van belangrijke updates over de applicatie\n• Het waarborgen van de veiligheid en betrouwbaarheid van de applicatie"
+        },
+        "section4": {
+            "title": "4. Hoe Bewaren We Je Gegevens?",
+            "content": "Je gegevens worden veilig opgeslagen via Supabase, een gerenommeerde cloud database provider met servers in de Europese Unie. Alle verbindingen zijn versleuteld via HTTPS. Wachtwoorden worden nooit in platte tekst opgeslagen maar altijd versleuteld (hashed)."
+        },
+        "section5": {
+            "title": "5. Delen We Je Gegevens?",
+            "content": "Nee. We verkopen, verhuren of delen je persoonlijke gegevens niet met derden voor marketing- of commerciële doeleinden. Je financiële gegevens zijn strikt privé en alleen voor jou toegankelijk.\n\nWe maken gebruik van Supabase voor hosting en database management. Supabase heeft toegang tot de infrastructuur maar niet tot de inhoud van je gegevens voor andere doeleinden dan het leveren van hun dienst."
+        },
+        "section6": {
+            "title": "6. Jouw Rechten (AVG/GDPR)",
+            "intro": "Op grond van de Algemene Verordening Gegevensbescherming (AVG) heb je de volgende rechten:",
+            "right1": "Recht op inzage",
+            "right1Desc": "Je kunt opvragen welke gegevens we van je hebben",
+            "right2": "Recht op rectificatie",
+            "right2Desc": "Je kunt onjuiste gegevens laten corrigeren",
+            "right3": "Recht op verwijdering",
+            "right3Desc": "Je kunt je account en alle bijbehorende gegevens laten verwijderen",
+            "right4": "Recht op dataportabiliteit",
+            "right4Desc": "Je kunt je gegevens in een gestructureerd formaat opvragen",
+            "right5": "Recht van bezwaar",
+            "right5Desc": "Je kunt bezwaar maken tegen de verwerking van je gegevens"
+        },
+        "section7": {
+            "title": "7. Cookies en Tracking",
+            "content": "Huzl gebruikt alleen technisch noodzakelijke cookies voor authenticatie en het functioneren van de applicatie. We gebruiken geen tracking cookies voor advertenties of marketing doeleinden."
+        },
+        "section8": {
+            "title": "8. Bewaartermijn",
+            "content": "We bewaren je gegevens zolang je een actief account hebt. Als je je account verwijdert, worden al je gegevens permanent uit onze systemen verwijderd binnen 30 dagen."
+        },
+        "section9": {
+            "title": "9. Beveiliging",
+            "content": "We nemen redelijke technische en organisatorische maatregelen om je gegevens te beschermen tegen verlies, misbruik en ongeautoriseerde toegang. Alle communicatie verloopt via versleutelde verbindingen (HTTPS/SSL)."
+        },
+        "section10": {
+            "title": "10. Minderjarigen",
+            "content": "Huzl is bedoeld voor personen van 16 jaar en ouder. We verzamelen niet bewust gegevens van personen jonger dan 16 jaar."
+        },
+        "section11": {
+            "title": "11. Wijzigingen in dit Beleid",
+            "content": "We kunnen dit privacybeleid van tijd tot tijd bijwerken. Wijzigingen worden in de applicatie gepubliceerd. We raden je aan dit beleid regelmatig te bekijken."
+        },
+        "section12": {
+            "title": "12. Contact",
+            "content": "Voor vragen over dit privacybeleid of het uitoefenen van je rechten kun je contact opnemen met:"
+        }
+    },
+    "terms": {
+        "title": "Servicevoorwaarden",
+        "updated": "Laatst bijgewerkt: 3 januari 2026",
+        "back": "Terug",
+        "section1": {
+            "title": "1. Acceptatie van de Voorwaarden",
+            "content": "Door gebruik te maken van Huzl, een product van Menefex, ga je akkoord met deze servicevoorwaarden. Als je niet akkoord gaat met deze voorwaarden, mag je de applicatie niet gebruiken."
+        },
+        "section2": {
+            "title": "2. Omschrijving van de Dienst",
+            "content": "Huzl is een financiële beheerstool waarmee particulieren en ondernemers hun inkomsten, uitgaven, budgetten en schulden kunnen bijhouden. De applicatie biedt inzicht in je financiële situatie door middel van overzichten en grafieken."
+        },
+        "section3": {
+            "title": "3. Gebruikersaccount",
+            "content": "Je bent verantwoordelijk voor het beveiligen van je account en wachtwoord. Je bent volledig verantwoordelijk voor alle activiteiten die onder jouw account plaatsvinden. Je verplicht je om ons onmiddellijk op de hoogte te stellen van ongeautoriseerd gebruik van je account."
+        },
+        "section4": {
+            "title": "4. Juistheid van Gegevens",
+            "content": "Huzl is een tool om je financiën bij te houden. De informatie die je invoert en de berekeningen die de applicatie maakt zijn gebaseerd op jouw invoer. Menefex is niet verantwoordelijk voor onjuistheden in de door jou ingevoerde gegevens of beslissingen die je neemt op basis van de informatie in de applicatie."
+        },
+        "section5": {
+            "title": "5. Intellectueel Eigendom",
+            "content": "Alle rechten op de applicatie, inclusief maar niet beperkt tot software, ontwerp, logo's en teksten, berusten bij Menefex. Het is niet toegestaan om deze te kopiëren, wijzigen of verspreiden zonder voorafgaande schriftelijke toestemming."
+        },
+        "section6": {
+            "title": "6. Beperking van Aansprakelijkheid",
+            "content": "Huzl wordt aangeboden \"zoals het is\" zonder enige garantie. Menefex is niet aansprakelijk voor enige directe, indirecte, incidentele of gevolgschade die voortvloeit uit het gebruik of de onmogelijkheid om de applicatie te gebruiken, inclusief maar niet beperkt tot financiële verliezen of verlies van gegevens."
+        },
+        "section7": {
+            "title": "7. Beëindiging",
+            "content": "Wij behouden ons het recht voor om je toegang tot de applicatie op elk moment te beëindigen of op te schorten, met of zonder reden, met of zonder kennisgeving. Bij beëindiging blijven alle bepalingen die naar hun aard bedoeld zijn om voort te duren, van kracht."
+        },
+        "section8": {
+            "title": "8. Wijzigingen",
+            "content": "Wij behouden ons het recht voor om deze voorwaarden op elk moment te wijzigen. Wijzigingen worden van kracht zodra ze in de applicatie worden gepubliceerd. Je gebruik van de applicatie na wijzigingen betekent dat je de nieuwe voorwaarden accepteert."
+        },
+        "section9": {
+            "title": "9. Toepasselijk Recht",
+            "content": "Op deze voorwaarden is Nederlands recht van toepassing. Geschillen zullen worden voorgelegd aan de bevoegde rechter in Nederland."
+        },
+        "section10": {
+            "title": "10. Contact",
+            "content": "Voor vragen over deze servicevoorwaarden kun je contact opnemen met Menefex via de website of per e-mail via de contactgegevens op de website."
+        },
+        "contact": {
+            "name": "Menefex",
+            "kvk": "KVK-nummer: 76045315",
+            "email": "E-mail: info@menefex.nl",
+            "website": "Website:"
+        }
     }
 }

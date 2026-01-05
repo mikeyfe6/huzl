@@ -2,6 +2,7 @@ import "@/utils/i18n";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useTranslation } from "react-i18next";
 import "react-native-reanimated";
 
 import { AuthProvider } from "@/hooks/use-auth";
@@ -13,6 +14,7 @@ export const unstable_settings = {
 };
 
 function RootContent() {
+    const { t } = useTranslation();
     const colorScheme = useColorScheme();
 
     return (
@@ -21,9 +23,9 @@ function RootContent() {
                 <RefreshProvider>
                     <Stack>
                         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                        <Stack.Screen name="income" options={{ presentation: "modal", title: "Income" }} />
-                        <Stack.Screen name="terms" options={{ presentation: "modal", title: "Terms of Service" }} />
-                        <Stack.Screen name="privacy" options={{ presentation: "modal", title: "Privacy Policy" }} />
+                        <Stack.Screen name="income" options={{ presentation: "modal", title: t("modal.income") }} />
+                        <Stack.Screen name="terms" options={{ presentation: "modal", title: t("modal.terms") }} />
+                        <Stack.Screen name="privacy" options={{ presentation: "modal", title: t("modal.privacy") }} />
                     </Stack>
                     <StatusBar style="auto" />
                 </RefreshProvider>
