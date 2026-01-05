@@ -1,0 +1,70 @@
+{
+    "common": {
+        "welcome": "Welcome!",
+        "loading": "Loading..."
+    },
+    "auth": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up",
+        "createAccount": "Create Account",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "alreadyHaveAccount": "Already have an account?",
+        "accountCreated": "✓ Account created! Please check your email to confirm your account.",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 6 characters",
+        "signInOrCreate": "Sign in or create an account to continue",
+        "getStarted": "Create your account to get started"
+    },
+    "home": {
+        "title": "Hello",
+        "signedInAs": "Signed in as",
+        "monthlyIncome": "Monthly Income",
+        "monthlyCosts": "Monthly Costs",
+        "monthlyDebts": "Monthly Debts",
+        "monthlyDisposable": "Monthly Disposable"
+    },
+    "debts": {
+        "title": "Debts",
+        "name": "Name",
+        "maxAmount": "Max Amount",
+        "monthlyPayment": "Monthly Payment",
+        "addDebt": "Add Debt",
+        "updateDebt": "Update Debt",
+        "cancel": "Cancel",
+        "yourDebts": "Your Debts",
+        "noDebts": "No debts (hooray!)",
+        "total": "Total",
+        "monthly": "Monthly",
+        "terms": "Terms",
+        "remaining": "Remaining",
+        "deleteDebt": "Delete debt",
+        "deleteConfirm": "Are you sure you want to delete",
+        "delete": "Delete",
+        "amountPaid": "Amount paid"
+    },
+    "expenses": {
+        "title": "Expenses",
+        "addExpense": "Add Expense",
+        "updateExpense": "Update Expense",
+        "yourExpenses": "Your Expenses",
+        "noExpenses": "No expenses yet",
+        "daily": "Daily",
+        "monthly": "Monthly",
+        "yearly": "Yearly"
+    },
+    "budgets": {
+        "title": "Budgets",
+        "addBudget": "Add Budget",
+        "updateBudget": "Update Budget",
+        "yourBudgets": "Your Budgets",
+        "noBudgets": "No budgets yet"
+    },
+    "settings": {
+        "title": "Settings",
+        "language": "Language",
+        "currency": "Currency",
+        "signOut": "Sign Out"
+    }
+}

@@ -1,5 +1,6 @@
 import { Link, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -15,6 +16,7 @@ import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { CurrencyPickerModal } from "@/components/ui/currency-modal";
+import { LanguageModal } from "@/components/ui/language-modal";
 
 import { Colors, greenColor, linkColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
@@ -32,6 +34,7 @@ import {
 
 export default function SettingsScreen() {
     const { user, refreshUser, signOut } = useAuth();
+    const { i18n } = useTranslation();
     const router = useRouter();
 
     const colorScheme = useColorScheme();
@@ -43,6 +46,7 @@ export default function SettingsScreen() {
     const [displayName, setDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
     const [currencyModalVisible, setCurrencyModalVisible] = useState(false);
+    const [languageModalVisible, setLanguageModalVisible] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -314,9 +318,7 @@ export default function SettingsScreen() {
                         </ThemedText>
                         <TouchableOpacity style={styles.settingItem} onPress={() => setCurrencyModalVisible(true)}>
                             <View style={styles.settingBox}>
-                                <ThemedText
-                                    style={[styles.settingLabel, styles.settingLabelNoMargin, styles.settingLink]}
-                                >
+                                <ThemedText style={[styles.settingLabel, styles.settingLink]}>
                                     Currency Symbol
                                 </ThemedText>
                                 <ThemedText style={styles.settingValue}>
@@ -332,13 +334,27 @@ export default function SettingsScreen() {
                         </ThemedText>
                         <TouchableOpacity style={styles.settingItem} onPress={() => router.push("/income")}>
                             <View style={styles.settingBox}>
-                                <ThemedText
-                                    style={[styles.settingLabel, styles.settingLabelNoMargin, styles.settingLink]}
-                                >
+                                <ThemedText style={[styles.settingLabel, styles.settingLink]}>
                                     Monthly Income
                                 </ThemedText>
                                 <ThemedText style={styles.settingValue}>
                                     {monthlyIncome === null ? "Not set" : formatAmount(monthlyIncome)}
+                                </ThemedText>
+                            </View>
+                        </TouchableOpacity>
+                    </ThemedView>
+
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
+                            Language
+                        </ThemedText>
+                        <TouchableOpacity style={[styles.settingItem]} onPress={() => setLanguageModalVisible(true)}>
+                            <View style={styles.settingBox}>
+                                <ThemedText style={[styles.settingLabel, styles.settingLink]}>
+                                    Select Language
+                                </ThemedText>
+                                <ThemedText style={styles.settingValue}>
+                                    {i18n.language === "nl" ? "Nederlands" : "English"}
                                 </ThemedText>
                             </View>
                         </TouchableOpacity>
@@ -386,6 +402,7 @@ export default function SettingsScreen() {
                     onClose={() => setCurrencyModalVisible(false)}
                     currentSymbol={currencySymbol}
                 />
+                <LanguageModal visible={languageModalVisible} onClose={() => setLanguageModalVisible(false)} />
             </ScrollView>
         </AuthGate>
     );

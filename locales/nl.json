@@ -1,0 +1,70 @@
+{
+    "common": {
+        "welcome": "Welkom!",
+        "loading": "Laden..."
+    },
+    "auth": {
+        "signIn": "Inloggen",
+        "signUp": "Account Aanmaken",
+        "createAccount": "Account Aanmaken",
+        "email": "E-mailadres",
+        "password": "Wachtwoord",
+        "confirmPassword": "Wachtwoord Bevestigen",
+        "alreadyHaveAccount": "Heb je al een account?",
+        "accountCreated": "✓ Account aangemaakt! Controleer je e-mail om je account te bevestigen.",
+        "passwordMismatch": "Wachtwoorden komen niet overeen",
+        "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
+        "signInOrCreate": "Meld je aan of maak een account om door te gaan",
+        "getStarted": "Maak een account aan om aan de slag te gaan"
+    },
+    "home": {
+        "title": "Hallo",
+        "signedInAs": "Ingelogd als",
+        "monthlyIncome": "Maandelijks Inkomen",
+        "monthlyCosts": "Maandelijkse Kosten",
+        "monthlyDebts": "Maandelijkse Schulden",
+        "monthlyDisposable": "Maandelijks Beschikbaar"
+    },
+    "debts": {
+        "title": "Schulden",
+        "name": "Naam",
+        "maxAmount": "Maximaal Bedrag",
+        "monthlyPayment": "Maandelijke Betaling",
+        "addDebt": "Schuld Toevoegen",
+        "updateDebt": "Schuld Bijwerken",
+        "cancel": "Annuleren",
+        "yourDebts": "Jouw Schulden",
+        "noDebts": "Geen schulden (hoera!)",
+        "total": "Totaal",
+        "monthly": "Maandelijks",
+        "terms": "Looptijd",
+        "remaining": "Resterend",
+        "deleteDebt": "Schuld verwijderen",
+        "deleteConfirm": "Weet je zeker dat je wilt verwijderen",
+        "delete": "Verwijderen",
+        "amountPaid": "Betaald bedrag"
+    },
+    "expenses": {
+        "title": "Uitgaven",
+        "addExpense": "Uitgave Toevoegen",
+        "updateExpense": "Uitgave Bijwerken",
+        "yourExpenses": "Jouw Uitgaven",
+        "noExpenses": "Nog geen uitgaven",
+        "daily": "Dagelijks",
+        "monthly": "Maandelijks",
+        "yearly": "Jaarlijks"
+    },
+    "budgets": {
+        "title": "Budgetten",
+        "addBudget": "Budget Toevoegen",
+        "updateBudget": "Budget Bijwerken",
+        "yourBudgets": "Jouw Budgetten",
+        "noBudgets": "Nog geen budgetten"
+    },
+    "settings": {
+        "title": "Instellingen",
+        "language": "Taal",
+        "currency": "Valuta",
+        "signOut": "Afmelden"
+    }
+}

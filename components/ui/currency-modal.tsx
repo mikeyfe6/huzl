@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     header: {
         ...baseFlex("space-between", "center"),
         paddingHorizontal: 20,
-        paddingBottom: 20,
+        paddingBottom: 32,
     },
     list: {
         flex: 1,
