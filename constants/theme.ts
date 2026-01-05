@@ -12,20 +12,19 @@ export const greenColor = "#4caf50";
 export const redColor = "#f44336";
 export const blueColor = "#0c86c5";
 export const copperColor = "#aa6600";
-export const goldColor = "#d1982eff";
+export const goldColor = "#F7B900";
 export const orangeColor = "#F49E0B";
 export const fuchsiaColor = "#bd38d5ff";
 
-export const steelLightColor = "#3f5e90";
-export const steelDarkColor = "#819fd2ff";
+export const steelColor = "#819fd2ff";
 
 export const greenLightColor = "#4caf5080";
 export const redLightColor = "#f4433680";
 export const greenDarkColor = "#4caf5050";
 export const redDarkColor = "#f4433650";
 
-export const personalColor = "#8296B666";
-export const businessColor = "#da902266";
+export const personalColor = "#819fd275";
+export const businessColor = "#F7B90066";
 export const familyColor = "#9c27b075";
 
 export const dailyColor = "#0c86c530";
@@ -55,10 +54,6 @@ export const Colors = {
         cardNegativeBackground: redLightColor,
         statLabel: darkGreyColor,
 
-        personalLabel: steelLightColor,
-        businessLabel: copperColor,
-        familyLabel: fuchsiaColor,
-
         selectedTab: whiteColor,
 
         dailyTab: whiteColor,
@@ -84,10 +79,6 @@ export const Colors = {
         cardPositiveBackground: greenDarkColor,
         cardNegativeBackground: redDarkColor,
         statLabel: silverColor,
-
-        personalLabel: steelDarkColor,
-        businessLabel: goldColor,
-        familyLabel: fuchsiaColor,
 
         selectedTab: almostBlackColor,
 

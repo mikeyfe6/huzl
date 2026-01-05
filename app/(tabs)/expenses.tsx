@@ -33,7 +33,6 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
-    baseEllipsis,
     baseEmpty,
     baseEmptyText,
     baseFlex,
@@ -812,7 +811,7 @@ export default function ExpensesScreen() {
                             >
                                 <View style={styles.expenseItem}>
                                     <View style={styles.expenseInfo}>
-                                        <ThemedText type="defaultSemiBold" style={baseEllipsis}>
+                                        <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
                                             {expense.name}
                                         </ThemedText>
                                         <View style={styles.expenseMeta}>

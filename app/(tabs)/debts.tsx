@@ -14,12 +14,11 @@ import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, slateColor } from "@/constants/theme";
+import { blueColor, Colors, greenColor, mediumGreyColor, orangeColor, redColor, slateColor } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
     baseCard,
-    baseEllipsis,
     baseEmpty,
     baseEmptyText,
     baseFlex,
@@ -52,6 +51,8 @@ export default function DebtsScreen() {
     const [amount, setAmount] = useState("");
     const [payPerMonth, setPayPerMonth] = useState("");
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [paymentId, setPaymentId] = useState<string | null>(null);
+    const [paymentAmount, setPaymentAmount] = useState("");
     const [loading, setLoading] = useState(false);
 
     const colorScheme = useColorScheme();
@@ -109,6 +110,32 @@ export default function DebtsScreen() {
             .eq("user_id", user.id);
         if (!error) {
             setDebts((prev) => prev.map((d) => (d.id === id ? { ...d, active: !currentActive } : d)));
+        }
+        setLoading(false);
+    };
+
+    const handleMakePayment = async (debtId: string) => {
+        if (!user || !paymentAmount.trim()) return;
+        const payment = Number.parseFloat(paymentAmount);
+        if (Number.isNaN(payment) || payment <= 0) return;
+
+        const debt = debts.find((d) => d.id === debtId);
+        if (!debt) return;
+
+        const newAmount = Math.max(0, debt.amount - payment);
+        setLoading(true);
+
+        const { data, error } = await supabase
+            .from("debts")
+            .update({ amount: newAmount })
+            .eq("id", debtId)
+            .eq("user_id", user.id)
+            .select();
+
+        if (!error && data && data.length > 0) {
+            setDebts((prev) => prev.map((d) => (d.id === debtId ? { ...d, amount: newAmount } : d)));
+            setPaymentId(null);
+            setPaymentAmount("");
         }
         setLoading(false);
     };
@@ -242,6 +269,21 @@ export default function DebtsScreen() {
                     fontSize: 12.5,
                     opacity: 0.6,
                 },
+                paymentSection: {
+                    ...baseFlex("center"),
+                    ...baseGap,
+                },
+                paymentInput: {
+                    ...baseInput(theme),
+                    ...baseSelect,
+                    flex: 2,
+                },
+                paymentButton: {
+                    ...baseButton,
+                },
+                paymentButtonText: {
+                    ...baseButtonText,
+                },
                 emptyState: {
                     ...baseEmpty,
                 },
@@ -318,7 +360,7 @@ export default function DebtsScreen() {
                             <ThemedView key={debt.id} style={[styles.item, !debt.active && { opacity: 0.5 }]}>
                                 <View style={styles.itemHeader}>
                                     <View style={styles.itemTitle}>
-                                        <ThemedText type="defaultSemiBold" style={baseEllipsis}>
+                                        <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
                                             {debt.name}
                                         </ThemedText>
                                         <ThemedText style={styles.itemLabel}>
@@ -326,6 +368,20 @@ export default function DebtsScreen() {
                                         </ThemedText>
                                     </View>
                                     <View style={styles.itemIcons}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setPaymentId(paymentId === debt.id ? null : debt.id);
+                                                setPaymentAmount("");
+                                            }}
+                                            style={[
+                                                styles.itemIcon,
+                                                {
+                                                    borderColor: blueColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons name="cash-outline" size={16} color={blueColor} />
+                                        </TouchableOpacity>
                                         <TouchableOpacity
                                             onPress={() => handleToggleActive(debt.id, debt.active)}
                                             style={[
@@ -394,6 +450,36 @@ export default function DebtsScreen() {
                                         <ThemedText style={styles.itemRemaining}>Remaining: —</ThemedText>
                                     )}
                                 </View>
+                                {paymentId === debt.id && (
+                                    <View style={styles.paymentSection}>
+                                        <TextInput
+                                            style={styles.paymentInput}
+                                            placeholder={`Amount paid (${currencySymbol})`}
+                                            placeholderTextColor={theme.placeholder}
+                                            value={paymentAmount}
+                                            onChangeText={(text) => setPaymentAmount(formatNumber(text))}
+                                            keyboardType="decimal-pad"
+                                            autoFocus
+                                        />
+                                        <TouchableOpacity
+                                            style={[styles.paymentButton, { backgroundColor: greenColor }]}
+                                            onPress={() => handleMakePayment(debt.id)}
+                                            disabled={loading || !paymentAmount.trim()}
+                                        >
+                                            <ThemedText style={styles.paymentButtonText}>Save</ThemedText>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={[styles.paymentButton, { backgroundColor: redColor }]}
+                                            onPress={() => {
+                                                setPaymentId(null);
+                                                setPaymentAmount("");
+                                            }}
+                                            disabled={loading}
+                                        >
+                                            <ThemedText style={styles.paymentButtonText}>Cancel</ThemedText>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                             </ThemedView>
                         ))
                     )}

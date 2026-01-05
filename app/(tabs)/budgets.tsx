@@ -20,7 +20,6 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
-    baseEllipsis,
     baseFlex,
     baseGap,
     baseIcon,
@@ -579,7 +578,7 @@ export default function BudgetsScreen() {
                                         style={styles.budgetInfo}
                                         onPress={() => setSelectedBudgetId(budget.id)}
                                     >
-                                        <ThemedText type="defaultSemiBold" style={baseEllipsis}>
+                                        <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
                                             {budget.name}
                                         </ThemedText>
                                     </TouchableOpacity>
@@ -715,7 +714,7 @@ export default function BudgetsScreen() {
                                     style={[styles.expenseItem, !expense.active && { opacity: 0.5 }]}
                                 >
                                     <View style={styles.expenseInfo}>
-                                        <ThemedText type="defaultSemiBold" style={baseEllipsis}>
+                                        <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
                                             {expense.name}
                                         </ThemedText>
                                         <ThemedText style={styles.expenseLabel}>

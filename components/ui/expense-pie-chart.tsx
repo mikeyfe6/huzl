@@ -93,19 +93,19 @@ export function ExpensePieChart({ expenses, selectedCategory, onCategorySelect }
                 <Path
                     d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
                     fill={personalColor}
-                    opacity={selectedCategory === "personal" ? 1 : 0.6}
+                    opacity={selectedCategory === "personal" ? 1 : 0.75}
                     onPress={() => onCategorySelect("personal")}
                 />
                 <Path
                     d={getPieSlicePath(businessStartAngle, businessEndAngle, chartRadius, 0)}
                     fill={businessColor}
-                    opacity={selectedCategory === "business" ? 1 : 0.6}
+                    opacity={selectedCategory === "business" ? 1 : 0.75}
                     onPress={() => onCategorySelect("business")}
                 />
                 <Path
                     d={getPieSlicePath(familyStartAngle, familyEndAngle, chartRadius, 0)}
                     fill={familyColor}
-                    opacity={selectedCategory === "family" ? 1 : 0.6}
+                    opacity={selectedCategory === "family" ? 1 : 0.75}
                     onPress={() => onCategorySelect("family")}
                 />
                 <Circle
