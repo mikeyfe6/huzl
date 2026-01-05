@@ -10,7 +10,7 @@ import { useCurrency } from "@/hooks/use-currency";
 
 import { supabase } from "@/utils/supabase";
 
-import { formatCapitalize, formatCurrency, formatNumber } from "@/utils/helpers";
+import { formatCurrency, formatNumber } from "@/utils/helpers";
 
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
@@ -849,7 +849,7 @@ export default function ExpensesScreen() {
                                                 ]}
                                             >
                                                 <ThemedText style={styles.badgeText}>
-                                                    {formatCapitalize(expense.category)}
+                                                    {categoryLabelMap[expense.category]}
                                                 </ThemedText>
                                             </View>
                                         </View>
@@ -1028,7 +1028,7 @@ export default function ExpensesScreen() {
                                 </View>
                                 <View style={styles.chartItems}>
                                     {expenses.filter((e) => e.active && e.category === category).length === 0 ? (
-                                        <ThemedText>No expenses in this category.</ThemedText>
+                                        <ThemedText>{t("expenses.noExpensesInCategories")}</ThemedText>
                                     ) : (
                                         expenses
                                             .filter((e) => e.active && e.category === category)
@@ -1059,9 +1059,7 @@ export default function ExpensesScreen() {
 
                 {expenses.length === 0 && !loading && (
                     <ThemedView style={styles.emptyState}>
-                        <ThemedText style={styles.emptyStateText}>
-                            {user ? "Add your first expense!" : "Sign in to track your expenses."}
-                        </ThemedText>
+                        <ThemedText style={styles.emptyStateText}>{t("expenses.addFirstExpense")}</ThemedText>
                     </ThemedView>
                 )}
             </ScrollView>

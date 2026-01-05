@@ -3,6 +3,13 @@
         "welcome": "Welcome!",
         "loading": "Loading …"
     },
+    "tabs": {
+        "home": "Home",
+        "expenses": "Expenses",
+        "debts": "Debts",
+        "budgets": "Budgets",
+        "settings": "Settings"
+    },
     "auth": {
         "getStarted": "Create your account to get started",
         "signInOrCreate": "Sign in or create an account to continue",
@@ -61,8 +68,10 @@
         "yearlySpend": "Total Yearly Spend",
         "monthlySpend": "Total Monthly Spend",
         "dailySpend": "Total Daily Spend",
+        "addFirstExpense": "Add your first expense!",
         "delete": "Delete",
-        "deleteExpense": "Delete expense"
+        "deleteExpense": "Delete expense",
+        "noExpensesInCategories": "No expenses in this category."
     },
     "sorting": {
         "sortBy": "Sort By",
@@ -71,6 +80,27 @@
         "nameZToA": "Name Z to A",
         "amountLowToHigh": "Amount Low to High",
         "amountHighToLow": "Amount High to Low",
+        "cancel": "Cancel"
+    },
+    "budgets": {
+        "title": "Budgets",
+        "name": "Name",
+        "namePlaceholder": "e.g. Groceries",
+        "totalAmount": "Total Amount",
+        "addBudget": "Add Budget",
+        "updateBudget": "Update Budget",
+        "yourBudgets": "Your Budgets",
+        "remaining": "Remaining",
+        "expenseName": "Expense Name",
+        "expenseNamePlaceholder": "e.g. Apples",
+        "expenseAmount": "Expense Amount",
+        "addExpense": "Add Expense",
+        "updateExpense": "Update Expense",
+        "expenses": "Expenses",
+        "noExpenses": "No expenses yet",
+        "addFirstBudget": "Add your first budget!",
+        "delete": "Delete",
+        "deleteBudget": "Delete budget",
         "cancel": "Cancel"
     },
     "debts": {
@@ -92,13 +122,6 @@
         "deleteConfirm": "Are you sure you want to delete",
         "delete": "Delete",
         "amountPaid": "Amount paid"
-    },
-    "budgets": {
-        "title": "Budgets",
-        "addBudget": "Add Budget",
-        "updateBudget": "Update Budget",
-        "yourBudgets": "Your Budgets",
-        "noBudgets": "No budgets yet"
     },
     "settings": {
         "title": "Settings",

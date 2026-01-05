@@ -3,6 +3,13 @@
         "welcome": "Welkom!",
         "loading": "Laden …"
     },
+    "tabs": {
+        "home": "Home",
+        "expenses": "Uitgaven",
+        "debts": "Schulden",
+        "budgets": "Budgetten",
+        "settings": "Instellingen"
+    },
     "auth": {
         "getStarted": "Maak een account aan om aan de slag te gaan",
         "signInOrCreate": "Meld je aan of maak een account om door te gaan",
@@ -61,8 +68,10 @@
         "yearlySpend": "Totale Jaarlijkse Uitgaven",
         "monthlySpend": "Totale Maandelijkse Uitgaven",
         "dailySpend": "Totale Dagelijkse Uitgaven",
+        "addFirstExpense": "Voeg je eerste uitgave toe!",
         "delete": "Verwijder",
-        "deleteExpense": "Verwijder uitgave"
+        "deleteExpense": "Verwijder uitgave",
+        "noExpensesInCategories": "Geen uitgaven in deze categorie."
     },
     "sorting": {
         "sortBy": "Sorteren op",
@@ -71,6 +80,27 @@
         "nameZToA": "Naam Z tot A",
         "amountLowToHigh": "Bedrag Laag naar Hoog",
         "amountHighToLow": "Bedrag Hoog naar Laag",
+        "cancel": "Annuleren"
+    },
+    "budgets": {
+        "title": "Budgetten",
+        "name": "Naam",
+        "namePlaceholder": "Bijv. Boodschappen",
+        "totalAmount": "Totaal Bedrag",
+        "addBudget": "Budget Toevoegen",
+        "updateBudget": "Budget Bijwerken",
+        "yourBudgets": "Jouw Budgetten",
+        "remaining": "Resterend",
+        "expenseName": "Uitgave Naam",
+        "expenseNamePlaceholder": "Bijv. Appels",
+        "expenseAmount": "Uitgave Bedrag",
+        "addExpense": "Uitgave Toevoegen",
+        "updateExpense": "Uitgave Bijwerken",
+        "expenses": "Uitgaven",
+        "noExpenses": "Nog geen uitgaven",
+        "addFirstBudget": "Voeg je eerste budget toe!",
+        "delete": "Verwijder",
+        "deleteBudget": "Verwijder budget",
         "cancel": "Annuleren"
     },
     "debts": {
@@ -92,13 +122,6 @@
         "deleteConfirm": "Weet je zeker dat je wilt verwijderen",
         "delete": "Verwijderen",
         "amountPaid": "Betaald bedrag"
-    },
-    "budgets": {
-        "title": "Budgetten",
-        "addBudget": "Budget Toevoegen",
-        "updateBudget": "Budget Bijwerken",
-        "yourBudgets": "Jouw Budgetten",
-        "noBudgets": "Nog geen budgetten"
     },
     "settings": {
         "title": "Instellingen",
