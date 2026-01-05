@@ -106,9 +106,11 @@
     "debts": {
         "title": "Schulden",
         "name": "Naam",
-        "namePlacholder": "Bijv. Studielening",
-        "maxAmount": "Maximaal Bedrag",
-        "monthlyPayment": "Maandelijke Betaling",
+        "namePlaceholder": "Bijv. Studielening",
+        "totalAmount": "Totaal Bedrag",
+        "totalAmountPlaceholder": "Bijv. 5000",
+        "monthlyPayment": "Maandelijkse Betaling",
+        "monthlyPaymentPlaceholder": "Bijv. 200",
         "addDebt": "Schuld Toevoegen",
         "updateDebt": "Schuld Bijwerken",
         "cancel": "Annuleren",
@@ -116,12 +118,12 @@
         "noDebts": "Geen schulden (hoera!)",
         "total": "Totaal",
         "monthly": "Maandelijks",
-        "terms": "Looptijd",
+        "terms": "Termijnen",
         "remaining": "Resterend",
-        "deleteDebt": "Schuld verwijderen",
-        "deleteConfirm": "Weet je zeker dat je wilt verwijderen",
-        "delete": "Verwijderen",
-        "amountPaid": "Betaald bedrag"
+        "amountPaid": "Betaald bedrag",
+        "save": "Opslaan",
+        "delete": "Verwijder",
+        "deleteDebt": "Verwijder schuld"
     },
     "settings": {
         "title": "Instellingen",

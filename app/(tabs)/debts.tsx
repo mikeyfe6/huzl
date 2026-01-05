@@ -91,14 +91,14 @@ export default function DebtsScreen() {
 
     const confirmDeleteDebt = (id: string, name: string) => {
         if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`Delete "${name}"?`);
+            const ok = globalThis.confirm(`${t("debts.delete")} "${name}"?`);
             if (ok) handleDeleteDebt(id);
             return;
         }
 
-        Alert.alert("Delete debt", `Are you sure you want to delete "${name}"?`, [
-            { text: "Cancel", style: "cancel" },
-            { text: "Delete", style: "destructive", onPress: () => handleDeleteDebt(id) },
+        Alert.alert(`${t("debts.deleteDebt")}`, `${t("debts.delete")} "${name}"?`, [
+            { text: t("debts.cancel"), style: "cancel" },
+            { text: t("debts.delete"), style: "destructive", onPress: () => handleDeleteDebt(id) },
         ]);
     };
 
@@ -307,24 +307,28 @@ export default function DebtsScreen() {
                     <TextInput
                         ref={nameInputRef}
                         style={styles.input}
-                        placeholder="e.g., Car Loan"
+                        placeholder={t("debts.namePlaceholder")}
                         placeholderTextColor={theme.placeholder}
                         value={name}
                         onChangeText={setName}
                     />
-                    <ThemedText style={styles.label}>Max Amount ({currencySymbol})</ThemedText>
+                    <ThemedText style={styles.label}>
+                        {t("debts.totalAmount")} ({currencySymbol})
+                    </ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder="e.g., 5000"
+                        placeholder={t("debts.totalAmountPlaceholder")}
                         placeholderTextColor={theme.placeholder}
                         value={amount}
                         onChangeText={(text) => setAmount(formatNumber(text))}
                         keyboardType="decimal-pad"
                     />
-                    <ThemedText style={styles.label}>Monthly Payment ({currencySymbol})</ThemedText>
+                    <ThemedText style={styles.label}>
+                        {t("debts.monthlyPayment")} ({currencySymbol})
+                    </ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder="e.g., 200"
+                        placeholder={t("debts.monthlyPaymentPlaceholder")}
                         placeholderTextColor={theme.placeholder}
                         value={payPerMonth}
                         onChangeText={(text) => setPayPerMonth(formatNumber(text))}
@@ -336,7 +340,9 @@ export default function DebtsScreen() {
                             onPress={handleAddOrUpdateDebt}
                             disabled={loading}
                         >
-                            <ThemedText style={styles.buttonText}>{editingId ? "Update Debt" : "Add Debt"}</ThemedText>
+                            <ThemedText style={styles.buttonText}>
+                                {editingId ? t("debts.updateDebt") : t("debts.addDebt")}
+                            </ThemedText>
                         </TouchableOpacity>
                         {editingId && (
                             <TouchableOpacity
@@ -344,18 +350,18 @@ export default function DebtsScreen() {
                                 onPress={handleCancelEdit}
                                 disabled={loading}
                             >
-                                <ThemedText style={styles.buttonText}>Cancel</ThemedText>
+                                <ThemedText style={styles.buttonText}>{t("debts.cancel")}</ThemedText>
                             </TouchableOpacity>
                         )}
                     </View>
                 </ThemedView>
                 <ThemedView style={styles.list}>
                     <ThemedText type="subtitle" style={styles.header}>
-                        Your Debts
+                        {t("debts.yourDebts")}
                     </ThemedText>
                     {debts.length === 0 ? (
                         <ThemedView style={styles.emptyState}>
-                            <ThemedText style={styles.emptyStateText}>No debts (hooray!)</ThemedText>
+                            <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
                         </ThemedView>
                     ) : (
                         debts.map((debt) => (
@@ -366,7 +372,7 @@ export default function DebtsScreen() {
                                             {debt.name}
                                         </ThemedText>
                                         <ThemedText style={styles.itemLabel}>
-                                            Total: {formatCurrency(debt.amount, currencySymbol)}
+                                            {t("debts.total")}: {formatCurrency(debt.amount, currencySymbol)}
                                         </ThemedText>
                                     </View>
                                     <View style={styles.itemIcons}>
@@ -425,7 +431,7 @@ export default function DebtsScreen() {
                                 </View>
                                 <View style={styles.itemAmount}>
                                     <ThemedText style={styles.itemPayment}>
-                                        Monthly:{" "}
+                                        {t("debts.monthly")}:{" "}
                                         {debt.pay_per_month
                                             ? `${formatCurrency(debt.pay_per_month, currencySymbol)}`
                                             : "—"}
@@ -439,24 +445,24 @@ export default function DebtsScreen() {
                                                     : formatAmount(debt.amount % debt.pay_per_month);
                                             return (
                                                 <ThemedText style={styles.itemRemaining}>
-                                                    Terms: {months}{" "}
+                                                    {t("debts.terms")}: {months}{" "}
                                                     {months > 1
                                                         ? `(${months - 1} × ${currencySymbol} ${formatAmount(
                                                               debt.pay_per_month
-                                                          )} — last: ${currencySymbol} ${lastPayment})`
+                                                          )} — 1 x: ${currencySymbol} ${lastPayment})`
                                                         : ""}
                                                 </ThemedText>
                                             );
                                         })()
                                     ) : (
-                                        <ThemedText style={styles.itemRemaining}>Terms: —</ThemedText>
+                                        <ThemedText style={styles.itemRemaining}>{t("debts.terms")}: —</ThemedText>
                                     )}
                                 </View>
                                 {paymentId === debt.id && (
                                     <View style={styles.paymentSection}>
                                         <TextInput
                                             style={styles.paymentInput}
-                                            placeholder={`Amount paid (${currencySymbol})`}
+                                            placeholder={`${t("debts.amountPaid")} (${currencySymbol})`}
                                             placeholderTextColor={theme.placeholder}
                                             value={paymentAmount}
                                             onChangeText={(text) => setPaymentAmount(formatNumber(text))}
@@ -468,7 +474,7 @@ export default function DebtsScreen() {
                                             onPress={() => handleMakePayment(debt.id)}
                                             disabled={loading || !paymentAmount.trim()}
                                         >
-                                            <ThemedText style={styles.paymentButtonText}>Save</ThemedText>
+                                            <ThemedText style={styles.paymentButtonText}>{t("debts.save")}</ThemedText>
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={[styles.paymentButton, { backgroundColor: redColor }]}
@@ -478,7 +484,9 @@ export default function DebtsScreen() {
                                             }}
                                             disabled={loading}
                                         >
-                                            <ThemedText style={styles.paymentButtonText}>Cancel</ThemedText>
+                                            <ThemedText style={styles.paymentButtonText}>
+                                                {t("debts.cancel")}
+                                            </ThemedText>
                                         </TouchableOpacity>
                                     </View>
                                 )}

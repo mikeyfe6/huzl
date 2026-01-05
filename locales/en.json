@@ -107,8 +107,10 @@
         "title": "Debts",
         "name": "Name",
         "namePlaceholder": "e.g. Student Loan",
-        "maxAmount": "Max Amount",
+        "totalAmount": "Total Amount",
+        "totalAmountPlaceholder": "e.g. 5000",
         "monthlyPayment": "Monthly Payment",
+        "monthlyPaymentPlaceholder": "e.g. 200",
         "addDebt": "Add Debt",
         "updateDebt": "Update Debt",
         "cancel": "Cancel",
@@ -118,10 +120,10 @@
         "monthly": "Monthly",
         "terms": "Terms",
         "remaining": "Remaining",
-        "deleteDebt": "Delete debt",
-        "deleteConfirm": "Are you sure you want to delete",
+        "amountPaid": "Amount paid",
+        "save": "Save",
         "delete": "Delete",
-        "amountPaid": "Amount paid"
+        "deleteDebt": "Delete debt"
     },
     "settings": {
         "title": "Settings",
