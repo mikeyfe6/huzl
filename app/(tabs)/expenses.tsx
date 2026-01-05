@@ -15,7 +15,7 @@ import { formatCurrency, formatNumber } from "@/utils/helpers";
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { ExpensePieChart } from "@/components/ui/expense-pie-chart";
+import { ExpensesPie } from "@/components/ui/expenses-pie";
 import { SORT_OPTIONS, SortModal, SortOption } from "@/components/ui/sort-modal";
 
 import {
@@ -481,6 +481,7 @@ export default function ExpensesScreen() {
                 },
                 sortTriggerText: {
                     ...baseWeight,
+                    fontSize: 14,
                     color: theme.label,
                 },
                 expenseAmounts: {
@@ -954,7 +955,7 @@ export default function ExpensesScreen() {
                         </View>
 
                         <View style={styles.chartContainer}>
-                            <ExpensePieChart
+                            <ExpensesPie
                                 expenses={expenses}
                                 selectedCategory={category}
                                 onCategorySelect={setCategory}

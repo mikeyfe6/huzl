@@ -26,10 +26,6 @@ export const personalColor = "#819fd275";
 export const businessColor = "#F7B90075";
 export const familyColor = "#9c27b075";
 
-// export const dailyColor = "#0c86c530";
-// export const monthlyColor = "#f49e0b30";
-// export const yearlyColor = "#4caf5030";
-
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";
 export const darkGreyColor = "#666";
@@ -39,8 +35,6 @@ export const charcoalColor = "#151718";
 export const lightTextColor = "#ecedee";
 export const slateColor = "#687076";
 export const silverColor = "#9ba1a6";
-
-// TODO: text color fixen voor zwarte text
 
 export const Colors = {
     light: {

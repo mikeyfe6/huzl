@@ -75,11 +75,11 @@
     },
     "sorting": {
         "sortBy": "Sorteren op",
-        "dateAdded": "Datum Toegevoegd",
+        "dateAdded": "Toegevoegd",
         "nameAToZ": "Naam A tot Z",
         "nameZToA": "Naam Z tot A",
-        "amountLowToHigh": "Bedrag Laag naar Hoog",
-        "amountHighToLow": "Bedrag Hoog naar Laag",
+        "amountLowToHigh": "Laag naar Hoog",
+        "amountHighToLow": "Hoog naar Laag",
         "cancel": "Annuleren"
     },
     "budgets": {

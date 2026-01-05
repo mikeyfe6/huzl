@@ -21,7 +21,7 @@ interface ExpensePieChartProps {
     readonly onCategorySelect: (category: Category) => void;
 }
 
-export function ExpensePieChart({ expenses, selectedCategory, onCategorySelect }: ExpensePieChartProps) {
+export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: ExpensePieChartProps) {
     const { width: windowWidth } = useWindowDimensions();
 
     // Calculate totals

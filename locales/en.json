@@ -78,8 +78,8 @@
         "dateAdded": "Date Added",
         "nameAToZ": "Name A to Z",
         "nameZToA": "Name Z to A",
-        "amountLowToHigh": "Amount Low to High",
-        "amountHighToLow": "Amount High to Low",
+        "amountLowToHigh": "Low to High",
+        "amountHighToLow": "High to Low",
         "cancel": "Cancel"
     },
     "budgets": {

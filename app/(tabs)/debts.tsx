@@ -264,16 +264,17 @@ export default function DebtsScreen() {
                 },
                 itemPayment: {
                     fontWeight: "500",
-                    fontSize: 13,
+                    fontSize: 12,
                     color: slateColor,
                 },
                 itemRemaining: {
-                    fontSize: 12.5,
+                    fontSize: 11.5,
                     opacity: 0.6,
                 },
                 paymentSection: {
                     ...baseFlex("center"),
                     ...baseGap,
+                    flexWrap: "wrap",
                 },
                 paymentInput: {
                     ...baseInput(theme),
@@ -282,6 +283,7 @@ export default function DebtsScreen() {
                 },
                 paymentButton: {
                     ...baseButton,
+                    minWidth: 100,
                 },
                 paymentButtonText: {
                     ...baseButtonText,
