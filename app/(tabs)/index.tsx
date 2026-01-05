@@ -433,20 +433,20 @@ export default function HomeScreen() {
             <ThemedView style={styles.container}>
                 <HeaderImage />
                 <ThemedText type="title">
-                    Hello{" "}
+                    {t("home.title")}{" "}
                     {typeof user.user_metadata.display_name === "string" &&
                     user.user_metadata.display_name.trim().length > 0
                         ? user.user_metadata.display_name.trim()
                         : "!"}
                 </ThemedText>
                 <ThemedText style={styles.text}>
-                    Signed in as <ThemedText style={styles.user}>{user.email}</ThemedText>
+                    {t("home.signedInAs")} <ThemedText style={styles.user}>{user.email}</ThemedText>
                 </ThemedText>
 
                 <ThemedView style={styles.statsContainer}>
                     {monthlyIncome !== null && (
                         <ThemedView style={styles.statCard}>
-                            <ThemedText style={styles.statLabel}>Monthly Income</ThemedText>
+                            <ThemedText style={styles.statLabel}>{t("home.monthlyIncome")}</ThemedText>
                             <View style={styles.statWrapper}>
                                 <Ionicons name="add-outline" size={16} color={greenColor} />
                                 <ThemedText style={styles.statValue}>
@@ -457,7 +457,7 @@ export default function HomeScreen() {
                     )}
 
                     <ThemedView style={styles.statCard}>
-                        <ThemedText style={styles.statLabel}>Monthly Costs</ThemedText>
+                        <ThemedText style={styles.statLabel}>{t("home.monthlyCosts")}</ThemedText>
                         <View style={styles.statWrapper}>
                             <Ionicons name="remove-outline" size={16} color={redColor} />
                             <ThemedText style={styles.statValue}>
@@ -467,7 +467,7 @@ export default function HomeScreen() {
                     </ThemedView>
 
                     <ThemedView style={styles.statCard}>
-                        <ThemedText style={styles.statLabel}>Monthly Debts</ThemedText>
+                        <ThemedText style={styles.statLabel}>{t("home.monthlyDebts")}</ThemedText>
                         <View style={styles.statWrapper}>
                             <Ionicons name="alert" size={16} color={orangeColor} />
                             <ThemedText style={styles.statValue}>
@@ -482,7 +482,7 @@ export default function HomeScreen() {
                                 monthlyDisposable >= 0 ? styles.statCardPositive : styles.statCardNegative,
                             ]}
                         >
-                            <ThemedText style={styles.statLabel}>Monthly Disposable</ThemedText>
+                            <ThemedText style={styles.statLabel}>{t("home.monthlyDisposable")}</ThemedText>
                             <ThemedText style={styles.statValue}>
                                 {currencySymbol} {monthlyDisposable.toFixed(2).replace(".", ",")}
                             </ThemedText>

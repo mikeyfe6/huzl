@@ -14,8 +14,8 @@ type Language = {
 };
 
 const AVAILABLE_LANGUAGES: Language[] = [
-    { code: "en", name: "English", nativeName: "English" },
     { code: "nl", name: "Dutch", nativeName: "Nederlands" },
+    { code: "en", name: "English", nativeName: "English" },
 ];
 
 interface LanguageModalProps {
