@@ -15,7 +15,6 @@ export const copperColor = "#aa6600";
 export const goldColor = "#F7B900";
 export const orangeColor = "#F49E0B";
 export const fuchsiaColor = "#bd38d5ff";
-
 export const steelColor = "#819fd2ff";
 
 export const greenLightColor = "#4caf5080";
@@ -27,9 +26,9 @@ export const personalColor = "#819fd275";
 export const businessColor = "#F7B90075";
 export const familyColor = "#9c27b075";
 
-export const dailyColor = "#0c86c530";
-export const monthlyColor = "#f49e0b30";
-export const yearlyColor = "#4caf5030";
+// export const dailyColor = "#0c86c530";
+// export const monthlyColor = "#f49e0b30";
+// export const yearlyColor = "#4caf5030";
 
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";
