@@ -4,18 +4,32 @@
         "loading": "Loading..."
     },
     "auth": {
+        "getStarted": "Create your account to get started",
+        "signInOrCreate": "Sign in or create an account to continue",
+        "emailPlaceholder": "name@example.com",
+        "passwordPlaceholder": "password",
+        "confirmPasswordPlaceholder": "confirm password",
+        "createAccount": "Create Account",
+        "alreadyHaveAccount": "Already have an account?",
         "signIn": "Sign In",
         "signUp": "Sign Up",
-        "createAccount": "Create Account",
-        "email": "Email",
-        "password": "Password",
-        "confirmPassword": "Confirm Password",
-        "alreadyHaveAccount": "Already have an account?",
-        "accountCreated": "✓ Account created! Please check your email to confirm your account.",
+        "disclaimer": {
+            "first": "When you continue with email, you automatically agree to Huzl's",
+            "second": "Terms of Service",
+            "third": "and",
+            "fourth": "Privacy Policy"
+        },
+        "accountCreated": "Please check your email to confirm your account.",
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password must be at least 6 characters",
-        "signInOrCreate": "Sign in or create an account to continue",
-        "getStarted": "Create your account to get started"
+        "errors": {
+            "missingCredentials": "Please fill in all fields.",
+            "generic": "Something went wrong. Please try again.",
+            "invalidCredentials": "Invalid email or password.",
+            "emailNotConfirmed": "Please confirm your email before signing in.",
+            "alreadyRegistered": "An account with this email already exists.",
+            "rateLimited": "Too many attempts. Please wait and try again."
+        }
     },
     "home": {
         "title": "Hello",

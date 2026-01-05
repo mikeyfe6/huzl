@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Image, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -27,6 +28,7 @@ import {
 } from "@/styles/base";
 
 export default function HomeScreen() {
+    const { t } = useTranslation();
     const { user, loading, signIn, signUp } = useAuth();
     const { refreshFlag } = useRefreshContext();
     const colorScheme = useColorScheme();
@@ -43,26 +45,48 @@ export default function HomeScreen() {
     const [debts, setDebts] = useState<any[]>([]);
     const [isSignUp, setIsSignUp] = useState(false);
 
+    const mapAuthError = (err: unknown) => {
+        const message = typeof err === "string" ? err : (err as any)?.message ?? "";
+        const normalized = message.toLowerCase();
+
+        if (normalized.includes("invalid login credentials")) return t("auth.errors.invalidCredentials");
+        if (normalized.includes("email not confirmed")) return t("auth.errors.emailNotConfirmed");
+        if (normalized.includes("already registered")) return t("auth.errors.alreadyRegistered");
+        if (normalized.includes("too many")) return t("auth.errors.rateLimited");
+
+        return t("auth.errors.generic");
+    };
+
     const handleSignIn = async () => {
         setError(null);
+        if (!email.trim() || !password.trim()) {
+            setError(t("auth.errors.missingCredentials"));
+            return;
+        }
         const { error } = await signIn(email.trim(), password);
-        if (error) setError(error);
+        if (error) {
+            setError(mapAuthError(error));
+        }
     };
 
     const handleSignUp = async () => {
         setError(null);
         setRegistrationSuccess(false);
+        if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+            setError(t("auth.errors.missingCredentials"));
+            return;
+        }
         if (password !== confirmPassword) {
-            setError("Passwords do not match");
+            setError(t("auth.passwordMismatch"));
             return;
         }
         if (password.length < 6) {
-            setError("Password must be at least 6 characters");
+            setError(t("auth.passwordTooShort"));
             return;
         }
         const { error, success } = await signUp(email.trim(), password);
         if (error) {
-            setError(error);
+            setError(mapAuthError(error));
         } else if (success) {
             setRegistrationSuccess(true);
             setIsSignUp(false);
@@ -320,13 +344,13 @@ export default function HomeScreen() {
             <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
                 <ThemedView style={styles.container}>
                     <HeaderImage />
-                    <ThemedText type="title">Welcome !</ThemedText>
+                    <ThemedText type="title">{t("common.welcome")}</ThemedText>
                     <ThemedText style={styles.text}>
-                        {isSignUp ? "Create your account to get started" : "Sign in or create an account to continue"}
+                        {isSignUp ? t("auth.getStarted") : t("auth.signInOrCreate")}
                     </ThemedText>
                     <View style={styles.fieldset}>
                         <TextInput
-                            placeholder="you@example.com"
+                            placeholder={t("auth.emailPlaceholder")}
                             autoCapitalize="none"
                             keyboardType="email-address"
                             autoComplete="email"
@@ -336,7 +360,7 @@ export default function HomeScreen() {
                             placeholderTextColor={theme.placeholder}
                         />
                         <TextInput
-                            placeholder="password"
+                            placeholder={t("auth.passwordPlaceholder")}
                             secureTextEntry
                             value={password}
                             autoComplete="password"
@@ -346,7 +370,7 @@ export default function HomeScreen() {
                         />
                         {isSignUp && (
                             <TextInput
-                                placeholder="confirm password"
+                                placeholder={t("auth.confirmPasswordPlaceholder")}
                                 secureTextEntry
                                 value={confirmPassword}
                                 autoComplete="off"
@@ -358,42 +382,40 @@ export default function HomeScreen() {
                         {isSignUp ? (
                             <>
                                 <TouchableOpacity onPress={handleSignUp} style={styles.signInButton}>
-                                    <ThemedText style={styles.signInText}>Create Account</ThemedText>
+                                    <ThemedText style={styles.signInText}>{t("auth.createAccount")}</ThemedText>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => setIsSignUp(false)} style={styles.signUpButton}>
-                                    <ThemedText style={styles.signUpText}>Already have an account?</ThemedText>
+                                    <ThemedText style={styles.signUpText}>{t("auth.alreadyHaveAccount")}</ThemedText>
                                 </TouchableOpacity>
                             </>
                         ) : (
                             <>
                                 <TouchableOpacity onPress={handleSignIn} style={styles.signInButton}>
-                                    <ThemedText style={styles.signInText}>Sign In</ThemedText>
+                                    <ThemedText style={styles.signInText}>{t("auth.signIn")}</ThemedText>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => setIsSignUp(true)} style={styles.signUpButton}>
-                                    <ThemedText style={styles.signUpText}>Create Account</ThemedText>
+                                    <ThemedText style={styles.signUpText}>{t("auth.signUp")}</ThemedText>
                                 </TouchableOpacity>
                             </>
                         )}
                         <ThemedText style={styles.termsText}>
-                            Wanneer je doorgaat met e-mail ga je automatisch akkoord met Huzl's{" "}
+                            {t("auth.disclaimer.first")}{" "}
                             <Link href="/terms">
                                 <ThemedText type="link" style={styles.termsLink}>
-                                    Servicevoorwaarden
+                                    {t("auth.disclaimer.second")}
                                 </ThemedText>
                             </Link>{" "}
-                            en{" "}
+                            {t("auth.disclaimer.third")}{" "}
                             <Link href="/privacy">
                                 <ThemedText type="link" style={styles.termsLink}>
-                                    Privacybeleid
+                                    {t("auth.disclaimer.fourth")}
                                 </ThemedText>
                             </Link>
                             .
                         </ThemedText>
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
                             {registrationSuccess ? (
-                                <ThemedText style={styles.successText}>
-                                    ✓ Account created! Please check your email to confirm your account.
-                                </ThemedText>
+                                <ThemedText style={styles.successText}>{t("auth.accountCreated")}</ThemedText>
                             ) : (
                                 <ThemedText style={[styles.errorText, !error && styles.errorHidden]}>
                                     {error ? error.charAt(0).toUpperCase() + error.slice(1) : " "}

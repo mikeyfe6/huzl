@@ -4,18 +4,32 @@
         "loading": "Laden..."
     },
     "auth": {
+        "getStarted": "Maak een account aan om aan de slag te gaan",
+        "signInOrCreate": "Meld je aan of maak een account om door te gaan",
+        "emailPlaceholder": "naam@voorbeeld.nl",
+        "passwordPlaceholder": "wachtwoord",
+        "confirmPasswordPlaceholder": "wachtwoord bevestigen",
+        "createAccount": "Account Aanmaken",
+        "alreadyHaveAccount": "Heb je al een account?",
         "signIn": "Inloggen",
         "signUp": "Account Aanmaken",
-        "createAccount": "Account Aanmaken",
-        "email": "E-mailadres",
-        "password": "Wachtwoord",
-        "confirmPassword": "Wachtwoord Bevestigen",
-        "alreadyHaveAccount": "Heb je al een account?",
-        "accountCreated": "✓ Account aangemaakt! Controleer je e-mail om je account te bevestigen.",
+        "disclaimer": {
+            "first": "Wanneer je doorgaat met e-mail ga je automatisch akkoord met Huzl's",
+            "second": "Servicevoorwaarden",
+            "third": "en",
+            "fourth": "Privacybeleid"
+        },
+        "accountCreated": "Controleer je e-mail om je account te bevestigen.",
         "passwordMismatch": "Wachtwoorden komen niet overeen",
         "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
-        "signInOrCreate": "Meld je aan of maak een account om door te gaan",
-        "getStarted": "Maak een account aan om aan de slag te gaan"
+        "errors": {
+            "missingCredentials": "Vul alle velden in.",
+            "generic": "Er ging iets mis. Probeer het opnieuw.",
+            "invalidCredentials": "Onjuiste e-mail of wachtwoord.",
+            "emailNotConfirmed": "Bevestig je e-mail voordat je inlogt.",
+            "alreadyRegistered": "Er bestaat al een account met deze e-mail.",
+            "rateLimited": "Te veel pogingen. Wacht even en probeer opnieuw."
+        }
     },
     "home": {
         "title": "Hallo",
