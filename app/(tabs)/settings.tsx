@@ -33,8 +33,8 @@ import {
 } from "@/styles/base";
 
 export default function SettingsScreen() {
+    const { t, i18n } = useTranslation();
     const { user, refreshUser, signOut } = useAuth();
-    const { i18n } = useTranslation();
     const router = useRouter();
 
     const colorScheme = useColorScheme();
@@ -217,20 +217,20 @@ export default function SettingsScreen() {
             <ScrollView contentContainerStyle={styles.container}>
                 <ThemedView style={styles.wrapper}>
                     <ThemedText type="title" style={styles.heading}>
-                        Settings
+                        {t("settings.title")}
                     </ThemedText>
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
-                            Profile
+                            {t("settings.profile")}
                         </ThemedText>
                         <ThemedView
                             style={[styles.settingItem, styles.settingItemNoBorder, styles.settingItemLessPadding]}
                         >
-                            <ThemedText style={styles.settingLabel}>Email</ThemedText>
+                            <ThemedText style={styles.settingLabel}>{t("settings.email")}</ThemedText>
                             <TextInput
                                 style={styles.input}
-                                placeholder="your@email.com"
+                                placeholder={t("settings.emailPlaceholder")}
                                 placeholderTextColor={theme.placeholder}
                                 value={email}
                                 onChangeText={setEmail}
@@ -240,10 +240,10 @@ export default function SettingsScreen() {
                             />
                         </ThemedView>
                         <ThemedView style={[styles.settingItem, styles.settingItemNoBorder]}>
-                            <ThemedText style={styles.settingLabel}>Display Name</ThemedText>
+                            <ThemedText style={styles.settingLabel}>{t("settings.displayName")}</ThemedText>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Your name"
+                                placeholder={t("settings.displayNamePlaceholder")}
                                 placeholderTextColor={theme.placeholder}
                                 value={displayName}
                                 onChangeText={setDisplayName}
@@ -255,7 +255,7 @@ export default function SettingsScreen() {
                             disabled={loading || !hasProfileChanges}
                         >
                             <ThemedText style={styles.saveButtonText}>
-                                {loading ? "Saving..." : "Save Profile"}
+                                {loading ? t("settings.saving") : t("settings.saveProfile")}
                             </ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
@@ -264,10 +264,10 @@ export default function SettingsScreen() {
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
-                            Appearance
+                            {t("settings.appearance")}
                         </ThemedText>
                         <ThemedView style={styles.settingItem}>
-                            <ThemedText style={styles.settingLabel}>Theme</ThemedText>
+                            <ThemedText style={styles.settingLabel}>{t("settings.theme")}</ThemedText>
                             <View style={styles.settingWrapper}>
                                 <TouchableOpacity
                                     style={[styles.themeButton, preference === "light" && styles.themeButtonActive]}
@@ -279,7 +279,7 @@ export default function SettingsScreen() {
                                             preference === "light" && styles.themeButtonTextActive,
                                         ]}
                                     >
-                                        Light
+                                        {t("settings.light")}
                                     </ThemedText>
                                 </TouchableOpacity>
                                 <TouchableOpacity
@@ -292,7 +292,7 @@ export default function SettingsScreen() {
                                             preference === "dark" && styles.themeButtonTextActive,
                                         ]}
                                     >
-                                        Dark
+                                        {t("settings.dark")}
                                     </ThemedText>
                                 </TouchableOpacity>
                                 <TouchableOpacity
@@ -305,7 +305,7 @@ export default function SettingsScreen() {
                                             preference === "system" && styles.themeButtonTextActive,
                                         ]}
                                     >
-                                        System
+                                        {t("settings.system")}
                                     </ThemedText>
                                 </TouchableOpacity>
                             </View>
@@ -314,12 +314,12 @@ export default function SettingsScreen() {
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
-                            Currency
+                            {t("settings.currency")}
                         </ThemedText>
                         <TouchableOpacity style={styles.settingItem} onPress={() => setCurrencyModalVisible(true)}>
                             <View style={styles.settingBox}>
                                 <ThemedText style={[styles.settingLabel, styles.settingLink]}>
-                                    Currency Symbol
+                                    {t("settings.currencySymbol")}
                                 </ThemedText>
                                 <ThemedText style={styles.settingValue}>
                                     {currencySymbol} ({currencyCode})
@@ -330,15 +330,15 @@ export default function SettingsScreen() {
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
-                            Income
+                            {t("settings.income")}
                         </ThemedText>
                         <TouchableOpacity style={styles.settingItem} onPress={() => router.push("/income")}>
                             <View style={styles.settingBox}>
                                 <ThemedText style={[styles.settingLabel, styles.settingLink]}>
-                                    Monthly Income
+                                    {t("settings.monthlyIncome")}
                                 </ThemedText>
                                 <ThemedText style={styles.settingValue}>
-                                    {monthlyIncome === null ? "Not set" : formatAmount(monthlyIncome)}
+                                    {monthlyIncome === null ? t("settings.notSet") : formatAmount(monthlyIncome)}
                                 </ThemedText>
                             </View>
                         </TouchableOpacity>
@@ -346,12 +346,12 @@ export default function SettingsScreen() {
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
-                            Language
+                            {t("settings.language")}
                         </ThemedText>
                         <TouchableOpacity style={[styles.settingItem]} onPress={() => setLanguageModalVisible(true)}>
                             <View style={styles.settingBox}>
                                 <ThemedText style={[styles.settingLabel, styles.settingLink]}>
-                                    Select Language
+                                    {t("settings.selectLanguage")}
                                 </ThemedText>
                                 <ThemedText style={styles.settingValue}>
                                     {i18n.language === "nl" ? "Nederlands" : "English"}
@@ -362,17 +362,17 @@ export default function SettingsScreen() {
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
-                            About
+                            {t("settings.about")}
                         </ThemedText>
                         <ThemedView style={[styles.settingItem]}>
-                            <ThemedText style={styles.settingLabel}>Version</ThemedText>
+                            <ThemedText style={styles.settingLabel}>{t("settings.version")}</ThemedText>
                             <ThemedText style={styles.settingValue}>1.0.0</ThemedText>
                         </ThemedView>
                         <View style={styles.linksContainer}>
                             <Link href="/terms" asChild>
                                 <TouchableOpacity>
                                     <ThemedText type="link" style={styles.linkText}>
-                                        Voorwaarden
+                                        {t("settings.terms")}
                                     </ThemedText>
                                 </TouchableOpacity>
                             </Link>
@@ -380,7 +380,7 @@ export default function SettingsScreen() {
                             <Link href="/privacy" asChild>
                                 <TouchableOpacity>
                                     <ThemedText type="link" style={styles.linkText}>
-                                        Privacy
+                                        {t("settings.privacy")}
                                     </ThemedText>
                                 </TouchableOpacity>
                             </Link>
@@ -393,7 +393,7 @@ export default function SettingsScreen() {
                             await signOut();
                         }}
                     >
-                        <ThemedText style={styles.logOutButtonText}>Log Out</ThemedText>
+                        <ThemedText style={styles.logOutButtonText}> {t("settings.signOut")}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
 

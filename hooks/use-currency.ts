@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { useAuth } from "./use-auth";
 
 export interface Currency {
@@ -6,18 +8,28 @@ export interface Currency {
     name: string;
 }
 
-export const AVAILABLE_CURRENCIES: Currency[] = [
-    { symbol: "€", code: "EUR", name: "Euro" },
-    { symbol: "$", code: "USD", name: "US Dollar" },
-    { symbol: "£", code: "GBP", name: "British Pound" },
-    { symbol: "¥", code: "JPY", name: "Japanese Yen" },
-    { symbol: "₹", code: "INR", name: "Indian Rupee" },
-    { symbol: "R$", code: "BRL", name: "Brazilian Real" },
-    { symbol: "C$", code: "CAD", name: "Canadian Dollar" },
-    { symbol: "A$", code: "AUD", name: "Australian Dollar" },
-    { symbol: "Fr", code: "CHF", name: "Swiss Franc" },
-    { symbol: "kr", code: "SEK", name: "Swedish Krona" },
-];
+const CURRENCY_CONFIGS = [
+    { symbol: "€", code: "EUR", nameKey: "currency.eur" },
+    { symbol: "$", code: "USD", nameKey: "currency.usd" },
+    { symbol: "£", code: "GBP", nameKey: "currency.gbp" },
+    { symbol: "¥", code: "JPY", nameKey: "currency.jpy" },
+    { symbol: "₹", code: "INR", nameKey: "currency.inr" },
+    { symbol: "R$", code: "BRL", nameKey: "currency.brl" },
+    { symbol: "C$", code: "CAD", nameKey: "currency.cad" },
+    { symbol: "A$", code: "AUD", nameKey: "currency.aud" },
+    { symbol: "Fr", code: "CHF", nameKey: "currency.chf" },
+    { symbol: "kr", code: "SEK", nameKey: "currency.sek" },
+] as const;
+
+export function useAvailableCurrencies(): Currency[] {
+    const { t } = useTranslation();
+
+    return CURRENCY_CONFIGS.map((config) => ({
+        symbol: config.symbol,
+        code: config.code,
+        name: t(config.nameKey),
+    }));
+}
 
 export function useCurrency() {
     const { user } = useAuth();

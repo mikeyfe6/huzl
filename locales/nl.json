@@ -127,8 +127,47 @@
     },
     "settings": {
         "title": "Instellingen",
-        "language": "Taal",
+        "profile": "Profiel",
+        "email": "E-mail",
+        "emailPlaceholder": "naam@voorbeeld.nl",
+        "displayName": "Weergavenaam",
+        "displayNamePlaceholder": "Jouw naam",
+        "saving": "Opslaan …",
+        "saveProfile": "Profiel opslaan",
+        "appearance": "Uiterlijk",
+        "theme": "Thema",
+        "light": "Licht",
+        "dark": "Donker",
+        "system": "Systeem",
         "currency": "Valuta",
-        "signOut": "Afmelden"
+        "currencySymbol": "Valutasymbool",
+        "income": "Inkomen",
+        "monthlyIncome": "Maandelijks Inkomen",
+        "notSet": "Niet ingesteld",
+        "language": "Taal",
+        "selectLanguage": "Selecteer Taal",
+        "about": "Over",
+        "version": "Versie",
+        "terms": "Servicevoorwaarden",
+        "privacy": "Privacybeleid",
+        "signOut": "Uitloggen"
+    },
+    "currency": {
+        "selectCurrency": "Selecteer Valuta",
+        "close": "Sluiten",
+        "eur": "Euro",
+        "usd": "Amerikaanse Dollar",
+        "gbp": "Britse Pond",
+        "jpy": "Japanse Yen",
+        "inr": "Indiase Roepie",
+        "brl": "Braziliaanse Real",
+        "cad": "Canadese Dollar",
+        "aud": "Australische Dollar",
+        "chf": "Zwitserse Frank",
+        "sek": "Zweedse Kroon"
+    },
+    "language": {
+        "selectLanguage": "Selecteer Taal",
+        "close": "Sluiten"
     }
 }

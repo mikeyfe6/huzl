@@ -43,9 +43,9 @@ export function LanguageModal({ visible, onClose }: LanguageModalProps) {
         <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
-                    <ThemedText type="title">{t("settings.language")}</ThemedText>
+                    <ThemedText type="title">{t("language.selectLanguage")}</ThemedText>
                     <TouchableOpacity onPress={onClose} disabled={saving}>
-                        <ThemedText type="danger">Close</ThemedText>
+                        <ThemedText type="danger">{t("language.close")}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
 

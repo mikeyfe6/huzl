@@ -127,8 +127,47 @@
     },
     "settings": {
         "title": "Settings",
-        "language": "Language",
+        "profile": "Profile",
+        "email": "Email",
+        "emailPlaceholder": "name@example.com",
+        "displayName": "Display Name",
+        "displayNamePlaceholder": "Your name",
+        "saving": "Saving …",
+        "saveProfile": "Save Profile",
+        "appearance": "Appearance",
+        "theme": "Theme",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
         "currency": "Currency",
+        "currencySymbol": "Currency Symbol",
+        "income": "Income",
+        "monthlyIncome": "Monthly Income",
+        "notSet": "Not Set",
+        "language": "Language",
+        "selectLanguage": "Select Language",
+        "about": "About",
+        "version": "Version",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
         "signOut": "Sign Out"
+    },
+    "currency": {
+        "selectCurrency": "Select Currency",
+        "close": "Close",
+        "eur": "Euro",
+        "usd": "US Dollar",
+        "gbp": "British Pound",
+        "jpy": "Japanese Yen",
+        "inr": "Indian Rupee",
+        "brl": "Brazilian Real",
+        "cad": "Canadian Dollar",
+        "aud": "Australian Dollar",
+        "chf": "Swiss Franc",
+        "sek": "Swedish Krona"
+    },
+    "language": {
+        "selectLanguage": "Select Language",
+        "close": "Close"
     }
 }

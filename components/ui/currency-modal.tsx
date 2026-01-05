@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { linkColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
-import { AVAILABLE_CURRENCIES, type Currency } from "@/hooks/use-currency";
+import { useAvailableCurrencies, type Currency } from "@/hooks/use-currency";
 import { baseFlex, baseWeight } from "@/styles/base";
 import { supabase } from "@/utils/supabase";
 
@@ -16,8 +17,10 @@ interface CurrencyPickerModalProps {
 }
 
 export function CurrencyPickerModal({ visible, onClose, currentSymbol }: CurrencyPickerModalProps) {
+    const { t } = useTranslation();
     const { refreshUser } = useAuth();
     const [saving, setSaving] = useState(false);
+    const availableCurrencies = useAvailableCurrencies();
 
     const handleSelect = async (currency: Currency) => {
         setSaving(true);
@@ -49,14 +52,14 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol }: Currenc
         <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
-                    <ThemedText type="title">Select Currency</ThemedText>
+                    <ThemedText type="title">{t("currency.selectCurrency")}</ThemedText>
                     <TouchableOpacity onPress={onClose} disabled={saving}>
-                        <ThemedText type="danger">Close</ThemedText>
+                        <ThemedText type="danger">{t("currency.close")}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
 
                 <ScrollView style={styles.list}>
-                    {AVAILABLE_CURRENCIES.map((currency) => {
+                    {availableCurrencies.map((currency) => {
                         const isSelected = currency.symbol === currentSymbol;
                         return (
                             <TouchableOpacity
