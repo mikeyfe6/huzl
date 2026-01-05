@@ -13,7 +13,7 @@
     "modal": {
         "income": "Income",
         "terms": "Terms of Service",
-        "privacy": "Privacy Policy",
+        "privacy": "Privacy Policy"
     },
     "auth": {
         "getStarted": "Create your account to get started",
