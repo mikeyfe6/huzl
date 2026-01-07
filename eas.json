@@ -3,35 +3,16 @@
         "version": ">= 16.28.0",
         "appVersionSource": "remote"
     },
-
     "build": {
         "development": {
             "developmentClient": true,
-            "distribution": "internal",
-            "ios": {
-                "googleServicesFile": "./ios/huzl/GoogleService-Info.plist"
-            },
-            "android": {
-                "googleServicesFile": "./android/app/google-services.json"
-            }
+            "distribution": "internal"
         },
         "preview": {
-            "distribution": "internal",
-            "ios": {
-                "googleServicesFile": "./ios/huzl/GoogleService-Info.plist"
-            },
-            "android": {
-                "googleServicesFile": "./android/app/google-services.json"
-            }
+            "distribution": "internal"
         },
         "production": {
-            "autoIncrement": true,
-            "ios": {
-                "googleServicesFile": "./ios/huzl/GoogleService-Info.plist"
-            },
-            "android": {
-                "googleServicesFile": "./android/app/google-services.json"
-            }
+            "autoIncrement": true
         }
     },
     "submit": {
