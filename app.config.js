@@ -14,31 +14,31 @@ export default {
             bundleIdentifier: "com.menefex.huzl",
             googleServicesFile: process.env.GOOGLE_SERVICE_INFO_PLIST ?? "./firebase/GoogleService-Info.plist",
             infoPlist: {
-                ITSAppUsesNonExemptEncryption: false
-            }
+                ITSAppUsesNonExemptEncryption: false,
+            },
         },
         android: {
             adaptiveIcon: {
                 backgroundColor: "#F6F5F3",
                 foregroundImage: "./assets/images/android-icon-foreground.png",
                 backgroundImage: "./assets/images/android-icon-background.png",
-                monochromeImage: "./assets/images/android-icon-monochrome.png"
+                monochromeImage: "./assets/images/android-icon-monochrome.png",
             },
             edgeToEdgeEnabled: true,
             predictiveBackGestureEnabled: false,
             package: "com.menefex.huzl",
-            googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? "./firebase/google-services.json"
+            googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? "./firebase/google-services.json",
         },
         web: {
             output: "static",
-            favicon: "./assets/images/favicon.png"
+            favicon: "./assets/images/favicon.png",
         },
         plugins: [
             [
                 "expo-router",
                 {
-                    origin: "https://huzl.expo.app"
-                }
+                    origin: "https://huzl.expo.app",
+                },
             ],
             [
                 "expo-splash-screen",
@@ -48,9 +48,9 @@ export default {
                     resizeMode: "contain",
                     backgroundColor: "#F6F5F3",
                     dark: {
-                        backgroundColor: "#000000"
-                    }
-                }
+                        backgroundColor: "#000000",
+                    },
+                },
             ],
             "expo-web-browser",
             "@react-native-firebase/app",
@@ -60,28 +60,28 @@ export default {
                     ios: {
                         useFrameworks: "static",
                         podfileProperties: {
-                            "use_modular_headers!": true
+                            "use_modular_headers!": true,
                         },
-                        buildReactNativeFromSource: true
-                    }
-                }
-            ]
+                        buildReactNativeFromSource: true,
+                    },
+                },
+            ],
         ],
         experiments: {
             typedRoutes: true,
-            reactCompiler: true
+            reactCompiler: true,
         },
         extra: {
             router: {},
             eas: {
-                projectId: "8a99531b-9918-4a51-a7f3-2b25dadac2c9"
-            }
+                projectId: "8a99531b-9918-4a51-a7f3-2b25dadac2c9",
+            },
         },
         runtimeVersion: {
-            policy: "appVersion"
+            policy: "appVersion",
         },
         updates: {
-            url: "https://u.expo.dev/8a99531b-9918-4a51-a7f3-2b25dadac2c9"
-        }
-    }
+            url: "https://u.expo.dev/8a99531b-9918-4a51-a7f3-2b25dadac2c9",
+        },
+    },
 };
