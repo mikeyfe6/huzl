@@ -41,4 +41,8 @@ app-example
 
 # generated native folders
 /ios
+!/ios/huzl/GoogleService-Info.plist
+!/ios/Podfile
+!/ios/Podfile.lock
 /android
+!/android/app/google-services.json
