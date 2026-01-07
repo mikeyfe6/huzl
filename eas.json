@@ -6,7 +6,11 @@
     "build": {
         "development": {
             "developmentClient": true,
-            "distribution": "internal"
+            "distribution": "internal",
+            "env": {
+                "GOOGLE_SERVICES_JSON": "@env GOOGLE_SERVICES_JSON",
+                "GOOGLE_SERVICE_INFO_PLIST": "@env GOOGLE_SERVICE_INFO_PLIST"
+            }
         },
         "preview": {
             "distribution": "internal"
