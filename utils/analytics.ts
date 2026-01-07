@@ -62,8 +62,10 @@ function getGtag(): ((...args: any[]) => void) | null {
 }
 
 function waitForGtag(cb: (gtag: (...args: any[]) => void) => void, retries = 20) {
-    if (typeof globalThis !== "undefined" && (globalThis as any).gtag) {
-        cb((globalThis as any).gtag);
+    if (Platform.OS !== "web") return;
+
+    if (typeof globalThis !== "undefined" && (globalThis as any).window?.gtag) {
+        cb((globalThis as any).window.gtag);
         return;
     }
 
@@ -85,19 +87,23 @@ function getPageMetadata() {
 
 export async function logScreenView(name: string) {
     if (!name) return;
+
     if (Platform.OS === "web") {
         waitForGtag((gtag) => {
             gtag("event", "page_view", {
-                send_to: GA_ID,
                 ...getPageMetadata(),
             });
         });
         return;
     }
+
     try {
         const inst = getNativeAnalyticsInstance();
         if (inst && typeof rnfbAnalyticsMod?.logScreenView === "function") {
-            await rnfbAnalyticsMod.logScreenView(inst, { screen_name: name, screen_class: name });
+            await rnfbAnalyticsMod.logScreenView(inst, {
+                screen_name: name,
+                screen_class: name,
+            });
         }
     } catch {
         // noop
