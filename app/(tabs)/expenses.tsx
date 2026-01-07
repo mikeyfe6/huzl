@@ -430,6 +430,9 @@ export default function ExpensesScreen() {
                         android: 0,
                         default: 10,
                     }),
+                    minHeight: Platform.select({
+                        android: "100%",
+                    }),
                 },
                 selectOption: {
                     color: theme.inputText,

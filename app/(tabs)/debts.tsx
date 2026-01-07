@@ -280,10 +280,14 @@ export default function DebtsScreen() {
                     ...baseInput(theme),
                     ...baseSelect,
                     flex: 2,
+                    minWidth: 150,
                 },
                 paymentButton: {
                     ...baseButton,
                     minWidth: 100,
+                },
+                paymentButtonDisabled: {
+                    opacity: 0.5,
                 },
                 paymentButtonText: {
                     ...baseButtonText,
@@ -472,7 +476,11 @@ export default function DebtsScreen() {
                                             autoFocus
                                         />
                                         <TouchableOpacity
-                                            style={[styles.paymentButton, { backgroundColor: greenColor }]}
+                                            style={[
+                                                styles.paymentButton,
+                                                { backgroundColor: greenColor },
+                                                (!paymentAmount.trim() || loading) && styles.paymentButtonDisabled,
+                                            ]}
                                             onPress={() => handleMakePayment(debt.id)}
                                             disabled={loading || !paymentAmount.trim()}
                                         >
