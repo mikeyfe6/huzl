@@ -41,4 +41,6 @@ app-example
 
 # generated native folders
 /ios
+!/ios/Podfile
+!/ios/Podfile.lock
 /android
