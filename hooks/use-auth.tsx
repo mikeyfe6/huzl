@@ -53,9 +53,6 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             email,
             password,
         });
-        if (!error) {
-            logEvent("login", { method: "password" });
-        }
         return { error: error?.message };
     };
 

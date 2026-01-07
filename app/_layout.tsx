@@ -34,17 +34,6 @@ function RootContent() {
         setUserId(user?.id ?? null);
     }, [user?.id]);
 
-    // Dev-only: fire a test event once on mount to verify GA4
-    require("react").useEffect(() => {
-        if (__DEV__) {
-            // Avoid blocking render; best-effort fire-and-forget
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            require("@/utils/analytics").logEvent("dev_test_open", { ts: Date.now() });
-        }
-        // run once
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <RefreshProvider>
