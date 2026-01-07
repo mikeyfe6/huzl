@@ -99,10 +99,8 @@ export async function logEvent(eventName: string, params?: Record<string, any>) 
     if (Platform.OS === "web") {
         const gtag = getGtag();
         if (gtag) {
-            gtag("event", eventName, {
-                send_to: GA_ID,
-                ...(params ?? {}),
-            });
+            const gaParams = { send_to: GA_ID, ...params };
+            gtag("event", eventName, gaParams);
         }
         return;
     }
