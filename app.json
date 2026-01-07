@@ -45,14 +45,7 @@
                 }
             ],
             "expo-web-browser",
-            [
-                "expo-build-properties",
-                {
-                    "ios": {
-                        "useFrameworks": "dynamic"
-                    }
-                }
-            ]
+            "expo-build-properties"
         ],
         "experiments": {
             "typedRoutes": true,
