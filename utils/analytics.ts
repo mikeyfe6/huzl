@@ -61,6 +61,17 @@ function getGtag(): ((...args: any[]) => void) | null {
     return null;
 }
 
+function waitForGtag(cb: (gtag: (...args: any[]) => void) => void, retries = 20) {
+    if (typeof globalThis !== "undefined" && (globalThis as any).gtag) {
+        cb((globalThis as any).gtag);
+        return;
+    }
+
+    if (retries > 0) {
+        setTimeout(() => waitForGtag(cb, retries - 1), 100);
+    }
+}
+
 function getPageMetadata() {
     const hasDocument = typeof document !== "undefined";
     const hasLocation = typeof globalThis !== "undefined" && globalThis.location;
@@ -75,13 +86,12 @@ function getPageMetadata() {
 export async function logScreenView(name: string) {
     if (!name) return;
     if (Platform.OS === "web") {
-        const gtag = getGtag();
-        if (gtag) {
+        waitForGtag((gtag) => {
             gtag("event", "page_view", {
                 send_to: GA_ID,
                 ...getPageMetadata(),
             });
-        }
+        });
         return;
     }
     try {
@@ -97,11 +107,10 @@ export async function logScreenView(name: string) {
 export async function logEvent(eventName: string, params?: Record<string, any>) {
     if (!eventName) return;
     if (Platform.OS === "web") {
-        const gtag = getGtag();
-        if (gtag) {
+        waitForGtag((gtag) => {
             const gaParams = { send_to: GA_ID, ...params };
             gtag("event", eventName, gaParams);
-        }
+        });
         return;
     }
     try {
