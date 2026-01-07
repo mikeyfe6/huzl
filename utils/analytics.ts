@@ -2,6 +2,9 @@ import type { FirebaseAnalyticsTypes } from "@react-native-firebase/analytics";
 import { Platform } from "react-native";
 type AnalyticsModule = FirebaseAnalyticsTypes.Module;
 
+// Capture GA ID for web
+const GA_ID = Platform.OS === "web" ? process.env.EXPO_PUBLIC_GA_MEASUREMENT_ID : null;
+
 // Silence legacy namespace warnings coming from dependencies (per RNFB v22 guide)
 // Must run before Firebase modules initialize.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -74,7 +77,10 @@ export async function logScreenView(name: string) {
     if (Platform.OS === "web") {
         const gtag = getGtag();
         if (gtag) {
-            gtag("event", "page_view", getPageMetadata());
+            gtag("event", "page_view", {
+                send_to: GA_ID,
+                ...getPageMetadata(),
+            });
         }
         return;
     }
@@ -93,7 +99,10 @@ export async function logEvent(eventName: string, params?: Record<string, any>) 
     if (Platform.OS === "web") {
         const gtag = getGtag();
         if (gtag) {
-            gtag("event", eventName, params ?? {});
+            gtag("event", eventName, {
+                send_to: GA_ID,
+                ...(params ?? {}),
+            });
         }
         return;
     }
