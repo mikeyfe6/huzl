@@ -74,6 +74,7 @@ function waitForGtag(cb: (gtag: (...args: any[]) => void) => void, retries = 20)
         const g = getGlobal();
         const w = g?.window;
 
+        if (w?.gtag) {
             cb(w.gtag);
             return;
         }
