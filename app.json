@@ -49,7 +49,11 @@
                 "expo-build-properties",
                 {
                     "ios": {
-                        "useFrameworks": "static"
+                        "useFrameworks": "static",
+                        "podfileProperties": {
+                            "use_modular_headers!": true
+                        },
+                        "buildReactNativeFromSource": true
                     }
                 }
             ]
