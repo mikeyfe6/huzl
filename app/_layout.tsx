@@ -34,6 +34,17 @@ function RootContent() {
         setUserId(user?.id ?? null);
     }, [user?.id]);
 
+    // Dev-only: fire a test event once on mount to verify GA4
+    require("react").useEffect(() => {
+        if (__DEV__) {
+            // Avoid blocking render; best-effort fire-and-forget
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            require("@/utils/analytics").logEvent("dev_test_open", { ts: Date.now() });
+        }
+        // run once
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <RefreshProvider>
@@ -71,14 +82,14 @@ export default function RootLayout() {
                 />
                 <meta property="og:locale" content={i18n.language === "nl" ? "nl_NL" : "en_US"} />
                 {verification && <meta name="google-site-verification" content={verification} />}
-                {gaId && (
+                {Platform.OS === "web" && gaId && (
                     <>
                         <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
                         <script
                             dangerouslySetInnerHTML={{
                                 __html: `
                                 window.dataLayer = window.dataLayer || [];
-                                function gtag(){dataLayer.push(arguments);}
+                                function gtag(){dataLayer.push(arguments);} 
                                 gtag('js', new Date());
                                 gtag('config', '${gaId}');
                             `,

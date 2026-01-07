@@ -34,7 +34,7 @@
             [
                 "expo-router",
                 {
-                    "origin": "http://localhost:8081"
+                    "origin": "https://huzl.expo.app"
                 }
             ],
             [
@@ -50,6 +50,13 @@
                 }
             ],
             "expo-web-browser",
+            [
+                "@react-native-firebase/app",
+                {
+                    "ios": { "googleServicesFile": "./ios/huzl/GoogleService-Info.plist" },
+                    "android": { "googleServicesFile": "./android/app/google-services.json" }
+                }
+            ],
             [
                 "expo-build-properties",
                 {
