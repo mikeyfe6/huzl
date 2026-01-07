@@ -29,6 +29,10 @@ try {
     rnfbAppMod = null;
 }
 
+function getGlobal() {
+    return typeof globalThis === "object" ? (globalThis as any) : null;
+}
+
 function getNativeAnalyticsInstance(): AnalyticsModule | null {
     if (Platform.OS === "web") return null;
     if (nativeAnalyticsInstance) return nativeAnalyticsInstance;
@@ -55,33 +59,38 @@ function getNativeAnalyticsInstance(): AnalyticsModule | null {
 }
 
 function getGtag(): ((...args: any[]) => void) | null {
-    if (typeof globalThis !== "undefined" && (globalThis as any).window?.gtag) {
-        return (globalThis as any).window.gtag as (...args: any[]) => void;
+    const g = getGlobal();
+    const w = g?.window;
+
+    if (w?.gtag) {
+        return w.gtag;
     }
+
     return null;
 }
 
 function waitForGtag(cb: (gtag: (...args: any[]) => void) => void, retries = 20) {
-    if (Platform.OS !== "web") return;
+    if (Platform.OS === "web") {
+        const g = getGlobal();
+        const w = g?.window;
 
-    if (typeof globalThis !== "undefined" && (globalThis as any).window?.gtag) {
-        cb((globalThis as any).window.gtag);
-        return;
-    }
+            cb(w.gtag);
+            return;
+        }
 
-    if (retries > 0) {
-        setTimeout(() => waitForGtag(cb, retries - 1), 100);
+        if (retries > 0) {
+            setTimeout(() => waitForGtag(cb, retries - 1), 100);
+        }
     }
 }
 
 function getPageMetadata() {
-    const hasDocument = typeof document !== "undefined";
-    const hasLocation = typeof globalThis !== "undefined" && globalThis.location;
+    const g = getGlobal();
 
     return {
-        page_title: hasDocument ? document.title : undefined,
-        page_location: hasLocation ? globalThis.location.href : undefined,
-        page_path: hasLocation ? globalThis.location.pathname : undefined,
+        page_title: g?.document?.title,
+        page_location: g?.location?.href,
+        page_path: g?.location?.pathname,
     };
 }
 
