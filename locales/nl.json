@@ -1,4 +1,8 @@
 {
+    "seo": {
+        "title": "Huzl • Geldbeheer",
+        "description": "Beheer budgetten, volg uitgaven, monitor schulden en maandelijks inkomen met duidelijke overzichten in Huzl."
+    },
     "common": {
         "welcome": "Welkom!",
         "loading": "Laden …"

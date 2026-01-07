@@ -1,3 +1,4 @@
+import { logEvent, setUserId } from "@/utils/analytics";
 import { supabase } from "@/utils/supabase";
 import type { User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -30,8 +31,15 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             .catch(() => setLoading(false));
 
         // Listen for auth changes
-        const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
+        const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+            const nextUser = session?.user ?? null;
+            setUser(nextUser);
+            setUserId(nextUser?.id ?? null);
+            if (event === "SIGNED_IN" && nextUser?.id) {
+                logEvent("sign_in");
+            } else if (event === "SIGNED_OUT") {
+                logEvent("sign_out");
+            }
         });
 
         return () => {
@@ -45,16 +53,23 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             email,
             password,
         });
+        if (!error) {
+            logEvent("login", { method: "password" });
+        }
         return { error: error?.message };
     };
 
     const signUp = async (email: string, password: string) => {
         const { data, error } = await supabase.auth.signUp({ email, password });
+        if (!error && data.user) {
+            logEvent("sign_up", { method: "password" });
+        }
         return { error: error?.message, success: !error && !!data.user };
     };
 
     const signOut = async () => {
         await supabase.auth.signOut();
+        logEvent("logout");
     };
 
     const refreshUser = async () => {

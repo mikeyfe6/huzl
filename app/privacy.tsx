@@ -1,7 +1,8 @@
 import { router } from "expo-router";
+import Head from "expo-router/head";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
@@ -58,6 +59,12 @@ export default function PrivacyScreen() {
 
     return (
         <ThemedView style={styles.container}>
+            {Platform.OS === "web" && (
+                <Head>
+                    <title>{`${t("privacy.title")} • Huzl`}</title>
+                    <meta name="robots" content="index, follow" />
+                </Head>
+            )}
             <ScrollView contentContainerStyle={styles.content}>
                 <ThemedText type="title" style={styles.title}>
                     {t("privacy.title")}
