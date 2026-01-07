@@ -12,7 +12,7 @@
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.menefex.huzl",
-            "googleServicesFile": "$GOOGLE_SERVICE_INFO_PLIST",
+            "googleServicesFile": "GOOGLE_SERVICE_INFO_PLIST",
             "infoPlist": {
                 "ITSAppUsesNonExemptEncryption": false
             }
@@ -27,7 +27,7 @@
             "edgeToEdgeEnabled": true,
             "predictiveBackGestureEnabled": false,
             "package": "com.menefex.huzl",
-            "googleServicesFile": "$GOOGLE_SERVICES_JSON"
+            "googleServicesFile": "GOOGLE_SERVICES_JSON"
         },
         "web": {
             "output": "static",
