@@ -83,13 +83,5 @@
         "updates": {
             "url": "https://u.expo.dev/8a99531b-9918-4a51-a7f3-2b25dadac2c9"
         }
-    },
-    "build": {
-        "development": {
-            "env": {
-                "GOOGLE_SERVICES_JSON": "@env GOOGLE_SERVICES_JSON",
-                "GOOGLE_SERVICE_INFO_PLIST": "@env GOOGLE_SERVICE_INFO_PLIST"
-            }
-        }
     }
 }
