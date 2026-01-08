@@ -6,9 +6,6 @@ import type { FirebaseAnalyticsTypes } from "@react-native-firebase/analytics";
 import { Platform } from "react-native";
 type AnalyticsModule = FirebaseAnalyticsTypes.Module;
 
-// Capture GA ID for web
-const GA_ID = Platform.OS === "web" ? process.env.EXPO_PUBLIC_GA_MEASUREMENT_ID : null;
-
 // Silence legacy namespace warnings coming from dependencies (per RNFB v22 guide)
 // Must run before Firebase modules initialize.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -62,32 +59,7 @@ function getNativeAnalyticsInstance(): AnalyticsModule | null {
     return nativeAnalyticsInstance;
 }
 
-function getGtag(): ((...args: any[]) => void) | null {
-    const g = getGlobal();
-    const w = g?.window;
-
-    if (w?.gtag) {
-        return w.gtag;
-    }
-
-    return null;
-}
-
-function waitForGtag(cb: (gtag: (...args: any[]) => void) => void, retries = 20) {
-    if (Platform.OS === "web") {
-        const g = getGlobal();
-        const w = g?.window;
-
-        if (w?.gtag) {
-            cb(w.gtag);
-            return;
-        }
-
-        if (retries > 0) {
-            setTimeout(() => waitForGtag(cb, retries - 1), 100);
-        }
-    }
-}
+// gtag helpers removed; web uses GTM dataLayer exclusively
 
 function getPageMetadata() {
     const g = getGlobal();
@@ -103,22 +75,23 @@ export async function logScreenView(name: string) {
     if (!name) return;
 
     if (Platform.OS === "web") {
+        const g = getGlobal();
+        const w = g?.window;
+        let dl: Array<Record<string, any>> | undefined;
+        if (w) {
+            w.dataLayer = w.dataLayer || [];
+            dl = w.dataLayer as Array<Record<string, any>>;
+        }
         const metadata = {
             screen_name: name,
-            send_to: GA_ID ?? undefined,
-            page_referrer: (getGlobal()?.document?.referrer as string | undefined) ?? undefined,
+            page_referrer: (g?.document?.referrer as string | undefined) ?? undefined,
             ...getPageMetadata(),
         };
 
-        const g = getGlobal();
-        const dl = g?.window?.dataLayer as Array<Record<string, any>> | undefined;
+        // GTM-only: push to dataLayer
         if (dl) {
             dl.push({ event: "page_view", ...metadata });
         }
-
-        waitForGtag((gtag) => {
-            gtag("event", "page_view", metadata);
-        });
         return;
     }
 
@@ -139,16 +112,21 @@ export async function logEvent(eventName: string, params?: Record<string, any>) 
     if (!eventName) return;
     if (Platform.OS === "web") {
         const g = getGlobal();
-        const dl = g?.window?.dataLayer as Array<Record<string, any>> | undefined;
-        const gaParams = { send_to: GA_ID, ...params };
-
-        if (dl) {
-            dl.push({ event: eventName, ...gaParams });
+        const w = g?.window;
+        let dl: Array<Record<string, any>> | undefined;
+        if (w) {
+            w.dataLayer = w.dataLayer || [];
+            dl = w.dataLayer as Array<Record<string, any>>;
         }
 
-        waitForGtag((gtag) => {
-            gtag("event", eventName, gaParams);
-        });
+        // GTM-only: push to dataLayer
+        if (dl) {
+            if (params && Object.keys(params).length > 0) {
+                dl.push({ event: eventName, ...params });
+            } else {
+                dl.push({ event: eventName });
+            }
+        }
         return;
     }
     try {
@@ -163,9 +141,15 @@ export async function logEvent(eventName: string, params?: Record<string, any>) 
 
 export async function setUserId(userId: string | null) {
     if (Platform.OS === "web") {
-        const gtag = getGtag();
-        if (gtag) {
-            gtag("set", { user_id: userId ?? null });
+        const g = getGlobal();
+        const w = g?.window;
+        let dl: Array<Record<string, any>> | undefined;
+        if (w) {
+            w.dataLayer = w.dataLayer || [];
+            dl = w.dataLayer as Array<Record<string, any>>;
+        }
+        if (dl) {
+            dl.push({ event: "set_user", user_id: userId ?? null });
         }
         return;
     }
@@ -181,9 +165,15 @@ export async function setUserId(userId: string | null) {
 
 export async function setUserProperties(props: Record<string, string>) {
     if (Platform.OS === "web") {
-        const gtag = getGtag();
-        if (gtag) {
-            gtag("set", props);
+        const g = getGlobal();
+        const w = g?.window;
+        let dl: Array<Record<string, any>> | undefined;
+        if (w) {
+            w.dataLayer = w.dataLayer || [];
+            dl = w.dataLayer as Array<Record<string, any>>;
+        }
+        if (dl) {
+            dl.push({ event: "user_properties", ...props });
         }
         return;
     }
