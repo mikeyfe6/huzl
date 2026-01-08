@@ -30,12 +30,23 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             })
             .catch(() => setLoading(false));
 
-        // Listen for auth changes
+        // Listen for auth changes (dedupe userId and limit to sign-in/out)
+        let lastUserIdSent: string | null = null;
         const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
             const nextUser = session?.user ?? null;
             setUser(nextUser);
-            setUserId(nextUser?.id ?? null);
-            if (event === "SIGNED_OUT") {
+
+            if (event === "SIGNED_IN" && nextUser?.id) {
+                const uid = nextUser.id;
+                if (uid !== lastUserIdSent) {
+                    setUserId(uid);
+                    lastUserIdSent = uid;
+                }
+            } else if (event === "SIGNED_OUT") {
+                if (lastUserIdSent !== null) {
+                    setUserId(null);
+                    lastUserIdSent = null;
+                }
                 logEvent("sign_out");
             }
         });
