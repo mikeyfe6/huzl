@@ -441,7 +441,10 @@ export default function DebtsScreen() {
                                     <ThemedText style={styles.itemPayment}>
                                         {t("debts.monthly")}:{" "}
                                         {debt.pay_per_month
-                                            ? `${formatCurrency(debt.pay_per_month, currencySymbol)}`
+                                            ? `${formatCurrency(
+                                                  Math.min(debt.pay_per_month, debt.amount),
+                                                  currencySymbol
+                                              )}`
                                             : "—"}
                                     </ThemedText>
                                     {debt.pay_per_month && debt.pay_per_month > 0 ? (
