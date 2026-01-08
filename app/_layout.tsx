@@ -23,12 +23,28 @@ function RootContent() {
     const { user } = useAuth();
     const { usePathname } = require("expo-router");
     const pathname: string = usePathname();
+    const name = pathname?.replace(/^\//, "") || "home";
 
-    // Track screen views when the route changes (web + native)
     require("react").useEffect(() => {
-        const name = pathname?.replace(/^\//, "") || "home";
         logScreenView(name);
     }, [pathname]);
+
+    const pageTitle = (() => {
+        if (name === "home") {
+            return t("seo.title", { defaultValue: "Huzl • Money Management" });
+        }
+        const labels: Record<string, string> = {
+            expenses: t("tabs.expenses"),
+            debts: t("tabs.debts"),
+            budgets: t("tabs.budgets"),
+            settings: t("tabs.settings"),
+            income: t("modal.income"),
+            privacy: t("modal.privacy"),
+            terms: t("modal.terms"),
+        };
+        const label = labels[name] || t("tabs.home");
+        return `${label} • Huzl`;
+    })();
 
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -39,9 +55,10 @@ function RootContent() {
                     <Stack.Screen name="terms" options={{ presentation: "modal", title: t("modal.terms") }} />
                     <Stack.Screen name="privacy" options={{ presentation: "modal", title: t("modal.privacy") }} />
                 </Stack>
-                {Platform.OS === "web" && user && (
+                {Platform.OS === "web" && (
                     <Head>
-                        <meta name="robots" content="noindex, nofollow" />
+                        <title>{pageTitle}</title>
+                        {user && <meta name="robots" content="noindex, nofollow" />}
                     </Head>
                 )}
                 <StatusBar style="auto" />
@@ -105,7 +122,6 @@ export default function RootLayout() {
     return (
         <CustomThemeProvider>
             <Head>
-                <title>{t("seo.title", { defaultValue: "Huzl • Money Management" })}</title>
                 <meta
                     name="description"
                     content={t("seo.description", {
