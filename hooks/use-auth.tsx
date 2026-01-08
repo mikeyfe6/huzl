@@ -35,9 +35,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             const nextUser = session?.user ?? null;
             setUser(nextUser);
             setUserId(nextUser?.id ?? null);
-            if (event === "SIGNED_IN" && nextUser?.id) {
-                logEvent("sign_in");
-            } else if (event === "SIGNED_OUT") {
+            if (event === "SIGNED_OUT") {
                 logEvent("sign_out");
             }
         });
@@ -53,6 +51,9 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             email,
             password,
         });
+        if (!error) {
+            logEvent("sign_in");
+        }
         return { error: error?.message };
     };
 
