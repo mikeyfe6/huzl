@@ -1,9 +1,9 @@
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
-import { businessColor, familyColor, personalColor } from "@/constants/theme";
+import { businessColor, familyColor, investColor, personalColor } from "@/constants/theme";
 
-type Category = "personal" | "business" | "family";
+type Category = "personal" | "business" | "family" | "invest";
 
 interface ExpenseItem {
     id: string;
@@ -35,6 +35,10 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
         .filter((e) => e.active && e.category === "business")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
+    const familyYearlySpend = expenses
+        .filter((e) => e.active && e.category === "family")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
     // Pie chart calculations - responsive
     const responsiveSize = Math.min(windowWidth * 0.9, 450);
     const chartRadius = 145;
@@ -43,6 +47,7 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
 
     const personalPercent = totalYearlySpend > 0 ? (personalYearlySpend / totalYearlySpend) * 100 : 0;
     const businessPercent = totalYearlySpend > 0 ? (businessYearlySpend / totalYearlySpend) * 100 : 0;
+    const familyPercent = totalYearlySpend > 0 ? (familyYearlySpend / totalYearlySpend) * 100 : 0;
 
     // Helper function to create SVG pie slice path with offset for selected slice
     const getPieSlicePath = (startAngle: number, endAngle: number, radius: number, offsetAmount: number = 0) => {
@@ -74,11 +79,14 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
     const businessStartAngle = personalEndAngle;
     const businessEndAngle = businessStartAngle + (businessPercent / 100) * 360;
     const familyStartAngle = businessEndAngle;
-    const familyEndAngle = 360;
+    const familyEndAngle = familyStartAngle + (familyPercent / 100) * 360;
+    const investStartAngle = familyEndAngle;
+    const investEndAngle = 360;
 
     const getStrokeColor = (category: Category): string => {
         if (category === "personal") return personalColor;
         if (category === "business") return businessColor;
+        if (category === "invest") return investColor;
         return familyColor;
     };
 
@@ -107,6 +115,12 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
                     fill={familyColor}
                     opacity={selectedCategory === "family" ? 1 : 0.75}
                     onPress={() => onCategorySelect("family")}
+                />
+                <Path
+                    d={getPieSlicePath(investStartAngle, investEndAngle, chartRadius, 0)}
+                    fill={investColor}
+                    opacity={selectedCategory === "invest" ? 1 : 0.75}
+                    onPress={() => onCategorySelect("invest")}
                 />
                 <Circle
                     cx={chartCenterX}

@@ -23,6 +23,7 @@ import {
     Colors,
     familyColor,
     greenColor,
+    investColor,
     linkColor,
     mediumGreyColor,
     personalColor,
@@ -52,7 +53,7 @@ import {
 } from "@/styles/base";
 
 type Frequency = "daily" | "monthly" | "yearly";
-type Category = "personal" | "business" | "family";
+type Category = "personal" | "business" | "family" | "invest";
 interface ExpenseItem {
     id: string;
     name: string;
@@ -262,6 +263,7 @@ export default function ExpensesScreen() {
             personal: t("expenses.personal"),
             business: t("expenses.business"),
             family: t("expenses.family"),
+            invest: t("expenses.invest"),
         }),
         [t]
     );
@@ -306,6 +308,10 @@ export default function ExpensesScreen() {
 
     const familyYearlySpend = expenses
         .filter((e) => e.active && e.category === "family")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const investYearlySpend = expenses
+        .filter((e) => e.active && e.category === "invest")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
     const getFrequencyLabel = (freq: Frequency): string => {
@@ -536,6 +542,10 @@ export default function ExpensesScreen() {
                     backgroundColor: familyColor,
                     borderColor: familyColor,
                 },
+                badgeInvest: {
+                    backgroundColor: investColor,
+                    borderColor: investColor,
+                },
                 badgeText: {
                     ...baseWeight,
                     fontSize: 11,
@@ -750,6 +760,16 @@ export default function ExpensesScreen() {
                         >
                             <ThemedText>{t("expenses.family")}</ThemedText>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "invest" && styles.categoryActive]}
+                            onPress={() => setCategory("invest")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "invest",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.invest")}</ThemedText>
+                        </TouchableOpacity>
                     </View>
 
                     <ThemedText style={styles.label}>{t("expenses.frequency")}</ThemedText>
@@ -850,6 +870,7 @@ export default function ExpensesScreen() {
                                                     expense.category === "personal" && styles.badgePersonal,
                                                     expense.category === "business" && styles.badgeBusiness,
                                                     expense.category === "family" && styles.badgeFamily,
+                                                    expense.category === "invest" && styles.badgeInvest,
                                                 ]}
                                             >
                                                 <ThemedText style={styles.badgeText}>
@@ -939,6 +960,12 @@ export default function ExpensesScreen() {
                                     {formatCurrency(familyYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
+                            <ThemedText>
+                                {t("expenses.invest")}:{" "}
+                                <ThemedText style={styles.totalInline}>
+                                    {formatCurrency(investYearlySpend, currencySymbol)}
+                                </ThemedText>
+                            </ThemedText>
                         </ThemedView>
 
                         <View style={styles.totalDetails}>
@@ -965,7 +992,7 @@ export default function ExpensesScreen() {
                             />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>
-                                    {(["personal", "business", "family"] as Category[]).map((cat) => {
+                                    {(["personal", "business", "family", "invest"] as Category[]).map((cat) => {
                                         let btnBgColor = theme.inputBackground;
                                         let btnBorderColor = theme.inputBorder;
                                         let dotColor = slateColor;
@@ -991,6 +1018,13 @@ export default function ExpensesScreen() {
                                                 percent =
                                                     totalYearlySpend > 0
                                                         ? (familyYearlySpend / totalYearlySpend) * 100
+                                                        : 0;
+                                                break;
+                                            case "invest":
+                                                dotColor = investColor;
+                                                percent =
+                                                    totalYearlySpend > 0
+                                                        ? (investYearlySpend / totalYearlySpend) * 100
                                                         : 0;
                                                 break;
                                         }

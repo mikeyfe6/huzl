@@ -25,6 +25,7 @@ export const redDarkColor = "#f4433650";
 export const personalColor = "#819fd275";
 export const businessColor = "#F7B90075";
 export const familyColor = "#9c27b075";
+export const investColor = "#4caf5075";
 
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";
