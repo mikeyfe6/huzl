@@ -605,6 +605,12 @@ export default function ExpensesScreen() {
                     paddingHorizontal: 16,
                     marginBottom: 16,
                 },
+                totalDots: {
+                    width: 10,
+                    height: 10,
+                    borderRadius: 25,
+                    marginRight: 8,
+                },
                 totalInline: {
                     fontWeight: "bold",
                     paddingLeft: 8,
@@ -945,24 +951,56 @@ export default function ExpensesScreen() {
                                 {formatCurrency(totalYearlySpend, currencySymbol)}
                             </ThemedText>
                             <ThemedText>
+                                <View
+                                    style={[
+                                        styles.totalDots,
+                                        {
+                                            backgroundColor: personalColor,
+                                        },
+                                    ]}
+                                />
                                 {t("expenses.personal")}:{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(personalYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
+                                <View
+                                    style={[
+                                        styles.totalDots,
+                                        {
+                                            backgroundColor: businessColor,
+                                        },
+                                    ]}
+                                />
                                 {t("expenses.business")}:{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(businessYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
+                                <View
+                                    style={[
+                                        styles.totalDots,
+                                        {
+                                            backgroundColor: familyColor,
+                                        },
+                                    ]}
+                                />
                                 {t("expenses.family")}:{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(familyYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
                             <ThemedText>
+                                <View
+                                    style={[
+                                        styles.totalDots,
+                                        {
+                                            backgroundColor: investColor,
+                                        },
+                                    ]}
+                                />
                                 {t("expenses.invest")}:{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(investYearlySpend, currencySymbol)}
