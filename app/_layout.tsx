@@ -31,7 +31,9 @@ function RootContent() {
 
     // Sync analytics user id when auth changes
     require("react").useEffect(() => {
-        setUserId(user?.id ?? null);
+        if (user?.id) {
+            setUserId(user.id);
+        }
     }, [user?.id]);
 
     return (
