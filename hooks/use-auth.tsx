@@ -66,7 +66,6 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
     const signOut = async () => {
         await supabase.auth.signOut();
-        logEvent("logout");
     };
 
     const refreshUser = async () => {
