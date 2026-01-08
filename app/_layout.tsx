@@ -10,7 +10,7 @@ import "react-native-reanimated";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider as CustomThemeProvider, useColorScheme } from "@/hooks/use-color-scheme";
 import { RefreshProvider } from "@/hooks/use-refresh-context";
-import { logScreenView, setUserId } from "@/utils/analytics";
+import { logScreenView } from "@/utils/analytics";
 
 export const unstable_settings = {
     anchor: "(tabs)",
@@ -28,13 +28,6 @@ function RootContent() {
         const name = pathname?.replace(/^\//, "") || "home";
         logScreenView(name);
     }, [pathname]);
-
-    // Sync analytics user id when auth changes
-    require("react").useEffect(() => {
-        if (user?.id) {
-            setUserId(user.id);
-        }
-    }, [user?.id]);
 
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
