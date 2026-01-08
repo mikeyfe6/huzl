@@ -106,6 +106,8 @@ export async function logScreenView(name: string) {
         waitForGtag((gtag) => {
             gtag("event", "page_view", {
                 screen_name: name,
+                send_to: GA_ID ?? undefined,
+                page_referrer: (getGlobal()?.document?.referrer as string | undefined) ?? undefined,
                 ...getPageMetadata(),
             });
         });
