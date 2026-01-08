@@ -387,11 +387,13 @@ export default function ExpensesScreen() {
                 categoryGroup: {
                     ...baseFlex("center"),
                     ...baseGap,
+                    flexWrap: "wrap",
                 },
                 categoryOption: {
                     ...baseFlex("center", "center"),
                     ...baseInput(theme),
                     flex: 1,
+                    minWidth: 120,
                 },
                 categoryActive: {
                     borderColor: linkColor,
