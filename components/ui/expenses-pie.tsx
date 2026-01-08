@@ -8,8 +8,6 @@ type Category = "personal" | "business" | "family" | "invest";
 interface ExpenseItem {
     id: string;
     name: string;
-    amount: number;
-    frequency: "daily" | "monthly" | "yearly";
     category: Category;
     yearlyTotal: number;
     active: boolean;
