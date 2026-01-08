@@ -1,3 +1,7 @@
+if (__DEV__) {
+    globalThis.RNFBDebug = true;
+}
+
 import "@/utils/i18n";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
