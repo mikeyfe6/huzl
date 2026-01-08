@@ -101,6 +101,7 @@ export async function logScreenView(name: string) {
     if (Platform.OS === "web") {
         waitForGtag((gtag) => {
             gtag("event", "page_view", {
+                screen_name: name,
                 ...getPageMetadata(),
             });
         });
