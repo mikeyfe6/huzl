@@ -31,6 +31,7 @@ import {
     baseList,
     baseMain,
     baseSelect,
+    baseWeight,
 } from "@/styles/base";
 
 type DebtItem = {
@@ -244,6 +245,7 @@ export default function DebtsScreen() {
                     flex: 1,
                 },
                 itemLabel: {
+                    ...baseWeight,
                     fontSize: 13,
                     opacity: 0.7,
                     marginTop: 4,
@@ -263,12 +265,12 @@ export default function DebtsScreen() {
                     borderTopColor: theme.dividerColor,
                 },
                 itemPayment: {
-                    fontWeight: "500",
-                    fontSize: 12,
+                    fontSize: 13,
                     color: slateColor,
                 },
                 itemRemaining: {
-                    fontSize: 11.5,
+                    ...baseWeight,
+                    fontSize: 13,
                     opacity: 0.6,
                 },
                 paymentSection: {
