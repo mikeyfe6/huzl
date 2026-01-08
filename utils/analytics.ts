@@ -147,6 +147,10 @@ export async function setUserId(userId: string | null) {
         if (w) {
             w.dataLayer = w.dataLayer || [];
             dl = w.dataLayer as Array<Record<string, any>>;
+            // Expose user id for GTM JavaScript Variable consumption
+            if (g) {
+                g.huzlUserId = userId ?? null;
+            }
         }
         if (dl) {
             dl.push({ event: "set_user", user_id: userId ?? null });
