@@ -26,7 +26,7 @@ function RootContent() {
     const name = pathname?.replace(/^\//, "") || "home";
 
     require("react").useEffect(() => {
-        logScreenView(name);
+        logScreenView(name, pageTitle);
     }, [pathname]);
 
     const pageTitle = (() => {

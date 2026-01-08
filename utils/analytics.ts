@@ -71,8 +71,9 @@ function getPageMetadata() {
     };
 }
 
-export async function logScreenView(name: string) {
+export async function logScreenView(name: string, title?: string) {
     if (!name) return;
+    const screenName = title || name;
 
     if (Platform.OS === "web") {
         const g = getGlobal();
@@ -83,7 +84,7 @@ export async function logScreenView(name: string) {
             dl = w.dataLayer as Array<Record<string, any>>;
         }
         const metadata = {
-            screen_name: name,
+            screen_name: screenName,
             page_referrer: (g?.document?.referrer as string | undefined) ?? undefined,
             ...getPageMetadata(),
         };
@@ -99,7 +100,7 @@ export async function logScreenView(name: string) {
         const inst = getNativeAnalyticsInstance();
         if (inst && typeof rnfbAnalyticsMod?.logScreenView === "function") {
             await rnfbAnalyticsMod.logScreenView(inst, {
-                screen_name: name,
+                screen_name: screenName,
                 screen_class: name,
             });
         }
