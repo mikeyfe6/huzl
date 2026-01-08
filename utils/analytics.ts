@@ -149,8 +149,8 @@ export async function logEvent(eventName: string, params?: Record<string, any>) 
 export async function setUserId(userId: string | null) {
     if (Platform.OS === "web") {
         const gtag = getGtag();
-        if (gtag && userId) {
-            gtag("set", { user_id: userId });
+        if (gtag) {
+            gtag("set", { user_id: userId ?? null });
         }
         return;
     }
