@@ -1,7 +1,3 @@
-if (__DEV__) {
-    globalThis.RNFBDebug = true;
-}
-
 import "@/utils/i18n";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
@@ -84,7 +80,9 @@ export default function RootLayout() {
                                 window.dataLayer = window.dataLayer || [];
                                 window.gtag = function gtag(){ window.dataLayer.push(arguments); };
                                 window.gtag('js', new Date());
-                                window.gtag('config', '${gaId}');
+                                window.gtag('config', '${gaId}', {
+                                    send_page_view: false,
+                                });
                             `,
                             }}
                         />

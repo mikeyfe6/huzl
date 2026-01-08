@@ -1,3 +1,7 @@
+if (__DEV__) {
+    (globalThis as any).RNFBDebug = true;
+}
+
 import type { FirebaseAnalyticsTypes } from "@react-native-firebase/analytics";
 import { Platform } from "react-native";
 type AnalyticsModule = FirebaseAnalyticsTypes.Module;
