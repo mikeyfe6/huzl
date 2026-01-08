@@ -103,13 +103,21 @@ export async function logScreenView(name: string) {
     if (!name) return;
 
     if (Platform.OS === "web") {
+        const metadata = {
+            screen_name: name,
+            send_to: GA_ID ?? undefined,
+            page_referrer: (getGlobal()?.document?.referrer as string | undefined) ?? undefined,
+            ...getPageMetadata(),
+        };
+
+        const g = getGlobal();
+        const dl = g?.window?.dataLayer as Array<Record<string, any>> | undefined;
+        if (dl) {
+            dl.push({ event: "page_view", ...metadata });
+        }
+
         waitForGtag((gtag) => {
-            gtag("event", "page_view", {
-                screen_name: name,
-                send_to: GA_ID ?? undefined,
-                page_referrer: (getGlobal()?.document?.referrer as string | undefined) ?? undefined,
-                ...getPageMetadata(),
-            });
+            gtag("event", "page_view", metadata);
         });
         return;
     }
@@ -130,8 +138,15 @@ export async function logScreenView(name: string) {
 export async function logEvent(eventName: string, params?: Record<string, any>) {
     if (!eventName) return;
     if (Platform.OS === "web") {
+        const g = getGlobal();
+        const dl = g?.window?.dataLayer as Array<Record<string, any>> | undefined;
+        const gaParams = { send_to: GA_ID, ...params };
+
+        if (dl) {
+            dl.push({ event: eventName, ...gaParams });
+        }
+
         waitForGtag((gtag) => {
-            const gaParams = { send_to: GA_ID, ...params };
             gtag("event", eventName, gaParams);
         });
         return;

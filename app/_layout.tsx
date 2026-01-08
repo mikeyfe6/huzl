@@ -52,6 +52,7 @@ function RootContent() {
 export default function RootLayout() {
     const { t, i18n } = useTranslation();
     const gaId = process.env.EXPO_PUBLIC_GA_MEASUREMENT_ID;
+    const gtmId = process.env.EXPO_PUBLIC_GTM_ID;
     const verification = process.env.EXPO_PUBLIC_GOOGLE_SITE_VERIFICATION;
     return (
         <CustomThemeProvider>
@@ -66,7 +67,25 @@ export default function RootLayout() {
                 />
                 <meta property="og:locale" content={i18n.language === "nl" ? "nl_NL" : "en_US"} />
                 {verification && <meta name="google-site-verification" content={verification} />}
-                {Platform.OS === "web" && gaId && (
+                {Platform.OS === "web" && gtmId ? (
+                    <script
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                                (function(w,d,s,l,i){
+                                    w[l]=w[l]||[];
+                                    w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+                                    var f=d.getElementsByTagName(s)[0],
+                                        j=d.createElement(s),
+                                        dl=l!='dataLayer'?'&l='+l:'';
+                                    j.async=true;
+                                    j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                                    f.parentNode.insertBefore(j,f);
+                                })(window,document,'script','dataLayer','${gtmId}');
+                            `,
+                        }}
+                    />
+                ) : null}
+                {Platform.OS === "web" && !gtmId && gaId ? (
                     <>
                         <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
                         <script
@@ -82,7 +101,7 @@ export default function RootLayout() {
                             }}
                         />
                     </>
-                )}
+                ) : null}
             </Head>
             <AuthProvider>
                 <RootContent />
