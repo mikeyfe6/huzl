@@ -270,7 +270,7 @@ export default function DebtsScreen() {
                 },
                 itemRemaining: {
                     ...baseWeight,
-                    fontSize: 13,
+                    fontSize: 12.5,
                     opacity: 0.6,
                 },
                 paymentSection: {
