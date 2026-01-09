@@ -591,7 +591,6 @@ export default function ExpensesScreen() {
                 totalDay: {
                     backgroundColor: theme.dailyTab,
                 },
-
                 totalTitle: {
                     borderBottomWidth: StyleSheet.hairlineWidth,
                     borderBottomColor: theme.dividerColor,
@@ -958,9 +957,10 @@ export default function ExpensesScreen() {
                                             backgroundColor: personalColor,
                                         },
                                     ]}
-                                />
-                                <ThemedText style={styles.totalLabel}>{t("expenses.personal")}: </ThemedText>
+                                />{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.personal")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
+                                    {" "}
                                     {formatCurrency(personalYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
@@ -972,9 +972,10 @@ export default function ExpensesScreen() {
                                             backgroundColor: businessColor,
                                         },
                                     ]}
-                                />
-                                <ThemedText style={styles.totalLabel}>{t("expenses.business")}: </ThemedText>
+                                />{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.business")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
+                                    {" "}
                                     {formatCurrency(businessYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
@@ -986,9 +987,10 @@ export default function ExpensesScreen() {
                                             backgroundColor: familyColor,
                                         },
                                     ]}
-                                />
-                                <ThemedText style={styles.totalLabel}>{t("expenses.family")}: </ThemedText>
+                                />{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.family")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
+                                    {" "}
                                     {formatCurrency(familyYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
@@ -1000,9 +1002,10 @@ export default function ExpensesScreen() {
                                             backgroundColor: investColor,
                                         },
                                     ]}
-                                />
-                                <ThemedText style={styles.totalLabel}>{t("expenses.invest")}: </ThemedText>
+                                />{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.invest")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
+                                    {" "}
                                     {formatCurrency(investYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
