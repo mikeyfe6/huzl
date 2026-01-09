@@ -8,9 +8,8 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useThemePreference } from "@/hooks/use-theme-preference";
 
-import { supabase } from "@/utils/supabase";
-
 import { formatAmount } from "@/utils/helpers";
+import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
@@ -29,6 +28,7 @@ import {
     baseInput,
     baseMain,
     baseSelect,
+    baseSmall,
     baseWeight,
 } from "@/styles/base";
 
@@ -118,7 +118,7 @@ export default function SettingsScreen() {
                 },
                 settingLabel: {
                     ...baseWeight,
-                    fontSize: 14,
+                    ...baseSmall,
                     color: theme.label,
                     marginBottom: 12,
                 },
@@ -137,7 +137,7 @@ export default function SettingsScreen() {
                     marginBottom: 0,
                 },
                 settingValue: {
-                    fontSize: 14,
+                    ...baseSmall,
                     color: theme.placeholder,
                 },
                 input: {
@@ -182,7 +182,7 @@ export default function SettingsScreen() {
                     marginTop: 20,
                 },
                 linkText: {
-                    fontSize: 14,
+                    ...baseSmall,
                 },
                 logOutButton: {
                     marginTop: 12,

@@ -8,9 +8,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { supabase } from "@/utils/supabase";
-
 import { formatCurrency, formatNumber } from "@/utils/helpers";
+import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
@@ -45,9 +44,11 @@ import {
     baseLabel,
     baseList,
     baseMain,
+    baseMini,
     baseRadius,
     baseSelect,
     baseSize,
+    baseSmall,
     baseSpace,
     baseWeight,
 } from "@/styles/base";
@@ -418,11 +419,6 @@ export default function ExpensesScreen() {
                     borderWidth: 0,
                     fontFamily: "System",
                     color: theme.inputText,
-                    fontSize: Platform.select({
-                        ios: 16,
-                        android: 16,
-                        default: 16,
-                    }),
                     height: Platform.select({
                         ios: 216,
                         android: 44,
@@ -443,12 +439,8 @@ export default function ExpensesScreen() {
                     }),
                 },
                 selectOption: {
+                    ...baseSize,
                     color: theme.inputText,
-                    fontSize: Platform.select({
-                        ios: 16,
-                        android: 16,
-                        default: 16,
-                    }),
                 },
                 selectIcon: {
                     position: "absolute",
@@ -492,7 +484,7 @@ export default function ExpensesScreen() {
                 },
                 sortTriggerText: {
                     ...baseWeight,
-                    fontSize: 14,
+                    ...baseSmall,
                     color: theme.label,
                 },
                 expenseAmounts: {
@@ -513,12 +505,12 @@ export default function ExpensesScreen() {
                     flex: 1,
                 },
                 expenseLabel: {
-                    fontSize: 13,
+                    ...baseMini,
                     opacity: 0.7,
                 },
                 expenseAmount: {
                     ...baseWeight,
-                    fontSize: 13,
+                    ...baseMini,
                 },
                 expenseMeta: {
                     ...baseFlex("flex-start", "center"),
@@ -567,17 +559,17 @@ export default function ExpensesScreen() {
                     borderTopColor: theme.dividerColor,
                 },
                 expensePeriod: {
-                    fontSize: 13,
+                    ...baseMini,
                     color: slateColor,
                 },
                 expenseYearly: {
                     ...baseWeight,
-                    fontSize: 14,
+                    ...baseSmall,
                     color: theme.text,
                 },
                 expenseMonthly: {
                     ...baseWeight,
-                    fontSize: 14,
+                    ...baseSmall,
                     color: mediumGreyColor,
                 },
                 totalSection: {
@@ -599,6 +591,14 @@ export default function ExpensesScreen() {
                 totalDay: {
                     backgroundColor: theme.dailyTab,
                 },
+
+                totalTitle: {
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: theme.dividerColor,
+                    paddingBottom: 12,
+                },
+                totalContent: { display: "flex", alignItems: "center" },
+                totalLabel: { minWidth: 100 },
                 totalDetails: {
                     ...baseFlex("space-between", "center"),
                     gap: 16,
@@ -621,9 +621,7 @@ export default function ExpensesScreen() {
                     marginBottom: 0,
                 },
                 totalAmount: {
-                    fontSize: 32,
                     fontWeight: "bold",
-                    color: theme.text,
                     lineHeight: 40,
                 },
                 chartContainer: {
@@ -662,7 +660,7 @@ export default function ExpensesScreen() {
                 },
                 chartButtonText: { ...baseWeight },
                 chartButtonLabel: {
-                    fontSize: 14,
+                    ...baseSmall,
                     color: theme.statLabel,
                 },
                 chartItems: {
@@ -684,7 +682,7 @@ export default function ExpensesScreen() {
                     ...baseWeight,
                 },
                 chartItemLabel: {
-                    fontSize: 13,
+                    ...baseMini,
                     color: theme.statLabel,
                 },
                 emptyState: {
@@ -946,11 +944,13 @@ export default function ExpensesScreen() {
                 {expenses.length > 0 && (
                     <>
                         <ThemedView style={[styles.totalSection, styles.totalYear]}>
-                            <ThemedText type="subtitle">{t("expenses.yearlySpend")}</ThemedText>
-                            <ThemedText style={styles.totalAmount}>
+                            <ThemedText type="subtitle" style={styles.totalTitle}>
+                                {t("expenses.yearlySpend")}
+                            </ThemedText>
+                            <ThemedText style={[styles.totalAmount, { fontSize: 32, marginBottom: 24 }]}>
                                 {formatCurrency(totalYearlySpend, currencySymbol)}
                             </ThemedText>
-                            <ThemedText>
+                            <ThemedText style={styles.totalContent}>
                                 <View
                                     style={[
                                         styles.totalDots,
@@ -959,12 +959,12 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />
-                                {t("expenses.personal")}:{" "}
+                                <ThemedText style={styles.totalLabel}>{t("expenses.personal")}: </ThemedText>
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(personalYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
-                            <ThemedText>
+                            <ThemedText style={styles.totalContent}>
                                 <View
                                     style={[
                                         styles.totalDots,
@@ -973,12 +973,12 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />
-                                {t("expenses.business")}:{" "}
+                                <ThemedText style={styles.totalLabel}>{t("expenses.business")}: </ThemedText>
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(businessYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
-                            <ThemedText>
+                            <ThemedText style={styles.totalContent}>
                                 <View
                                     style={[
                                         styles.totalDots,
@@ -987,12 +987,12 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />
-                                {t("expenses.family")}:{" "}
+                                <ThemedText style={styles.totalLabel}>{t("expenses.family")}: </ThemedText>
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(familyYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
-                            <ThemedText>
+                            <ThemedText style={styles.totalContent}>
                                 <View
                                     style={[
                                         styles.totalDots,
@@ -1001,7 +1001,7 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />
-                                {t("expenses.invest")}:{" "}
+                                <ThemedText style={styles.totalLabel}>{t("expenses.invest")}: </ThemedText>
                                 <ThemedText style={styles.totalInline}>
                                     {formatCurrency(investYearlySpend, currencySymbol)}
                                 </ThemedText>
@@ -1010,14 +1010,18 @@ export default function ExpensesScreen() {
 
                         <View style={styles.totalDetails}>
                             <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalMonth]}>
-                                <ThemedText type="defaultSemiBold">{t("expenses.monthlySpend")}</ThemedText>
+                                <ThemedText type="defaultSemiBold" style={styles.totalTitle}>
+                                    {t("expenses.monthlySpend")}
+                                </ThemedText>
                                 <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
                                     {formatCurrency(totalMonthlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedView>
 
                             <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalDay]}>
-                                <ThemedText type="defaultSemiBold">{t("expenses.dailySpend")}</ThemedText>
+                                <ThemedText type="defaultSemiBold" style={styles.totalTitle}>
+                                    {t("expenses.dailySpend")}
+                                </ThemedText>
                                 <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
                                     {formatCurrency(totalDailySpend, currencySymbol)}
                                 </ThemedText>

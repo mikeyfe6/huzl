@@ -7,9 +7,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { supabase } from "@/utils/supabase";
-
 import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
+import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
@@ -30,7 +29,9 @@ import {
     baseLabel,
     baseList,
     baseMain,
+    baseMini,
     baseSelect,
+    baseSmall,
     baseWeight,
 } from "@/styles/base";
 
@@ -246,7 +247,7 @@ export default function DebtsScreen() {
                 },
                 itemLabel: {
                     ...baseWeight,
-                    fontSize: 13,
+                    ...baseSmall,
                     opacity: 0.7,
                     marginTop: 4,
                 },
@@ -265,12 +266,12 @@ export default function DebtsScreen() {
                     borderTopColor: theme.dividerColor,
                 },
                 itemPayment: {
-                    fontSize: 13,
+                    ...baseMini,
                     color: slateColor,
                 },
                 itemRemaining: {
                     ...baseWeight,
-                    fontSize: 12.5,
+                    ...baseMini,
                     opacity: 0.6,
                 },
                 paymentSection: {

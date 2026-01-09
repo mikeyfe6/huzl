@@ -13,7 +13,16 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { Colors, greenColor, silverColor } from "@/constants/theme";
-import { baseButton, baseButtonText, baseFlex, baseGap, baseInput, baseSelect, baseWeight } from "@/styles/base";
+import {
+    baseButton,
+    baseButtonText,
+    baseFlex,
+    baseGap,
+    baseInput,
+    baseSelect,
+    baseSmall,
+    baseWeight,
+} from "@/styles/base";
 
 export default function ModalScreen() {
     const { t } = useTranslation();
@@ -94,7 +103,7 @@ export default function ModalScreen() {
                 },
                 label: {
                     ...baseWeight,
-                    fontSize: 14,
+                    ...baseSmall,
                     color: theme.label,
                     marginBottom: 12,
                 },

@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-import { Colors, linkColor } from "@/constants/theme";
 
+import { Colors, linkColor } from "@/constants/theme";
 import { baseBorder, baseFlex } from "@/styles/base";
 
 type ThemeShape = (typeof Colors)[keyof typeof Colors];

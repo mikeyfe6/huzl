@@ -7,9 +7,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { supabase } from "@/utils/supabase";
-
 import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
+import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
@@ -21,6 +20,8 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
+    baseEmpty,
+    baseEmptyText,
     baseFlex,
     baseGap,
     baseIcon,
@@ -30,6 +31,7 @@ import {
     baseList,
     baseMain,
     baseSelect,
+    baseSmall,
     baseSpace,
     baseWeight,
 } from "@/styles/base";
@@ -445,7 +447,7 @@ export default function BudgetsScreen() {
                     padding: 8,
                 },
                 budgetAmount: {
-                    fontSize: 14,
+                    ...baseSmall,
                     opacity: 0.8,
                     color: theme.label,
                 },
@@ -493,19 +495,15 @@ export default function BudgetsScreen() {
                     flex: 1,
                 },
                 expenseLabel: {
-                    fontSize: 14,
+                    ...baseSmall,
                     opacity: 0.7,
                     color: theme.label,
                 },
                 emptyState: {
-                    ...baseFlex("center", "center"),
-                    paddingVertical: 60,
+                    ...baseEmpty,
                 },
                 emptyStateText: {
-                    fontSize: 18,
-                    opacity: 0.6,
-                    textAlign: "center",
-                    color: theme.emptyStateText,
+                    ...baseEmptyText(theme),
                 },
             }),
         [theme, colorScheme]

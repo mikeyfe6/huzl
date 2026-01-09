@@ -4,8 +4,9 @@ import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-nat
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+
 import { linkColor, whiteColor } from "@/constants/theme";
-import { baseFlex, baseWeight } from "@/styles/base";
+import { baseFlex, baseLarge, baseMini, baseSize, baseWeight } from "@/styles/base";
 
 type Language = {
     code: string;
@@ -106,15 +107,15 @@ const styles = StyleSheet.create({
     },
     languageName: {
         ...baseWeight,
-        fontSize: 16,
+        ...baseSize,
     },
     languageNative: {
-        fontSize: 13,
+        ...baseMini,
         opacity: 0.7,
         marginTop: 4,
     },
     checkmark: {
-        fontSize: 24,
+        ...baseLarge,
         fontWeight: "bold",
         color: whiteColor,
     },

@@ -11,6 +11,7 @@ import "react-native-reanimated";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider as CustomThemeProvider, useColorScheme } from "@/hooks/use-color-scheme";
 import { RefreshProvider } from "@/hooks/use-refresh-context";
+
 import { logScreenView } from "@/utils/analytics";
 
 export const unstable_settings = {

@@ -2,10 +2,12 @@ import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useAuth } from "@/hooks/use-auth";
+
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+
 import { Colors } from "@/constants/theme";
-import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export default function TabLayout() {

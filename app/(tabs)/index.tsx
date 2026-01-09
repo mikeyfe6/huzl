@@ -22,7 +22,9 @@ import {
     baseFlex,
     baseGap,
     baseInput,
+    baseLarge,
     baseSelect,
+    baseSmall,
     baseSpace,
     baseWeight,
 } from "@/styles/base";
@@ -261,18 +263,14 @@ export default function HomeScreen() {
                         default: 12,
                     }),
                 },
-                errorContainer: {
-                    minHeight: 24,
-                    justifyContent: "center",
-                    alignItems: "center",
-                },
+                errorContainer: { ...baseCenter, minHeight: 24 },
                 errorText: {
                     fontSize: 15,
                     color: "red",
                     textAlign: "center",
                 },
                 successText: {
-                    fontSize: 14,
+                    ...baseSmall,
                     color: greenColor,
                     textAlign: "center",
                     fontWeight: "500",
@@ -299,7 +297,7 @@ export default function HomeScreen() {
                     backgroundColor: theme.cardBackground,
                 },
                 statLabel: {
-                    fontSize: 14,
+                    ...baseSmall,
                     color: theme.statLabel,
                     textAlign: "center",
                 },
@@ -308,7 +306,7 @@ export default function HomeScreen() {
                     gap: 4,
                 },
                 statValue: {
-                    fontSize: 24,
+                    ...baseLarge,
                     fontWeight: "bold",
                     textAlign: "center",
                 },

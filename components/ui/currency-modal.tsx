@@ -2,13 +2,16 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { linkColor, whiteColor } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { useAvailableCurrencies, type Currency } from "@/hooks/use-currency";
-import { baseFlex, baseWeight } from "@/styles/base";
+
 import { supabase } from "@/utils/supabase";
+
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+
+import { linkColor, whiteColor } from "@/constants/theme";
+import { baseFlex, baseLarge, baseMini, baseTitle, baseWeight } from "@/styles/base";
 
 interface CurrencyPickerModalProps {
     readonly visible: boolean;
@@ -120,22 +123,20 @@ const styles = StyleSheet.create({
         gap: 16,
     },
     currencySymbol: {
-        fontSize: 28,
-        fontWeight: "bold",
+        ...baseTitle,
         width: 40,
         height: 40,
-        lineHeight: 40,
     },
     currencyName: {
         ...baseWeight,
     },
     currencyCode: {
-        fontSize: 13,
+        ...baseMini,
         opacity: 0.7,
         marginTop: 2,
     },
     checkmark: {
-        fontSize: 24,
+        ...baseLarge,
         fontWeight: "bold",
         color: whiteColor,
     },
