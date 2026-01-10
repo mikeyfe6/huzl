@@ -17,7 +17,8 @@
     "modal": {
         "income": "Inkomen",
         "terms": "Servicevoorwaarden",
-        "privacy": "Privacybeleid"
+        "privacy": "Privacybeleid",
+        "helpdesk": "Helpdesk"
     },
     "auth": {
         "getStarted": "Maak een account aan om aan de slag te gaan",
@@ -156,6 +157,9 @@
         "notSet": "Niet ingesteld",
         "language": "Taal",
         "selectLanguage": "Selecteer Taal",
+        "helpdesk": "Helpdesk",
+        "helpdeskLabel": "Bugs, Feedback & Ondersteuning",
+        "submitTicket": "Een ticket indienen",
         "about": "Over",
         "version": "Versie",
         "terms": "Servicevoorwaarden",
@@ -187,6 +191,21 @@
     "language": {
         "selectLanguage": "Selecteer Taal",
         "close": "Sluiten"
+    },
+    "helpdesk": {
+        "title": "Bugs, Feedback & Ondersteuning",
+        "type": "Type",
+        "bug": "Bug",
+        "feedback": "Feedback",
+        "support": "Ondersteuning",
+        "message": "Bericht",
+        "messagePlaceholder": "Typ hier je bericht...",
+        "sending": "Verzenden …",
+        "send": "Verzenden",
+        "yourTickets": "Jouw Tickets",
+        "delete": "Verwijder",
+        "deleteTicket": "Verwijder ticket",
+        "cancel": "Annuleren"
     },
     "privacy": {
         "title": "Privacybeleid",

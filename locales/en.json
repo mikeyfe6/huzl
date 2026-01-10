@@ -17,7 +17,8 @@
     "modal": {
         "income": "Income",
         "terms": "Terms of Service",
-        "privacy": "Privacy Policy"
+        "privacy": "Privacy Policy",
+        "helpdesk": "Helpdesk"
     },
     "auth": {
         "getStarted": "Create your account to get started",
@@ -156,6 +157,9 @@
         "notSet": "Not Set",
         "language": "Language",
         "selectLanguage": "Select Language",
+        "helpdesk": "Helpdesk",
+        "helpdeskLabel": "Bugs, Feedback & Support",
+        "submitTicket": "Submit a Ticket",
         "about": "About",
         "version": "Version",
         "terms": "Terms of Service",
@@ -187,6 +191,21 @@
     "language": {
         "selectLanguage": "Select Language",
         "close": "Close"
+    },
+    "helpdesk": {
+        "title": "Bugs, Feedback & Support",
+        "type": "Type",
+        "bug": "Bug",
+        "feedback": "Feedback",
+        "support": "Support",
+        "message": "Message",
+        "messagePlaceholder": "Type your message here...",
+        "sending": "Sending …",
+        "send": "Send",
+        "yourTickets": "Your Tickets",
+        "delete": "Delete",
+        "deleteTicket": "Delete ticket",
+        "cancel": "Cancel"
     },
     "privacy": {
         "title": "Privacy Policy",

@@ -7,23 +7,28 @@ import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, V
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
+import { formatCapitalize } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, linkColor } from "@/constants/theme";
+import { Colors, greenColor, redColor } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
+    baseCard,
     baseEmpty,
     baseEmptyText,
+    baseFlex,
     baseInput,
     baseLabel,
     baseList,
     baseMain,
+    baseMini,
     baseSelect,
     baseSize,
+    baseSpace,
 } from "@/styles/base";
 
 type Ticket = {
@@ -45,6 +50,34 @@ export default function HelpdeskScreen() {
 
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
+
+    const handleDeleteTicket = async (id: string) => {
+        if (!user) return;
+        setLoading(true);
+        const { error } = await supabase.from("helpdesk").delete().eq("id", id).eq("user_id", user.id);
+        if (!error) {
+            setTickets((prev) => prev.filter((t) => t.id !== id));
+        }
+        setLoading(false);
+    };
+
+    const confirmDeleteTicket = (id: string, message: string) => {
+        if (Platform.OS === "web") {
+            const ok = globalThis.confirm(`${t("helpdesk.delete")} "${message.slice(0, 20)}"?`);
+            if (ok) handleDeleteTicket(id);
+            return;
+        }
+        Alert.alert(t("helpdesk.deleteTicket"), `${t("helpdesk.delete")} "${message.slice(0, 20)}"?`, [
+            { text: t("helpdesk.cancel"), style: "cancel" },
+            {
+                text: t("helpdesk.delete"),
+                style: "destructive",
+                onPress: () => {
+                    void handleDeleteTicket(id);
+                },
+            },
+        ]);
+    };
 
     const fetchTickets = async () => {
         if (!user?.id) return;
@@ -91,7 +124,6 @@ export default function HelpdeskScreen() {
 
     useEffect(() => {
         fetchTickets();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.id]);
 
     const styles = useMemo(
@@ -165,12 +197,26 @@ export default function HelpdeskScreen() {
                 },
                 button: {
                     ...baseButton,
-                    backgroundColor: linkColor,
+                    marginTop: 8,
+                    backgroundColor: greenColor,
                 },
                 buttonText: { ...baseButtonText },
                 list: { ...baseList },
                 header: {
                     marginBottom: 8,
+                },
+                item: {
+                    ...baseFlex("space-between", "flex-start"),
+                    ...baseCard(theme),
+                },
+                itemContent: {
+                    ...baseSpace,
+                    flex: 1,
+                },
+                time: {
+                    ...baseMini,
+                    opacity: 0.7,
+                    color: theme.label,
                 },
                 emptyState: {
                     ...baseEmpty,
@@ -186,7 +232,7 @@ export default function HelpdeskScreen() {
         <ScrollView contentContainerStyle={styles.container}>
             <ThemedView style={styles.fieldset}>
                 <ThemedText type="title" style={styles.heading}>
-                    Bugs, feedback & ondersteuning
+                    {t("helpdesk.title")}
                 </ThemedText>
 
                 <ThemedText style={styles.label}>{t("helpdesk.type")}</ThemedText>
@@ -220,7 +266,7 @@ export default function HelpdeskScreen() {
                 <ThemedText style={styles.label}>{t("helpdesk.message")}</ThemedText>
                 <TextInput
                     style={styles.input}
-                    placeholder="Your message"
+                    placeholder={t("helpdesk.messagePlaceholder")}
                     placeholderTextColor={theme.placeholder}
                     value={message}
                     onChangeText={setMessage}
@@ -228,7 +274,9 @@ export default function HelpdeskScreen() {
                 />
 
                 <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading || submitting}>
-                    <ThemedText style={styles.buttonText}>{submitting ? "Sending..." : "Send"}</ThemedText>
+                    <ThemedText style={styles.buttonText}>
+                        {submitting ? t("helpdesk.sending") : t("helpdesk.send")}
+                    </ThemedText>
                 </TouchableOpacity>
             </ThemedView>
 
@@ -238,15 +286,20 @@ export default function HelpdeskScreen() {
                         Jouw tickets
                     </ThemedText>
                     {tickets.map((ticket) => (
-                        <View
-                            key={ticket.id}
-                            style={{ marginBottom: 12, padding: 10, borderWidth: 1, borderRadius: 6 }}
-                        >
-                            <ThemedText style={{ fontWeight: "bold" }}>{ticket.type}</ThemedText>
-                            <ThemedText>{ticket.message}</ThemedText>
-                            <ThemedText style={{ fontSize: 12, color: "#888" }}>
-                                {new Date(ticket.created_at).toLocaleString()}
-                            </ThemedText>
+                        <View key={ticket.id} style={styles.item}>
+                            <View style={styles.itemContent}>
+                                <ThemedText type="defaultSemiBold">{formatCapitalize(ticket.type)}</ThemedText>
+                                <ThemedText>{ticket.message}</ThemedText>
+                                <ThemedText style={styles.time}>
+                                    {new Date(ticket.created_at).toLocaleString()}
+                                </ThemedText>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => confirmDeleteTicket(ticket.id, ticket.message)}
+                                disabled={loading}
+                            >
+                                <Ionicons name="trash" size={18} color={redColor} />
+                            </TouchableOpacity>
                         </View>
                     ))}
                 </ThemedView>

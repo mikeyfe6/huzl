@@ -361,14 +361,14 @@ export default function SettingsScreen() {
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
-                            Helpdesk
+                            {t("settings.helpdesk")}
                         </ThemedText>
                         <ThemedView style={[styles.settingItem]}>
-                            <ThemedText style={styles.settingLabel}>Bugs, feedback & ondersteuning</ThemedText>
+                            <ThemedText style={styles.settingLabel}>{t("settings.helpdeskLabel")}</ThemedText>
                             <TouchableOpacity onPress={() => router.push("/helpdesk")}>
                                 <View style={styles.settingBox}>
                                     <ThemedText style={[styles.settingLabel, styles.settingLink]}>
-                                        Submit a ticket
+                                        {t("settings.submitTicket")}
                                     </ThemedText>
                                 </View>
                             </TouchableOpacity>
