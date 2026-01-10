@@ -128,10 +128,10 @@ export default function SettingsScreen() {
                 settingWrapper: {
                     ...baseGap,
                     flexDirection: "row",
-                    marginTop: 8,
                 },
                 settingLink: {
                     color: linkColor,
+                    marginBottom: 0,
                 },
                 settingLabelNoMargin: {
                     marginBottom: 0,
@@ -179,13 +179,12 @@ export default function SettingsScreen() {
                 linksContainer: {
                     ...baseFlex("center", "center"),
                     ...baseGap,
-                    marginTop: 20,
+                    marginVertical: 12,
                 },
                 linkText: {
                     ...baseSmall,
                 },
                 logOutButton: {
-                    marginTop: 12,
                     ...baseBorder,
                     ...baseButton,
                     borderColor: redColor,
@@ -362,12 +361,31 @@ export default function SettingsScreen() {
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
+                            Helpdesk
+                        </ThemedText>
+                        <ThemedView style={[styles.settingItem]}>
+                            <ThemedText style={styles.settingLabel}>Bugs, feedback & ondersteuning</ThemedText>
+                            <TouchableOpacity onPress={() => router.push("/helpdesk")}>
+                                <View style={styles.settingBox}>
+                                    <ThemedText style={[styles.settingLabel, styles.settingLink]}>
+                                        Submit a ticket
+                                    </ThemedText>
+                                </View>
+                            </TouchableOpacity>
+                        </ThemedView>
+                    </ThemedView>
+
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
                             {t("settings.about")}
                         </ThemedText>
                         <ThemedView style={[styles.settingItem]}>
                             <ThemedText style={styles.settingLabel}>{t("settings.version")}</ThemedText>
                             <ThemedText style={styles.settingValue}>1.0.0</ThemedText>
                         </ThemedView>
+                    </ThemedView>
+
+                    <ThemedView>
                         <View style={styles.linksContainer}>
                             <Link href="/terms" asChild>
                                 <TouchableOpacity>

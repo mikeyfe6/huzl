@@ -202,10 +202,8 @@ export default function HomeScreen() {
                     padding: 16,
                 },
                 image: {
-                    width: 350,
-                    height: 200,
-                    resizeMode: "contain",
-                    marginVertical: -12,
+                    width: 275,
+                    height: 125,
                 },
                 text: {
                     marginTop: 8,
@@ -215,7 +213,7 @@ export default function HomeScreen() {
                     width: "100%",
                     marginTop: 16,
                     maxWidth: 500,
-                    marginBottom: 64,
+                    marginBottom: 32,
                 },
                 input: {
                     ...baseInput(theme),
@@ -286,7 +284,7 @@ export default function HomeScreen() {
                     width: "100%",
                     maxWidth: 500,
                     marginTop: 24,
-                    marginBottom: 64,
+                    marginBottom: 40,
                 },
                 statCard: {
                     ...baseSpace,
@@ -326,6 +324,7 @@ export default function HomeScreen() {
             style={styles.image}
             accessible
             accessibilityLabel="Huzl logo"
+            resizeMode="cover"
         />
     );
 

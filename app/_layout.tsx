@@ -55,6 +55,7 @@ function RootContent() {
                     <Stack.Screen name="income" options={{ presentation: "modal", title: t("modal.income") }} />
                     <Stack.Screen name="terms" options={{ presentation: "modal", title: t("modal.terms") }} />
                     <Stack.Screen name="privacy" options={{ presentation: "modal", title: t("modal.privacy") }} />
+                    <Stack.Screen name="helpdesk" options={{ presentation: "modal", title: t("modal.helpdesk") }} />
                 </Stack>
                 {Platform.OS === "web" && (
                     <Head>
