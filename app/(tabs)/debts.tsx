@@ -509,10 +509,19 @@ export default function DebtsScreen() {
                     </ThemedView>
                 )}
 
-                {debts.length === 0 && (
+                {loading ? (
                     <ThemedView style={styles.emptyState}>
-                        <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
+                        <ThemedText style={styles.emptyStateText}>
+                            <Ionicons name="time-outline" size={24} color={theme.inputText} />
+                        </ThemedText>
                     </ThemedView>
+                ) : (
+                    !loading &&
+                    debts.length === 0 && (
+                        <ThemedView style={styles.emptyState}>
+                            <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
+                        </ThemedView>
+                    )
                 )}
             </ScrollView>
         </AuthGate>
