@@ -10,13 +10,14 @@ const resources = {
     nl: { translation: nl },
 };
 
-const deviceLanguage = Localization.getLocales()[0]?.languageCode || "en";
-const fallbackLanguage = deviceLanguage.startsWith("nl") ? "nl" : "en";
+const defaultLanguage = "nl";
+const deviceLanguage = Localization.getLocales()[0]?.languageCode || defaultLanguage;
+const resolvedLanguage = deviceLanguage.startsWith("nl") ? "nl" : defaultLanguage;
 
 i18n.use(initReactI18next).init({
     resources,
-    lng: fallbackLanguage,
-    fallbackLng: "en",
+    lng: resolvedLanguage,
+    fallbackLng: defaultLanguage,
     interpolation: {
         escapeValue: false,
     },
