@@ -233,7 +233,7 @@ export default function DebtsScreen() {
                 buttonText: { ...baseButtonText },
                 list: { ...baseList },
                 header: {
-                    marginBottom: 8,
+                    marginBottom: 12,
                 },
                 item: {
                     ...baseCard(theme),
@@ -364,16 +364,14 @@ export default function DebtsScreen() {
                         )}
                     </View>
                 </ThemedView>
-                <ThemedView style={styles.list}>
-                    <ThemedText type="subtitle" style={styles.header}>
-                        {t("debts.yourDebts")}
-                    </ThemedText>
-                    {debts.length === 0 ? (
-                        <ThemedView style={styles.emptyState}>
-                            <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
-                        </ThemedView>
-                    ) : (
-                        debts.map((debt) => (
+
+                {debts.length > 0 && (
+                    <ThemedView style={styles.list}>
+                        <ThemedText type="subtitle" style={styles.header}>
+                            {t("debts.yourDebts")}
+                        </ThemedText>
+
+                        {debts.map((debt) => (
                             <ThemedView key={debt.id} style={[styles.item, !debt.active && { opacity: 0.5 }]}>
                                 <View style={styles.itemHeader}>
                                     <View style={styles.itemTitle}>
@@ -507,9 +505,15 @@ export default function DebtsScreen() {
                                     </View>
                                 )}
                             </ThemedView>
-                        ))
-                    )}
-                </ThemedView>
+                        ))}
+                    </ThemedView>
+                )}
+
+                {debts.length === 0 && (
+                    <ThemedView style={styles.emptyState}>
+                        <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
+                    </ThemedView>
+                )}
             </ScrollView>
         </AuthGate>
     );

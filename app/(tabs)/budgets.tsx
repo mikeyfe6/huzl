@@ -425,7 +425,7 @@ export default function BudgetsScreen() {
                     ...baseList,
                 },
                 budgetHeader: {
-                    marginBottom: 8,
+                    marginBottom: 12,
                 },
                 budgetCard: {
                     ...baseCard(theme),
