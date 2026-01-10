@@ -10,6 +10,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { formatCapitalize } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
+import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
@@ -229,87 +230,89 @@ export default function HelpdeskScreen() {
     );
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <ThemedView style={styles.fieldset}>
-                <ThemedText type="title" style={styles.heading}>
-                    {t("helpdesk.title")}
-                </ThemedText>
-
-                <ThemedText style={styles.label}>{t("helpdesk.type")}</ThemedText>
-                <View style={styles.select}>
-                    <Picker
-                        selectedValue={type}
-                        onValueChange={(value) => setType(value)}
-                        style={[
-                            styles.selectInput,
-                            Platform.OS === "web"
-                                ? ([
-                                      {
-                                          appearance: "none",
-                                          WebkitAppearance: "none",
-                                          MozAppearance: "none",
-                                      } as any,
-                                  ] as any)
-                                : null,
-                        ]}
-                        itemStyle={styles.selectOption}
-                    >
-                        <Picker.Item label={t("helpdesk.bug")} value="bug" />
-                        <Picker.Item label={t("helpdesk.feedback")} value="feedback" />
-                        <Picker.Item label={t("helpdesk.support")} value="support" />
-                    </Picker>
-                    {Platform.OS === "web" && (
-                        <Ionicons name="chevron-down" size={18} color={theme.inputText} style={styles.selectIcon} />
-                    )}
-                </View>
-
-                <ThemedText style={styles.label}>{t("helpdesk.message")}</ThemedText>
-                <TextInput
-                    style={styles.input}
-                    placeholder={t("helpdesk.messagePlaceholder")}
-                    placeholderTextColor={theme.placeholder}
-                    value={message}
-                    onChangeText={setMessage}
-                    multiline
-                />
-
-                <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading || submitting}>
-                    <ThemedText style={styles.buttonText}>
-                        {submitting ? t("helpdesk.sending") : t("helpdesk.send")}
+        <AuthGate>
+            <ScrollView contentContainerStyle={styles.container}>
+                <ThemedView style={styles.fieldset}>
+                    <ThemedText type="title" style={styles.heading}>
+                        {t("helpdesk.title")}
                     </ThemedText>
-                </TouchableOpacity>
-            </ThemedView>
 
-            {tickets.length > 0 && (
-                <ThemedView style={styles.list}>
-                    <ThemedText type="subtitle" style={styles.header}>
-                        Jouw tickets
-                    </ThemedText>
-                    {tickets.map((ticket) => (
-                        <View key={ticket.id} style={styles.item}>
-                            <View style={styles.itemContent}>
-                                <ThemedText type="defaultSemiBold">{formatCapitalize(ticket.type)}</ThemedText>
-                                <ThemedText>{ticket.message}</ThemedText>
-                                <ThemedText style={styles.time}>
-                                    {new Date(ticket.created_at).toLocaleString()}
-                                </ThemedText>
+                    <ThemedText style={styles.label}>{t("helpdesk.type")}</ThemedText>
+                    <View style={styles.select}>
+                        <Picker
+                            selectedValue={type}
+                            onValueChange={(value) => setType(value)}
+                            style={[
+                                styles.selectInput,
+                                Platform.OS === "web"
+                                    ? ([
+                                          {
+                                              appearance: "none",
+                                              WebkitAppearance: "none",
+                                              MozAppearance: "none",
+                                          } as any,
+                                      ] as any)
+                                    : null,
+                            ]}
+                            itemStyle={styles.selectOption}
+                        >
+                            <Picker.Item label={t("helpdesk.bug")} value="bug" />
+                            <Picker.Item label={t("helpdesk.feedback")} value="feedback" />
+                            <Picker.Item label={t("helpdesk.support")} value="support" />
+                        </Picker>
+                        {Platform.OS === "web" && (
+                            <Ionicons name="chevron-down" size={18} color={theme.inputText} style={styles.selectIcon} />
+                        )}
+                    </View>
+
+                    <ThemedText style={styles.label}>{t("helpdesk.message")}</ThemedText>
+                    <TextInput
+                        style={styles.input}
+                        placeholder={t("helpdesk.messagePlaceholder")}
+                        placeholderTextColor={theme.placeholder}
+                        value={message}
+                        onChangeText={setMessage}
+                        multiline
+                    />
+
+                    <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading || submitting}>
+                        <ThemedText style={styles.buttonText}>
+                            {submitting ? t("helpdesk.sending") : t("helpdesk.send")}
+                        </ThemedText>
+                    </TouchableOpacity>
+                </ThemedView>
+
+                {tickets.length > 0 && (
+                    <ThemedView style={styles.list}>
+                        <ThemedText type="subtitle" style={styles.header}>
+                            {t("helpdesk.yourTickets")}
+                        </ThemedText>
+                        {tickets.map((ticket) => (
+                            <View key={ticket.id} style={styles.item}>
+                                <View style={styles.itemContent}>
+                                    <ThemedText type="defaultSemiBold">{formatCapitalize(ticket.type)}</ThemedText>
+                                    <ThemedText>{ticket.message}</ThemedText>
+                                    <ThemedText style={styles.time}>
+                                        {new Date(ticket.created_at).toLocaleString()}
+                                    </ThemedText>
+                                </View>
+                                <TouchableOpacity
+                                    onPress={() => confirmDeleteTicket(ticket.id, ticket.message)}
+                                    disabled={loading}
+                                >
+                                    <Ionicons name="trash" size={18} color={redColor} />
+                                </TouchableOpacity>
                             </View>
-                            <TouchableOpacity
-                                onPress={() => confirmDeleteTicket(ticket.id, ticket.message)}
-                                disabled={loading}
-                            >
-                                <Ionicons name="trash" size={18} color={redColor} />
-                            </TouchableOpacity>
-                        </View>
-                    ))}
-                </ThemedView>
-            )}
+                        ))}
+                    </ThemedView>
+                )}
 
-            {tickets.length === 0 && (
-                <ThemedView style={styles.emptyState}>
-                    <ThemedText style={styles.emptyStateText}>{t("helpdesk.noTickets")}</ThemedText>
-                </ThemedView>
-            )}
-        </ScrollView>
+                {tickets.length === 0 && (
+                    <ThemedView style={styles.emptyState}>
+                        <ThemedText style={styles.emptyStateText}>{t("helpdesk.noTickets")}</ThemedText>
+                    </ThemedView>
+                )}
+            </ScrollView>
+        </AuthGate>
     );
 }

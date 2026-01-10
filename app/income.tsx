@@ -9,6 +9,7 @@ import { useCurrency } from "@/hooks/use-currency";
 
 import { supabase } from "@/utils/supabase";
 
+import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
@@ -134,38 +135,40 @@ export default function IncomeScreen() {
     );
 
     return (
-        <ThemedView style={styles.outerContainer}>
-            <ThemedView style={styles.container}>
-                <ThemedText type="title" style={styles.title}>
-                    {t("income.setIncome")}
-                </ThemedText>
-                <ThemedText style={styles.hint}>{t("income.setIncomeLabel")}</ThemedText>
-                <ThemedText style={styles.label}>
-                    {t("income.amount")} ({currencySymbol})
-                </ThemedText>
-                <TextInput
-                    style={styles.input}
-                    placeholder="0.00"
-                    placeholderTextColor={theme.placeholder}
-                    keyboardType="decimal-pad"
-                    value={income}
-                    onChangeText={(text) => setIncome(text)}
-                />
-                <ThemedView style={styles.actions}>
-                    <TouchableOpacity
-                        style={[styles.saveButton, (saving || !hasIncomeChanges) && styles.saveButtonDisabled]}
-                        disabled={saving || !hasIncomeChanges}
-                        onPress={handleSave}
-                    >
-                        <ThemedText style={styles.saveButtonText}>
-                            {saving ? t("income.saving") : t("income.saveIncome")}
-                        </ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cancelLink} onPress={() => router.back()}>
-                        <ThemedText type="danger">{t("income.cancel")}</ThemedText>
-                    </TouchableOpacity>
+        <AuthGate>
+            <ThemedView style={styles.outerContainer}>
+                <ThemedView style={styles.container}>
+                    <ThemedText type="title" style={styles.title}>
+                        {t("income.setIncome")}
+                    </ThemedText>
+                    <ThemedText style={styles.hint}>{t("income.setIncomeLabel")}</ThemedText>
+                    <ThemedText style={styles.label}>
+                        {t("income.amount")} ({currencySymbol})
+                    </ThemedText>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="0.00"
+                        placeholderTextColor={theme.placeholder}
+                        keyboardType="decimal-pad"
+                        value={income}
+                        onChangeText={(text) => setIncome(text)}
+                    />
+                    <ThemedView style={styles.actions}>
+                        <TouchableOpacity
+                            style={[styles.saveButton, (saving || !hasIncomeChanges) && styles.saveButtonDisabled]}
+                            disabled={saving || !hasIncomeChanges}
+                            onPress={handleSave}
+                        >
+                            <ThemedText style={styles.saveButtonText}>
+                                {saving ? t("income.saving") : t("income.saveIncome")}
+                            </ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.cancelLink} onPress={() => router.back()}>
+                            <ThemedText type="danger">{t("income.cancel")}</ThemedText>
+                        </TouchableOpacity>
+                    </ThemedView>
                 </ThemedView>
             </ThemedView>
-        </ThemedView>
+        </AuthGate>
     );
 }

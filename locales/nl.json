@@ -205,7 +205,8 @@
         "yourTickets": "Jouw Tickets",
         "delete": "Verwijder",
         "deleteTicket": "Verwijder ticket",
-        "cancel": "Annuleren"
+        "cancel": "Annuleren",
+        "noTickets": "Nog geen tickets"
     },
     "privacy": {
         "title": "Privacybeleid",

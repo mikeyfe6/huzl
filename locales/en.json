@@ -205,7 +205,8 @@
         "yourTickets": "Your Tickets",
         "delete": "Delete",
         "deleteTicket": "Delete ticket",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "noTickets": "No tickets yet"
     },
     "privacy": {
         "title": "Privacy Policy",
