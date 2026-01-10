@@ -506,7 +506,7 @@ export default function BudgetsScreen() {
                     ...baseEmptyText(theme),
                 },
             }),
-        [theme, colorScheme]
+        [theme]
     );
 
     return (

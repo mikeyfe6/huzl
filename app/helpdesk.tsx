@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Button, Platform, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -12,8 +12,10 @@ import { supabase } from "@/utils/supabase";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors } from "@/constants/theme";
+import { Colors, linkColor } from "@/constants/theme";
 import {
+    baseButton,
+    baseButtonText,
     baseEmpty,
     baseEmptyText,
     baseInput,
@@ -39,21 +41,21 @@ export default function HelpdeskScreen() {
     const [type, setType] = useState("feedback");
     const [submitting, setSubmitting] = useState(false);
     const [tickets, setTickets] = useState<Ticket[]>([]);
-    const [loadingTickets, setLoadingTickets] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
 
     const fetchTickets = async () => {
         if (!user?.id) return;
-        setLoadingTickets(true);
+        setLoading(true);
         const { data, error } = await supabase
             .from("helpdesk")
             .select("id, type, message, created_at")
             .eq("user_id", user.id)
             .order("created_at", { ascending: false });
         if (!error) setTickets(data || []);
-        setLoadingTickets(false);
+        setLoading(false);
     };
 
     const handleSubmit = async () => {
@@ -161,6 +163,11 @@ export default function HelpdeskScreen() {
                     marginTop: -9,
                     pointerEvents: "none",
                 },
+                button: {
+                    ...baseButton,
+                    backgroundColor: linkColor,
+                },
+                buttonText: { ...baseButtonText },
                 list: { ...baseList },
                 header: {
                     marginBottom: 8,
@@ -171,121 +178,9 @@ export default function HelpdeskScreen() {
                 emptyStateText: {
                     ...baseEmptyText(theme),
                 },
-                // input: {
-                //     ...baseInput(theme),
-                //     ...baseSelect,
-                // },
-                // buttons: {
-                //     ...baseFlex("center"),
-                //     ...baseGap,
-                //     marginTop: 8,
-                // },
-                // button: {
-                //     ...baseButton,
-                // },
-                // buttonText: { ...baseButtonText },
-                // list: { ...baseList },
-                // header: {
-                //     marginBottom: 8,
-                // },
-                // item: {
-                //     ...baseCard(theme),
-                // },
-                // itemHeader: {
-                //     ...baseFlex("space-between", "flex-start"),
-                //     ...baseGap,
-                // },
-                // itemTitle: {
-                //     flex: 1,
-                // },
-                // itemLabel: {
-                //     ...baseWeight,
-                //     ...baseSmall,
-                //     opacity: 0.7,
-                //     marginTop: 4,
-                // },
-                // itemIcons: {
-                //     ...baseIcons,
-                // },
-                // itemIcon: {
-                //     ...baseIcon,
-                // },
-                // itemAmount: {
-                //     ...baseFlex("space-between"),
-                //     flexWrap: "wrap",
-                //     gap: 4,
-                //     paddingTop: 8,
-                //     borderTopWidth: StyleSheet.hairlineWidth,
-                //     borderTopColor: theme.dividerColor,
-                // },
-                // itemPayment: {
-                //     ...baseMini,
-                //     color: slateColor,
-                // },
-                // itemRemaining: {
-                //     ...baseWeight,
-                //     ...baseMini,
-                //     opacity: 0.6,
-                // },
-                // paymentSection: {
-                //     ...baseFlex("center"),
-                //     ...baseGap,
-                //     flexWrap: "wrap",
-                // },
-                // paymentInput: {
-                //     ...baseInput(theme),
-                //     ...baseSelect,
-                //     flex: 2,
-                //     minWidth: 150,
-                // },
-                // paymentButton: {
-                //     ...baseButton,
-                //     minWidth: 100,
-                // },
-                // paymentButtonDisabled: {
-                //     opacity: 0.5,
-                // },
-                // paymentButtonText: {
-                //     ...baseButtonText,
-                // },
-                // emptyState: {
-                //     ...baseEmpty,
-                // },
-                // emptyStateText: {
-                //     ...baseEmptyText(theme),
-                // },
             }),
-        [theme, colorScheme]
+        [theme]
     );
-
-    let ticketsContent;
-
-    if (loadingTickets) {
-        ticketsContent = <ThemedText>Loading...</ThemedText>;
-    } else if (tickets.length === 0) {
-        ticketsContent = (
-            <ThemedView style={styles.emptyState}>
-                <ThemedText style={styles.emptyStateText}>No tickets found.</ThemedText>
-            </ThemedView>
-        );
-    } else {
-        ticketsContent = (
-            <>
-                <ThemedText type="subtitle" style={styles.header}>
-                    Jouw tickets
-                </ThemedText>
-                {tickets.map((ticket) => (
-                    <View key={ticket.id} style={{ marginBottom: 12, padding: 10, borderWidth: 1, borderRadius: 6 }}>
-                        <ThemedText style={{ fontWeight: "bold" }}>{ticket.type}</ThemedText>
-                        <ThemedText>{ticket.message}</ThemedText>
-                        <ThemedText style={{ fontSize: 12, color: "#888" }}>
-                            {new Date(ticket.created_at).toLocaleString()}
-                        </ThemedText>
-                    </View>
-                ))}
-            </>
-        );
-    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -331,10 +226,37 @@ export default function HelpdeskScreen() {
                     onChangeText={setMessage}
                     multiline
                 />
-                <Button title={submitting ? "Sending..." : "Send"} onPress={handleSubmit} disabled={submitting} />
+
+                <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading || submitting}>
+                    <ThemedText style={styles.buttonText}>{submitting ? "Sending..." : "Send"}</ThemedText>
+                </TouchableOpacity>
             </ThemedView>
 
-            <ThemedView style={styles.list}>{ticketsContent}</ThemedView>
+            {tickets.length > 0 && (
+                <ThemedView style={styles.list}>
+                    <ThemedText type="subtitle" style={styles.header}>
+                        Jouw tickets
+                    </ThemedText>
+                    {tickets.map((ticket) => (
+                        <View
+                            key={ticket.id}
+                            style={{ marginBottom: 12, padding: 10, borderWidth: 1, borderRadius: 6 }}
+                        >
+                            <ThemedText style={{ fontWeight: "bold" }}>{ticket.type}</ThemedText>
+                            <ThemedText>{ticket.message}</ThemedText>
+                            <ThemedText style={{ fontSize: 12, color: "#888" }}>
+                                {new Date(ticket.created_at).toLocaleString()}
+                            </ThemedText>
+                        </View>
+                    ))}
+                </ThemedView>
+            )}
+
+            {tickets.length === 0 && (
+                <ThemedView style={styles.emptyState}>
+                    <ThemedText style={styles.emptyStateText}>{t("helpdesk.noTickets")}</ThemedText>
+                </ThemedView>
+            )}
         </ScrollView>
     );
 }

@@ -302,7 +302,7 @@ export default function DebtsScreen() {
                     ...baseEmptyText(theme),
                 },
             }),
-        [theme, colorScheme]
+        [theme]
     );
 
     return (
