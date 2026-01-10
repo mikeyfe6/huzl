@@ -24,7 +24,7 @@ import {
     baseWeight,
 } from "@/styles/base";
 
-export default function ModalScreen() {
+export default function IncomeScreen() {
     const { t } = useTranslation();
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
