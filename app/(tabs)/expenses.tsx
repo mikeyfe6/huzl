@@ -555,7 +555,7 @@ export default function ExpensesScreen() {
                     fontSize: 11,
                     lineHeight: 12,
                     color: theme.text,
-                    opacity: 0.875,
+                    opacity: 0.9,
                 },
                 expenseIcons: {
                     ...baseIcons,
