@@ -20,6 +20,7 @@ import { SORT_OPTIONS, SortModal, SortOption } from "@/components/ui/sort-modal"
 import {
     businessColor,
     Colors,
+    entertainmentColor,
     familyColor,
     greenColor,
     investColor,
@@ -54,7 +55,7 @@ import {
 } from "@/styles/base";
 
 type Frequency = "daily" | "monthly" | "yearly";
-type Category = "personal" | "business" | "family" | "invest";
+type Category = "personal" | "business" | "family" | "invest" | "entertainment";
 interface ExpenseItem {
     id: string;
     name: string;
@@ -265,6 +266,7 @@ export default function ExpensesScreen() {
             business: t("expenses.business"),
             family: t("expenses.family"),
             invest: t("expenses.invest"),
+            entertainment: t("expenses.entertainment"),
         }),
         [t]
     );
@@ -313,6 +315,10 @@ export default function ExpensesScreen() {
 
     const investYearlySpend = expenses
         .filter((e) => e.active && e.category === "invest")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const entertainmentYearlySpend = expenses
+        .filter((e) => e.active && e.category === "entertainment")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
     const getFrequencyLabel = (freq: Frequency): string => {
@@ -540,10 +546,15 @@ export default function ExpensesScreen() {
                     backgroundColor: investColor,
                     borderColor: investColor,
                 },
+                badgeEntertainment: {
+                    backgroundColor: entertainmentColor,
+                    borderColor: entertainmentColor,
+                },
                 badgeText: {
                     ...baseWeight,
                     fontSize: 11,
-                    lineHeight: 11,
+                    lineHeight: 12,
+
                     color: theme.text,
                 },
                 expenseIcons: {
@@ -775,6 +786,16 @@ export default function ExpensesScreen() {
                         >
                             <ThemedText>{t("expenses.invest")}</ThemedText>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "entertainment" && styles.categoryActive]}
+                            onPress={() => setCategory("entertainment")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "entertainment",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.entertainment")}</ThemedText>
+                        </TouchableOpacity>
                     </View>
 
                     <ThemedText style={styles.label}>{t("expenses.frequency")}</ThemedText>
@@ -876,6 +897,7 @@ export default function ExpensesScreen() {
                                                     expense.category === "business" && styles.badgeBusiness,
                                                     expense.category === "family" && styles.badgeFamily,
                                                     expense.category === "invest" && styles.badgeInvest,
+                                                    expense.category === "entertainment" && styles.badgeEntertainment,
                                                 ]}
                                             >
                                                 <ThemedText style={styles.badgeText}>
@@ -1009,6 +1031,21 @@ export default function ExpensesScreen() {
                                     {formatCurrency(investYearlySpend, currencySymbol)}
                                 </ThemedText>
                             </ThemedText>
+                            <ThemedText style={styles.totalContent}>
+                                <View
+                                    style={[
+                                        styles.totalDots,
+                                        {
+                                            backgroundColor: entertainmentColor,
+                                        },
+                                    ]}
+                                />{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.entertainment")}:</ThemedText>{" "}
+                                <ThemedText style={styles.totalInline}>
+                                    {" "}
+                                    {formatCurrency(entertainmentYearlySpend, currencySymbol)}
+                                </ThemedText>
+                            </ThemedText>
                         </ThemedView>
 
                         <View style={styles.totalDetails}>
@@ -1039,77 +1076,88 @@ export default function ExpensesScreen() {
                             />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>
-                                    {(["personal", "business", "family", "invest"] as Category[]).map((cat) => {
-                                        let btnBgColor = theme.inputBackground;
-                                        let btnBorderColor = theme.inputBorder;
-                                        let dotColor = slateColor;
-                                        let percent = 0;
+                                    {(["personal", "business", "family", "invest", "entertainment"] as Category[]).map(
+                                        (cat) => {
+                                            let btnBgColor = theme.inputBackground;
+                                            let btnBorderColor = theme.inputBorder;
+                                            let dotColor = slateColor;
+                                            let percent = 0;
 
-                                        switch (cat) {
-                                            case "personal":
-                                                dotColor = personalColor;
-                                                percent =
-                                                    totalYearlySpend > 0
-                                                        ? (personalYearlySpend / totalYearlySpend) * 100
-                                                        : 0;
-                                                break;
-                                            case "business":
-                                                dotColor = businessColor;
-                                                percent =
-                                                    totalYearlySpend > 0
-                                                        ? (businessYearlySpend / totalYearlySpend) * 100
-                                                        : 0;
-                                                break;
-                                            case "family":
-                                                dotColor = familyColor;
-                                                percent =
-                                                    totalYearlySpend > 0
-                                                        ? (familyYearlySpend / totalYearlySpend) * 100
-                                                        : 0;
-                                                break;
-                                            case "invest":
-                                                dotColor = investColor;
-                                                percent =
-                                                    totalYearlySpend > 0
-                                                        ? (investYearlySpend / totalYearlySpend) * 100
-                                                        : 0;
-                                                break;
-                                        }
+                                            switch (cat) {
+                                                case "personal":
+                                                    dotColor = personalColor;
+                                                    percent =
+                                                        totalYearlySpend > 0
+                                                            ? (personalYearlySpend / totalYearlySpend) * 100
+                                                            : 0;
+                                                    break;
+                                                case "business":
+                                                    dotColor = businessColor;
+                                                    percent =
+                                                        totalYearlySpend > 0
+                                                            ? (businessYearlySpend / totalYearlySpend) * 100
+                                                            : 0;
+                                                    break;
+                                                case "family":
+                                                    dotColor = familyColor;
+                                                    percent =
+                                                        totalYearlySpend > 0
+                                                            ? (familyYearlySpend / totalYearlySpend) * 100
+                                                            : 0;
+                                                    break;
+                                                case "invest":
+                                                    dotColor = investColor;
+                                                    percent =
+                                                        totalYearlySpend > 0
+                                                            ? (investYearlySpend / totalYearlySpend) * 100
+                                                            : 0;
+                                                    break;
+                                                case "entertainment":
+                                                    dotColor = entertainmentColor;
+                                                    percent =
+                                                        totalYearlySpend > 0
+                                                            ? (entertainmentYearlySpend / totalYearlySpend) * 100
+                                                            : 0;
+                                                    break;
+                                            }
 
-                                        if (category === cat) {
-                                            btnBgColor = dotColor;
-                                            btnBorderColor = dotColor;
-                                        }
+                                            if (category === cat) {
+                                                btnBgColor = dotColor;
+                                                btnBorderColor = dotColor;
+                                            }
 
-                                        return (
-                                            <TouchableOpacity
-                                                key={cat}
-                                                onPress={() => setCategory(cat)}
-                                                style={[
-                                                    styles.chartButton,
-                                                    {
-                                                        backgroundColor: btnBgColor,
-                                                        borderColor: btnBorderColor,
-                                                    },
-                                                ]}
-                                            >
-                                                <View
+                                            return (
+                                                <TouchableOpacity
+                                                    key={cat}
+                                                    onPress={() => setCategory(cat)}
                                                     style={[
-                                                        styles.chartButtonDot,
+                                                        styles.chartButton,
                                                         {
-                                                            backgroundColor: dotColor,
+                                                            backgroundColor: btnBgColor,
+                                                            borderColor: btnBorderColor,
                                                         },
                                                     ]}
-                                                />
-                                                <ThemedText style={styles.chartButtonText}>
-                                                    {categoryLabelMap[cat]}
-                                                </ThemedText>
-                                                <ThemedText style={[styles.chartButtonText, styles.chartButtonLabel]}>
-                                                    {percent.toFixed(1)}%
-                                                </ThemedText>
-                                            </TouchableOpacity>
-                                        );
-                                    })}
+                                                >
+                                                    <View
+                                                        style={[
+                                                            styles.chartButtonDot,
+                                                            {
+                                                                backgroundColor: dotColor,
+                                                            },
+                                                        ]}
+                                                    />
+                                                    <ThemedText style={styles.chartButtonText}>
+                                                        {categoryLabelMap[cat]}
+                                                    </ThemedText>
+                                                    <ThemedText
+                                                        style={[styles.chartButtonText, styles.chartButtonLabel]}
+                                                    >
+                                                        {percent.toFixed(1)}%
+                                                    </ThemedText>
+                                                </TouchableOpacity>
+                                            );
+                                        }
+                                    )}
                                 </View>
                                 <View style={styles.chartItems}>
                                     {expenses.filter((e) => e.active && e.category === category).length === 0 ? (

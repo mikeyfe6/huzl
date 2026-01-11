@@ -22,10 +22,11 @@ export const redLightColor = "#f4433680";
 export const greenDarkColor = "#4caf5050";
 export const redDarkColor = "#f4433650";
 
-export const personalColor = "#819fd275";
+export const personalColor = "#BDBDBD75";
 export const businessColor = "#F7B90075";
-export const familyColor = "#9c27b075";
-export const investColor = "#7A9A7675";
+export const familyColor = "#0880EC75";
+export const investColor = "#88B93E75";
+export const entertainmentColor = "#7a2fd075";
 
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";
