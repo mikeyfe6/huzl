@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -44,18 +44,33 @@ export default function IncomeScreen() {
     const [sources, setSources] = useState<IncomeSource[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const originalSourcesRef = useRef<IncomeSource[]>([]);
+    const [originalSources, setOriginalSources] = useState<IncomeSource[]>([]);
 
     const hasIncomeChanges = useMemo(() => {
-        const orig = originalSourcesRef.current;
-        if (orig.length !== sources.length) return true;
+        if (originalSources.length !== sources.length) return true;
+
         for (let i = 0; i < sources.length; i++) {
-            const a = sources[i],
-                b = orig[i];
-            if (!b || a.type !== b.type || a.amount !== b.amount || a.active !== b.active) return true;
+            const a = sources[i];
+            const b = originalSources[i];
+
+            if (!b) return true;
+
+            const aAmount = Number.parseFloat(a.amount);
+            const bAmount = Number.parseFloat(b.amount);
+
+            if (
+                a.type !== b.type ||
+                a.active !== b.active ||
+                (Number.isNaN(aAmount) && !Number.isNaN(bAmount)) ||
+                (!Number.isNaN(aAmount) && Number.isNaN(bAmount)) ||
+                (!Number.isNaN(aAmount) && !Number.isNaN(bAmount) && aAmount !== bAmount)
+            ) {
+                return true;
+            }
         }
+
         return false;
-    }, [sources]);
+    }, [sources, originalSources]);
 
     const saveButtonDisabled = useMemo(() => {
         if (saving || !hasIncomeChanges) return true;
@@ -153,6 +168,7 @@ export default function IncomeScreen() {
                 Alert.alert("Error", `Failed to save income: ${updateError?.message || insertError?.message}`);
                 return;
             }
+            setOriginalSources(sources);
             Alert.alert(t("income.saved"), t("income.savedMsg"));
         } catch (e) {
             console.error("Save income error:", e);
@@ -176,6 +192,7 @@ export default function IncomeScreen() {
             .from("incomes")
             .select("id, type, amount, active")
             .eq("user_id", user.id)
+            .eq("active", true)
             .then(({ data, error }) => {
                 let mappedSources: IncomeSource[];
                 if (error) {
@@ -194,7 +211,7 @@ export default function IncomeScreen() {
                     mappedSources = [{ type: "salary", amount: "", active: true }];
                 }
                 setSources(mappedSources);
-                originalSourcesRef.current = mappedSources;
+                setOriginalSources(mappedSources);
                 setLoading(false);
             });
     }, [user]);
@@ -247,6 +264,7 @@ export default function IncomeScreen() {
                     paddingVertical: 6,
                     marginBottom: 4,
                     fontWeight: "500",
+                    outlineWidth: 0,
                 },
                 category: {
                     borderTopWidth: StyleSheet.hairlineWidth,
@@ -290,11 +308,11 @@ export default function IncomeScreen() {
                 saveButtonText: {
                     ...baseButtonText,
                 },
-                backButton: {
+                closeButton: {
                     ...baseButton,
-                    backgroundColor: linkColor,
+                    backgroundColor: redColor,
                 },
-                backButtonText: {
+                closeButtonText: {
                     ...baseButtonText,
                     color: whiteColor,
                 },
@@ -317,7 +335,7 @@ export default function IncomeScreen() {
                     ) : (
                         sources.map((src, idx) => (
                             <View key={src.id ?? idx} style={styles.wrapper}>
-                                <TouchableOpacity onPress={() => {}} activeOpacity={1} style={styles.item}>
+                                <TouchableOpacity style={[styles.item, { opacity: src.active ? 1 : 0.5 }]}>
                                     <TextInput
                                         style={styles.input}
                                         value={src.amount}
@@ -411,8 +429,8 @@ export default function IncomeScreen() {
                                 {saving ? t("income.saving") : t("income.saveIncome")}
                             </ThemedText>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                            <ThemedText style={styles.backButtonText}>{t("income.done")}</ThemedText>
+                        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+                            <ThemedText style={styles.closeButtonText}>{t("income.close")}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>

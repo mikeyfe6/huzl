@@ -199,8 +199,8 @@
         "saved": "Saved",
         "savedMsg": "Income updated",
         "saving": "Saving …",
-        "saveIncome": "Save Income",
-        "done": "Done"
+        "saveIncome": "Save",
+        "close": "Close"
     },
     "language": {
         "selectLanguage": "Select Language",

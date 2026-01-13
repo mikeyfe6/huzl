@@ -199,8 +199,8 @@
         "saved": "Opgeslagen",
         "savedMsg": "Inkomen bijgewerkt",
         "saving": "Opslaan …",
-        "saveIncome": "Inkomen opslaan",
-        "done": "Klaar"
+        "saveIncome": "Opslaan",
+        "close": "Sluiten"
     },
     "language": {
         "selectLanguage": "Selecteer Taal",

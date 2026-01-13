@@ -1,5 +1,6 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { Link, useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -94,27 +95,30 @@ export default function SettingsScreen() {
         }
     }, [user]);
 
-    useEffect(() => {
-        if (!user) {
-            setMonthlyIncome(null);
-            return;
-        }
-        supabase
-            .from("incomes")
-            .select("amount")
-            .eq("user_id", user.id)
-            .then(({ data, error }) => {
-                if (error || !Array.isArray(data)) {
-                    setMonthlyIncome(null);
-                } else {
-                    const total = data.reduce((sum, row) => {
-                        const amt = typeof row.amount === "number" ? row.amount : Number.parseFloat(String(row.amount));
-                        return sum + (Number.isNaN(amt) ? 0 : amt);
-                    }, 0);
-                    setMonthlyIncome(total);
-                }
-            });
-    }, [user]);
+    useFocusEffect(
+        useCallback(() => {
+            if (!user) {
+                setMonthlyIncome(null);
+                return;
+            }
+            supabase
+                .from("incomes")
+                .select("amount")
+                .eq("user_id", user.id)
+                .then(({ data, error }) => {
+                    if (error || !Array.isArray(data)) {
+                        setMonthlyIncome(null);
+                    } else {
+                        const total = data.reduce((sum, row) => {
+                            const amt =
+                                typeof row.amount === "number" ? row.amount : Number.parseFloat(String(row.amount));
+                            return sum + (Number.isNaN(amt) ? 0 : amt);
+                        }, 0);
+                        setMonthlyIncome(total);
+                    }
+                });
+        }, [user])
+    );
 
     const styles = useMemo(
         () =>

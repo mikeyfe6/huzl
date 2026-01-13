@@ -503,7 +503,7 @@ export default function ExpensesScreen() {
                 expenseInactive: {
                     opacity: 0.5,
                 },
-                expenseItem: {
+                expenseWrapper: {
                     ...baseFlex("space-between", "flex-start"),
                     ...baseGap,
                 },
@@ -878,7 +878,7 @@ export default function ExpensesScreen() {
                                 key={expense.id}
                                 style={[styles.expenseCard, !expense.active && styles.expenseInactive]}
                             >
-                                <View style={styles.expenseItem}>
+                                <View style={styles.expenseWrapper}>
                                     <View style={styles.expenseInfo}>
                                         <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
                                             {expense.name}
