@@ -53,7 +53,6 @@ export default {
                 },
             ],
             "expo-web-browser",
-            "@react-native-firebase/app",
             [
                 "expo-build-properties",
                 {
