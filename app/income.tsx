@@ -363,16 +363,7 @@ export default function IncomeScreen() {
                                                     ]}
                                                     onPress={() => updateSource(idx, "type", item.key)}
                                                 >
-                                                    <ThemedText
-                                                        style={[
-                                                            styles.typeText,
-                                                            {
-                                                                color: src.type === item.key ? whiteColor : theme.text,
-                                                            },
-                                                        ]}
-                                                    >
-                                                        {item.label}
-                                                    </ThemedText>
+                                                    <ThemedText style={styles.typeText}>{item.label}</ThemedText>
                                                 </TouchableOpacity>
                                             );
                                         }}
