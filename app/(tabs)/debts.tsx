@@ -49,7 +49,13 @@ export default function DebtsScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
 
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
     const { symbol: currencySymbol } = useCurrency();
+
+    const nameInputRef = useRef<TextInput>(null);
+    const scrollViewRef = useRef<ScrollView>(null);
+
     const [debts, setDebts] = useState<DebtItem[]>([]);
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
@@ -58,12 +64,6 @@ export default function DebtsScreen() {
     const [paymentId, setPaymentId] = useState<string | null>(null);
     const [paymentAmount, setPaymentAmount] = useState("");
     const [loading, setLoading] = useState(false);
-
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
-
-    const nameInputRef = useRef<TextInput>(null);
-    const scrollViewRef = useRef<ScrollView>(null);
 
     const handleEditDebt = (debt: DebtItem) => {
         setName(debt.name);

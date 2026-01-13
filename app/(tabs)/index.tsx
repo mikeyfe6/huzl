@@ -33,6 +33,7 @@ export default function HomeScreen() {
     const { t } = useTranslation();
     const { user, loading, signIn, signUp } = useAuth();
     const { refreshFlag } = useRefreshContext();
+
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const { symbol: currencySymbol } = useCurrency();
@@ -42,7 +43,6 @@ export default function HomeScreen() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [registrationSuccess, setRegistrationSuccess] = useState(false);
-
     const [expenses, setExpenses] = useState<any[]>([]);
     const [debts, setDebts] = useState<any[]>([]);
     const [isSignUp, setIsSignUp] = useState(false);
@@ -113,11 +113,29 @@ export default function HomeScreen() {
         }
     };
 
-    const monthlyIncome = useMemo(() => {
-        const val = (user?.user_metadata as any)?.monthly_income;
-        if (typeof val === "number") return val;
-        if (val) return Number.parseFloat(String(val));
-        return null;
+    const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (!user) {
+            setMonthlyIncome(null);
+            return;
+        }
+
+        supabase
+            .from("incomes")
+            .select("amount")
+            .eq("user_id", user.id)
+            .then(({ data, error }) => {
+                if (error || !Array.isArray(data)) {
+                    setMonthlyIncome(null);
+                } else {
+                    const total = data.reduce((sum, row) => {
+                        const amt = typeof row.amount === "number" ? row.amount : Number.parseFloat(String(row.amount));
+                        return sum + (Number.isNaN(amt) ? 0 : amt);
+                    }, 0);
+                    setMonthlyIncome(total);
+                }
+            });
     }, [user]);
 
     const totals = useMemo(() => {

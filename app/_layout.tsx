@@ -1,6 +1,6 @@
 import "@/utils/i18n";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import Head from "expo-router/head";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -20,15 +20,12 @@ export const unstable_settings = {
 
 function RootContent() {
     const { t } = useTranslation();
-    const colorScheme = useColorScheme();
     const { user } = useAuth();
-    const { usePathname } = require("expo-router");
+
     const pathname: string = usePathname();
     const name = pathname?.replace(/^\//, "") || "home";
 
-    require("react").useEffect(() => {
-        logScreenView(name, pageTitle);
-    }, [pathname]);
+    const colorScheme = useColorScheme();
 
     const pageTitle = (() => {
         if (name === "home") {
@@ -46,6 +43,10 @@ function RootContent() {
         const label = labels[name] || t("tabs.home");
         return `${label} • Huzl`;
     })();
+
+    useEffect(() => {
+        logScreenView(name, pageTitle);
+    }, [pathname]);
 
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

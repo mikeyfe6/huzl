@@ -49,7 +49,14 @@ export default function BudgetsScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
 
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
     const { symbol: currencySymbol } = useCurrency();
+
+    const nameInputRef = useRef<TextInput>(null);
+    const expenseNameInputRef = useRef<TextInput>(null);
+    const scrollViewRef = useRef<ScrollView>(null);
+
     const [budgetName, setBudgetName] = useState("");
     const [totalAmount, setTotalAmount] = useState("");
     const [budgets, setBudgets] = useState<BudgetItem[]>([]);
@@ -59,12 +66,6 @@ export default function BudgetsScreen() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
-
-    const nameInputRef = useRef<TextInput>(null);
-    const expenseNameInputRef = useRef<TextInput>(null);
-    const scrollViewRef = useRef<ScrollView>(null);
 
     const fetchBudgetExpenses = async (budgetId: string) => {
         const { data: expensesData } = await supabase

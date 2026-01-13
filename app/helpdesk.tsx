@@ -43,14 +43,14 @@ export default function HelpdeskScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
 
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+
     const [message, setMessage] = useState("");
     const [type, setType] = useState("feedback");
     const [submitting, setSubmitting] = useState(false);
     const [tickets, setTickets] = useState<Ticket[]>([]);
     const [loading, setLoading] = useState(false);
-
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
 
     const handleDeleteTicket = async (id: string) => {
         if (!user) return;

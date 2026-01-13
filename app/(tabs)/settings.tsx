@@ -47,13 +47,7 @@ export default function SettingsScreen() {
     const [loading, setLoading] = useState(false);
     const [currencyModalVisible, setCurrencyModalVisible] = useState(false);
     const [languageModalVisible, setLanguageModalVisible] = useState(false);
-
-    useEffect(() => {
-        if (user) {
-            setEmail(user.email || "");
-            setDisplayName(user.user_metadata?.display_name || "");
-        }
-    }, [user]);
+    const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
 
     const handleSaveProfile = async () => {
         if (!user) return;
@@ -85,6 +79,42 @@ export default function SettingsScreen() {
             setLoading(false);
         }
     };
+
+    const hasProfileChanges = useMemo(() => {
+        const baseEmail = user?.email || "";
+        const baseDisplayName = user?.user_metadata?.display_name || "";
+
+        return email.trim() !== baseEmail || displayName.trim() !== baseDisplayName;
+    }, [user, email, displayName]);
+
+    useEffect(() => {
+        if (user) {
+            setEmail(user.email || "");
+            setDisplayName(user.user_metadata?.display_name || "");
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (!user) {
+            setMonthlyIncome(null);
+            return;
+        }
+        supabase
+            .from("incomes")
+            .select("amount")
+            .eq("user_id", user.id)
+            .then(({ data, error }) => {
+                if (error || !Array.isArray(data)) {
+                    setMonthlyIncome(null);
+                } else {
+                    const total = data.reduce((sum, row) => {
+                        const amt = typeof row.amount === "number" ? row.amount : Number.parseFloat(String(row.amount));
+                        return sum + (Number.isNaN(amt) ? 0 : amt);
+                    }, 0);
+                    setMonthlyIncome(total);
+                }
+            });
+    }, [user]);
 
     const styles = useMemo(
         () =>
@@ -196,20 +226,6 @@ export default function SettingsScreen() {
             }),
         [theme]
     );
-
-    const monthlyIncome = useMemo(() => {
-        const val = (user?.user_metadata as any)?.monthly_income;
-        if (typeof val === "number") return val;
-        if (val) return Number.parseFloat(String(val));
-        return null;
-    }, [user]);
-
-    const hasProfileChanges = useMemo(() => {
-        const baseEmail = user?.email || "";
-        const baseDisplayName = user?.user_metadata?.display_name || "";
-
-        return email.trim() !== baseEmail || displayName.trim() !== baseDisplayName;
-    }, [user, email, displayName]);
 
     return (
         <AuthGate>

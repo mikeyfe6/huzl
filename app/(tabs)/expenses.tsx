@@ -70,6 +70,13 @@ export default function ExpensesScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
 
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+    const { symbol: currencySymbol } = useCurrency();
+
+    const nameInputRef = useRef<TextInput>(null);
+    const scrollViewRef = useRef<ScrollView>(null);
+
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
     const [frequency, setFrequency] = useState<Frequency>("monthly");
@@ -81,13 +88,6 @@ export default function ExpensesScreen() {
     const [sortModalVisible, setSortModalVisible] = useState(false);
     const [nameFocused, setNameFocused] = useState(false);
     const [amountFocused, setAmountFocused] = useState(false);
-
-    const { symbol: currencySymbol } = useCurrency();
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
-
-    const nameInputRef = useRef<TextInput>(null);
-    const scrollViewRef = useRef<ScrollView>(null);
 
     const calculateYearlyTotal = (amount: number, freq: Frequency): number => {
         const num = Number.parseFloat(amount.toString());
