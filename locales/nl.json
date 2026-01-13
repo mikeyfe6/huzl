@@ -182,12 +182,25 @@
         "sek": "Zweedse Kroon"
     },
     "income": {
-        "setIncome": "Stel je maandelijkse inkomen in",
-        "setIncomeLabel": "Wordt gebruikt voor budgetten en overzichten.",
-        "amount": "Bedrag",
+        "salary": "Salaris",
+        "freelance": "Freelance/Zelfstandig",
+        "benefit": "Uitkering/Toeslag",
+        "pension": "Pensioen",
+        "alimony": "Alimentatie",
+        "investment": "Dividend/Rente",
+        "other": "Overig",
+        "invalidAmountTitle": "Ongeldig bedrag",
+        "invalidAmountMsg": "Voer een geldig, niet-negatief bedrag in",
+        "title": "Stel je maandelijkse inkomen in",
+        "hint": "Wordt gebruikt voor budgetten en overzichten.",
+        "sources": "Inkomensbronnen",
+        "addSource": "Bron toevoegen",
+        "total": "Totaal",
+        "saved": "Opgeslagen",
+        "savedMsg": "Inkomen bijgewerkt",
         "saving": "Opslaan …",
         "saveIncome": "Inkomen opslaan",
-        "cancel": "Annuleren"
+        "done": "Klaar"
     },
     "language": {
         "selectLanguage": "Selecteer Taal",

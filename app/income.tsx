@@ -69,13 +69,13 @@ export default function IncomeScreen() {
     }, [saving, hasIncomeChanges, sources]);
 
     const incomeTypes = [
-        { key: "salary", label: t("income.type.salary", "Salaris") },
-        { key: "freelance", label: t("income.type.freelance", "Freelance/Zelfstandig") },
-        { key: "benefit", label: t("income.type.benefit", "Uitkering/Toeslag") },
-        { key: "pension", label: t("income.type.pension", "Pensioen") },
-        { key: "alimony", label: t("income.type.alimony", "Alimentatie") },
-        { key: "investment", label: t("income.type.investment", "Dividend/Rente") },
-        { key: "other", label: t("income.type.other", "Overig") },
+        { key: "salary", label: t("income.salary") },
+        { key: "freelance", label: t("income.freelance") },
+        { key: "benefit", label: t("income.benefit") },
+        { key: "pension", label: t("income.pension") },
+        { key: "alimony", label: t("income.alimony") },
+        { key: "investment", label: t("income.investment") },
+        { key: "other", label: t("income.other") },
     ];
 
     const addSource = () => {
@@ -109,10 +109,7 @@ export default function IncomeScreen() {
             if (src.active === false) continue;
             const parsed = Number.parseFloat(src.amount);
             if (Number.isNaN(parsed) || parsed < 0) {
-                Alert.alert(
-                    t("income.invalidAmountTitle", "Ongeldig bedrag"),
-                    t("income.invalidAmountMsg", "Voer een geldig, niet-negatief bedrag in.")
-                );
+                Alert.alert(t("income.invalidAmountTitle"), t("income.invalidAmountMsg"));
                 return;
             }
         }
@@ -156,7 +153,7 @@ export default function IncomeScreen() {
                 Alert.alert("Error", `Failed to save income: ${updateError?.message || insertError?.message}`);
                 return;
             }
-            Alert.alert(t("income.saved", "Opgeslagen"), t("income.savedMsg", "Inkomen bijgewerkt."));
+            Alert.alert(t("income.saved"), t("income.savedMsg"));
         } catch (e) {
             console.error("Save income error:", e);
             const msg = e instanceof Error ? e.message : "An unexpected error occurred.";
@@ -295,7 +292,7 @@ export default function IncomeScreen() {
                 },
                 backButton: {
                     ...baseButton,
-                    backgroundColor: redColor,
+                    backgroundColor: linkColor,
                 },
                 backButtonText: {
                     ...baseButtonText,
@@ -309,10 +306,10 @@ export default function IncomeScreen() {
         <AuthGate>
             <ScrollView contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
-                    <ThemedText type="title">{t("income.setIncome")}</ThemedText>
-                    <ThemedText style={styles.hint}>{t("income.setIncomeLabel")}</ThemedText>
+                    <ThemedText type="title">{t("income.title")}</ThemedText>
+                    <ThemedText style={styles.hint}>{t("income.hint")}</ThemedText>
                     <ThemedText type="subtitle" style={styles.subtitle}>
-                        {t("income.sourcesLabel", "Inkomensbronnen")}
+                        {t("income.sources")}
                     </ThemedText>
 
                     {loading ? (
@@ -341,8 +338,8 @@ export default function IncomeScreen() {
                                                     style={[
                                                         styles.type,
                                                         {
-                                                            backgroundColor:
-                                                                src.type === item.key ? linkColor : theme.background,
+                                                            borderColor:
+                                                                src.type === item.key ? linkColor : theme.inputBorder,
                                                             marginRight: isLast ? 0 : 8,
                                                         },
                                                     ]}
@@ -398,10 +395,10 @@ export default function IncomeScreen() {
                         ))
                     )}
                     <TouchableOpacity onPress={addSource} style={styles.add}>
-                        <ThemedText style={styles.addText}>+ {t("income.addSource", "Bron toevoegen")}</ThemedText>
+                        <ThemedText style={styles.addText}>+ {t("income.addSource")}</ThemedText>
                     </TouchableOpacity>
                     <View style={styles.total}>
-                        <ThemedText> {t("income.total", "Totaal")}:</ThemedText>
+                        <ThemedText> {t("income.total")}:</ThemedText>
                         <ThemedText type="defaultSemiBold"> {formatCurrency(total, currencySymbol)}</ThemedText>
                     </View>
                     <ThemedView style={styles.buttons}>
@@ -415,7 +412,7 @@ export default function IncomeScreen() {
                             </ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                            <ThemedText style={styles.backButtonText}>{t("income.close")}</ThemedText>
+                            <ThemedText style={styles.backButtonText}>{t("income.done")}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>

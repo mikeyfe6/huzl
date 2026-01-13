@@ -182,12 +182,25 @@
         "sek": "Swedish Krona"
     },
     "income": {
-        "setIncome": "Set your monthly income",
-        "setIncomeLabel": "Used for budgets and summaries.",
-        "amount": "Amount",
+        "salary": "Salary",
+        "freelance": "Freelance",
+        "benefit": "Benefit",
+        "pension": "Pension",
+        "alimony": "Alimony",
+        "investment": "Dividend/Interest",
+        "other": "Other",
+        "invalidAmountTitle": "Invalid Amount",
+        "invalidAmountMsg": "Enter a valid, non-negative amount",
+        "title": "Set your monthly income",
+        "hint": "Used for budgets and overviews.",
+        "sources": "Income Sources",
+        "addSource": "Add Source",
+        "total": "Total",
+        "saved": "Saved",
+        "savedMsg": "Income updated",
         "saving": "Saving …",
         "saveIncome": "Save Income",
-        "cancel": "Cancel"
+        "done": "Done"
     },
     "language": {
         "selectLanguage": "Select Language",
