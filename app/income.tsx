@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -17,8 +17,10 @@ import { ThemedView } from "@/components/themed-view";
 
 import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
+    baseBorder,
     baseButton,
     baseButtonText,
+    baseCenter,
     baseFlex,
     baseGap,
     baseIcon,
@@ -42,7 +44,29 @@ export default function IncomeScreen() {
     const [sources, setSources] = useState<IncomeSource[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [hasIncomeChanges, setHasIncomeChanges] = useState(false);
+    const originalSourcesRef = useRef<IncomeSource[]>([]);
+
+    const hasIncomeChanges = useMemo(() => {
+        const orig = originalSourcesRef.current;
+        if (orig.length !== sources.length) return true;
+        for (let i = 0; i < sources.length; i++) {
+            const a = sources[i],
+                b = orig[i];
+            if (!b || a.type !== b.type || a.amount !== b.amount || a.active !== b.active) return true;
+        }
+        return false;
+    }, [sources]);
+
+    const saveButtonDisabled = useMemo(() => {
+        if (saving || !hasIncomeChanges) return true;
+        const activeSources = sources.filter((src) => src.active !== false);
+        if (activeSources.length === 0) return true;
+        for (const src of activeSources) {
+            const parsed = Number.parseFloat(src.amount);
+            if (src.amount === "" || Number.isNaN(parsed) || parsed < 0) return true;
+        }
+        return false;
+    }, [saving, hasIncomeChanges, sources]);
 
     const incomeTypes = [
         { key: "salary", label: t("income.type.salary", "Salaris") },
@@ -156,29 +180,27 @@ export default function IncomeScreen() {
             .select("id, type, amount, active")
             .eq("user_id", user.id)
             .then(({ data, error }) => {
+                let mappedSources: IncomeSource[];
                 if (error) {
                     Alert.alert("Error", `Failed to load incomes: ${error.message}`);
-                    setSources([]);
+                    mappedSources = [];
                 } else if (Array.isArray(data) && data.length > 0) {
-                    setSources(
-                        data.map((row) => ({
+                    mappedSources = data.map(
+                        (row): IncomeSource => ({
                             id: row.id,
                             type: row.type,
                             amount: typeof row.amount === "number" ? row.amount.toFixed(2) : String(row.amount),
-                            active: row.active !== false, // default to true if undefined
-                        }))
+                            active: row.active !== false,
+                        })
                     );
                 } else {
-                    setSources([{ type: "salary", amount: "", active: true }]);
+                    mappedSources = [{ type: "salary", amount: "", active: true }];
                 }
+                setSources(mappedSources);
+                originalSourcesRef.current = mappedSources;
                 setLoading(false);
-                setHasIncomeChanges(false);
             });
     }, [user]);
-
-    useEffect(() => {
-        setHasIncomeChanges(true);
-    }, [sources]);
 
     const styles = useMemo(
         () =>
@@ -207,62 +229,57 @@ export default function IncomeScreen() {
                     ...baseFlex("center", "center"),
                 },
                 item: {
+                    ...baseBorder,
+                    ...baseSelect,
                     flex: 1,
-                    borderWidth: 1,
                     borderColor: theme.inputBorder,
                     borderRadius: 6,
-                    ...baseSelect,
                 },
                 icons: {
-                    marginLeft: 16,
+                    ...baseCenter,
                     flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
                     gap: 12,
+                    marginLeft: 16,
                 },
                 icon: {
                     ...baseIcon,
                 },
                 input: {
-                    // ...baseWeight,
                     ...baseSize,
                     color: theme.text,
                     paddingVertical: 6,
-                    fontSize: 16,
                     marginBottom: 4,
                     fontWeight: "500",
                 },
                 category: {
-                    borderTopWidth: 1,
-                    paddingTop: 10,
+                    borderTopWidth: StyleSheet.hairlineWidth,
                     borderTopColor: theme.inputBorder,
+                    paddingTop: 10,
                     gap: 16,
                 },
                 type: {
-                    borderRadius: 8,
+                    ...baseBorder,
+                    borderRadius: 7,
                     paddingHorizontal: 14,
                     paddingVertical: 5,
-                    borderWidth: 1,
                     borderColor: theme.inputBorder,
                 },
                 typeText: { ...baseSmall },
                 delete: { padding: 4 },
                 add: { marginTop: 8, marginBottom: 6 },
                 addText: {
+                    ...baseWeight,
                     color: greenColor,
-                    fontWeight: "bold",
                 },
                 total: {
                     ...baseFlex("space-between", "center"),
                     fontSize: 18,
                     backgroundColor: theme.cardBackground,
-                    paddingHorizontal: 16,
-                    paddingTop: 14,
-                    paddingBottom: 18,
+                    padding: 16,
                     borderRadius: 12,
                     marginTop: 24,
                 },
-                actions: {
+                buttons: {
                     ...baseGap,
                     marginTop: 12,
                 },
@@ -387,10 +404,10 @@ export default function IncomeScreen() {
                         <ThemedText> {t("income.total", "Totaal")}:</ThemedText>
                         <ThemedText type="defaultSemiBold"> {formatCurrency(total, currencySymbol)}</ThemedText>
                     </View>
-                    <ThemedView style={styles.actions}>
+                    <ThemedView style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.saveButton, (saving || !hasIncomeChanges) && styles.saveButtonDisabled]}
-                            disabled={saving || !hasIncomeChanges}
+                            style={[styles.saveButton, saveButtonDisabled && styles.saveButtonDisabled]}
+                            disabled={saveButtonDisabled}
                             onPress={handleSave}
                         >
                             <ThemedText style={styles.saveButtonText}>
