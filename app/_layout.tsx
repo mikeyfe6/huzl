@@ -1,7 +1,10 @@
 import "@/utils/i18n";
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { useFonts } from "expo-font";
 import { Stack, usePathname } from "expo-router";
 import Head from "expo-router/head";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -76,6 +79,20 @@ export default function RootLayout() {
     const gtmId = process.env.EXPO_PUBLIC_GTM_ID;
     const verification = process.env.EXPO_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
+    const [fontsLoaded, fontError] = useFonts({
+        "BebasNeue-Regular": require("../assets/fonts/BebasNeue-Regular.ttf"),
+    });
+
+    useEffect(() => {
+        SplashScreen.preventAutoHideAsync();
+    }, []);
+
+    useEffect(() => {
+        if (fontsLoaded || fontError) {
+            SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded, fontError]);
+
     useEffect(() => {
         if (Platform.OS !== "web") return;
         const head = document.head;
@@ -121,6 +138,10 @@ export default function RootLayout() {
             }
         }
     }, [gtmId, gaId]);
+
+    if (!fontsLoaded && !fontError) {
+        return null;
+    }
 
     return (
         <CustomThemeProvider>

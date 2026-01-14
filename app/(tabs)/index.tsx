@@ -216,15 +216,16 @@ export default function HomeScreen() {
     const styles = useMemo(
         () =>
             StyleSheet.create({
+                logo: { ...baseFlex("center", "center"), gap: 8, marginBottom: 32 },
+                image: {
+                    maxWidth: 100,
+                    height: 100,
+                },
                 container: {
                     ...baseCenter,
                     ...baseSpace,
                     flex: 1,
                     padding: 16,
-                },
-                image: {
-                    width: 275,
-                    height: 125,
                 },
                 text: {
                     marginTop: 8,
@@ -340,13 +341,16 @@ export default function HomeScreen() {
     );
 
     const HeaderImage = () => (
-        <Image
-            source={require("../../assets/images/huzl-logo.png")}
-            style={styles.image}
-            accessible
-            accessibilityLabel="Huzl logo"
-            resizeMode="cover"
-        />
+        <View style={styles.logo} pointerEvents="none">
+            <Image
+                source={require("../../assets/images/huzl-icon.png")}
+                style={styles.image}
+                accessible
+                accessibilityLabel="Huzl logo"
+                resizeMode="contain"
+            />
+            <ThemedText type="logo">huzl</ThemedText>
+        </View>
     );
 
     if (loading) {

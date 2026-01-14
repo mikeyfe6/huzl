@@ -7,7 +7,7 @@ import { useThemeColor } from "@/hooks/use-theme-color";
 export type ThemedTextProps = TextProps & {
     lightColor?: string;
     darkColor?: string;
-    type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "danger" | "label";
+    type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "danger" | "label" | "logo";
 };
 
 export function ThemedText({ style, lightColor, darkColor, type = "default", ...rest }: ThemedTextProps) {
@@ -24,6 +24,7 @@ export function ThemedText({ style, lightColor, darkColor, type = "default", ...
                 type === "link" ? styles.link : undefined,
                 type === "danger" ? styles.danger : undefined,
                 type === "label" ? styles.label : undefined,
+                type === "logo" ? styles.logo : undefined,
                 style,
             ]}
             {...rest}
@@ -62,5 +63,10 @@ const styles = StyleSheet.create({
     },
     label: {
         color: lightGreyColor,
+    },
+    logo: {
+        fontFamily: "BebasNeue-Regular",
+        fontSize: 128,
+        paddingTop: 16,
     },
 });
