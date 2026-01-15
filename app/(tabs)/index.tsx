@@ -268,7 +268,7 @@ export default function HomeScreen() {
                     lineHeight: Platform.select({
                         ios: 26,
                         android: 26,
-                        default: 14,
+                        default: 12,
                     }),
                     fontSize: Platform.select({
                         ios: 14,
