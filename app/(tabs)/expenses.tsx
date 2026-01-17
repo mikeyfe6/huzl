@@ -35,6 +35,7 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
+    baseCorner,
     baseEmpty,
     baseEmptyText,
     baseFlex,
@@ -134,18 +135,18 @@ export default function ExpensesScreen() {
                     const amount = Number.parseFloat(String(data.amount));
                     setExpenses((prev) =>
                         prev.map((exp) =>
-                            exp.id === editingId
-                                ? {
-                                      id: data.id,
-                                      name: data.name,
-                                      amount,
-                                      frequency: data.frequency as Frequency,
-                                      category: (data.category as Category) ?? "personal",
-                                      yearlyTotal: calculateYearlyTotal(amount, data.frequency as Frequency),
-                                      active: data.active ?? true,
-                                  }
-                                : exp
-                        )
+                            exp.id === editingId ?
+                                {
+                                    id: data.id,
+                                    name: data.name,
+                                    amount,
+                                    frequency: data.frequency as Frequency,
+                                    category: (data.category as Category) ?? "personal",
+                                    yearlyTotal: calculateYearlyTotal(amount, data.frequency as Frequency),
+                                    active: data.active ?? true,
+                                }
+                            :   exp,
+                        ),
                     );
                     setExpenseName("");
                     setExpenseAmount("");
@@ -247,7 +248,7 @@ export default function ExpensesScreen() {
             const { error } = await supabase.from("expenses").update({ active: !currentActive }).eq("id", id);
             if (!error) {
                 setExpenses((prev) =>
-                    prev.map((expense) => (expense.id === id ? { ...expense, active: !currentActive } : expense))
+                    prev.map((expense) => (expense.id === id ? { ...expense, active: !currentActive } : expense)),
                 );
             }
         } finally {
@@ -257,7 +258,7 @@ export default function ExpensesScreen() {
 
     const sortLabelMap = useMemo(
         () => Object.fromEntries(SORT_OPTIONS.map((option) => [option.value, t(option.labelKey)])),
-        [t]
+        [t],
     );
 
     const categoryLabelMap = useMemo(
@@ -268,7 +269,7 @@ export default function ExpensesScreen() {
             invest: t("expenses.invest"),
             entertainment: t("expenses.entertainment"),
         }),
-        [t]
+        [t],
     );
 
     const getSortedExpenses = (): ExpenseItem[] => {
@@ -525,10 +526,10 @@ export default function ExpensesScreen() {
                 },
                 badge: {
                     ...baseBorder,
+                    ...baseCorner,
                     paddingHorizontal: 8,
                     paddingVertical: 3,
                     opacity: 0.7,
-                    borderRadius: 12,
                 },
                 badgePersonal: {
                     backgroundColor: personalColor,
@@ -702,7 +703,7 @@ export default function ExpensesScreen() {
                     ...baseEmptyText(theme),
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -805,15 +806,15 @@ export default function ExpensesScreen() {
                             onValueChange={(itemValue) => setFrequency(itemValue as Frequency)}
                             style={[
                                 styles.selectInput,
-                                Platform.OS === "web"
-                                    ? ([
-                                          {
-                                              appearance: "none",
-                                              WebkitAppearance: "none",
-                                              MozAppearance: "none",
-                                          } as any,
-                                      ] as any)
-                                    : null,
+                                Platform.OS === "web" ?
+                                    ([
+                                        {
+                                            appearance: "none",
+                                            WebkitAppearance: "none",
+                                            MozAppearance: "none",
+                                        } as any,
+                                    ] as any)
+                                :   null,
                             ]}
                             itemStyle={styles.selectOption}
                         >
@@ -1087,37 +1088,37 @@ export default function ExpensesScreen() {
                                                 case "personal":
                                                     dotColor = personalColor;
                                                     percent =
-                                                        totalYearlySpend > 0
-                                                            ? (personalYearlySpend / totalYearlySpend) * 100
-                                                            : 0;
+                                                        totalYearlySpend > 0 ?
+                                                            (personalYearlySpend / totalYearlySpend) * 100
+                                                        :   0;
                                                     break;
                                                 case "business":
                                                     dotColor = businessColor;
                                                     percent =
-                                                        totalYearlySpend > 0
-                                                            ? (businessYearlySpend / totalYearlySpend) * 100
-                                                            : 0;
+                                                        totalYearlySpend > 0 ?
+                                                            (businessYearlySpend / totalYearlySpend) * 100
+                                                        :   0;
                                                     break;
                                                 case "family":
                                                     dotColor = familyColor;
                                                     percent =
-                                                        totalYearlySpend > 0
-                                                            ? (familyYearlySpend / totalYearlySpend) * 100
-                                                            : 0;
+                                                        totalYearlySpend > 0 ?
+                                                            (familyYearlySpend / totalYearlySpend) * 100
+                                                        :   0;
                                                     break;
                                                 case "invest":
                                                     dotColor = investColor;
                                                     percent =
-                                                        totalYearlySpend > 0
-                                                            ? (investYearlySpend / totalYearlySpend) * 100
-                                                            : 0;
+                                                        totalYearlySpend > 0 ?
+                                                            (investYearlySpend / totalYearlySpend) * 100
+                                                        :   0;
                                                     break;
                                                 case "entertainment":
                                                     dotColor = entertainmentColor;
                                                     percent =
-                                                        totalYearlySpend > 0
-                                                            ? (entertainmentYearlySpend / totalYearlySpend) * 100
-                                                            : 0;
+                                                        totalYearlySpend > 0 ?
+                                                            (entertainmentYearlySpend / totalYearlySpend) * 100
+                                                        :   0;
                                                     break;
                                             }
 
@@ -1156,14 +1157,13 @@ export default function ExpensesScreen() {
                                                     </ThemedText>
                                                 </TouchableOpacity>
                                             );
-                                        }
+                                        },
                                     )}
                                 </View>
                                 <View style={styles.chartItems}>
-                                    {expenses.filter((e) => e.active && e.category === category).length === 0 ? (
+                                    {expenses.filter((e) => e.active && e.category === category).length === 0 ?
                                         <ThemedText>{t("expenses.noExpensesInCategories")}</ThemedText>
-                                    ) : (
-                                        expenses
+                                    :   expenses
                                             .filter((e) => e.active && e.category === category)
                                             .map((e) => ({
                                                 ...e,
@@ -1183,27 +1183,26 @@ export default function ExpensesScreen() {
                                                     </ThemedText>
                                                 </ThemedText>
                                             ))
-                                    )}
+                                    }
                                 </View>
                             </View>
                         </View>
                     </>
                 )}
 
-                {loading ? (
+                {loading ?
                     <ThemedView style={styles.emptyState}>
                         <ThemedText style={styles.emptyStateText}>
                             <Ionicons name="time-outline" size={24} color={theme.inputText} />
                         </ThemedText>
                     </ThemedView>
-                ) : (
-                    !loading &&
+                :   !loading &&
                     expenses.length === 0 && (
                         <ThemedView style={styles.emptyState}>
                             <ThemedText style={styles.emptyStateText}>{t("expenses.addFirstExpense")}</ThemedText>
                         </ThemedView>
                     )
-                )}
+                }
             </ScrollView>
         </AuthGate>
     );

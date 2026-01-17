@@ -15,12 +15,13 @@ import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
+import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor } from "@/constants/theme";
 import {
     baseBorder,
     baseButton,
     baseButtonText,
     baseCenter,
+    baseCorner,
     baseFlex,
     baseGap,
     baseIcon,
@@ -157,7 +158,7 @@ export default function IncomeScreen() {
                         type: src.type,
                         amount: Number.parseFloat(src.amount),
                         active: src.active !== false,
-                    }))
+                    })),
                 );
                 if (error) {
                     insertError = error;
@@ -205,7 +206,7 @@ export default function IncomeScreen() {
                             type: row.type,
                             amount: typeof row.amount === "number" ? row.amount.toFixed(2) : String(row.amount),
                             active: row.active !== false,
-                        })
+                        }),
                     );
                 } else {
                     mappedSources = [{ type: "salary", amount: "", active: true }];
@@ -288,10 +289,10 @@ export default function IncomeScreen() {
                 },
                 total: {
                     ...baseFlex("space-between", "center"),
+                    ...baseCorner,
                     fontSize: 18,
                     backgroundColor: theme.cardBackground,
                     padding: 16,
-                    borderRadius: 12,
                     marginTop: 24,
                 },
                 buttons: {
@@ -314,10 +315,9 @@ export default function IncomeScreen() {
                 },
                 closeButtonText: {
                     ...baseButtonText,
-                    color: whiteColor,
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -330,10 +330,9 @@ export default function IncomeScreen() {
                         {t("income.sources")}
                     </ThemedText>
 
-                    {loading ? (
+                    {loading ?
                         <ThemedText>Loading...</ThemedText>
-                    ) : (
-                        sources.map((src, idx) => (
+                    :   sources.map((src, idx) => (
                             <View key={src.id ?? idx} style={styles.wrapper}>
                                 <TouchableOpacity style={[styles.item, { opacity: src.active ? 1 : 0.5 }]}>
                                     <TextInput
@@ -402,7 +401,7 @@ export default function IncomeScreen() {
                                 </View>
                             </View>
                         ))
-                    )}
+                    }
                     <TouchableOpacity onPress={addSource} style={styles.add}>
                         <ThemedText style={styles.addText}>+ {t("income.addSource")}</ThemedText>
                     </TouchableOpacity>

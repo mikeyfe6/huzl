@@ -6,7 +6,7 @@ import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-nativ
 import { ThemedText } from "@/components/themed-text";
 
 import { Colors, linkColor } from "@/constants/theme";
-import { baseBorder, baseFlex } from "@/styles/base";
+import { baseBorder, baseCorner, baseFlex } from "@/styles/base";
 
 type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
@@ -42,13 +42,13 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                 },
                 sheet: {
                     ...baseBorder,
+                    ...baseCorner,
                     width: "100%",
                     maxWidth: Platform.select({
                         ios: undefined,
                         android: undefined,
                         default: 600,
                     }),
-                    borderRadius: 12,
                     backgroundColor: theme.cardBackground,
                     borderColor: theme.borderColor,
                     paddingVertical: 8,
@@ -78,7 +78,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                     alignItems: "center",
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (

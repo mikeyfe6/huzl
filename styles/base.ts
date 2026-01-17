@@ -3,10 +3,15 @@ import { StyleSheet } from "react-native";
 
 export const baseGap = { gap: 12 };
 export const baseSpace = { gap: 8 };
+
 export const baseWeight = { fontWeight: "600" as const };
+
 export const baseRadius = { borderRadius: 8 };
+export const baseCorner = { borderRadius: 12 };
 export const baseBorder = { borderWidth: StyleSheet.hairlineWidth };
+
 export const baseTitle = { fontSize: 28, fontWeight: "bold" as const, lineHeight: 40 };
+
 export const baseLarge = { fontSize: 24 };
 export const baseSize = { fontSize: 16 };
 export const baseSmall = { fontSize: 14 };
@@ -14,7 +19,7 @@ export const baseMini = { fontSize: 13 };
 
 export const baseFlex = (
     justify: "flex-start" | "center" | "space-between" | undefined = undefined,
-    align: "flex-start" | "center" | "flex-end" | undefined = undefined
+    align: "flex-start" | "center" | "flex-end" | undefined = undefined,
 ) => ({
     flexDirection: "row" as const,
     justifyContent: justify,

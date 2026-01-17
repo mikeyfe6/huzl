@@ -17,8 +17,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { CurrencyPickerModal } from "@/components/ui/currency-modal";
 import { LanguageModal } from "@/components/ui/language-modal";
+import { ChangePasswordModal } from "@/components/ui/password-modal";
 
-import { Colors, greenColor, linkColor, redColor, silverColor, whiteColor } from "@/constants/theme";
+import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
     baseBorder,
     baseButton,
@@ -49,6 +50,7 @@ export default function SettingsScreen() {
     const [currencyModalVisible, setCurrencyModalVisible] = useState(false);
     const [languageModalVisible, setLanguageModalVisible] = useState(false);
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
+    const [changePasswordVisible, setChangePasswordVisible] = useState(false);
 
     const handleSaveProfile = async () => {
         if (!user) return;
@@ -117,7 +119,7 @@ export default function SettingsScreen() {
                         setMonthlyIncome(total);
                     }
                 });
-        }, [user])
+        }, [user]),
     );
 
     const styles = useMemo(
@@ -185,14 +187,24 @@ export default function SettingsScreen() {
                 saveButtonDisabled: {
                     opacity: 0.5,
                 },
+                saveButtonText: {
+                    ...baseButtonText,
+                    color: whiteColor,
+                },
+                passwordButton: {
+                    ...baseBorder,
+                    ...baseButton,
+                    marginTop: 16,
+                    borderColor: mediumGreyColor,
+                },
+                passwordButtonText: {
+                    ...baseButtonText,
+                    color: theme.text,
+                },
                 hr: {
                     borderBottomColor: theme.dividerColor,
                     borderBottomWidth: StyleSheet.hairlineWidth,
                     marginTop: 16,
-                },
-                saveButtonText: {
-                    ...baseButtonText,
-                    color: whiteColor,
                 },
                 themeButton: {
                     ...baseInput(theme),
@@ -228,7 +240,7 @@ export default function SettingsScreen() {
                     color: redColor,
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -276,6 +288,9 @@ export default function SettingsScreen() {
                             <ThemedText style={styles.saveButtonText}>
                                 {loading ? t("settings.saving") : t("settings.saveProfile")}
                             </ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.passwordButton} onPress={() => setChangePasswordVisible(true)}>
+                            <ThemedText style={styles.passwordButtonText}>{t("settings.changePassword")}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
 
@@ -441,6 +456,7 @@ export default function SettingsScreen() {
                     currentSymbol={currencySymbol}
                 />
                 <LanguageModal visible={languageModalVisible} onClose={() => setLanguageModalVisible(false)} />
+                <ChangePasswordModal visible={changePasswordVisible} onClose={() => setChangePasswordVisible(false)} />
             </ScrollView>
         </AuthGate>
     );

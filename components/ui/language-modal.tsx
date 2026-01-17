@@ -6,7 +6,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { linkColor, whiteColor } from "@/constants/theme";
-import { baseFlex, baseLarge, baseMini, baseSize, baseWeight } from "@/styles/base";
+import { baseCorner, baseFlex, baseLarge, baseMini, baseSize, baseWeight } from "@/styles/base";
 
 type Language = {
     code: string;
@@ -94,9 +94,9 @@ const styles = StyleSheet.create({
     },
     languageItem: {
         ...baseFlex("space-between", "center"),
+        ...baseCorner,
         paddingVertical: 16,
         paddingHorizontal: 16,
-        borderRadius: 12,
         marginBottom: 8,
     },
     languageItemSelected: {

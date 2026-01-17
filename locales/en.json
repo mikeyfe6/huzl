@@ -146,6 +146,7 @@
         "displayNamePlaceholder": "Your name",
         "saving": "Saving …",
         "saveProfile": "Save Profile",
+        "changePassword": "Change Password",
         "appearance": "Appearance",
         "theme": "Theme",
         "light": "Light",
@@ -166,6 +167,20 @@
         "terms": "Terms of Service",
         "privacy": "Privacy Policy",
         "signOut": "Sign Out"
+    },
+    "password": {
+        "changePassword": "Change Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "saving": "Saving …",
+        "save": "Save",
+        "cancel": "Cancel",
+        "passwordRequired": "Password is required",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 6 characters",
+        "passwordChanged": "Password changed",
+        "unexpectedError": "Unexpected error, please try again later",
+        "error": "Error changing password, please try again"
     },
     "currency": {
         "selectCurrency": "Select Currency",

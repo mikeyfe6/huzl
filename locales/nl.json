@@ -146,6 +146,7 @@
         "displayNamePlaceholder": "Jouw naam",
         "saving": "Opslaan …",
         "saveProfile": "Profiel opslaan",
+        "changePassword": "Wijzig je wachtwoord",
         "appearance": "Uiterlijk",
         "theme": "Thema",
         "light": "Licht",
@@ -166,6 +167,20 @@
         "terms": "Servicevoorwaarden",
         "privacy": "Privacybeleid",
         "signOut": "Uitloggen"
+    },
+    "password": {
+        "changePassword": "Wachtwoord Wijzigen",
+        "newPassword": "Nieuw wachtwoord",
+        "confirmPassword": "Bevestig nieuw wachtwoord",
+        "saving": "Opslaan …",
+        "save": "Opslaan",
+        "cancel": "Annuleren",
+        "passwordRequired": "Wachtwoord is verplicht",
+        "passwordMismatch": "Wachtwoorden komen niet overeen",
+        "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
+        "passwordChanged": "Wachtwoord gewijzigd",
+        "unexpectedError": "Onverwachte fout, probeer het later opnieuw",
+        "error": "Fout"
     },
     "currency": {
         "selectCurrency": "Selecteer Valuta",

@@ -11,7 +11,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { linkColor, whiteColor } from "@/constants/theme";
-import { baseFlex, baseLarge, baseMini, baseTitle, baseWeight } from "@/styles/base";
+import { baseCorner, baseFlex, baseLarge, baseMini, baseTitle, baseWeight } from "@/styles/base";
 
 interface CurrencyPickerModalProps {
     readonly visible: boolean;
@@ -110,9 +110,9 @@ const styles = StyleSheet.create({
     },
     currencyItem: {
         ...baseFlex("space-between", "center"),
+        ...baseCorner,
         paddingVertical: 16,
         paddingHorizontal: 16,
-        borderRadius: 12,
         marginBottom: 8,
     },
     currencyItemSelected: {

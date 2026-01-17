@@ -20,6 +20,7 @@ import {
     baseBorder,
     baseButton,
     baseCenter,
+    baseCorner,
     baseFlex,
     baseGap,
     baseInput,
@@ -49,7 +50,7 @@ export default function HomeScreen() {
     const [isSignUp, setIsSignUp] = useState(false);
 
     const mapAuthError = (err: unknown) => {
-        const message = typeof err === "string" ? err : (err as any)?.message ?? "";
+        const message = typeof err === "string" ? err : ((err as any)?.message ?? "");
         const normalized = message.toLowerCase();
 
         if (normalized.includes("invalid login credentials")) return t("auth.errors.invalidCredentials");
@@ -138,7 +139,7 @@ export default function HomeScreen() {
                         setMonthlyIncome(total);
                     }
                 });
-        }, [user])
+        }, [user]),
     );
 
     const totals = useMemo(() => {
@@ -310,10 +311,10 @@ export default function HomeScreen() {
                 },
                 statCard: {
                     ...baseSpace,
+                    ...baseCorner,
                     paddingHorizontal: 16,
                     paddingTop: 14,
                     paddingBottom: 18,
-                    borderRadius: 12,
                     backgroundColor: theme.cardBackground,
                 },
                 statLabel: {
@@ -337,7 +338,7 @@ export default function HomeScreen() {
                     backgroundColor: theme.cardNegativeBackground,
                 },
             }),
-        [theme]
+        [theme],
     );
 
     const HeaderImage = () => (
@@ -401,7 +402,7 @@ export default function HomeScreen() {
                                 placeholderTextColor={theme.placeholder}
                             />
                         )}
-                        {isSignUp ? (
+                        {isSignUp ?
                             <>
                                 <TouchableOpacity onPress={handleSignUp} style={styles.signInButton}>
                                     <ThemedText style={styles.signInText}>{t("auth.createAccount")}</ThemedText>
@@ -410,8 +411,7 @@ export default function HomeScreen() {
                                     <ThemedText style={styles.signUpText}>{t("auth.alreadyHaveAccount")}</ThemedText>
                                 </TouchableOpacity>
                             </>
-                        ) : (
-                            <>
+                        :   <>
                                 <TouchableOpacity onPress={handleSignIn} style={styles.signInButton}>
                                     <ThemedText style={styles.signInText}>{t("auth.signIn")}</ThemedText>
                                 </TouchableOpacity>
@@ -419,7 +419,7 @@ export default function HomeScreen() {
                                     <ThemedText style={styles.signUpText}>{t("auth.signUp")}</ThemedText>
                                 </TouchableOpacity>
                             </>
-                        )}
+                        }
                         <ThemedText style={styles.termsText}>
                             {t("auth.disclaimer.first")}{" "}
                             <Link href="/terms">
@@ -436,13 +436,12 @@ export default function HomeScreen() {
                             .
                         </ThemedText>
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
-                            {registrationSuccess ? (
+                            {registrationSuccess ?
                                 <ThemedText style={styles.successText}>{t("auth.accountCreated")}</ThemedText>
-                            ) : (
-                                <ThemedText style={[styles.errorText, !error && styles.errorHidden]}>
+                            :   <ThemedText style={[styles.errorText, !error && styles.errorHidden]}>
                                     {error ? error.charAt(0).toUpperCase() + error.slice(1) : " "}
                                 </ThemedText>
-                            )}
+                            }
                         </View>
                     </View>
                 </ThemedView>
@@ -456,10 +455,12 @@ export default function HomeScreen() {
                 <HeaderImage />
                 <ThemedText type="title">
                     {t("home.title")}{" "}
-                    {typeof user.user_metadata.display_name === "string" &&
-                    user.user_metadata.display_name.trim().length > 0
-                        ? user.user_metadata.display_name.trim()
-                        : "!"}
+                    {(
+                        typeof user.user_metadata.display_name === "string" &&
+                        user.user_metadata.display_name.trim().length > 0
+                    ) ?
+                        user.user_metadata.display_name.trim()
+                    :   "!"}
                 </ThemedText>
                 <ThemedText style={styles.text}>
                     {t("home.signedInAs")} <ThemedText style={styles.user}>{user.email}</ThemedText>

@@ -38,6 +38,9 @@ export const lightTextColor = "#ecedee";
 export const slateColor = "#687076";
 export const silverColor = "#9ba1a6";
 
+// alternative theme colors; #F28B60, #22D6CB, #F3BB65
+// rgba(24,150,103) which hex is #189667
+
 export const Colors = {
     light: {
         text: almostBlackColor,
