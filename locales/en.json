@@ -27,14 +27,16 @@
     "auth": {
         "getStarted": "Create your account to get started",
         "signInOrCreate": "Sign in or create an account to continue",
-        "emailPlaceholder": "name@example.com",
-        "passwordPlaceholder": "password",
-        "confirmPasswordPlaceholder": "confirm password",
         "createAccount": "Create Account",
         "alreadyHaveAccount": "Already have an account?",
         "signIn": "Sign In",
         "signUp": "Sign Up",
         "forgotPassword": "Forgot Password?",
+        "placeholder": {
+            "email": "name@example.com",
+            "password": "password",
+            "confirmPassword": "confirm password"
+        },
         "disclaimer": {
             "first": "When you continue with email, you automatically agree to Huzl's",
             "second": "Terms of Service",

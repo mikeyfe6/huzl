@@ -385,7 +385,7 @@ export default function HomeScreen() {
                     </ThemedText>
                     <View style={styles.fieldset}>
                         <TextInput
-                            placeholder={t("auth.emailPlaceholder")}
+                            placeholder={t("auth.placeholder.email")}
                             autoCapitalize="none"
                             keyboardType="email-address"
                             autoComplete="email"
@@ -395,7 +395,7 @@ export default function HomeScreen() {
                             placeholderTextColor={theme.placeholder}
                         />
                         <TextInput
-                            placeholder={t("auth.passwordPlaceholder")}
+                            placeholder={t("auth.placeholder.password")}
                             secureTextEntry
                             value={password}
                             autoComplete="password"
@@ -406,7 +406,7 @@ export default function HomeScreen() {
                         />
                         {isSignUp && (
                             <TextInput
-                                placeholder={t("auth.confirmPasswordPlaceholder")}
+                                placeholder={t("auth.placeholder.confirmPassword")}
                                 secureTextEntry
                                 value={confirmPassword}
                                 autoComplete="off"

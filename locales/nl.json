@@ -27,14 +27,16 @@
     "auth": {
         "getStarted": "Maak een account aan om aan de slag te gaan",
         "signInOrCreate": "Meld je aan of maak een account om door te gaan",
-        "emailPlaceholder": "naam@voorbeeld.nl",
-        "passwordPlaceholder": "wachtwoord",
-        "confirmPasswordPlaceholder": "wachtwoord bevestigen",
         "createAccount": "Account Aanmaken",
         "alreadyHaveAccount": "Heb je al een account?",
         "signIn": "Inloggen",
         "signUp": "Account Aanmaken",
         "forgotPassword": "Wachtwoord vergeten?",
+        "placeholder": {
+            "email": "naam@voorbeeld.nl",
+            "password": "wachtwoord",
+            "confirmPassword": "wachtwoord bevestigen"
+        },
         "disclaimer": {
             "first": "Wanneer je doorgaat met e-mail ga je automatisch akkoord met Huzl's",
             "second": "Servicevoorwaarden",
