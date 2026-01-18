@@ -10,7 +10,8 @@
         "close": "Close",
         "cancel": "Cancel",
         "delete": "Delete",
-        "save": "Save"
+        "save": "Save",
+        "saving": "Saving …"
     },
     "tabs": {
         "home": "Home",
@@ -170,36 +171,44 @@
     },
     "settings": {
         "title": "Settings",
-        "profile": "Profile",
-        "email": "Email",
-        "emailPlaceholder": "name@example.com",
-        "displayName": "Display Name",
-        "displayNamePlaceholder": "Your name",
-        "saving": "Saving …",
-        "saveProfile": "Save Profile",
-        "changePassword": "Change Password",
-        "appearance": "Appearance",
-        "theme": "Theme",
-        "light": "Light",
-        "dark": "Dark",
-        "system": "System",
-        "currency": "Currency",
-        "currencySymbol": "Currency Symbol",
-        "income": "Income",
-        "monthlyIncome": "Monthly Income",
-        "notSet": "Not Set",
-        "language": "Language",
-        "selectLanguage": "Select Language",
-        "helpdesk": "Helpdesk",
-        "helpdeskLabel": "Bugs, Feedback & Support",
-        "submitTicket": "Submit a Ticket",
-        "about": "About",
-        "version": "Version",
-        "terms": "Terms of Service",
-        "privacy": "Privacy Policy",
-        "undoTermination": "Undo Account Termination",
-        "terminateAccount": "Terminate Account",
-        "signOut": "Sign Out"
+        "subtitle": {
+            "profile": "Profile",
+            "appearance": "Appearance",
+            "currency": "Currency",
+            "income": "Income",
+            "language": "Language",
+            "helpdesk": "Helpdesk",
+            "about": "About"
+        },
+        "label": {
+            "email": "E-mail",
+            "displayName": "Display Name",
+            "theme": "Theme",
+            "helpdesk": "Bugs, Feedback & Support",
+            "version": "Version"
+        },
+        "placeholder": {
+            "displayName": "Your name"
+        },
+        "button": {
+            "saveProfile": "Save Profile",
+            "changePassword": "Change Password",
+            "light": "Light",
+            "dark": "Dark",
+            "system": "System",
+            "signOut": "Sign Out"
+        },
+        "link": {
+            "currencySymbol": "Currency Symbol",
+            "monthlyIncome": "Monthly Income",
+            "selectLanguage": "Select Language",
+            "submitTicket": "Submit a Ticket",
+            "terms": "Terms of Service",
+            "privacy": "Privacy Policy",
+            "undoTermination": "Undo Account Termination",
+            "terminateAccount": "Terminate Account"
+        },
+        "notSet": "Not Set"
     },
     "password": {
         "changePassword": "Change Password",

@@ -10,7 +10,8 @@
         "close": "Sluiten",
         "cancel": "Annuleren",
         "delete": "Verwijder",
-        "save": "Opslaan"
+        "save": "Opslaan",
+        "saving": "Opslaan …"
     },
     "tabs": {
         "home": "Home",
@@ -170,36 +171,44 @@
     },
     "settings": {
         "title": "Instellingen",
-        "profile": "Profiel",
-        "email": "E-mail",
-        "emailPlaceholder": "naam@voorbeeld.nl",
-        "displayName": "Weergavenaam",
-        "displayNamePlaceholder": "Jouw naam",
-        "saving": "Opslaan …",
-        "saveProfile": "Profiel opslaan",
-        "changePassword": "Wijzig je wachtwoord",
-        "appearance": "Uiterlijk",
-        "theme": "Thema",
-        "light": "Licht",
-        "dark": "Donker",
-        "system": "Systeem",
-        "currency": "Valuta",
-        "currencySymbol": "Valutasymbool",
-        "income": "Inkomen",
-        "monthlyIncome": "Maandelijks Inkomen",
-        "notSet": "Niet ingesteld",
-        "language": "Taal",
-        "selectLanguage": "Selecteer Taal",
-        "helpdesk": "Helpdesk",
-        "helpdeskLabel": "Bugs, Feedback & Ondersteuning",
-        "submitTicket": "Een ticket indienen",
-        "about": "Over",
-        "version": "Versie",
-        "terms": "Servicevoorwaarden",
-        "privacy": "Privacybeleid",
-        "undoTermination": "Herstel accountbeëindiging",
-        "terminateAccount": "Account Beëindigen",
-        "signOut": "Uitloggen"
+        "subtitle": {
+            "profile": "Profiel",
+            "appearance": "Uiterlijk",
+            "currency": "Valuta",
+            "income": "Inkomen",
+            "language": "Taal",
+            "helpdesk": "Helpdesk",
+            "about": "Over"
+        },
+        "label": {
+            "email": "E-mail",
+            "displayName": "Weergavenaam",
+            "theme": "Thema",
+            "helpdesk": "Bugs, Feedback & Ondersteuning",
+            "version": "Versie"
+        },
+        "placeholder": {
+            "displayName": "Jouw naam"
+        },
+        "button": {
+            "saveProfile": "Profiel opslaan",
+            "changePassword": "Wijzig je wachtwoord",
+            "light": "Licht",
+            "dark": "Donker",
+            "system": "Systeem",
+            "signOut": "Uitloggen"
+        },
+        "link": {
+            "currencySymbol": "Valutasymbool",
+            "monthlyIncome": "Maandelijks Inkomen",
+            "selectLanguage": "Selecteer Taal",
+            "submitTicket": "Een ticket indienen",
+            "terms": "Servicevoorwaarden",
+            "privacy": "Privacybeleid",
+            "undoTermination": "Herstel accountbeëindiging",
+            "terminateAccount": "Account Beëindigen"
+        },
+        "notSet": "Niet ingesteld"
     },
     "password": {
         "changePassword": "Wachtwoord Wijzigen",
