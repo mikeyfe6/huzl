@@ -26,11 +26,12 @@ export default function TabLayout() {
                     tabBarShowLabel: true,
                     headerShown: false,
                     tabBarButton: HapticTab,
-                    tabBarStyle: user
-                        ? {
-                              height: 80,
-                          }
-                        : { display: "none" },
+                    tabBarStyle:
+                        user ?
+                            {
+                                height: 80,
+                            }
+                        :   { display: "none" },
                     tabBarItemStyle: {
                         paddingVertical: 14,
                         height: 80,

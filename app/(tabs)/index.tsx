@@ -12,15 +12,18 @@ import { useRefreshContext } from "@/hooks/use-refresh-context";
 
 import { supabase } from "@/utils/supabase";
 
+import { ForgotPasswordModal } from "@/components/modal/forgot-password-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import {
+    baseBold,
     baseBorder,
     baseButton,
     baseCenter,
     baseCorner,
+    baseError,
     baseFlex,
     baseGap,
     baseInput,
@@ -28,6 +31,7 @@ import {
     baseSelect,
     baseSmall,
     baseSpace,
+    baseSuccess,
     baseWeight,
 } from "@/styles/base";
 
@@ -48,6 +52,7 @@ export default function HomeScreen() {
     const [expenses, setExpenses] = useState<any[]>([]);
     const [debts, setDebts] = useState<any[]>([]);
     const [isSignUp, setIsSignUp] = useState(false);
+    const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
 
     const mapAuthError = (err: unknown) => {
         const message = typeof err === "string" ? err : ((err as any)?.message ?? "");
@@ -260,9 +265,18 @@ export default function HomeScreen() {
                 signUpText: {
                     ...baseWeight,
                 },
+                forgetButton: {
+                    ...baseFlex("center", "center"),
+                    minHeight: 44,
+                },
+                forgetButtonText: {
+                    ...baseSmall,
+                    ...baseWeight,
+                    textAlign: "center",
+                    color: mediumGreyColor,
+                },
                 termsText: {
                     color: mediumGreyColor,
-                    marginTop: 12,
                     marginHorizontal: "auto",
                     textAlign: "center",
                     maxWidth: "90%",
@@ -284,23 +298,21 @@ export default function HomeScreen() {
                         default: 12,
                     }),
                 },
-                errorContainer: { ...baseCenter, minHeight: 24 },
+                errorContainer: { ...baseCenter, minHeight: 44 },
                 errorText: {
-                    fontSize: 15,
-                    color: "red",
-                    textAlign: "center",
+                    ...baseError,
                 },
                 successText: {
-                    ...baseSmall,
-                    color: greenColor,
-                    textAlign: "center",
-                    fontWeight: "500",
+                    ...baseSuccess,
                 },
                 errorHidden: {
                     opacity: 0,
                 },
                 user: {
                     color: mediumGreyColor,
+                },
+                terminate: {
+                    ...baseError,
                 },
                 statsContainer: {
                     ...baseGap,
@@ -328,7 +340,7 @@ export default function HomeScreen() {
                 },
                 statValue: {
                     ...baseLarge,
-                    fontWeight: "bold",
+                    ...baseBold,
                     textAlign: "center",
                 },
                 statCardPositive: {
@@ -390,6 +402,7 @@ export default function HomeScreen() {
                             onChangeText={setPassword}
                             style={styles.input}
                             placeholderTextColor={theme.placeholder}
+                            onSubmitEditing={handleSignIn}
                         />
                         {isSignUp && (
                             <TextInput
@@ -420,6 +433,14 @@ export default function HomeScreen() {
                                 </TouchableOpacity>
                             </>
                         }
+                        {!isSignUp && (
+                            <TouchableOpacity
+                                onPress={() => setForgotPasswordVisible(true)}
+                                style={styles.forgetButton}
+                            >
+                                <ThemedText style={styles.forgetButtonText}>{t("auth.forgotPassword")}</ThemedText>
+                            </TouchableOpacity>
+                        )}
                         <ThemedText style={styles.termsText}>
                             {t("auth.disclaimer.first")}{" "}
                             <Link href="/terms">
@@ -445,6 +466,7 @@ export default function HomeScreen() {
                         </View>
                     </View>
                 </ThemedView>
+                <ForgotPasswordModal visible={forgotPasswordVisible} onClose={() => setForgotPasswordVisible(false)} />
             </ScrollView>
         );
     }
@@ -465,6 +487,9 @@ export default function HomeScreen() {
                 <ThemedText style={styles.text}>
                     {t("home.signedInAs")} <ThemedText style={styles.user}>{user.email}</ThemedText>
                 </ThemedText>
+                {user.user_metadata?.deleteRequested && (
+                    <ThemedText style={styles.terminate}>{t("home.pendingTermination")}</ThemedText>
+                )}
 
                 <ThemedView style={styles.statsContainer}>
                     {monthlyIncome !== null && (

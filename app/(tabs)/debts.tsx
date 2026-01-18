@@ -99,7 +99,7 @@ export default function DebtsScreen() {
         }
 
         Alert.alert(`${t("debts.deleteDebt")}`, `${t("debts.delete")} "${name}"?`, [
-            { text: t("debts.cancel"), style: "cancel" },
+            { text: t("common.cancel"), style: "cancel" },
             { text: t("debts.delete"), style: "destructive", onPress: () => handleDeleteDebt(id) },
         ]);
     };
@@ -302,7 +302,7 @@ export default function DebtsScreen() {
                     ...baseEmptyText(theme),
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -359,7 +359,7 @@ export default function DebtsScreen() {
                                 onPress={handleCancelEdit}
                                 disabled={loading}
                             >
-                                <ThemedText style={styles.buttonText}>{t("debts.cancel")}</ThemedText>
+                                <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                             </TouchableOpacity>
                         )}
                     </View>
@@ -439,34 +439,32 @@ export default function DebtsScreen() {
                                 <View style={styles.itemAmount}>
                                     <ThemedText style={styles.itemPayment}>
                                         {t("debts.monthly")}:{" "}
-                                        {debt.pay_per_month
-                                            ? `${formatCurrency(
-                                                  Math.min(debt.pay_per_month, debt.amount),
-                                                  currencySymbol
-                                              )}`
-                                            : "—"}
+                                        {debt.pay_per_month ?
+                                            `${formatCurrency(
+                                                Math.min(debt.pay_per_month, debt.amount),
+                                                currencySymbol,
+                                            )}`
+                                        :   "—"}
                                     </ThemedText>
-                                    {debt.pay_per_month && debt.pay_per_month > 0 ? (
+                                    {debt.pay_per_month && debt.pay_per_month > 0 ?
                                         (() => {
                                             const months = Math.ceil(debt.amount / debt.pay_per_month);
                                             const lastPayment =
-                                                debt.amount % debt.pay_per_month === 0
-                                                    ? formatAmount(debt.pay_per_month)
-                                                    : formatAmount(debt.amount % debt.pay_per_month);
+                                                debt.amount % debt.pay_per_month === 0 ?
+                                                    formatAmount(debt.pay_per_month)
+                                                :   formatAmount(debt.amount % debt.pay_per_month);
                                             return (
                                                 <ThemedText style={styles.itemRemaining}>
                                                     {t("debts.terms")}: {months}{" "}
-                                                    {months > 1
-                                                        ? `(${months - 1} × ${currencySymbol} ${formatAmount(
-                                                              debt.pay_per_month
-                                                          )} — 1 x: ${currencySymbol} ${lastPayment})`
-                                                        : ""}
+                                                    {months > 1 ?
+                                                        `(${months - 1} × ${currencySymbol} ${formatAmount(
+                                                            debt.pay_per_month,
+                                                        )} — 1 x: ${currencySymbol} ${lastPayment})`
+                                                    :   ""}
                                                 </ThemedText>
                                             );
                                         })()
-                                    ) : (
-                                        <ThemedText style={styles.itemRemaining}>{t("debts.terms")}: —</ThemedText>
-                                    )}
+                                    :   <ThemedText style={styles.itemRemaining}>{t("debts.terms")}: —</ThemedText>}
                                 </View>
                                 {paymentId === debt.id && (
                                     <View style={styles.paymentSection}>
@@ -499,7 +497,7 @@ export default function DebtsScreen() {
                                             disabled={loading}
                                         >
                                             <ThemedText style={styles.paymentButtonText}>
-                                                {t("debts.cancel")}
+                                                {t("common.cancel")}
                                             </ThemedText>
                                         </TouchableOpacity>
                                     </View>
@@ -509,20 +507,19 @@ export default function DebtsScreen() {
                     </ThemedView>
                 )}
 
-                {loading ? (
+                {loading ?
                     <ThemedView style={styles.emptyState}>
                         <ThemedText style={styles.emptyStateText}>
                             <Ionicons name="time-outline" size={24} color={theme.inputText} />
                         </ThemedText>
                     </ThemedView>
-                ) : (
-                    !loading &&
+                :   !loading &&
                     debts.length === 0 && (
                         <ThemedView style={styles.emptyState}>
                             <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
                         </ThemedView>
                     )
-                )}
+                }
             </ScrollView>
         </AuthGate>
     );

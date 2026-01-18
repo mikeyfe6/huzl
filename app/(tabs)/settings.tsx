@@ -13,11 +13,12 @@ import { formatAmount } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
+import { CurrencyPickerModal } from "@/components/modal/currency-picker-modal";
+import { LanguagePickerModal } from "@/components/modal/language-picker-modal";
+import { ChangePasswordModal } from "@/components/modal/reset-password-modal";
+import { TerminateAccountModal } from "@/components/modal/terminate-account-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { CurrencyPickerModal } from "@/components/ui/currency-modal";
-import { LanguageModal } from "@/components/ui/language-modal";
-import { ChangePasswordModal } from "@/components/ui/password-modal";
 
 import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
@@ -51,6 +52,7 @@ export default function SettingsScreen() {
     const [languageModalVisible, setLanguageModalVisible] = useState(false);
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
     const [changePasswordVisible, setChangePasswordVisible] = useState(false);
+    const [terminateAccountVisible, setTerminateAccountVisible] = useState(false);
 
     const handleSaveProfile = async () => {
         if (!user) return;
@@ -223,9 +225,13 @@ export default function SettingsScreen() {
                     color: whiteColor,
                 },
                 linksContainer: {
-                    ...baseFlex("center", "center"),
+                    ...baseCenter,
                     ...baseGap,
                     marginVertical: 12,
+                },
+                linksWrapper: {
+                    ...baseFlex("center", "center"),
+                    ...baseGap,
                 },
                 linkText: {
                     ...baseSmall,
@@ -420,8 +426,8 @@ export default function SettingsScreen() {
                         </ThemedView>
                     </ThemedView>
 
-                    <ThemedView>
-                        <View style={styles.linksContainer}>
+                    <ThemedView style={styles.linksContainer}>
+                        <View style={styles.linksWrapper}>
                             <Link href="/terms" asChild>
                                 <TouchableOpacity>
                                     <ThemedText type="link" style={styles.linkText}>
@@ -437,6 +443,15 @@ export default function SettingsScreen() {
                                     </ThemedText>
                                 </TouchableOpacity>
                             </Link>
+                        </View>
+                        <View style={styles.linksWrapper}>
+                            <TouchableOpacity onPress={() => setTerminateAccountVisible(true)}>
+                                <ThemedText type="link" style={styles.linkText}>
+                                    {user?.user_metadata?.deleteRequested ?
+                                        t("settings.undoTermination")
+                                    :   t("settings.terminateAccount")}
+                                </ThemedText>
+                            </TouchableOpacity>
                         </View>
                     </ThemedView>
 
@@ -455,8 +470,12 @@ export default function SettingsScreen() {
                     onClose={() => setCurrencyModalVisible(false)}
                     currentSymbol={currencySymbol}
                 />
-                <LanguageModal visible={languageModalVisible} onClose={() => setLanguageModalVisible(false)} />
+                <LanguagePickerModal visible={languageModalVisible} onClose={() => setLanguageModalVisible(false)} />
                 <ChangePasswordModal visible={changePasswordVisible} onClose={() => setChangePasswordVisible(false)} />
+                <TerminateAccountModal
+                    visible={terminateAccountVisible}
+                    onClose={() => setTerminateAccountVisible(false)}
+                />
             </ScrollView>
         </AuthGate>
     );

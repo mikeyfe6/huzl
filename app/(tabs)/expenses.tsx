@@ -12,10 +12,10 @@ import { formatCurrency, formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
+import { SORT_OPTIONS, SortModal, SortOption } from "@/components/modal/sort-expenses-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { ExpensesPie } from "@/components/ui/expenses-pie";
-import { SORT_OPTIONS, SortModal, SortOption } from "@/components/ui/sort-modal";
 
 import {
     businessColor,
@@ -31,6 +31,7 @@ import {
     slateColor,
 } from "@/constants/theme";
 import {
+    baseBold,
     baseBorder,
     baseButton,
     baseButtonText,
@@ -236,7 +237,7 @@ export default function ExpensesScreen() {
         }
 
         Alert.alert(t("expenses.deleteExpense"), `${t("expenses.delete")} "${name}"?`, [
-            { text: t("expenses.cancel"), style: "cancel" },
+            { text: t("common.cancel"), style: "cancel" },
             { text: t("expenses.delete"), style: "destructive", onPress: () => handleDeleteExpense(id) },
         ]);
     };
@@ -623,7 +624,7 @@ export default function ExpensesScreen() {
                     marginRight: 8,
                 },
                 totalInline: {
-                    fontWeight: "bold",
+                    ...baseBold,
                     paddingLeft: 8,
                 },
                 totalPeriod: {
@@ -632,7 +633,7 @@ export default function ExpensesScreen() {
                     marginBottom: 0,
                 },
                 totalAmount: {
-                    fontWeight: "bold",
+                    ...baseBold,
                     lineHeight: 40,
                 },
                 chartContainer: {
@@ -841,7 +842,7 @@ export default function ExpensesScreen() {
                                 style={[styles.button, { backgroundColor: redColor }]}
                                 onPress={handleCancelEdit}
                             >
-                                <ThemedText style={styles.buttonText}>{t("expenses.cancel")}</ThemedText>
+                                <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                             </TouchableOpacity>
                         )}
                     </View>

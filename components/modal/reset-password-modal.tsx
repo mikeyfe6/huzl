@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { supabase } from "@/utils/supabase";
 
@@ -12,11 +12,12 @@ import { Colors, greenColor, redColor } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
-    baseCenter,
-    baseCorner,
+    baseError,
     baseFlex,
     baseGap,
     baseInput,
+    baseModal,
+    baseOverlay,
     baseSelect,
 } from "@/styles/base";
 
@@ -34,34 +35,40 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleChangePassword = async () => {
+        setError(null);
         if (!newPassword || !confirmPassword) {
-            Alert.alert(t("password.error"), t("password.passwordRequired"));
+            setError(t("password.passwordRequired"));
+            setTimeout(() => setError(null), 7000);
             return;
         }
         if (newPassword !== confirmPassword) {
-            Alert.alert(t("password.error"), t("password.passwordMismatch"));
+            setError(t("password.passwordMismatch"));
+            setTimeout(() => setError(null), 7000);
             return;
         }
         if (newPassword.length < 6) {
-            Alert.alert(t("password.error"), t("password.passwordTooShort"));
+            setError(t("password.passwordTooShort"));
+            setTimeout(() => setError(null), 7000);
             return;
         }
         setLoading(true);
         try {
             const { error } = await supabase.auth.updateUser({ password: newPassword });
             if (error) {
-                Alert.alert(t("password.error"), error.message);
+                setError(error.message);
+                setTimeout(() => setError(null), 7000);
             } else {
-                Alert.alert(t("password.success"), t("password.passwordChanged"));
                 setNewPassword("");
                 setConfirmPassword("");
                 onClose();
             }
         } catch (err) {
             console.error("ChangePasswordModal error:", err);
-            Alert.alert(t("password.error"), t("password.unexpectedError"));
+            setError(t("password.unexpectedError"));
+            setTimeout(() => setError(null), 7000);
         } finally {
             setLoading(false);
         }
@@ -71,20 +78,13 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
         () =>
             StyleSheet.create({
                 overlay: {
-                    ...baseCenter,
-                    flex: 1,
-                    backgroundColor: "rgba(0,0,0,0.4)",
+                    ...baseOverlay,
                 },
                 modal: {
-                    ...baseCorner,
-                    backgroundColor: theme.background,
-                    padding: 24,
-                    width: "90%",
-                    maxWidth: 400,
-                    alignItems: "stretch",
+                    ...baseModal(theme),
                 },
                 title: {
-                    marginBottom: 24,
+                    marginBottom: 16,
                 },
                 input: {
                     ...baseInput(theme),
@@ -93,7 +93,7 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                 buttons: {
                     ...baseFlex("center", "center"),
                     ...baseGap,
-                    marginTop: 16,
+                    marginTop: 24,
                 },
                 button: {
                     ...baseButton,
@@ -101,12 +101,18 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                 buttonText: {
                     ...baseButtonText,
                 },
+                errorContainer: {
+                    marginTop: 24,
+                },
+                errorText: {
+                    ...baseError,
+                },
             }),
         [theme],
     );
 
     return (
-        <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+        <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
                     <ThemedText type="subtitle" style={styles.title}>
@@ -134,13 +140,6 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                     />
                     <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.button, { backgroundColor: redColor }]}
-                            onPress={onClose}
-                            disabled={loading}
-                        >
-                            <ThemedText style={styles.buttonText}>{t("password.cancel")}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
                             style={[styles.button, { backgroundColor: greenColor }]}
                             onPress={handleChangePassword}
                             disabled={loading}
@@ -149,7 +148,19 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                                 {loading ? t("password.saving") : t("password.save")}
                             </ThemedText>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.button, { backgroundColor: redColor }]}
+                            onPress={onClose}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
+                        </TouchableOpacity>
                     </View>
+                    {error ?
+                        <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
+                            <ThemedText style={styles.errorText}>{error}</ThemedText>
+                        </View>
+                    :   null}
                 </View>
             </View>
         </Modal>

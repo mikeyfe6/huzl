@@ -1,0 +1,157 @@
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Alert, Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+
+import { useAuth } from "@/hooks/use-auth";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+
+import { supabase } from "@/utils/supabase";
+
+import { ThemedText } from "@/components/themed-text";
+
+import { Colors, redColor, whiteColor } from "@/constants/theme";
+import {
+    baseButton,
+    baseButtonText,
+    baseFlex,
+    baseGap,
+    baseInput,
+    baseModal,
+    baseOverlay,
+    baseSelect,
+    baseTrans,
+    baseTransText,
+} from "@/styles/base";
+
+interface TerminateAccountModalProps {
+    visible: boolean;
+    onClose: () => void;
+}
+
+export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAccountModalProps>) {
+    const { t } = useTranslation();
+    const colorScheme = useColorScheme();
+    const { user, signOut } = useAuth();
+
+    const theme = Colors[colorScheme ?? "light"];
+
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const isPendingDeletion = user?.user_metadata?.deleteRequested;
+
+    const handleTerminateOrUndo = async () => {
+        if (!email.trim()) {
+            Alert.alert(t("terminate.errors.missingEmail"));
+            return;
+        }
+        if (user?.email !== email.trim()) {
+            Alert.alert(t("terminate.errors.emailMismatch"), t("terminate.errors.emailMismatchDesc"));
+            return;
+        }
+        setLoading(true);
+        try {
+            const { error } = await supabase.auth.updateUser({
+                data: {
+                    deleteRequested: !isPendingDeletion,
+                    requestDate: new Date().toISOString(),
+                },
+            });
+            if (error) {
+                Alert.alert(t("terminate.errors.generic"), error.message);
+            } else {
+                setEmail("");
+                onClose();
+                if (!isPendingDeletion) {
+                    await signOut();
+                }
+            }
+        } catch (err) {
+            console.error("TerminateAccountModal error:", err);
+            Alert.alert(t("terminate.errors.generic"));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const styles = StyleSheet.create({
+        overlay: {
+            ...baseOverlay,
+        },
+        modal: {
+            ...baseModal(theme),
+        },
+        title: {
+            marginBottom: 24,
+        },
+        subtitle: {
+            marginBottom: 24,
+        },
+        input: {
+            ...baseInput(theme),
+            ...baseSelect,
+        },
+        buttons: {
+            ...baseFlex("center", "center"),
+            ...baseGap,
+            flexWrap: "wrap",
+            marginTop: 24,
+        },
+        button: {
+            ...baseButton,
+        },
+        buttonText: {
+            ...baseButtonText,
+        },
+        transButton: {
+            ...baseTrans(redColor),
+            backgroundColor: whiteColor
+        },
+        transButtonText: {
+            ...baseTransText,
+            color: redColor,
+        },
+    });
+
+    let buttonLabel;
+    if (loading) {
+        buttonLabel = isPendingDeletion ? t("terminate.undoing") : t("terminate.terminating");
+    } else {
+        buttonLabel = isPendingDeletion ? t("terminate.undoTermination") : t("terminate.terminate");
+    }
+
+    return (
+        <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
+            <View style={styles.overlay}>
+                <View style={styles.modal}>
+                    <ThemedText type="subtitle" style={styles.title}>
+                        {t("terminate.title")}
+                    </ThemedText>
+                    <ThemedText style={styles.subtitle}>{t("terminate.fillEmail")}</ThemedText>
+                    <TextInput
+                        style={styles.input}
+                        value={email}
+                        placeholder={user?.email || t("terminate.emailPlaceholder")}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        autoComplete="email"
+                        placeholderTextColor={theme.placeholder}
+                        onChangeText={setEmail}
+                    />
+                    <View style={styles.buttons}>
+                        <TouchableOpacity
+                            style={[styles.button, { backgroundColor: redColor }]}
+                            onPress={onClose}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.transButton} onPress={handleTerminateOrUndo} disabled={loading}>
+                            <ThemedText style={styles.transButtonText}>{buttonLabel}</ThemedText>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        </Modal>
+    );
+}

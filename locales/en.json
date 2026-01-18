@@ -5,7 +5,11 @@
     },
     "common": {
         "welcome": "Welcome!",
-        "loading": "Loading …"
+        "loading": "Loading …",
+        "sending": "Sending …",
+        "send": "Send",
+        "close": "Close",
+        "cancel": "Cancel"
     },
     "tabs": {
         "home": "Home",
@@ -30,6 +34,7 @@
         "alreadyHaveAccount": "Already have an account?",
         "signIn": "Sign In",
         "signUp": "Sign Up",
+        "forgotPassword": "Forgot Password?",
         "disclaimer": {
             "first": "When you continue with email, you automatically agree to Huzl's",
             "second": "Terms of Service",
@@ -48,9 +53,14 @@
             "rateLimited": "Too many attempts. Please wait and try again."
         }
     },
+    "forgot": {
+        "title": "Forgot Password",
+        "text": "Enter your email address to receive a password reset link."
+    },
     "home": {
         "title": "Hello",
         "signedInAs": "Signed in as",
+        "pendingTermination": "Your account will be deleted within 24 hours.",
         "monthlyIncome": "Monthly Income",
         "monthlyCosts": "Monthly Costs",
         "monthlyDebts": "Monthly Debts",
@@ -73,7 +83,6 @@
         "yearly": "Yearly",
         "addExpense": "Add Expense",
         "updateExpense": "Update Expense",
-        "cancel": "Cancel",
         "yourExpenses": "Your Expenses",
         "period": "P/Y - P/M",
         "noExpenses": "No expenses yet",
@@ -91,8 +100,7 @@
         "nameAToZ": "Name A to Z",
         "nameZToA": "Name Z to A",
         "amountLowToHigh": "Low to High",
-        "amountHighToLow": "High to Low",
-        "cancel": "Cancel"
+        "amountHighToLow": "High to Low"
     },
     "budgets": {
         "title": "Budgets",
@@ -112,8 +120,7 @@
         "noExpenses": "No expenses yet",
         "addFirstBudget": "Add your first budget!",
         "delete": "Delete",
-        "deleteBudget": "Delete budget",
-        "cancel": "Cancel"
+        "deleteBudget": "Delete budget"
     },
     "debts": {
         "title": "Debts",
@@ -125,7 +132,6 @@
         "monthlyPaymentPlaceholder": "e.g. 200",
         "addDebt": "Add Debt",
         "updateDebt": "Update Debt",
-        "cancel": "Cancel",
         "yourDebts": "Your Debts",
         "noDebts": "No debts (hooray!)",
         "total": "Total",
@@ -166,6 +172,8 @@
         "version": "Version",
         "terms": "Terms of Service",
         "privacy": "Privacy Policy",
+        "undoTermination": "Undo Account Termination",
+        "terminateAccount": "Terminate Account",
         "signOut": "Sign Out"
     },
     "password": {
@@ -174,7 +182,6 @@
         "confirmPassword": "Confirm New Password",
         "saving": "Saving …",
         "save": "Save",
-        "cancel": "Cancel",
         "passwordRequired": "Password is required",
         "passwordMismatch": "Passwords do not match",
         "passwordTooShort": "Password must be at least 6 characters",
@@ -234,8 +241,26 @@
         "yourTickets": "Your Tickets",
         "delete": "Delete",
         "deleteTicket": "Delete ticket",
-        "cancel": "Cancel",
         "noTickets": "No tickets yet"
+    },
+    "terminate": {
+        "title": "Terminate Account",
+        "fillEmail": "Enter your email address to confirm you want to terminate your account.",
+        "undoing": "Undoing …",
+        "terminating": "Terminating …",
+        "undoTermination": "Undo Account Termination",
+        "terminate": "Terminate Account",
+        "terminationUndone": "Account termination undone",
+        "accountTerminationUndone": "Your account termination has been successfully undone. Your account is active and you can log in again.",
+        "accountTerminated": "Account terminated",
+        "errors": {
+            "missingEmail": "Enter your email address",
+            "emailMismatch": "Email address does not match",
+            "emailMismatchDesc": "The entered email address does not match your account email address.",
+            "emailRequired": "Email address is required",
+            "invalidEmail": "Invalid email address",
+            "generic": "Something went wrong. Please try again later."
+        }
     },
     "privacy": {
         "title": "Privacy Policy",

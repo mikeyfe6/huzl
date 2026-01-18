@@ -69,7 +69,7 @@ export default function HelpdeskScreen() {
             return;
         }
         Alert.alert(t("helpdesk.deleteTicket"), `${t("helpdesk.delete")} "${message.slice(0, 20)}"?`, [
-            { text: t("helpdesk.cancel"), style: "cancel" },
+            { text: t("common.cancel"), style: "cancel" },
             {
                 text: t("helpdesk.delete"),
                 style: "destructive",
@@ -226,7 +226,7 @@ export default function HelpdeskScreen() {
                     ...baseEmptyText(theme),
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -244,15 +244,15 @@ export default function HelpdeskScreen() {
                             onValueChange={(value) => setType(value)}
                             style={[
                                 styles.selectInput,
-                                Platform.OS === "web"
-                                    ? ([
-                                          {
-                                              appearance: "none",
-                                              WebkitAppearance: "none",
-                                              MozAppearance: "none",
-                                          } as any,
-                                      ] as any)
-                                    : null,
+                                Platform.OS === "web" ?
+                                    ([
+                                        {
+                                            appearance: "none",
+                                            WebkitAppearance: "none",
+                                            MozAppearance: "none",
+                                        } as any,
+                                    ] as any)
+                                :   null,
                             ]}
                             itemStyle={styles.selectOption}
                         >
@@ -307,20 +307,19 @@ export default function HelpdeskScreen() {
                     </ThemedView>
                 )}
 
-                {loading ? (
+                {loading ?
                     <ThemedView style={styles.emptyState}>
                         <ThemedText style={styles.emptyStateText}>
                             <Ionicons name="time-outline" size={24} color={theme.inputText} />
                         </ThemedText>
                     </ThemedView>
-                ) : (
-                    !loading &&
+                :   !loading &&
                     tickets.length === 0 && (
                         <ThemedView style={styles.emptyState}>
                             <ThemedText style={styles.emptyStateText}>{t("helpdesk.noTickets")}</ThemedText>
                         </ThemedView>
                     )
-                )}
+                }
             </ScrollView>
         </AuthGate>
     );

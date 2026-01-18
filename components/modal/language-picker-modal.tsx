@@ -6,7 +6,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { linkColor, whiteColor } from "@/constants/theme";
-import { baseCorner, baseFlex, baseLarge, baseMini, baseSize, baseWeight } from "@/styles/base";
+import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseSize, baseWeight } from "@/styles/base";
 
 type Language = {
     code: string;
@@ -19,12 +19,12 @@ const AVAILABLE_LANGUAGES: Language[] = [
     { code: "en", name: "English", nativeName: "English" },
 ];
 
-interface LanguageModalProps {
+interface LanguagePickerModalProps {
     readonly visible: boolean;
     readonly onClose: () => void;
 }
 
-export function LanguageModal({ visible, onClose }: LanguageModalProps) {
+export function LanguagePickerModal({ visible, onClose }: LanguagePickerModalProps) {
     const { i18n, t } = useTranslation();
     const [saving, setSaving] = useState(false);
 
@@ -41,7 +41,7 @@ export function LanguageModal({ visible, onClose }: LanguageModalProps) {
     };
 
     return (
-        <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
+        <Modal visible={visible} animationType="fade" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("language.selectLanguage")}</ThemedText>
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     },
     checkmark: {
         ...baseLarge,
-        fontWeight: "bold",
+        ...baseBold,
         color: whiteColor,
     },
     selectedText: {

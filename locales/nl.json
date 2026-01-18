@@ -5,7 +5,11 @@
     },
     "common": {
         "welcome": "Welkom!",
-        "loading": "Laden …"
+        "loading": "Laden …",
+        "sending": "Verzenden …",
+        "send": "Verzenden",
+        "close": "Sluiten",
+        "cancel": "Annuleren"
     },
     "tabs": {
         "home": "Home",
@@ -30,6 +34,7 @@
         "alreadyHaveAccount": "Heb je al een account?",
         "signIn": "Inloggen",
         "signUp": "Account Aanmaken",
+        "forgotPassword": "Wachtwoord vergeten?",
         "disclaimer": {
             "first": "Wanneer je doorgaat met e-mail ga je automatisch akkoord met Huzl's",
             "second": "Servicevoorwaarden",
@@ -48,9 +53,14 @@
             "rateLimited": "Te veel pogingen. Wacht even en probeer opnieuw."
         }
     },
+    "forgot": {
+        "title": "Wachtwoord vergeten",
+        "text": "Vul je e-mailadres in om een wachtwoordresetlink te ontvangen."
+    },
     "home": {
         "title": "Hallo",
         "signedInAs": "Ingelogd als",
+        "pendingTermination": "Je account wordt binnen 24 uur verwijderd.",
         "monthlyIncome": "Maandelijks Inkomen",
         "monthlyCosts": "Maandelijkse Kosten",
         "monthlyDebts": "Maandelijkse Schulden",
@@ -73,7 +83,6 @@
         "yearly": "Jaarlijks",
         "addExpense": "Uitgave Toevoegen",
         "updateExpense": "Uitgave Bijwerken",
-        "cancel": "Annuleren",
         "yourExpenses": "Jouw Uitgaven",
         "period": "P/J - P/M",
         "noExpenses": "Nog geen uitgaven",
@@ -91,8 +100,7 @@
         "nameAToZ": "Naam A tot Z",
         "nameZToA": "Naam Z tot A",
         "amountLowToHigh": "Laag naar Hoog",
-        "amountHighToLow": "Hoog naar Laag",
-        "cancel": "Annuleren"
+        "amountHighToLow": "Hoog naar Laag"
     },
     "budgets": {
         "title": "Budgetten",
@@ -112,8 +120,7 @@
         "noExpenses": "Nog geen uitgaven",
         "addFirstBudget": "Voeg je eerste budget toe!",
         "delete": "Verwijder",
-        "deleteBudget": "Verwijder budget",
-        "cancel": "Annuleren"
+        "deleteBudget": "Verwijder budget"
     },
     "debts": {
         "title": "Schulden",
@@ -125,7 +132,6 @@
         "monthlyPaymentPlaceholder": "Bijv. 200",
         "addDebt": "Schuld Toevoegen",
         "updateDebt": "Schuld Bijwerken",
-        "cancel": "Annuleren",
         "yourDebts": "Jouw Schulden",
         "noDebts": "Geen schulden (hoera!)",
         "total": "Totaal",
@@ -166,6 +172,8 @@
         "version": "Versie",
         "terms": "Servicevoorwaarden",
         "privacy": "Privacybeleid",
+        "undoTermination": "Herstel accountbeëindiging",
+        "terminateAccount": "Account Beëindigen",
         "signOut": "Uitloggen"
     },
     "password": {
@@ -174,7 +182,6 @@
         "confirmPassword": "Bevestig nieuw wachtwoord",
         "saving": "Opslaan …",
         "save": "Opslaan",
-        "cancel": "Annuleren",
         "passwordRequired": "Wachtwoord is verplicht",
         "passwordMismatch": "Wachtwoorden komen niet overeen",
         "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
@@ -234,8 +241,26 @@
         "yourTickets": "Jouw Tickets",
         "delete": "Verwijder",
         "deleteTicket": "Verwijder ticket",
-        "cancel": "Annuleren",
         "noTickets": "Nog geen tickets"
+    },
+    "terminate": {
+        "title": "Account Beëindigen",
+        "fillEmail": "Vul je e-mailadres in om te bevestigen dat je je account wilt beëindigen.",
+        "undoing": "Bezig met herstellen …",
+        "terminating": "Beëindigen …",
+        "undoTermination": "Herstel accountbeëindiging",
+        "terminate": "Account Beëindigen",
+        "terminationUndone": "Accountbeëindiging ongedaan gemaakt",
+        "accountTerminationUndone": "Je accountbeëindiging is succesvol ongedaan gemaakt. Je account is actief en je kunt weer inloggen.",
+        "accountTerminated": "Account beëindigd",
+        "errors": {
+            "missingEmail": "Vul je e-mailadres in",
+            "emailMismatch": "E-mailadres komt niet overeen",
+            "emailMismatchDesc": "Het ingevoerde e-mailadres komt niet overeen met je account e-mailadres.",
+            "emailRequired": "E-mailadres is verplicht",
+            "invalidEmail": "Ongeldig e-mailadres",
+            "generic": "Er ging iets mis. Probeer het later opnieuw."
+        }
     },
     "privacy": {
         "title": "Privacybeleid",

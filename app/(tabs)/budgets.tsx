@@ -247,7 +247,7 @@ export default function BudgetsScreen() {
                             return {
                                 ...budget,
                                 expenses: budget.expenses.map((e) =>
-                                    e.id === editingExpenseId ? { ...e, name: data.name, amount: data.amount } : e
+                                    e.id === editingExpenseId ? { ...e, name: data.name, amount: data.amount } : e,
                                 ),
                                 spent: budget.spent + amountDiff,
                             };
@@ -350,7 +350,7 @@ export default function BudgetsScreen() {
         }
 
         Alert.alert(`${t("budgets.delete")} ${type}`, `${t("budgets.delete")} "${name}"?`, [
-            { text: t("budgets.cancel"), style: "cancel" },
+            { text: t("common.cancel"), style: "cancel" },
             {
                 text: t("budgets.delete"),
                 style: "destructive",
@@ -507,7 +507,7 @@ export default function BudgetsScreen() {
                     ...baseEmptyText(theme),
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -556,7 +556,7 @@ export default function BudgetsScreen() {
                                 onPress={handleCancelEdit}
                                 disabled={loading}
                             >
-                                <ThemedText style={styles.buttonText}>{t("budgets.cancel")}</ThemedText>
+                                <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                             </TouchableOpacity>
                         )}
                     </View>
@@ -700,7 +700,7 @@ export default function BudgetsScreen() {
                                     onPress={handleCancelExpenseEdit}
                                     disabled={loading}
                                 >
-                                    <ThemedText style={styles.buttonText}>{t("budgets.cancel")}</ThemedText>
+                                    <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                                 </TouchableOpacity>
                             )}
                         </View>
@@ -708,12 +708,11 @@ export default function BudgetsScreen() {
                         <ThemedText type="subtitle" style={styles.expenseList}>
                             {t("budgets.expenses")}
                         </ThemedText>
-                        {selectedBudget.expenses.length === 0 ? (
+                        {selectedBudget.expenses.length === 0 ?
                             <ThemedView style={styles.emptyState}>
                                 <ThemedText style={styles.emptyStateText}>{t("budgets.noExpenses")}</ThemedText>
                             </ThemedView>
-                        ) : (
-                            selectedBudget.expenses.map((expense) => (
+                        :   selectedBudget.expenses.map((expense) => (
                                 <View
                                     key={expense.id}
                                     style={[styles.expenseItem, !expense.active && { opacity: 0.5 }]}
@@ -767,24 +766,23 @@ export default function BudgetsScreen() {
                                     </View>
                                 </View>
                             ))
-                        )}
+                        }
                     </ThemedView>
                 )}
 
-                {loading ? (
+                {loading ?
                     <ThemedView style={styles.emptyState}>
                         <ThemedText style={styles.emptyStateText}>
                             <Ionicons name="time-outline" size={24} color={theme.inputText} />
                         </ThemedText>
                     </ThemedView>
-                ) : (
-                    !loading &&
+                :   !loading &&
                     budgets.length === 0 && (
                         <ThemedView style={styles.emptyState}>
                             <ThemedText style={styles.emptyStateText}>{t("budgets.addFirstBudget")}</ThemedText>
                         </ThemedView>
                     )
-                )}
+                }
             </ScrollView>
         </AuthGate>
     );

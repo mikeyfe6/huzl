@@ -1,10 +1,11 @@
-import { whiteColor } from "@/constants/theme";
+import { greenColor, redColor, whiteColor } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const baseGap = { gap: 12 };
 export const baseSpace = { gap: 8 };
 
 export const baseWeight = { fontWeight: "600" as const };
+export const baseBold = { fontWeight: "bold" as const };
 
 export const baseRadius = { borderRadius: 8 };
 export const baseCorner = { borderRadius: 12 };
@@ -51,12 +52,25 @@ export const baseButton = {
     ...baseFlex("center", "center"),
     ...baseRadius,
     minHeight: 44,
+    minWidth: "auto" as const,
     paddingVertical: 12,
+    paddingHorizontal: 24,
     flex: 1,
 };
 
-export const baseButtonText = {
+export const baseTrans = (color: string) => ({
+    ...baseButton,
+    ...baseBorder,
+    borderColor: color,
+});
+
+export const baseTransText = {
     ...baseWeight,
+    whiteSpace: "nowrap" as const,
+};
+
+export const baseButtonText = {
+    ...baseTransText,
     color: whiteColor,
 };
 
@@ -112,4 +126,37 @@ export const baseIcon = {
     borderRadius: 6,
     width: 32,
     height: 32,
+};
+
+export const baseOverlay = {
+    ...baseCenter,
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.75)",
+};
+
+export const baseModal = (theme: any) => ({
+    ...baseCorner,
+    ...baseBorder,
+    alignItems: "stretch" as const,
+    width: "90%" as const,
+    maxWidth: 450,
+    backgroundColor: theme.background,
+    borderColor: theme.borderColor,
+    padding: 24,
+});
+
+export const baseMessage = {
+    ...baseBold,
+    fontSize: 15,
+    textAlign: "center" as const,
+};
+
+export const baseError = {
+    ...baseMessage,
+    color: redColor,
+};
+
+export const baseSuccess = {
+    ...baseMessage,
+    color: greenColor,
 };

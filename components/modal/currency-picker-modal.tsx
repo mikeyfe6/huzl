@@ -11,7 +11,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { linkColor, whiteColor } from "@/constants/theme";
-import { baseCorner, baseFlex, baseLarge, baseMini, baseTitle, baseWeight } from "@/styles/base";
+import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseTitle, baseWeight } from "@/styles/base";
 
 interface CurrencyPickerModalProps {
     readonly visible: boolean;
@@ -22,8 +22,9 @@ interface CurrencyPickerModalProps {
 export function CurrencyPickerModal({ visible, onClose, currentSymbol }: CurrencyPickerModalProps) {
     const { t } = useTranslation();
     const { refreshUser } = useAuth();
-    const [saving, setSaving] = useState(false);
     const availableCurrencies = useAvailableCurrencies();
+
+    const [saving, setSaving] = useState(false);
 
     const handleSelect = async (currency: Currency) => {
         setSaving(true);
@@ -52,7 +53,7 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol }: Currenc
     };
 
     return (
-        <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
+        <Modal visible={visible} animationType="fade" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("currency.selectCurrency")}</ThemedText>
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     },
     checkmark: {
         ...baseLarge,
-        fontWeight: "bold",
+        ...baseBold,
         color: whiteColor,
     },
     selectedText: {

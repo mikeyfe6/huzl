@@ -102,7 +102,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                         </TouchableOpacity>
                     ))}
                     <TouchableOpacity style={styles.cancel} onPress={onRequestClose}>
-                        <ThemedText type="danger">{t("sorting.cancel")}</ThemedText>
+                        <ThemedText type="danger">{t("common.close")}</ThemedText>
                     </TouchableOpacity>
                 </View>
             </View>

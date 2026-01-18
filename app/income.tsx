@@ -261,10 +261,10 @@ export default function IncomeScreen() {
                 },
                 input: {
                     ...baseSize,
+                    ...baseWeight,
                     color: theme.text,
                     paddingVertical: 6,
                     marginBottom: 4,
-                    fontWeight: "500",
                     outlineWidth: 0,
                 },
                 category: {
