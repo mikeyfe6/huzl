@@ -51,14 +51,13 @@
             "emailNotConfirmed": "Please confirm your email before signing in.",
             "alreadyRegistered": "An account with this email already exists.",
             "rateLimited": "Too many attempts. Please wait and try again.",
-            "passwordMismatch": "Passwords do not match",
-            "passwordTooShort": "Password must be at least 6 characters"
+            "passwordMismatch": "Passwords do not match.",
+            "passwordTooShort": "Password must be at least 6 characters."
         },
         "success": {
             "title": "Success",
-            "passwordResetSent": "Wachtwoord reset link verzonden",
-            "checkEmail": "Controleer je e-mail voor instructies om je wachtwoord te resetten.",
-            "accountCreated": "Controleer je e-mail om je account te bevestigen."
+            "passwordResetSent": "Password reset link sent.",
+            "accountCreated": "Check your email to confirm your account."
         }
     },
     "forgot": {

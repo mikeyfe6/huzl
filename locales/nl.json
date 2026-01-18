@@ -51,12 +51,12 @@
             "emailNotConfirmed": "Bevestig je e-mail voordat je inlogt.",
             "alreadyRegistered": "Er bestaat al een account met deze e-mail.",
             "rateLimited": "Te veel pogingen. Wacht even en probeer opnieuw.",
-            "passwordMismatch": "Wachtwoorden komen niet overeen",
-            "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn"
+            "passwordMismatch": "Wachtwoorden komen niet overeen.",
+            "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn."
         },
         "success": {
+            "title": "Succes",
             "passwordResetSent": "Wachtwoord reset link verzonden",
-            "checkEmail": "Controleer je e-mail voor instructies om je wachtwoord te resetten.",
             "accountCreated": "Controleer je e-mail om je account te bevestigen."
         }
     },
