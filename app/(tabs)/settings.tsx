@@ -267,7 +267,7 @@ export default function SettingsScreen() {
                             <ThemedText style={styles.settingLabel}>{t("settings.email")}</ThemedText>
                             <TextInput
                                 style={styles.input}
-                                placeholder={t("settings.emailPlaceholder")}
+                                placeholder={t("auth.placeholder.email")}
                                 placeholderTextColor={theme.placeholder}
                                 value={email}
                                 onChangeText={setEmail}

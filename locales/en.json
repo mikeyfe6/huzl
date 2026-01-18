@@ -4,7 +4,6 @@
         "description": "Manage budgets, track expenses, monitor debts and monthly income with Huzl's clear summaries."
     },
     "common": {
-        "welcome": "Welcome!",
         "loading": "Loading …",
         "sending": "Sending …",
         "send": "Send",
@@ -25,6 +24,7 @@
         "helpdesk": "Helpdesk"
     },
     "auth": {
+        "welcome": "Welcome!",
         "getStarted": "Create your account to get started",
         "signInOrCreate": "Sign in or create an account to continue",
         "createAccount": "Create Account",

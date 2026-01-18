@@ -379,7 +379,7 @@ export default function HomeScreen() {
             <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
                 <ThemedView style={styles.container}>
                     <HeaderImage />
-                    <ThemedText type="title">{t("common.welcome")}</ThemedText>
+                    <ThemedText type="title">{t("auth.welcome")}</ThemedText>
                     <ThemedText style={styles.text}>
                         {isSignUp ? t("auth.getStarted") : t("auth.signInOrCreate")}
                     </ThemedText>

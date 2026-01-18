@@ -4,7 +4,6 @@
         "description": "Beheer budgetten, volg uitgaven, monitor schulden en maandelijks inkomen met duidelijke overzichten in Huzl."
     },
     "common": {
-        "welcome": "Welkom!",
         "loading": "Laden …",
         "sending": "Verzenden …",
         "send": "Verzenden",
@@ -25,6 +24,7 @@
         "helpdesk": "Helpdesk"
     },
     "auth": {
+        "welcome": "Welkom!",
         "getStarted": "Maak een account aan om aan de slag te gaan",
         "signInOrCreate": "Meld je aan of maak een account om door te gaan",
         "createAccount": "Account Aanmaken",

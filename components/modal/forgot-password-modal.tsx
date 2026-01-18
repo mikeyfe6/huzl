@@ -103,7 +103,7 @@ export function ForgotPasswordModal({ visible, onClose }: Readonly<ForgotPasswor
                     <ThemedText style={styles.subtitle}>{t("forgot.text")}</ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder={t("auth.emailPlaceholder")}
+                        placeholder={t("auth.placeholder.email")}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         autoComplete="email"

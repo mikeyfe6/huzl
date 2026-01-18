@@ -105,7 +105,7 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
         },
         transButton: {
             ...baseTrans(redColor),
-            backgroundColor: whiteColor
+            backgroundColor: whiteColor,
         },
         transButtonText: {
             ...baseTransText,
@@ -131,7 +131,7 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
                     <TextInput
                         style={styles.input}
                         value={email}
-                        placeholder={user?.email || t("terminate.emailPlaceholder")}
+                        placeholder={user?.email || t("auth.placeholder.email")}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         autoComplete="email"
