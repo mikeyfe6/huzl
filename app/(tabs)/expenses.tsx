@@ -264,11 +264,11 @@ export default function ExpensesScreen() {
 
     const categoryLabelMap = useMemo(
         () => ({
-            personal: t("expenses.personal"),
-            business: t("expenses.business"),
-            family: t("expenses.family"),
-            invest: t("expenses.invest"),
-            entertainment: t("expenses.entertainment"),
+            personal: t("expenses.category.personal"),
+            business: t("expenses.category.business"),
+            family: t("expenses.category.family"),
+            invest: t("expenses.category.invest"),
+            entertainment: t("expenses.category.entertainment"),
         }),
         [t],
     );
@@ -326,11 +326,11 @@ export default function ExpensesScreen() {
     const getFrequencyLabel = (freq: Frequency): string => {
         switch (freq) {
             case "daily":
-                return t("expenses.daily");
+                return t("expenses.frequency.daily");
             case "monthly":
-                return t("expenses.monthly");
+                return t("expenses.frequency.monthly");
             case "yearly":
-                return t("expenses.yearly");
+                return t("expenses.frequency.yearly");
         }
     };
 
@@ -715,11 +715,11 @@ export default function ExpensesScreen() {
                         {t("expenses.title")}
                     </ThemedText>
 
-                    <ThemedText style={styles.label}>{t("expenses.name")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("expenses.label.name")}</ThemedText>
                     <TextInput
                         ref={nameInputRef}
                         style={[styles.input, nameFocused && { borderColor: linkColor }]}
-                        placeholder={t("expenses.namePlaceholder")}
+                        placeholder={t("expenses.placeholder.name")}
                         placeholderTextColor={theme.placeholder}
                         value={expenseName}
                         onChangeText={setExpenseName}
@@ -728,7 +728,7 @@ export default function ExpensesScreen() {
                     />
 
                     <ThemedText style={styles.label}>
-                        {t("expenses.amount")} ({currencySymbol})
+                        {t("expenses.label.amount")} ({currencySymbol})
                     </ThemedText>
                     <TextInput
                         style={[
@@ -746,7 +746,7 @@ export default function ExpensesScreen() {
                         onBlur={() => setAmountFocused(false)}
                     />
 
-                    <ThemedText style={styles.label}>{t("expenses.category")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("expenses.label.category")}</ThemedText>
                     <View style={styles.categoryGroup}>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "personal" && styles.categoryActive]}
@@ -756,7 +756,7 @@ export default function ExpensesScreen() {
                                 selected: category === "personal",
                             }}
                         >
-                            <ThemedText>{t("expenses.personal")}</ThemedText>
+                            <ThemedText>{t("expenses.category.personal")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "business" && styles.categoryActive]}
@@ -766,7 +766,7 @@ export default function ExpensesScreen() {
                                 selected: category === "business",
                             }}
                         >
-                            <ThemedText>{t("expenses.business")}</ThemedText>
+                            <ThemedText>{t("expenses.category.business")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "family" && styles.categoryActive]}
@@ -776,7 +776,7 @@ export default function ExpensesScreen() {
                                 selected: category === "family",
                             }}
                         >
-                            <ThemedText>{t("expenses.family")}</ThemedText>
+                            <ThemedText>{t("expenses.category.family")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "invest" && styles.categoryActive]}
@@ -786,7 +786,7 @@ export default function ExpensesScreen() {
                                 selected: category === "invest",
                             }}
                         >
-                            <ThemedText>{t("expenses.invest")}</ThemedText>
+                            <ThemedText>{t("expenses.category.invest")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.categoryOption, category === "entertainment" && styles.categoryActive]}
@@ -796,11 +796,11 @@ export default function ExpensesScreen() {
                                 selected: category === "entertainment",
                             }}
                         >
-                            <ThemedText>{t("expenses.entertainment")}</ThemedText>
+                            <ThemedText>{t("expenses.category.entertainment")}</ThemedText>
                         </TouchableOpacity>
                     </View>
 
-                    <ThemedText style={styles.label}>{t("expenses.frequency")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("expenses.label.frequency")}</ThemedText>
                     <View style={[styles.select]}>
                         <Picker
                             selectedValue={frequency}
@@ -819,9 +819,9 @@ export default function ExpensesScreen() {
                             ]}
                             itemStyle={styles.selectOption}
                         >
-                            <Picker.Item label={t("expenses.daily")} value="daily" />
-                            <Picker.Item label={t("expenses.monthly")} value="monthly" />
-                            <Picker.Item label={t("expenses.yearly")} value="yearly" />
+                            <Picker.Item label={t("expenses.frequency.daily")} value="daily" />
+                            <Picker.Item label={t("expenses.frequency.monthly")} value="monthly" />
+                            <Picker.Item label={t("expenses.frequency.yearly")} value="yearly" />
                         </Picker>
                         {Platform.OS === "web" && (
                             <Ionicons name="chevron-down" size={18} color={theme.inputText} style={styles.selectIcon} />
@@ -834,7 +834,7 @@ export default function ExpensesScreen() {
                             onPress={handleAddExpense}
                         >
                             <ThemedText style={styles.buttonText}>
-                                {editingId ? t("expenses.updateExpense") : t("expenses.addExpense")}
+                                {editingId ? t("expenses.button.updateExpense") : t("expenses.button.addExpense")}
                             </ThemedText>
                         </TouchableOpacity>
                         {editingId && (
@@ -982,7 +982,7 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.personal")}:</ThemedText>{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.category.personal")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {" "}
                                     {formatCurrency(personalYearlySpend, currencySymbol)}
@@ -997,7 +997,7 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.business")}:</ThemedText>{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.category.business")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {" "}
                                     {formatCurrency(businessYearlySpend, currencySymbol)}
@@ -1012,7 +1012,7 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.family")}:</ThemedText>{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.category.family")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {" "}
                                     {formatCurrency(familyYearlySpend, currencySymbol)}
@@ -1027,7 +1027,7 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.invest")}:</ThemedText>{" "}
+                                <ThemedText style={styles.totalLabel}> {t("expenses.category.invest")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {" "}
                                     {formatCurrency(investYearlySpend, currencySymbol)}
@@ -1042,7 +1042,10 @@ export default function ExpensesScreen() {
                                         },
                                     ]}
                                 />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.entertainment")}:</ThemedText>{" "}
+                                <ThemedText style={styles.totalLabel}>
+                                    {" "}
+                                    {t("expenses.category.entertainment")}:
+                                </ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
                                     {" "}
                                     {formatCurrency(entertainmentYearlySpend, currencySymbol)}
@@ -1149,7 +1152,7 @@ export default function ExpensesScreen() {
                                                         ]}
                                                     />
                                                     <ThemedText style={styles.chartButtonText}>
-                                                        {categoryLabelMap[cat]}
+                                                        {t(`expenses.category.${cat}`)}
                                                     </ThemedText>
                                                     <ThemedText
                                                         style={[styles.chartButtonText, styles.chartButtonLabel]}
@@ -1163,7 +1166,7 @@ export default function ExpensesScreen() {
                                 </View>
                                 <View style={styles.chartItems}>
                                     {expenses.filter((e) => e.active && e.category === category).length === 0 ?
-                                        <ThemedText>{t("expenses.noExpensesInCategories")}</ThemedText>
+                                        <ThemedText>{t("expenses.noExpensesInPie")}</ThemedText>
                                     :   expenses
                                             .filter((e) => e.active && e.category === category)
                                             .map((e) => ({

@@ -76,30 +76,39 @@
     },
     "expenses": {
         "title": "Expenses",
-        "name": "Name",
-        "namePlaceholder": "e.g. Spotify",
-        "amount": "Amount",
-        "category": "Category",
-        "personal": "Personal",
-        "business": "Business",
-        "family": "Family",
-        "invest": "Investment",
-        "entertainment": "Entertainment",
-        "frequency": "Frequency",
-        "daily": "Daily",
-        "monthly": "Monthly",
-        "yearly": "Yearly",
-        "addExpense": "Add Expense",
-        "updateExpense": "Update Expense",
+        "label": {
+            "name": "Name",
+            "amount": "Amount",
+            "category": "Category",
+            "frequency": "Frequency"
+        },
+        "placeholder": {
+            "name": "e.g. Spotify"
+        },
+        "category": {
+            "personal": "Personal",
+            "business": "Business",
+            "family": "Family",
+            "invest": "Investment",
+            "entertainment": "Entertainment"
+        },
+        "frequency": {
+            "daily": "Daily",
+            "monthly": "Monthly",
+            "yearly": "Yearly"
+        },
+        "button": {
+            "addExpense": "Add Expense",
+            "updateExpense": "Update Expense"
+        },
         "yourExpenses": "Your Expenses",
         "period": "P/Y - P/M",
-        "noExpenses": "No expenses yet",
         "yearlySpend": "Total Yearly Spend",
         "monthlySpend": "Total Monthly Spend",
         "dailySpend": "Total Daily Spend",
         "addFirstExpense": "Add your first expense!",
         "deleteExpense": "Delete expense",
-        "noExpensesInCategories": "No expenses in this category."
+        "noExpensesInPie": "No expenses in this category."
     },
     "sorting": {
         "sortBy": "Sort By",

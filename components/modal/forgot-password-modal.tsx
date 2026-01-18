@@ -55,7 +55,7 @@ export function ForgotPasswordModal({ visible, onClose }: Readonly<ForgotPasswor
                 onClose();
             }
         } catch (err) {
-            console.error("ForgotPasswordModal error:", err);
+            console.error("Forgot password error:", err);
             Alert.alert(t("auth.error.generic"));
             alert(t("auth.error.generic"));
         } finally {

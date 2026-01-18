@@ -76,30 +76,39 @@
     },
     "expenses": {
         "title": "Uitgaven",
-        "name": "Naam",
-        "namePlaceholder": "Bijv. Spotify",
-        "amount": "Bedrag",
-        "category": "Categorie",
-        "personal": "Persoonlijk",
-        "business": "Zakelijk",
-        "family": "Familie",
-        "invest": "Investering",
-        "entertainment": "Entertainment",
-        "frequency": "Frequentie",
-        "daily": "Dagelijks",
-        "monthly": "Maandelijks",
-        "yearly": "Jaarlijks",
-        "addExpense": "Uitgave Toevoegen",
-        "updateExpense": "Uitgave Bijwerken",
+        "label": {
+            "name": "Naam",
+            "amount": "Bedrag",
+            "category": "Categorie",
+            "frequency": "Frequentie"
+        },
+        "placeholder": {
+            "name": "Bijv. Spotify"
+        },
+        "category": {
+            "personal": "Persoonlijk",
+            "business": "Zakelijk",
+            "family": "Familie",
+            "invest": "Investering",
+            "entertainment": "Entertainment"
+        },
+        "frequency": {
+            "daily": "Dagelijks",
+            "monthly": "Maandelijks",
+            "yearly": "Jaarlijks"
+        },
+        "button": {
+            "addExpense": "Uitgave Toevoegen",
+            "updateExpense": "Uitgave Bijwerken"
+        },
         "yourExpenses": "Jouw Uitgaven",
         "period": "P/J - P/M",
-        "noExpenses": "Nog geen uitgaven",
         "yearlySpend": "Totale Jaarlijkse Uitgaven",
         "monthlySpend": "Totale Maandelijkse Uitgaven",
         "dailySpend": "Totale Dagelijkse Uitgaven",
         "addFirstExpense": "Voeg je eerste uitgave toe!",
         "deleteExpense": "Verwijder uitgave",
-        "noExpensesInCategories": "Geen uitgaven in deze categorie."
+        "noExpensesInPie": "Geen uitgaven in deze categorie."
     },
     "sorting": {
         "sortBy": "Sorteren op",
