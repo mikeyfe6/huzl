@@ -1,13 +1,16 @@
 import { logEvent, setUserId } from "@/utils/analytics";
 import { supabase } from "@/utils/supabase";
-import type { User } from "@supabase/supabase-js";
+import type { AuthError, User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 type AuthContextValue = {
     user: User | null;
     loading: boolean;
-    signIn: (email: string, password: string) => Promise<{ error?: string }>;
-    signUp: (email: string, password: string) => Promise<{ error?: string; success: boolean }>;
+    signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+    signUp: (
+        email: string,
+        password: string,
+    ) => Promise<{ error: AuthError | null; success: boolean; user: User | null }>;
     signOut: () => Promise<void>;
     refreshUser: () => Promise<void>;
 };
@@ -67,7 +70,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         if (!error) {
             logEvent("sign_in");
         }
-        return { error: error?.message };
+        return { error };
     };
 
     const signUp = async (email: string, password: string) => {
@@ -75,7 +78,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         if (!error && data.user) {
             logEvent("sign_up", { method: "password" });
         }
-        return { error: error?.message, success: !error && !!data.user };
+        return { error, success: !error && !!data.user, user: data.user };
     };
 
     const signOut = async () => {
@@ -89,7 +92,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
     const value = useMemo<AuthContextValue>(
         () => ({ user, loading, signIn, signUp, signOut, refreshUser }),
-        [user, loading]
+        [user, loading],
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

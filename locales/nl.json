@@ -41,16 +41,21 @@
             "third": "en",
             "fourth": "Privacybeleid"
         },
-        "accountCreated": "Controleer je e-mail om je account te bevestigen.",
-        "passwordMismatch": "Wachtwoorden komen niet overeen",
-        "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
-        "errors": {
+        "error": {
+            "title": "Fout",
             "missingCredentials": "Vul alle velden in.",
             "generic": "Er ging iets mis. Probeer het opnieuw.",
             "invalidCredentials": "Onjuiste e-mail of wachtwoord.",
             "emailNotConfirmed": "Bevestig je e-mail voordat je inlogt.",
             "alreadyRegistered": "Er bestaat al een account met deze e-mail.",
-            "rateLimited": "Te veel pogingen. Wacht even en probeer opnieuw."
+            "rateLimited": "Te veel pogingen. Wacht even en probeer opnieuw.",
+            "passwordMismatch": "Wachtwoorden komen niet overeen",
+            "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn"
+        },
+        "success": {
+            "passwordResetSent": "Wachtwoord reset link verzonden",
+            "checkEmail": "Controleer je e-mail voor instructies om je wachtwoord te resetten.",
+            "accountCreated": "Controleer je e-mail om je account te bevestigen."
         }
     },
     "forgot": {

@@ -55,21 +55,19 @@ export default function HomeScreen() {
     const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
 
     const mapAuthError = (err: unknown) => {
-        const message = typeof err === "string" ? err : ((err as any)?.message ?? "");
-        const normalized = message.toLowerCase();
+        const code = (err as any)?.code;
 
-        if (normalized.includes("invalid login credentials")) return t("auth.errors.invalidCredentials");
-        if (normalized.includes("email not confirmed")) return t("auth.errors.emailNotConfirmed");
-        if (normalized.includes("already registered")) return t("auth.errors.alreadyRegistered");
-        if (normalized.includes("too many")) return t("auth.errors.rateLimited");
+        if (code === "invalid_credentials") return t("auth.error.invalidCredentials");
+        if (code === "email_not_confirmed") return t("auth.error.emailNotConfirmed");
+        if (code === "too_many_requests") return t("auth.error.rateLimited");
 
-        return t("auth.errors.generic");
+        return t("auth.error.generic");
     };
 
     const handleSignIn = async () => {
         setError(null);
         if (!email.trim() || !password.trim()) {
-            setError(t("auth.errors.missingCredentials"));
+            setError(t("auth.error.missingCredentials"));
             return;
         }
         const { error } = await signIn(email.trim(), password);
@@ -82,20 +80,22 @@ export default function HomeScreen() {
         setError(null);
         setRegistrationSuccess(false);
         if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
-            setError(t("auth.errors.missingCredentials"));
+            setError(t("auth.error.missingCredentials"));
             return;
         }
         if (password !== confirmPassword) {
-            setError(t("auth.passwordMismatch"));
+            setError(t("auth.error.passwordMismatch"));
             return;
         }
         if (password.length < 6) {
-            setError(t("auth.passwordTooShort"));
+            setError(t("auth.error.passwordTooShort"));
             return;
         }
-        const { error, success } = await signUp(email.trim(), password);
+        const { error, success, user } = await signUp(email.trim(), password);
         if (error) {
             setError(mapAuthError(error));
+        } else if (user && Array.isArray(user.identities) && user.identities.length === 0) {
+            setError(t("auth.error.alreadyRegistered"));
         } else if (success) {
             setRegistrationSuccess(true);
             setIsSignUp(false);
@@ -458,7 +458,7 @@ export default function HomeScreen() {
                         </ThemedText>
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
                             {registrationSuccess ?
-                                <ThemedText style={styles.successText}>{t("auth.accountCreated")}</ThemedText>
+                                <ThemedText style={styles.successText}>{t("auth.success.accountCreated")}</ThemedText>
                             :   <ThemedText style={[styles.errorText, !error && styles.errorHidden]}>
                                     {error ? error.charAt(0).toUpperCase() + error.slice(1) : " "}
                                 </ThemedText>

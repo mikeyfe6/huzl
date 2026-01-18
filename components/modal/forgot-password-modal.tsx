@@ -20,6 +20,8 @@ import {
     baseSelect,
 } from "@/styles/base";
 
+// TODO: add successmessage after filling in email correctly
+
 interface ForgotPasswordModalProps {
     visible: boolean;
     onClose: () => void;
@@ -36,22 +38,26 @@ export function ForgotPasswordModal({ visible, onClose }: Readonly<ForgotPasswor
 
     const handleForgotPassword = async () => {
         if (!email.trim()) {
-            Alert.alert(t("auth.errors.missingCredentials"));
+            Alert.alert(t("auth.error.missingCredentials"));
+            alert(t("auth.error.missingCredentials"));
             return;
         }
         setLoading(true);
         try {
             const { error } = await supabase.auth.resetPasswordForEmail(email.trim());
             if (error) {
-                Alert.alert(t("auth.errors.generic"), error.message);
+                Alert.alert(t("auth.error.generic"), error.message);
+                alert(t("auth.error.generic"));
             } else {
-                Alert.alert(t("auth.success"), t("auth.resetEmailSent"));
+                Alert.alert(t("auth.success.title"), t("auth.success.passwordResetSent"));
+                alert(t("auth.success.passwordResetSent"));
                 setEmail("");
                 onClose();
             }
         } catch (err) {
             console.error("ForgotPasswordModal error:", err);
-            Alert.alert(t("auth.errors.generic"));
+            Alert.alert(t("auth.error.generic"));
+            alert(t("auth.error.generic"));
         } finally {
             setLoading(false);
         }
