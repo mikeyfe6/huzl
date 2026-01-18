@@ -85,13 +85,13 @@ export default function IncomeScreen() {
     }, [saving, hasIncomeChanges, sources]);
 
     const incomeTypes = [
-        { key: "salary", label: t("income.salary") },
-        { key: "freelance", label: t("income.freelance") },
-        { key: "benefit", label: t("income.benefit") },
-        { key: "pension", label: t("income.pension") },
-        { key: "alimony", label: t("income.alimony") },
-        { key: "investment", label: t("income.investment") },
-        { key: "other", label: t("income.other") },
+        { key: "salary", label: t("income.category.salary") },
+        { key: "freelance", label: t("income.category.freelance") },
+        { key: "benefit", label: t("income.category.benefit") },
+        { key: "pension", label: t("income.category.pension") },
+        { key: "alimony", label: t("income.category.alimony") },
+        { key: "investment", label: t("income.category.investment") },
+        { key: "other", label: t("income.category.other") },
     ];
 
     const addSource = () => {
@@ -125,7 +125,7 @@ export default function IncomeScreen() {
             if (src.active === false) continue;
             const parsed = Number.parseFloat(src.amount);
             if (Number.isNaN(parsed) || parsed < 0) {
-                Alert.alert(t("income.invalidAmountTitle"), t("income.invalidAmountMsg"));
+                Alert.alert(t("income.error.invalidAmountTitle"), t("income.error.invalidAmountMsg"));
                 return;
             }
         }
@@ -227,17 +227,11 @@ export default function IncomeScreen() {
                     ...baseMain,
                 },
                 subtitle: {
-                    marginBottom: 12,
-                },
-                hint: {
                     color: silverColor,
                     fontSize: 18,
                     marginBottom: 36,
                 },
                 label: {
-                    ...baseWeight,
-                    ...baseSmall,
-                    color: theme.label,
                     marginBottom: 12,
                 },
                 wrapper: {
@@ -325,9 +319,9 @@ export default function IncomeScreen() {
             <ScrollView contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
                     <ThemedText type="title">{t("income.title")}</ThemedText>
-                    <ThemedText style={styles.hint}>{t("income.hint")}</ThemedText>
-                    <ThemedText type="subtitle" style={styles.subtitle}>
-                        {t("income.sources")}
+                    <ThemedText style={styles.subtitle}>{t("income.subtitle")}</ThemedText>
+                    <ThemedText type="subtitle" style={styles.label}>
+                        {t("income.label")}
                     </ThemedText>
 
                     {loading ?
@@ -416,11 +410,11 @@ export default function IncomeScreen() {
                             onPress={handleSave}
                         >
                             <ThemedText style={styles.saveButtonText}>
-                                {saving ? t("income.saving") : t("income.saveIncome")}
+                                {saving ? t("common.saving") : t("common.save")}
                             </ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
-                            <ThemedText style={styles.closeButtonText}>{t("income.close")}</ThemedText>
+                            <ThemedText style={styles.closeButtonText}>{t("common.close")}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>

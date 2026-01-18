@@ -238,25 +238,26 @@
         "sek": "Zweedse Kroon"
     },
     "income": {
-        "salary": "Salaris",
-        "freelance": "Freelance/Zelfstandig",
-        "benefit": "Uitkering/Toeslag",
-        "pension": "Pensioen",
-        "alimony": "Alimentatie",
-        "investment": "Dividend/Rente",
-        "other": "Overig",
-        "invalidAmountTitle": "Ongeldig bedrag",
-        "invalidAmountMsg": "Voer een geldig, niet-negatief bedrag in",
         "title": "Stel je maandelijkse inkomen in",
-        "hint": "Wordt gebruikt voor budgetten en overzichten.",
-        "sources": "Inkomensbronnen",
+        "subtitle": "Voeg je inkomstenbronnen toe om een duidelijk overzicht van je maandelijkse in- en uitgaven te krijgen.",
+        "label": "Inkomensbronnen",
         "addSource": "Bron toevoegen",
         "total": "Totaal",
         "saved": "Opgeslagen",
         "savedMsg": "Inkomen bijgewerkt",
-        "saving": "Opslaan …",
-        "saveIncome": "Opslaan",
-        "close": "Sluiten"
+        "category": {
+            "salary": "Salaris",
+            "freelance": "Freelance/Zelfstandig",
+            "benefit": "Uitkering/Toeslag",
+            "pension": "Pensioen",
+            "alimony": "Alimentatie",
+            "investment": "Dividend/Rente",
+            "other": "Overig"
+        },
+        "error": {
+            "invalidAmountTitle": "Ongeldig bedrag",
+            "invalidAmountMsg": "Voer een geldig, niet-negatief bedrag in"
+        }
     },
     "language": {
         "selectLanguage": "Selecteer Taal",
