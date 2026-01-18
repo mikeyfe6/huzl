@@ -290,6 +290,7 @@ export default function IncomeScreen() {
                     marginTop: 4,
                 },
                 buttons: {
+                    ...baseFlex("center", "center"),
                     ...baseGap,
                     marginTop: 12,
                 },
@@ -404,6 +405,9 @@ export default function IncomeScreen() {
                         <ThemedText type="defaultSemiBold"> {formatCurrency(total, currencySymbol)}</ThemedText>
                     </View>
                     <ThemedView style={styles.buttons}>
+                        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+                            <ThemedText style={styles.closeButtonText}>{t("common.close")}</ThemedText>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.saveButton, saveButtonDisabled && styles.saveButtonDisabled]}
                             disabled={saveButtonDisabled}
@@ -412,9 +416,6 @@ export default function IncomeScreen() {
                             <ThemedText style={styles.saveButtonText}>
                                 {saving ? t("common.saving") : t("common.save")}
                             </ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
-                            <ThemedText style={styles.closeButtonText}>{t("common.close")}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>

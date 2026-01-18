@@ -67,7 +67,7 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
                 }
             }
         } catch (err) {
-            console.error("TerminateAccountModal error:", err);
+            console.error("Terminate Account error:", err);
             Alert.alert(t("terminate.errors.generic"));
         } finally {
             setLoading(false);
@@ -82,7 +82,7 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
             ...baseModal(theme),
         },
         title: {
-            marginBottom: 24,
+            marginBottom: 16,
         },
         subtitle: {
             marginBottom: 24,
@@ -117,7 +117,7 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
     if (loading) {
         buttonLabel = isPendingDeletion ? t("terminate.undoing") : t("terminate.terminating");
     } else {
-        buttonLabel = isPendingDeletion ? t("terminate.undoTermination") : t("terminate.terminate");
+        buttonLabel = isPendingDeletion ? t("terminate.button.undoTermination") : t("terminate.button.terminate");
     }
 
     return (
@@ -127,7 +127,7 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
                     <ThemedText type="subtitle" style={styles.title}>
                         {t("terminate.title")}
                     </ThemedText>
-                    <ThemedText style={styles.subtitle}>{t("terminate.fillEmail")}</ThemedText>
+                    <ThemedText style={styles.subtitle}>{t("terminate.subtitle")}</ThemedText>
                     <TextInput
                         style={styles.input}
                         value={email}
@@ -147,7 +147,9 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.transButton} onPress={handleTerminateOrUndo} disabled={loading}>
-                            <ThemedText style={styles.transButtonText}>{buttonLabel}</ThemedText>
+                            <ThemedText style={styles.transButtonText} numberOfLines={1}>
+                                {buttonLabel}
+                            </ThemedText>
                         </TouchableOpacity>
                     </View>
                 </View>

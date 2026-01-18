@@ -282,14 +282,13 @@
     },
     "terminate": {
         "title": "Terminate Account",
-        "fillEmail": "Enter your email address to confirm you want to terminate your account.",
+        "subtitle": "Enter your email address to confirm you want to terminate your account.",
         "undoing": "Undoing …",
         "terminating": "Terminating …",
-        "undoTermination": "Undo Account Termination",
-        "terminate": "Terminate Account",
-        "terminationUndone": "Account termination undone",
-        "accountTerminationUndone": "Your account termination has been successfully undone. Your account is active and you can log in again.",
-        "accountTerminated": "Account terminated",
+        "button": {
+            "terminate": "Terminate",
+            "undoTermination": "Undo Termination"
+        },
         "errors": {
             "missingEmail": "Enter your email address",
             "emailMismatch": "Email address does not match",

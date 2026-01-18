@@ -282,14 +282,13 @@
     },
     "terminate": {
         "title": "Account Beëindigen",
-        "fillEmail": "Vul je e-mailadres in om te bevestigen dat je je account wilt beëindigen.",
+        "subtitle": "Vul je e-mailadres in om te bevestigen dat je je account wilt beëindigen.",
         "undoing": "Bezig met herstellen …",
         "terminating": "Beëindigen …",
-        "undoTermination": "Herstel accountbeëindiging",
-        "terminate": "Account Beëindigen",
-        "terminationUndone": "Accountbeëindiging ongedaan gemaakt",
-        "accountTerminationUndone": "Je accountbeëindiging is succesvol ongedaan gemaakt. Je account is actief en je kunt weer inloggen.",
-        "accountTerminated": "Account beëindigd",
+        "button": {
+            "terminate": "Beëindigen",
+            "undoTermination": "Herstellen"
+        },
         "errors": {
             "missingEmail": "Vul je e-mailadres in",
             "emailMismatch": "E-mailadres komt niet overeen",
