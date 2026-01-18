@@ -120,18 +120,24 @@
     },
     "budgets": {
         "title": "Budgetten",
-        "name": "Naam",
-        "namePlaceholder": "Bijv. Boodschappen",
-        "totalAmount": "Totaal Bedrag",
-        "addBudget": "Budget Toevoegen",
-        "updateBudget": "Budget Bijwerken",
+        "label": {
+            "name": "Naam",
+            "totalAmount": "Totaal Bedrag",
+            "expenseName": "Uitgave Naam",
+            "expenseAmount": "Uitgave Bedrag"
+        },
+        "placeholder": {
+            "name": "Bijv. Boodschappen",
+            "expenseName": "Bijv. Appels"
+        },
+        "button": {
+            "addBudget": "Budget Toevoegen",
+            "updateBudget": "Budget Bijwerken",
+            "addExpense": "Uitgave Toevoegen",
+            "updateExpense": "Uitgave Bijwerken"
+        },
         "yourBudgets": "Jouw Budgetten",
         "remaining": "Resterend",
-        "expenseName": "Uitgave Naam",
-        "expenseNamePlaceholder": "Bijv. Appels",
-        "expenseAmount": "Uitgave Bedrag",
-        "addExpense": "Uitgave Toevoegen",
-        "updateExpense": "Uitgave Bijwerken",
         "expenses": "Uitgaven",
         "noExpenses": "Nog geen uitgaven",
         "addFirstBudget": "Voeg je eerste budget toe!",

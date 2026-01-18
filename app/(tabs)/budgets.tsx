@@ -518,18 +518,18 @@ export default function BudgetsScreen() {
                         {t("budgets.title")}
                     </ThemedText>
 
-                    <ThemedText style={styles.label}>{t("budgets.name")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("budgets.label.name")}</ThemedText>
                     <TextInput
                         ref={nameInputRef}
                         style={styles.input}
-                        placeholder={t("budgets.namePlaceholder")}
+                        placeholder={t("budgets.placeholder.name")}
                         placeholderTextColor={theme.placeholder}
                         value={budgetName}
                         onChangeText={setBudgetName}
                     />
 
                     <ThemedText style={styles.label}>
-                        {t("budgets.totalAmount")} ({currencySymbol})
+                        {t("budgets.label.totalAmount")} ({currencySymbol})
                     </ThemedText>
                     <TextInput
                         style={styles.input}
@@ -547,7 +547,7 @@ export default function BudgetsScreen() {
                             disabled={loading}
                         >
                             <ThemedText style={styles.buttonText}>
-                                {editingId ? t("budgets.updateBudget") : t("budgets.addBudget")}
+                                {editingId ? t("budgets.button.updateBudget") : t("budgets.button.addBudget")}
                             </ThemedText>
                         </TouchableOpacity>
                         {editingId && (
@@ -579,7 +579,9 @@ export default function BudgetsScreen() {
                                 <View style={styles.budgetTitle}>
                                     <TouchableOpacity
                                         style={styles.budgetInfo}
-                                        onPress={() => setSelectedBudgetId(budget.id)}
+                                        onPress={() =>
+                                            setSelectedBudgetId(selectedBudgetId === budget.id ? null : budget.id)
+                                        }
                                     >
                                         <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
                                             {budget.name}
@@ -662,18 +664,18 @@ export default function BudgetsScreen() {
                             </ThemedText>
                         </ThemedText>
 
-                        <ThemedText style={styles.label}>{t("budgets.expenseName")}</ThemedText>
+                        <ThemedText style={styles.label}>{t("budgets.label.expenseName")}</ThemedText>
                         <TextInput
                             ref={expenseNameInputRef}
                             style={styles.input}
-                            placeholder={t("budgets.expenseNamePlaceholder")}
+                            placeholder={t("budgets.placeholder.expenseName")}
                             placeholderTextColor={theme.placeholder}
                             value={expenseName}
                             onChangeText={setExpenseName}
                         />
 
                         <ThemedText style={styles.label}>
-                            {t("budgets.expenseAmount")} ({currencySymbol})
+                            {t("budgets.label.expenseAmount")} ({currencySymbol})
                         </ThemedText>
                         <TextInput
                             style={styles.input}
@@ -691,7 +693,9 @@ export default function BudgetsScreen() {
                                 disabled={loading}
                             >
                                 <ThemedText style={styles.buttonText}>
-                                    {editingExpenseId ? t("budgets.updateExpense") : t("budgets.addExpense")}
+                                    {editingExpenseId ?
+                                        t("budgets.button.updateExpense")
+                                    :   t("budgets.button.addExpense")}
                                 </ThemedText>
                             </TouchableOpacity>
                             {editingExpenseId && (

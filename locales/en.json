@@ -120,18 +120,24 @@
     },
     "budgets": {
         "title": "Budgets",
-        "name": "Name",
-        "namePlaceholder": "e.g. Groceries",
-        "totalAmount": "Total Amount",
-        "addBudget": "Add Budget",
-        "updateBudget": "Update Budget",
+        "label": {
+            "name": "Name",
+            "totalAmount": "Total Amount",
+            "expenseName": "Expense Name",
+            "expenseAmount": "Expense Amount"
+        },
+        "placeholder": {
+            "name": "e.g. Groceries",
+            "expenseName": "e.g. Apples"
+        },
+        "button": {
+            "addBudget": "Add Budget",
+            "updateBudget": "Update Budget",
+            "addExpense": "Add Expense",
+            "updateExpense": "Update Expense"
+        },
         "yourBudgets": "Your Budgets",
         "remaining": "Remaining",
-        "expenseName": "Expense Name",
-        "expenseNamePlaceholder": "e.g. Apples",
-        "expenseAmount": "Expense Amount",
-        "addExpense": "Add Expense",
-        "updateExpense": "Update Expense",
         "expenses": "Expenses",
         "noExpenses": "No expenses yet",
         "addFirstBudget": "Add your first budget!",
