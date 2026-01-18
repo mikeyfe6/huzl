@@ -54,7 +54,7 @@ export default function PrivacyScreen() {
                     color: whiteColor,
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -163,7 +163,7 @@ export default function PrivacyScreen() {
                 </ThemedText>
 
                 <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                    <ThemedText style={styles.backButtonText}>{t("privacy.back")}</ThemedText>
+                    <ThemedText style={styles.backButtonText}>{t("common.back")}</ThemedText>
                 </TouchableOpacity>
             </ScrollView>
         </ThemedView>

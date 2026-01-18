@@ -11,7 +11,8 @@
         "cancel": "Cancel",
         "delete": "Delete",
         "save": "Save",
-        "saving": "Saving …"
+        "saving": "Saving …",
+        "back": "Back"
     },
     "tabs": {
         "home": "Home",
@@ -301,7 +302,6 @@
     "privacy": {
         "title": "Privacy Policy",
         "updated": "Last updated: January 3, 2026",
-        "back": "Back",
         "section1": {
             "title": "1. Introduction",
             "content": "Menefex, owner of Huzl, greatly values the protection of your privacy and personal data. This privacy policy explains what data we collect, how we use it, and what rights you have."
@@ -369,7 +369,6 @@
     "terms": {
         "title": "Terms of Service",
         "updated": "Last updated: January 3, 2026",
-        "back": "Back",
         "section1": {
             "title": "1. Acceptance of Terms",
             "content": "By using Huzl, a product of Menefex, you agree to these terms of service. If you do not agree with these terms, you may not use the application."

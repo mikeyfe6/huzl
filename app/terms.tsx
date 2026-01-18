@@ -54,7 +54,7 @@ export default function TermsScreen() {
                     color: whiteColor,
                 },
             }),
-        [theme]
+        [theme],
     );
 
     return (
@@ -135,7 +135,7 @@ export default function TermsScreen() {
                 </ThemedText>
 
                 <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                    <ThemedText style={styles.backButtonText}>{t("terms.back")}</ThemedText>
+                    <ThemedText style={styles.backButtonText}>{t("common.back")}</ThemedText>
                 </TouchableOpacity>
             </ScrollView>
         </ThemedView>

@@ -11,7 +11,8 @@
         "cancel": "Annuleren",
         "delete": "Verwijder",
         "save": "Opslaan",
-        "saving": "Opslaan …"
+        "saving": "Opslaan …",
+        "back": "Terug"
     },
     "tabs": {
         "home": "Home",
@@ -301,7 +302,6 @@
     "privacy": {
         "title": "Privacybeleid",
         "updated": "Laatst bijgewerkt: 3 januari 2026",
-        "back": "Terug",
         "section1": {
             "title": "1. Inleiding",
             "content": "Menefex, eigenaar van Huzl, hecht veel waarde aan de bescherming van je privacy en persoonlijke gegevens. Dit privacybeleid legt uit welke gegevens we verzamelen, hoe we deze gebruiken en welke rechten je hebt."
@@ -369,7 +369,6 @@
     "terms": {
         "title": "Servicevoorwaarden",
         "updated": "Laatst bijgewerkt: 3 januari 2026",
-        "back": "Terug",
         "section1": {
             "title": "1. Acceptatie van de Voorwaarden",
             "content": "Door gebruik te maken van Huzl, een product van Menefex, ga je akkoord met deze servicevoorwaarden. Als je niet akkoord gaat met deze voorwaarden, mag je de applicatie niet gebruiken."
