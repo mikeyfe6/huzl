@@ -89,7 +89,13 @@ export default function RootLayout() {
 
     useEffect(() => {
         if (fontsLoaded || fontError) {
-            SplashScreen.hideAsync();
+            (async () => {
+                try {
+                    await SplashScreen.hideAsync();
+                } catch (e) {
+                    console.error(e);
+                }
+            })();
         }
     }, [fontsLoaded, fontError]);
 

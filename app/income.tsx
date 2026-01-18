@@ -229,7 +229,7 @@ export default function IncomeScreen() {
                 subtitle: {
                     color: silverColor,
                     fontSize: 18,
-                    marginBottom: 36,
+                    marginBottom: 24,
                 },
                 label: {
                     marginBottom: 12,
@@ -287,7 +287,7 @@ export default function IncomeScreen() {
                     fontSize: 18,
                     backgroundColor: theme.cardBackground,
                     padding: 16,
-                    marginTop: 24,
+                    marginTop: 4,
                 },
                 buttons: {
                     ...baseGap,

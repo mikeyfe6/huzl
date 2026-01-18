@@ -260,19 +260,22 @@
         }
     },
     "language": {
-        "selectLanguage": "Selecteer Taal",
-        "close": "Sluiten"
+        "title": "Selecteer Taal"
     },
     "helpdesk": {
         "title": "Bugs, Feedback & Ondersteuning",
-        "type": "Type",
-        "bug": "Bug",
-        "feedback": "Feedback",
-        "support": "Ondersteuning",
-        "message": "Bericht",
-        "messagePlaceholder": "Typ hier je bericht...",
-        "sending": "Verzenden …",
-        "send": "Verzenden",
+        "label": {
+            "type": "Type",
+            "message": "Bericht"
+        },
+        "type": {
+            "bug": "Bug",
+            "feedback": "Feedback",
+            "support": "Ondersteuning"
+        },
+        "placeholder": {
+            "message": "Typ hier je bericht..."
+        },
         "yourTickets": "Jouw Tickets",
         "deleteTicket": "Verwijder ticket",
         "noTickets": "Nog geen tickets"

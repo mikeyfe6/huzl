@@ -44,9 +44,9 @@ export function LanguagePickerModal({ visible, onClose }: LanguagePickerModalPro
         <Modal visible={visible} animationType="fade" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
-                    <ThemedText type="title">{t("language.selectLanguage")}</ThemedText>
+                    <ThemedText type="title">{t("language.title")}</ThemedText>
                     <TouchableOpacity onPress={onClose} disabled={saving}>
-                        <ThemedText type="danger">{t("language.close")}</ThemedText>
+                        <ThemedText type="danger">{t("common.close")}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
 

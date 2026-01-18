@@ -260,19 +260,22 @@
         }
     },
     "language": {
-        "selectLanguage": "Select Language",
-        "close": "Close"
+        "title": "Select Language"
     },
     "helpdesk": {
         "title": "Bugs, Feedback & Support",
-        "type": "Type",
-        "bug": "Bug",
-        "feedback": "Feedback",
-        "support": "Support",
-        "message": "Message",
-        "messagePlaceholder": "Type your message here...",
-        "sending": "Sending …",
-        "send": "Send",
+        "label": {
+            "type": "Type",
+            "message": "Message"
+        },
+        "type": {
+            "bug": "Bug",
+            "feedback": "Feedback",
+            "support": "Support"
+        },
+        "placeholder": {
+            "message": "Type your message here..."
+        },
         "yourTickets": "Your Tickets",
         "deleteTicket": "Delete ticket",
         "noTickets": "No tickets yet"

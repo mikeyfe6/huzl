@@ -32,6 +32,7 @@ import {
     baseMain,
     baseSelect,
     baseSmall,
+    baseSpace,
     baseWeight,
 } from "@/styles/base";
 
@@ -226,7 +227,7 @@ export default function SettingsScreen() {
                 },
                 linksContainer: {
                     ...baseCenter,
-                    ...baseGap,
+                    ...baseSpace,
                     marginVertical: 12,
                 },
                 linksWrapper: {

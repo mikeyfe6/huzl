@@ -237,7 +237,7 @@ export default function HelpdeskScreen() {
                         {t("helpdesk.title")}
                     </ThemedText>
 
-                    <ThemedText style={styles.label}>{t("helpdesk.type")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("helpdesk.label.type")}</ThemedText>
                     <View style={styles.select}>
                         <Picker
                             selectedValue={type}
@@ -256,19 +256,19 @@ export default function HelpdeskScreen() {
                             ]}
                             itemStyle={styles.selectOption}
                         >
-                            <Picker.Item label={t("helpdesk.bug")} value="bug" />
-                            <Picker.Item label={t("helpdesk.feedback")} value="feedback" />
-                            <Picker.Item label={t("helpdesk.support")} value="support" />
+                            <Picker.Item label={t("helpdesk.type.bug")} value="bug" />
+                            <Picker.Item label={t("helpdesk.type.feedback")} value="feedback" />
+                            <Picker.Item label={t("helpdesk.type.support")} value="support" />
                         </Picker>
                         {Platform.OS === "web" && (
                             <Ionicons name="chevron-down" size={18} color={theme.inputText} style={styles.selectIcon} />
                         )}
                     </View>
 
-                    <ThemedText style={styles.label}>{t("helpdesk.message")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("helpdesk.label.message")}</ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder={t("helpdesk.messagePlaceholder")}
+                        placeholder={t("helpdesk.placeholder.message")}
                         placeholderTextColor={theme.placeholder}
                         value={message}
                         onChangeText={setMessage}
@@ -277,7 +277,7 @@ export default function HelpdeskScreen() {
 
                     <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading || submitting}>
                         <ThemedText style={styles.buttonText}>
-                            {submitting ? t("helpdesk.sending") : t("helpdesk.send")}
+                            {submitting ? t("common.sending") : t("common.send")}
                         </ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
