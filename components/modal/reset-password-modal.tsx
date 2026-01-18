@@ -40,17 +40,17 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
     const handleChangePassword = async () => {
         setError(null);
         if (!newPassword || !confirmPassword) {
-            setError(t("password.passwordRequired"));
+            setError(t("password.error.passwordRequired"));
             setTimeout(() => setError(null), 7000);
             return;
         }
         if (newPassword !== confirmPassword) {
-            setError(t("password.passwordMismatch"));
+            setError(t("password.error.passwordMismatch"));
             setTimeout(() => setError(null), 7000);
             return;
         }
         if (newPassword.length < 6) {
-            setError(t("password.passwordTooShort"));
+            setError(t("password.error.passwordTooShort"));
             setTimeout(() => setError(null), 7000);
             return;
         }
@@ -66,8 +66,8 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                 onClose();
             }
         } catch (err) {
-            console.error("ChangePasswordModal error:", err);
-            setError(t("password.unexpectedError"));
+            console.error("Change Password error:", err);
+            setError(t("password.error.unexpectedError"));
             setTimeout(() => setError(null), 7000);
         } finally {
             setLoading(false);
@@ -84,7 +84,7 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                     ...baseModal(theme),
                 },
                 title: {
-                    marginBottom: 16,
+                    marginBottom: 24,
                 },
                 input: {
                     ...baseInput(theme),
@@ -116,11 +116,11 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
             <View style={styles.overlay}>
                 <View style={styles.modal}>
                     <ThemedText type="subtitle" style={styles.title}>
-                        {t("password.changePassword")}
+                        {t("password.title")}
                     </ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder={t("password.newPassword")}
+                        placeholder={t("password.placeholder.newPassword")}
                         secureTextEntry
                         value={newPassword}
                         placeholderTextColor={theme.placeholder}
@@ -130,7 +130,7 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                     />
                     <TextInput
                         style={[styles.input, { marginTop: 12 }]}
-                        placeholder={t("password.confirmPassword")}
+                        placeholder={t("password.placeholder.confirmPassword")}
                         secureTextEntry
                         value={confirmPassword}
                         placeholderTextColor={theme.placeholder}
@@ -140,20 +140,20 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                     />
                     <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.button, { backgroundColor: greenColor }]}
-                            onPress={handleChangePassword}
-                            disabled={loading}
-                        >
-                            <ThemedText style={styles.buttonText}>
-                                {loading ? t("password.saving") : t("password.save")}
-                            </ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
                             style={[styles.button, { backgroundColor: redColor }]}
                             onPress={onClose}
                             disabled={loading}
                         >
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.button, { backgroundColor: greenColor }]}
+                            onPress={handleChangePassword}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.buttonText}>
+                                {loading ? t("common.saving") : t("common.save")}
+                            </ThemedText>
                         </TouchableOpacity>
                     </View>
                     {error ?

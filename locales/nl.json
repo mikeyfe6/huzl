@@ -211,17 +211,17 @@
         "notSet": "Niet ingesteld"
     },
     "password": {
-        "changePassword": "Wachtwoord Wijzigen",
-        "newPassword": "Nieuw wachtwoord",
-        "confirmPassword": "Bevestig nieuw wachtwoord",
-        "saving": "Opslaan …",
-        "save": "Opslaan",
-        "passwordRequired": "Wachtwoord is verplicht",
-        "passwordMismatch": "Wachtwoorden komen niet overeen",
-        "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
-        "passwordChanged": "Wachtwoord gewijzigd",
-        "unexpectedError": "Onverwachte fout, probeer het later opnieuw",
-        "error": "Fout"
+        "title": "Wachtwoord Wijzigen",
+        "placeholder": {
+            "newPassword": "Nieuw wachtwoord",
+            "confirmPassword": "Bevestig nieuw wachtwoord"
+        },
+        "error": {
+            "passwordRequired": "Wachtwoord is verplicht",
+            "passwordMismatch": "Wachtwoorden komen niet overeen",
+            "passwordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
+            "unexpectedError": "Onverwachte fout, probeer het later opnieuw"
+        }
     },
     "currency": {
         "selectCurrency": "Selecteer Valuta",

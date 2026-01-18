@@ -211,17 +211,17 @@
         "notSet": "Not Set"
     },
     "password": {
-        "changePassword": "Change Password",
-        "newPassword": "New Password",
-        "confirmPassword": "Confirm New Password",
-        "saving": "Saving …",
-        "save": "Save",
-        "passwordRequired": "Password is required",
-        "passwordMismatch": "Passwords do not match",
-        "passwordTooShort": "Password must be at least 6 characters",
-        "passwordChanged": "Password changed",
-        "unexpectedError": "Unexpected error, please try again later",
-        "error": "Error changing password, please try again"
+        "title": "Change Password",
+        "placeholder": {
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm New Password"
+        },
+        "error": {
+            "passwordRequired": "Password is required",
+            "passwordMismatch": "Passwords do not match",
+            "passwordTooShort": "Password must be at least 6 characters",
+            "unexpectedError": "Unexpected error, please try again later"
+        }
     },
     "currency": {
         "selectCurrency": "Select Currency",
