@@ -36,6 +36,8 @@ import {
     baseWeight,
 } from "@/styles/base";
 
+// TODO: active state for expenses it not working yet...
+
 type BudgetItem = {
     id: string;
     name: string;

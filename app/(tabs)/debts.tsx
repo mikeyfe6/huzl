@@ -312,32 +312,32 @@ export default function DebtsScreen() {
                     <ThemedText type="title" style={styles.heading}>
                         {t("debts.title")}
                     </ThemedText>
-                    <ThemedText style={styles.label}>{t("debts.name")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("debts.label.name")}</ThemedText>
                     <TextInput
                         ref={nameInputRef}
                         style={styles.input}
-                        placeholder={t("debts.namePlaceholder")}
+                        placeholder={t("debts.placeholder.name")}
                         placeholderTextColor={theme.placeholder}
                         value={name}
                         onChangeText={setName}
                     />
                     <ThemedText style={styles.label}>
-                        {t("debts.totalAmount")} ({currencySymbol})
+                        {t("debts.label.totalAmount")} ({currencySymbol})
                     </ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder={t("debts.totalAmountPlaceholder")}
+                        placeholder={t("debts.placeholder.totalAmount")}
                         placeholderTextColor={theme.placeholder}
                         value={amount}
                         onChangeText={(text) => setAmount(formatNumber(text))}
                         keyboardType="decimal-pad"
                     />
                     <ThemedText style={styles.label}>
-                        {t("debts.monthlyPayment")} ({currencySymbol})
+                        {t("debts.label.monthlyPayment")} ({currencySymbol})
                     </ThemedText>
                     <TextInput
                         style={styles.input}
-                        placeholder={t("debts.monthlyPaymentPlaceholder")}
+                        placeholder={t("debts.placeholder.monthlyPayment")}
                         placeholderTextColor={theme.placeholder}
                         value={payPerMonth}
                         onChangeText={(text) => setPayPerMonth(formatNumber(text))}
@@ -350,7 +350,7 @@ export default function DebtsScreen() {
                             disabled={loading}
                         >
                             <ThemedText style={styles.buttonText}>
-                                {editingId ? t("debts.updateDebt") : t("debts.addDebt")}
+                                {editingId ? t("debts.button.updateDebt") : t("debts.button.addDebt")}
                             </ThemedText>
                         </TouchableOpacity>
                         {editingId && (
@@ -470,7 +470,7 @@ export default function DebtsScreen() {
                                     <View style={styles.paymentSection}>
                                         <TextInput
                                             style={styles.paymentInput}
-                                            placeholder={`${t("debts.amountPaid")} (${currencySymbol})`}
+                                            placeholder={`${t("debts.placeholder.amountPaid")} (${currencySymbol})`}
                                             placeholderTextColor={theme.placeholder}
                                             value={paymentAmount}
                                             onChangeText={(text) => setPaymentAmount(formatNumber(text))}
@@ -486,7 +486,7 @@ export default function DebtsScreen() {
                                             onPress={() => handleMakePayment(debt.id)}
                                             disabled={loading || !paymentAmount.trim()}
                                         >
-                                            <ThemedText style={styles.paymentButtonText}>{t("debts.save")}</ThemedText>
+                                            <ThemedText style={styles.paymentButtonText}>{t("common.save")}</ThemedText>
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={[styles.paymentButton, { backgroundColor: redColor }]}
