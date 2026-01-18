@@ -67,7 +67,7 @@ function RootContent() {
                         {user && <meta name="robots" content="noindex, nofollow" />}
                     </Head>
                 )}
-                <StatusBar style="auto" />
+                <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
             </RefreshProvider>
         </ThemeProvider>
     );

@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -19,7 +18,6 @@ export default function TabLayout() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }} edges={["top", "left", "right"]}>
-            <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: theme.tint,
