@@ -8,7 +8,8 @@
         "sending": "Sending …",
         "send": "Send",
         "close": "Close",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "delete": "Delete"
     },
     "tabs": {
         "home": "Home",
@@ -97,7 +98,6 @@
         "monthlySpend": "Total Monthly Spend",
         "dailySpend": "Total Daily Spend",
         "addFirstExpense": "Add your first expense!",
-        "delete": "Delete",
         "deleteExpense": "Delete expense",
         "noExpensesInCategories": "No expenses in this category."
     },
@@ -126,7 +126,6 @@
         "expenses": "Expenses",
         "noExpenses": "No expenses yet",
         "addFirstBudget": "Add your first budget!",
-        "delete": "Delete",
         "deleteBudget": "Delete budget"
     },
     "debts": {
@@ -147,7 +146,6 @@
         "remaining": "Remaining",
         "amountPaid": "Amount paid",
         "save": "Save",
-        "delete": "Delete",
         "deleteDebt": "Delete debt"
     },
     "settings": {
@@ -246,7 +244,6 @@
         "sending": "Sending …",
         "send": "Send",
         "yourTickets": "Your Tickets",
-        "delete": "Delete",
         "deleteTicket": "Delete ticket",
         "noTickets": "No tickets yet"
     },

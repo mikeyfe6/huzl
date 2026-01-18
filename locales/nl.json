@@ -8,7 +8,8 @@
         "sending": "Verzenden …",
         "send": "Verzenden",
         "close": "Sluiten",
-        "cancel": "Annuleren"
+        "cancel": "Annuleren",
+        "delete": "Verwijder"
     },
     "tabs": {
         "home": "Home",
@@ -97,7 +98,6 @@
         "monthlySpend": "Totale Maandelijkse Uitgaven",
         "dailySpend": "Totale Dagelijkse Uitgaven",
         "addFirstExpense": "Voeg je eerste uitgave toe!",
-        "delete": "Verwijder",
         "deleteExpense": "Verwijder uitgave",
         "noExpensesInCategories": "Geen uitgaven in deze categorie."
     },
@@ -126,7 +126,6 @@
         "expenses": "Uitgaven",
         "noExpenses": "Nog geen uitgaven",
         "addFirstBudget": "Voeg je eerste budget toe!",
-        "delete": "Verwijder",
         "deleteBudget": "Verwijder budget"
     },
     "debts": {
@@ -147,7 +146,6 @@
         "remaining": "Resterend",
         "amountPaid": "Betaald bedrag",
         "save": "Opslaan",
-        "delete": "Verwijder",
         "deleteDebt": "Verwijder schuld"
     },
     "settings": {
@@ -246,7 +244,6 @@
         "sending": "Verzenden …",
         "send": "Verzenden",
         "yourTickets": "Jouw Tickets",
-        "delete": "Verwijder",
         "deleteTicket": "Verwijder ticket",
         "noTickets": "Nog geen tickets"
     },

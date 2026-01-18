@@ -342,17 +342,17 @@ export default function BudgetsScreen() {
 
     const confirmDelete = (id: string, name: string, type: "budget" | "expense") => {
         if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`${t("budgets.delete")} "${name}"?`);
+            const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
             if (ok) {
                 type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
             }
             return;
         }
 
-        Alert.alert(`${t("budgets.delete")} ${type}`, `${t("budgets.delete")} "${name}"?`, [
+        Alert.alert(`${t("budgets.deleteBudget")} ${type}`, `${t("common.delete")} "${name}"?`, [
             { text: t("common.cancel"), style: "cancel" },
             {
-                text: t("budgets.delete"),
+                text: t("common.delete"),
                 style: "destructive",
                 onPress: () => {
                     type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);

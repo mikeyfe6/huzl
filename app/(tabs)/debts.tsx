@@ -93,14 +93,14 @@ export default function DebtsScreen() {
 
     const confirmDeleteDebt = (id: string, name: string) => {
         if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`${t("debts.delete")} "${name}"?`);
+            const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
             if (ok) handleDeleteDebt(id);
             return;
         }
 
-        Alert.alert(`${t("debts.deleteDebt")}`, `${t("debts.delete")} "${name}"?`, [
+        Alert.alert(`${t("debts.deleteDebt")}`, `${t("common.delete")} "${name}"?`, [
             { text: t("common.cancel"), style: "cancel" },
-            { text: t("debts.delete"), style: "destructive", onPress: () => handleDeleteDebt(id) },
+            { text: t("common.delete"), style: "destructive", onPress: () => handleDeleteDebt(id) },
         ]);
     };
 

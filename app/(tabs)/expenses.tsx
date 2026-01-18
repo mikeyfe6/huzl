@@ -231,14 +231,14 @@ export default function ExpensesScreen() {
 
     const confirmDeleteExpense = (id: string, name: string) => {
         if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`${t("expenses.delete")} "${name}"?`);
+            const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
             if (ok) handleDeleteExpense(id);
             return;
         }
 
-        Alert.alert(t("expenses.deleteExpense"), `${t("expenses.delete")} "${name}"?`, [
+        Alert.alert(t("expenses.deleteExpense"), `${t("common.delete")} "${name}"?`, [
             { text: t("common.cancel"), style: "cancel" },
-            { text: t("expenses.delete"), style: "destructive", onPress: () => handleDeleteExpense(id) },
+            { text: t("common.delete"), style: "destructive", onPress: () => handleDeleteExpense(id) },
         ]);
     };
 

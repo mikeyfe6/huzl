@@ -64,14 +64,14 @@ export default function HelpdeskScreen() {
 
     const confirmDeleteTicket = (id: string, message: string) => {
         if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`${t("helpdesk.delete")} "${message.slice(0, 20)}"?`);
+            const ok = globalThis.confirm(`${t("common.delete")} "${message.slice(0, 20)}"?`);
             if (ok) handleDeleteTicket(id);
             return;
         }
-        Alert.alert(t("helpdesk.deleteTicket"), `${t("helpdesk.delete")} "${message.slice(0, 20)}"?`, [
+        Alert.alert(t("helpdesk.deleteTicket"), `${t("common.delete")} "${message.slice(0, 20)}"?`, [
             { text: t("common.cancel"), style: "cancel" },
             {
-                text: t("helpdesk.delete"),
+                text: t("common.delete"),
                 style: "destructive",
                 onPress: () => {
                     void handleDeleteTicket(id);
