@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://huzl.expo.app/" rel="noopener noreferrer"
               target="_blank">
-    <img alt="Huzl Logo" src="https://huzl.expo.app/assets/assets/images/huzl-logo.ee431dee0d3709c6c6f0d7a9cf264e37.png" width="750" />
+    <img alt="Huzl Logo" src="https://huzl.expo.app/huzl-logo.png" width="750" />
   </a>
 </p>
 
@@ -17,7 +17,7 @@ Huzl is een moneymanagement crossplatform applicatie, opgericht door [Michael Fr
 
 Met Huzl beheer je je persoonlijke financiën eenvoudig: bijhouden van inkomsten, uitgaven, budgetten en schulden, allemaal in één overzichtelijk dashboard.
 
--   _Meer weten? Bekijk de app / check the app: [Huzl](https://huzl.expo.app)_
+- _Meer weten? Bekijk de app / check the app: [Huzl](https://huzl.expo.app)_
 
 <br>
 
