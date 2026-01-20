@@ -22,11 +22,11 @@ export const redLightColor = "#f4433680";
 export const greenDarkColor = "#4caf5050";
 export const redDarkColor = "#f4433650";
 
-export const personalColor = "#BDBDBD75";
-export const businessColor = "#F7B90075";
-export const familyColor = "#0880EC75";
-export const investColor = "#88B93E75";
-export const entertainmentColor = "#7a2fd075";
+export const personalColor = "#d1d1d1";
+export const businessColor = "#ffd044";
+export const familyColor = "#599edb";
+export const investColor = "#88B93E";
+export const entertainmentColor = "#865ab9";
 
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";
@@ -54,10 +54,6 @@ export const Colors = {
 
         selectedTab: whiteColor,
 
-        dailyTab: whiteColor,
-        monthlyTab: whiteColor,
-        yearlyTab: whiteColor,
-
         cardBackground: lightTextColor,
         inputBackground: whiteColor,
         inputBorder: lightGreyColor,
@@ -79,10 +75,6 @@ export const Colors = {
         statLabel: silverColor,
 
         selectedTab: almostBlackColor,
-
-        dailyTab: charcoalColor,
-        monthlyTab: charcoalColor,
-        yearlyTab: charcoalColor,
 
         cardBackground: almostBlackColor,
         inputBackground: almostBlackColor,

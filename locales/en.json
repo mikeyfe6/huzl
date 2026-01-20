@@ -97,7 +97,10 @@
         },
         "frequency": {
             "daily": "Daily",
+            "weekly": "Weekly",
             "monthly": "Monthly",
+            "quarterly": "Quarterly",
+            "halfyearly": "Halfyearly",
             "yearly": "Yearly"
         },
         "button": {
@@ -108,6 +111,7 @@
         "period": "P/Y - P/M",
         "yearlySpend": "Total Yearly Spend",
         "monthlySpend": "Total Monthly Spend",
+        "weeklySpend": "Total Weekly Spend",
         "dailySpend": "Total Daily Spend",
         "addFirstExpense": "Add your first expense!",
         "deleteExpense": "Delete expense",

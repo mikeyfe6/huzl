@@ -97,7 +97,10 @@
         },
         "frequency": {
             "daily": "Dagelijks",
+            "weekly": "Wekelijks",
             "monthly": "Maandelijks",
+            "quarterly": "Per kwartaal",
+            "halfyearly": "Halfjaarlijks",
             "yearly": "Jaarlijks"
         },
         "button": {
@@ -108,6 +111,7 @@
         "period": "P/J - P/M",
         "yearlySpend": "Totale Jaarlijkse Uitgaven",
         "monthlySpend": "Totale Maandelijkse Uitgaven",
+        "weeklySpend": "Totale Wekelijkse Uitgaven",
         "dailySpend": "Totale Dagelijkse Uitgaven",
         "addFirstExpense": "Voeg je eerste uitgave toe!",
         "deleteExpense": "Verwijder uitgave",

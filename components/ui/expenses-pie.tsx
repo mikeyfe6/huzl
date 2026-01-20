@@ -101,9 +101,14 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
     return (
         <TouchableOpacity
             activeOpacity={1}
-            style={{ width: responsiveSize, height: responsiveSize, justifyContent: "center", alignItems: "center" }}
+            style={{
+                width: responsiveSize,
+                height: responsiveSize,
+                justifyContent: "center",
+                alignItems: "center",
+            }}
         >
-            <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300">
+            <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: 0.5 }}>
                 <Path
                     d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
                     fill={personalColor}

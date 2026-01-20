@@ -56,7 +56,7 @@ import {
     baseWeight,
 } from "@/styles/base";
 
-type Frequency = "daily" | "monthly" | "yearly";
+type Frequency = "daily" | "weekly" | "monthly" | "quarterly" | "halfyearly" | "yearly";
 type Category = "personal" | "business" | "family" | "invest" | "entertainment";
 interface ExpenseItem {
     id: string;
@@ -98,8 +98,14 @@ export default function ExpensesScreen() {
         switch (freq) {
             case "daily":
                 return num * 365;
+            case "weekly":
+                return num * 52;
             case "monthly":
                 return num * 12;
+            case "quarterly":
+                return num * 4;
+            case "halfyearly":
+                return num * 2;
             case "yearly":
                 return num;
             default:
@@ -301,6 +307,7 @@ export default function ExpensesScreen() {
     const totalYearlySpend = expenses.filter((e) => e.active).reduce((sum, expense) => sum + expense.yearlyTotal, 0);
 
     const totalMonthlySpend = totalYearlySpend / 12;
+    const totalWeeklySpend = totalYearlySpend / 52;
     const totalDailySpend = totalYearlySpend / 365;
 
     const personalYearlySpend = expenses
@@ -327,8 +334,14 @@ export default function ExpensesScreen() {
         switch (freq) {
             case "daily":
                 return t("expenses.frequency.daily");
+            case "weekly":
+                return t("expenses.frequency.weekly");
             case "monthly":
                 return t("expenses.frequency.monthly");
+            case "quarterly":
+                return t("expenses.frequency.quarterly");
+            case "halfyearly":
+                return t("expenses.frequency.halfyearly");
             case "yearly":
                 return t("expenses.frequency.yearly");
         }
@@ -533,23 +546,23 @@ export default function ExpensesScreen() {
                     opacity: 0.7,
                 },
                 badgePersonal: {
-                    backgroundColor: personalColor,
+                    backgroundColor: personalColor + "50",
                     borderColor: personalColor,
                 },
                 badgeBusiness: {
-                    backgroundColor: businessColor,
+                    backgroundColor: businessColor + "50",
                     borderColor: businessColor,
                 },
                 badgeFamily: {
-                    backgroundColor: familyColor,
+                    backgroundColor: familyColor + "50",
                     borderColor: familyColor,
                 },
                 badgeInvest: {
-                    backgroundColor: investColor,
+                    backgroundColor: investColor + "50",
                     borderColor: investColor,
                 },
                 badgeEntertainment: {
-                    backgroundColor: entertainmentColor,
+                    backgroundColor: entertainmentColor + "50",
                     borderColor: entertainmentColor,
                 },
                 badgeText: {
@@ -589,20 +602,12 @@ export default function ExpensesScreen() {
                     ...baseBorder,
                     ...baseSpace,
                     ...baseRadius,
+                    backgroundColor: theme.background,
                     margin: 16,
                     paddingHorizontal: 16,
                     paddingVertical: 20,
                     flex: 1,
                     borderColor: theme.inputBorder,
-                },
-                totalYear: {
-                    backgroundColor: theme.yearlyTab,
-                },
-                totalMonth: {
-                    backgroundColor: theme.monthlyTab,
-                },
-                totalDay: {
-                    backgroundColor: theme.dailyTab,
                 },
                 totalTitle: {
                     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -613,6 +618,7 @@ export default function ExpensesScreen() {
                 totalLabel: { minWidth: 100 },
                 totalDetails: {
                     ...baseFlex("space-between", "center"),
+                    flexWrap: "wrap",
                     gap: 16,
                     paddingHorizontal: 16,
                     marginBottom: 16,
@@ -622,6 +628,7 @@ export default function ExpensesScreen() {
                     height: 10,
                     borderRadius: 25,
                     marginRight: 8,
+                    opacity: 0.75,
                 },
                 totalInline: {
                     ...baseBold,
@@ -631,6 +638,8 @@ export default function ExpensesScreen() {
                     marginHorizontal: 0,
                     marginTop: 0,
                     marginBottom: 0,
+                    minWidth: 175,
+                    alignSelf: "stretch",
                 },
                 totalAmount: {
                     ...baseBold,
@@ -669,6 +678,7 @@ export default function ExpensesScreen() {
                     width: 12,
                     height: 12,
                     borderRadius: 25,
+                    opacity: 0.75,
                 },
                 chartButtonText: { ...baseWeight },
                 chartButtonLabel: {
@@ -820,7 +830,10 @@ export default function ExpensesScreen() {
                             itemStyle={styles.selectOption}
                         >
                             <Picker.Item label={t("expenses.frequency.daily")} value="daily" />
+                            <Picker.Item label={t("expenses.frequency.weekly")} value="weekly" />
                             <Picker.Item label={t("expenses.frequency.monthly")} value="monthly" />
+                            <Picker.Item label={t("expenses.frequency.quarterly")} value="quarterly" />
+                            <Picker.Item label={t("expenses.frequency.halfyearly")} value="halfyearly" />
                             <Picker.Item label={t("expenses.frequency.yearly")} value="yearly" />
                         </Picker>
                         {Platform.OS === "web" && (
@@ -966,7 +979,7 @@ export default function ExpensesScreen() {
 
                 {expenses.length > 0 && (
                     <>
-                        <ThemedView style={[styles.totalSection, styles.totalYear]}>
+                        <ThemedView style={[styles.totalSection]}>
                             <ThemedText type="subtitle" style={styles.totalTitle}>
                                 {t("expenses.yearlySpend")}
                             </ThemedText>
@@ -1054,7 +1067,7 @@ export default function ExpensesScreen() {
                         </ThemedView>
 
                         <View style={styles.totalDetails}>
-                            <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalMonth]}>
+                            <ThemedView style={[styles.totalSection, styles.totalPeriod]}>
                                 <ThemedText type="defaultSemiBold" style={styles.totalTitle}>
                                     {t("expenses.monthlySpend")}
                                 </ThemedText>
@@ -1063,7 +1076,16 @@ export default function ExpensesScreen() {
                                 </ThemedText>
                             </ThemedView>
 
-                            <ThemedView style={[styles.totalSection, styles.totalPeriod, styles.totalDay]}>
+                            <ThemedView style={[styles.totalSection, styles.totalPeriod]}>
+                                <ThemedText type="defaultSemiBold" style={styles.totalTitle}>
+                                    {t("expenses.weeklySpend")}
+                                </ThemedText>
+                                <ThemedText style={[styles.totalAmount, { fontSize: 28 }]}>
+                                    {formatCurrency(totalWeeklySpend, currencySymbol)}
+                                </ThemedText>
+                            </ThemedView>
+
+                            <ThemedView style={[styles.totalSection, styles.totalPeriod]}>
                                 <ThemedText type="defaultSemiBold" style={styles.totalTitle}>
                                     {t("expenses.dailySpend")}
                                 </ThemedText>
@@ -1127,7 +1149,7 @@ export default function ExpensesScreen() {
                                             }
 
                                             if (category === cat) {
-                                                btnBgColor = dotColor;
+                                                btnBgColor = dotColor + "50";
                                                 btnBorderColor = dotColor;
                                             }
 
