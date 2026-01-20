@@ -32,14 +32,16 @@ export const baseCenter = {
     alignItems: "center" as const,
 };
 
+export const baseOutline = (theme: any) => ({ outlineColor: theme.focus });
+
 export const baseInput = (theme: any) => ({
+    ...baseOutline(theme),
     ...baseRadius,
     ...baseBorder,
     ...baseSize,
     borderColor: theme.inputBorder,
     backgroundColor: theme.inputBackground,
     color: theme.inputText,
-    outlineWidth: 0,
     minHeight: 44,
 });
 
@@ -48,15 +50,17 @@ export const baseSelect = {
     paddingVertical: 10,
 };
 
-export const baseButton = {
+export const baseButton = (theme: any) => ({
     ...baseFlex("center", "center"),
+    ...baseOutline(theme),
     ...baseRadius,
+    ...baseBorder,
     minHeight: 44,
     minWidth: "auto" as const,
     paddingVertical: 12,
     paddingHorizontal: 24,
     flex: 1,
-};
+});
 
 export const baseTrans = (color: string) => ({
     ...baseButton,
@@ -120,13 +124,14 @@ export const baseIcons = {
     gap: 10,
 };
 
-export const baseIcon = {
+export const baseIcon = (theme: any) => ({
     ...baseFlex("center", "center"),
+    ...baseOutline(theme),
     ...baseBorder,
     borderRadius: 6,
     width: 32,
     height: 32,
-};
+});
 
 export const baseOverlay = {
     ...baseCenter,

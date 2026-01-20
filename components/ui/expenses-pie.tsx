@@ -1,7 +1,8 @@
-import { TouchableOpacity, useWindowDimensions } from "react-native";
+import { TouchableOpacity, useColorScheme, useWindowDimensions } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
-import { businessColor, entertainmentColor, familyColor, investColor, personalColor } from "@/constants/theme";
+import { businessColor, Colors, entertainmentColor, familyColor, investColor, personalColor } from "@/constants/theme";
+import { baseOutline } from "@/styles/base";
 
 type Category = "personal" | "business" | "family" | "invest" | "entertainment";
 
@@ -101,10 +102,14 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
     const strokeSelected = 0.95;
     const strokeOpacity = 0.75;
 
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+
     return (
         <TouchableOpacity
             activeOpacity={1}
             style={{
+                ...baseOutline(theme),
                 width: responsiveSize,
                 height: responsiveSize,
                 justifyContent: "center",

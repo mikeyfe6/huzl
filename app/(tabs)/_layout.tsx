@@ -3,12 +3,13 @@ import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAuth } from "@/hooks/use-auth";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 
 import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { baseOutline } from "@/styles/base";
 
 export default function TabLayout() {
     const { t } = useTranslation();
@@ -23,7 +24,7 @@ export default function TabLayout() {
                     tabBarActiveTintColor: theme.tint,
                     tabBarShowLabel: true,
                     headerShown: false,
-                    tabBarButton: HapticTab,
+                    tabBarButton: (props) => <HapticTab {...props} style={[props.style, baseOutline(theme)]} />,
                     tabBarStyle:
                         user ?
                             {

@@ -48,6 +48,7 @@ import {
     baseList,
     baseMain,
     baseMini,
+    baseOutline,
     baseRadius,
     baseSelect,
     baseSize,
@@ -88,8 +89,6 @@ export default function ExpensesScreen() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption>("default");
     const [sortModalVisible, setSortModalVisible] = useState(false);
-    const [nameFocused, setNameFocused] = useState(false);
-    const [amountFocused, setAmountFocused] = useState(false);
 
     const calculateYearlyTotal = (amount: number, freq: Frequency): number => {
         const num = Number.parseFloat(amount.toString());
@@ -476,7 +475,7 @@ export default function ExpensesScreen() {
                     marginTop: 8,
                 },
                 button: {
-                    ...baseButton,
+                    ...baseButton(theme),
                 },
                 buttonText: {
                     ...baseButtonText,
@@ -576,7 +575,7 @@ export default function ExpensesScreen() {
                     ...baseIcons,
                 },
                 expenseIcon: {
-                    ...baseIcon,
+                    ...baseIcon(theme),
                 },
                 expenseTotal: {
                     ...baseFlex("space-between"),
@@ -667,6 +666,7 @@ export default function ExpensesScreen() {
                 },
                 chartButton: {
                     ...baseFlex("space-between", "center"),
+                    ...baseOutline(theme),
                     ...baseRadius,
                     ...baseBorder,
                     flex: 1,
@@ -728,32 +728,23 @@ export default function ExpensesScreen() {
                     <ThemedText style={styles.label}>{t("expenses.label.name")}</ThemedText>
                     <TextInput
                         ref={nameInputRef}
-                        style={[styles.input, nameFocused && { borderColor: linkColor }]}
+                        style={styles.input}
                         placeholder={t("expenses.placeholder.name")}
                         placeholderTextColor={theme.placeholder}
                         value={expenseName}
                         onChangeText={setExpenseName}
-                        onFocus={() => setNameFocused(true)}
-                        onBlur={() => setNameFocused(false)}
                     />
 
                     <ThemedText style={styles.label}>
                         {t("expenses.label.amount")} ({currencySymbol})
                     </ThemedText>
                     <TextInput
-                        style={[
-                            styles.input,
-                            amountFocused && {
-                                borderColor: linkColor,
-                            },
-                        ]}
+                        style={styles.input}
                         placeholder="0.00"
                         placeholderTextColor={theme.placeholder}
                         value={expenseAmount}
                         onChangeText={(text) => setExpenseAmount(formatNumber(text))}
                         keyboardType="decimal-pad"
-                        onFocus={() => setAmountFocused(true)}
-                        onBlur={() => setAmountFocused(false)}
                     />
 
                     <ThemedText style={styles.label}>{t("expenses.label.category")}</ThemedText>
@@ -843,7 +834,7 @@ export default function ExpensesScreen() {
 
                     <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.button, { backgroundColor: greenColor }]}
+                            style={[styles.button, { backgroundColor: greenColor, borderColor: greenColor }]}
                             onPress={handleAddExpense}
                         >
                             <ThemedText style={styles.buttonText}>
@@ -852,7 +843,7 @@ export default function ExpensesScreen() {
                         </TouchableOpacity>
                         {editingId && (
                             <TouchableOpacity
-                                style={[styles.button, { backgroundColor: redColor }]}
+                                style={[styles.button, { backgroundColor: redColor, borderColor: redColor }]}
                                 onPress={handleCancelEdit}
                             >
                                 <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>

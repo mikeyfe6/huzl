@@ -47,6 +47,7 @@ export const Colors = {
         background: whiteColor,
         tint: linkColor,
         icon: slateColor,
+        focus: charcoalColor,
 
         cardPositiveBackground: greenLightColor,
         cardNegativeBackground: redLightColor,
@@ -69,6 +70,7 @@ export const Colors = {
         background: charcoalColor,
         tint: linkColor,
         icon: silverColor,
+        focus: "transparent" as const,
 
         cardPositiveBackground: greenDarkColor,
         cardNegativeBackground: redDarkColor,

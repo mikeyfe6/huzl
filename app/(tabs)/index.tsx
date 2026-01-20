@@ -19,7 +19,6 @@ import { ThemedView } from "@/components/themed-view";
 import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import {
     baseBold,
-    baseBorder,
     baseButton,
     baseCenter,
     baseCorner,
@@ -28,6 +27,7 @@ import {
     baseGap,
     baseInput,
     baseLarge,
+    baseOutline,
     baseSelect,
     baseSmall,
     baseSpace,
@@ -249,17 +249,17 @@ export default function HomeScreen() {
                     color: theme.inputText,
                 },
                 signInButton: {
-                    ...baseButton,
+                    ...baseButton(theme),
                     backgroundColor: greenColor,
+                    borderColor: greenColor,
                 },
                 signInText: {
                     ...baseWeight,
                     color: whiteColor,
                 },
                 signUpButton: {
-                    ...baseButton,
+                    ...baseButton(theme),
                     ...baseWeight,
-                    ...baseBorder,
                     borderColor: mediumGreyColor,
                 },
                 signUpText: {
@@ -267,6 +267,7 @@ export default function HomeScreen() {
                 },
                 forgetButton: {
                     ...baseFlex("center", "center"),
+                    ...baseOutline(theme),
                     minHeight: 44,
                 },
                 forgetButtonText: {
@@ -389,6 +390,7 @@ export default function HomeScreen() {
                             autoCapitalize="none"
                             keyboardType="email-address"
                             autoComplete="email"
+                            autoFocus={true}
                             value={email}
                             onChangeText={setEmail}
                             style={styles.input}
@@ -443,13 +445,13 @@ export default function HomeScreen() {
                         )}
                         <ThemedText style={styles.termsText}>
                             {t("auth.disclaimer.first")}{" "}
-                            <Link href="/terms">
+                            <Link href="/terms" style={{ ...baseOutline(theme) }}>
                                 <ThemedText type="link" style={styles.termsLink}>
                                     {t("auth.disclaimer.second")}
                                 </ThemedText>
                             </Link>{" "}
                             {t("auth.disclaimer.third")}{" "}
-                            <Link href="/privacy">
+                            <Link href="/privacy" style={{ ...baseOutline(theme) }}>
                                 <ThemedText type="link" style={styles.termsLink}>
                                     {t("auth.disclaimer.fourth")}
                                 </ThemedText>
