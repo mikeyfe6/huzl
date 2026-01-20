@@ -1,37 +1,37 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
-
-import { useColorScheme } from "@/hooks/use-color-scheme";
 
 import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 
-import { Colors, greenColor, redColor } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
     baseFlex,
     baseGap,
+    baseGreen,
     baseInput,
     baseModal,
     baseOverlay,
+    baseRed,
     baseSelect,
 } from "@/styles/base";
 
 // TODO: add successmessage after filling in email correctly
 
+type ThemeShape = (typeof Colors)[keyof typeof Colors];
+
 interface ForgotPasswordModalProps {
     visible: boolean;
     onClose: () => void;
+    theme: ThemeShape;
 }
 
-export function ForgotPasswordModal({ visible, onClose }: Readonly<ForgotPasswordModalProps>) {
+export function ForgotPasswordModal({ visible, onClose, theme }: Readonly<ForgotPasswordModalProps>) {
     const { t } = useTranslation();
-
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
 
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
@@ -63,35 +63,39 @@ export function ForgotPasswordModal({ visible, onClose }: Readonly<ForgotPasswor
         }
     };
 
-    const styles = StyleSheet.create({
-        overlay: {
-            ...baseOverlay,
-        },
-        modal: {
-            ...baseModal(theme),
-        },
-        title: {
-            marginBottom: 16,
-        },
-        subtitle: {
-            marginBottom: 16,
-        },
-        input: {
-            ...baseInput(theme),
-            ...baseSelect,
-        },
-        buttons: {
-            ...baseFlex("center", "center"),
-            ...baseGap,
-            marginTop: 24,
-        },
-        button: {
-            ...baseButton,
-        },
-        buttonText: {
-            ...baseButtonText,
-        },
-    });
+    const styles = useMemo(
+        () =>
+            StyleSheet.create({
+                overlay: {
+                    ...baseOverlay,
+                },
+                modal: {
+                    ...baseModal(theme),
+                },
+                title: {
+                    marginBottom: 16,
+                },
+                subtitle: {
+                    marginBottom: 16,
+                },
+                input: {
+                    ...baseInput(theme),
+                    ...baseSelect,
+                },
+                buttons: {
+                    ...baseFlex("center", "center"),
+                    ...baseGap,
+                    marginTop: 24,
+                },
+                button: {
+                    ...baseButton(theme),
+                },
+                buttonText: {
+                    ...baseButtonText,
+                },
+            }),
+        [theme],
+    );
 
     return (
         <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
@@ -112,15 +116,11 @@ export function ForgotPasswordModal({ visible, onClose }: Readonly<ForgotPasswor
                         onChangeText={setEmail}
                     />
                     <View style={styles.buttons}>
-                        <TouchableOpacity
-                            style={[styles.button, { backgroundColor: redColor }]}
-                            onPress={onClose}
-                            disabled={loading}
-                        >
+                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.button, { backgroundColor: greenColor }]}
+                            style={[styles.button, { ...baseGreen }]}
                             onPress={handleForgotPassword}
                             disabled={loading}
                         >

@@ -16,7 +16,7 @@ import { ThemedView } from "@/components/themed-view";
 
 import { blueColor, Colors, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import {
-    baseBorder,
+    baseBlue,
     baseButton,
     baseButtonText,
     baseCard,
@@ -24,12 +24,14 @@ import {
     baseEmptyText,
     baseFlex,
     baseGap,
+    baseGreen,
     baseIcon,
     baseIcons,
     baseInput,
     baseLabel,
     baseList,
     baseMain,
+    baseRed,
     baseSelect,
     baseSmall,
     baseSpace,
@@ -418,7 +420,7 @@ export default function BudgetsScreen() {
                     marginTop: 8,
                 },
                 button: {
-                    ...baseButton,
+                    ...baseButton(theme),
                     backgroundColor: blueColor,
                 },
                 buttonText: {
@@ -441,14 +443,6 @@ export default function BudgetsScreen() {
                     ...baseFlex("space-between", "flex-start"),
                     ...baseGap,
                 },
-                budgetInfo: {
-                    flex: 1,
-                },
-                budgetIcon: {
-                    ...baseBorder,
-                    borderRadius: 6,
-                    padding: 8,
-                },
                 budgetAmount: {
                     ...baseSmall,
                     opacity: 0.8,
@@ -460,8 +454,8 @@ export default function BudgetsScreen() {
                 budgetIcons: {
                     ...baseIcons,
                 },
-                budgetItemIcon: {
-                    ...baseIcon,
+                budgetIcon: {
+                    ...baseIcon(theme),
                 },
                 progressBar: {
                     height: 8,
@@ -544,7 +538,7 @@ export default function BudgetsScreen() {
 
                     <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.button, { backgroundColor: blueColor }]}
+                            style={[styles.button, { ...baseBlue }]}
                             onPress={handleCreateBudget}
                             disabled={loading}
                         >
@@ -554,7 +548,7 @@ export default function BudgetsScreen() {
                         </TouchableOpacity>
                         {editingId && (
                             <TouchableOpacity
-                                style={[styles.button, { backgroundColor: redColor }]}
+                                style={[styles.button, { ...baseRed }]}
                                 onPress={handleCancelEdit}
                                 disabled={loading}
                             >
@@ -579,21 +573,27 @@ export default function BudgetsScreen() {
                                 ]}
                             >
                                 <View style={styles.budgetTitle}>
-                                    <TouchableOpacity
-                                        style={styles.budgetInfo}
-                                        onPress={() =>
-                                            setSelectedBudgetId(selectedBudgetId === budget.id ? null : budget.id)
-                                        }
-                                    >
-                                        <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
-                                            {budget.name}
-                                        </ThemedText>
-                                    </TouchableOpacity>
+                                    <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
+                                        {budget.name}
+                                    </ThemedText>
                                     <View style={styles.budgetIcons}>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                setSelectedBudgetId(selectedBudgetId === budget.id ? null : budget.id)
+                                            }
+                                            style={[
+                                                styles.budgetIcon,
+                                                {
+                                                    borderColor: blueColor,
+                                                },
+                                            ]}
+                                        >
+                                            <Ionicons name="cash-outline" size={16} color={blueColor} />
+                                        </TouchableOpacity>
                                         <TouchableOpacity
                                             onPress={() => handleToggleActive(budget.id, budget.active)}
                                             style={[
-                                                styles.budgetItemIcon,
+                                                styles.budgetIcon,
                                                 {
                                                     borderColor: budget.active ? greenColor : mediumGreyColor,
                                                 },
@@ -608,7 +608,7 @@ export default function BudgetsScreen() {
                                         <TouchableOpacity
                                             onPress={() => handleEditBudget(budget)}
                                             style={[
-                                                styles.budgetItemIcon,
+                                                styles.budgetIcon,
                                                 {
                                                     borderColor: mediumGreyColor,
                                                 },
@@ -619,7 +619,7 @@ export default function BudgetsScreen() {
                                         <TouchableOpacity
                                             onPress={() => confirmDelete(budget.id, budget.name, "budget")}
                                             style={[
-                                                styles.budgetItemIcon,
+                                                styles.budgetIcon,
                                                 {
                                                     borderColor: redColor,
                                                 },
@@ -690,7 +690,7 @@ export default function BudgetsScreen() {
 
                         <View style={styles.buttons}>
                             <TouchableOpacity
-                                style={[styles.button, { backgroundColor: greenColor }]}
+                                style={[styles.button, { ...baseGreen }]}
                                 onPress={handleAddExpense}
                                 disabled={loading}
                             >
@@ -702,7 +702,7 @@ export default function BudgetsScreen() {
                             </TouchableOpacity>
                             {editingExpenseId && (
                                 <TouchableOpacity
-                                    style={[styles.button, { backgroundColor: redColor }]}
+                                    style={[styles.button, { ...baseRed }]}
                                     onPress={handleCancelExpenseEdit}
                                     disabled={loading}
                                 >
@@ -735,7 +735,7 @@ export default function BudgetsScreen() {
                                         <TouchableOpacity
                                             onPress={() => handleToggleExpenseActive(expense.id, expense.active)}
                                             style={[
-                                                styles.budgetItemIcon,
+                                                styles.budgetIcon,
                                                 {
                                                     borderColor: expense.active ? greenColor : mediumGreyColor,
                                                 },
@@ -750,7 +750,7 @@ export default function BudgetsScreen() {
                                         <TouchableOpacity
                                             onPress={() => handleEditExpense(expense)}
                                             style={[
-                                                styles.budgetItemIcon,
+                                                styles.budgetIcon,
                                                 {
                                                     borderColor: mediumGreyColor,
                                                 },
@@ -761,7 +761,7 @@ export default function BudgetsScreen() {
                                         <TouchableOpacity
                                             onPress={() => confirmDelete(expense.id, expense.name, "expense")}
                                             style={[
-                                                styles.budgetItemIcon,
+                                                styles.budgetIcon,
                                                 {
                                                     borderColor: redColor,
                                                 },

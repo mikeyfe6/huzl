@@ -14,7 +14,7 @@ import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { blueColor, Colors, greenColor, mediumGreyColor, orangeColor, redColor, slateColor } from "@/constants/theme";
+import { blueColor, Colors, greenColor, mediumGreyColor, redColor, slateColor } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
@@ -23,6 +23,7 @@ import {
     baseEmptyText,
     baseFlex,
     baseGap,
+    baseGreen,
     baseIcon,
     baseIcons,
     baseInput,
@@ -30,6 +31,8 @@ import {
     baseList,
     baseMain,
     baseMini,
+    baseOrange,
+    baseRed,
     baseSelect,
     baseSmall,
     baseWeight,
@@ -228,7 +231,7 @@ export default function DebtsScreen() {
                     marginTop: 8,
                 },
                 button: {
-                    ...baseButton,
+                    ...baseButton(theme),
                 },
                 buttonText: { ...baseButtonText },
                 list: { ...baseList },
@@ -255,7 +258,7 @@ export default function DebtsScreen() {
                     ...baseIcons,
                 },
                 itemIcon: {
-                    ...baseIcon,
+                    ...baseIcon(theme),
                 },
                 itemAmount: {
                     ...baseFlex("space-between"),
@@ -286,7 +289,7 @@ export default function DebtsScreen() {
                     minWidth: 150,
                 },
                 paymentButton: {
-                    ...baseButton,
+                    ...baseButton(theme),
                     minWidth: 100,
                 },
                 paymentButtonDisabled: {
@@ -345,7 +348,7 @@ export default function DebtsScreen() {
                     />
                     <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.button, { backgroundColor: orangeColor }]}
+                            style={[styles.button, { ...baseOrange }]}
                             onPress={handleAddOrUpdateDebt}
                             disabled={loading}
                         >
@@ -355,7 +358,7 @@ export default function DebtsScreen() {
                         </TouchableOpacity>
                         {editingId && (
                             <TouchableOpacity
-                                style={[styles.button, { backgroundColor: redColor }]}
+                                style={[styles.button, { ...baseRed }]}
                                 onPress={handleCancelEdit}
                                 disabled={loading}
                             >
@@ -480,7 +483,7 @@ export default function DebtsScreen() {
                                         <TouchableOpacity
                                             style={[
                                                 styles.paymentButton,
-                                                { backgroundColor: greenColor },
+                                                { ...baseGreen },
                                                 (!paymentAmount.trim() || loading) && styles.paymentButtonDisabled,
                                             ]}
                                             onPress={() => handleMakePayment(debt.id)}
@@ -489,7 +492,7 @@ export default function DebtsScreen() {
                                             <ThemedText style={styles.paymentButtonText}>{t("common.save")}</ThemedText>
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                            style={[styles.paymentButton, { backgroundColor: redColor }]}
+                                            style={[styles.paymentButton, { ...baseRed }]}
                                             onPress={() => {
                                                 setPaymentId(null);
                                                 setPaymentAmount("");

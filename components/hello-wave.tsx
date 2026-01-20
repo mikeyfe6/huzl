@@ -1,5 +1,7 @@
 import Animated from "react-native-reanimated";
 
+// TODO: verwijderen door onactivisme
+
 export function HelloWave() {
     return (
         <Animated.Text

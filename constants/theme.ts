@@ -5,7 +5,7 @@
 
 import { Platform } from "react-native";
 
-export const linkColor = "#0a7ea4";
+export const linkColor = "#1E95C8";
 export const whiteColor = "#fff";
 export const blackColor = "#000";
 export const greenColor = "#4caf50";

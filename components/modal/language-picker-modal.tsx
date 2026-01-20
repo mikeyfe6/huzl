@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { linkColor, whiteColor } from "@/constants/theme";
-import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseSize, baseWeight } from "@/styles/base";
+import { Colors, linkColor, whiteColor } from "@/constants/theme";
+import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseOutline, baseSize, baseWeight } from "@/styles/base";
 
 type Language = {
     code: string;
     name: string;
     nativeName: string;
 };
+
+type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
 const AVAILABLE_LANGUAGES: Language[] = [
     { code: "nl", name: "Dutch", nativeName: "Nederlands" },
@@ -22,9 +24,10 @@ const AVAILABLE_LANGUAGES: Language[] = [
 interface LanguagePickerModalProps {
     readonly visible: boolean;
     readonly onClose: () => void;
+    readonly theme: ThemeShape;
 }
 
-export function LanguagePickerModal({ visible, onClose }: LanguagePickerModalProps) {
+export function LanguagePickerModal({ visible, onClose, theme }: LanguagePickerModalProps) {
     const { i18n, t } = useTranslation();
     const [saving, setSaving] = useState(false);
 
@@ -40,12 +43,64 @@ export function LanguagePickerModal({ visible, onClose }: LanguagePickerModalPro
         }
     };
 
+    const styles = useMemo(
+        () =>
+            StyleSheet.create({
+                container: {
+                    flex: 1,
+                    paddingTop: 60,
+                },
+                header: {
+                    ...baseFlex("space-between", "center"),
+                    paddingHorizontal: 20,
+                    paddingBottom: 32,
+                },
+                list: {
+                    flex: 1,
+                    paddingTop: 8,
+                    paddingHorizontal: 20,
+                },
+                languageItem: {
+                    ...baseFlex("space-between", "center"),
+                    ...baseOutline(theme),
+                    ...baseCorner,
+                    paddingVertical: 16,
+                    paddingHorizontal: 16,
+                    marginBottom: 8,
+                },
+                languageItemSelected: {
+                    backgroundColor: linkColor,
+                },
+                languageInfo: {
+                    flex: 1,
+                },
+                languageName: {
+                    ...baseWeight,
+                    ...baseSize,
+                },
+                languageNative: {
+                    ...baseMini,
+                    opacity: 0.7,
+                    marginTop: 4,
+                },
+                checkmark: {
+                    ...baseLarge,
+                    ...baseBold,
+                    color: whiteColor,
+                },
+                selectedText: {
+                    color: whiteColor,
+                },
+            }),
+        [theme],
+    );
+
     return (
         <Modal visible={visible} animationType="fade" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("language.title")}</ThemedText>
-                    <TouchableOpacity onPress={onClose} disabled={saving}>
+                    <TouchableOpacity onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
                         <ThemedText type="danger">{t("common.close")}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
@@ -77,49 +132,3 @@ export function LanguagePickerModal({ visible, onClose }: LanguagePickerModalPro
         </Modal>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 60,
-    },
-    header: {
-        ...baseFlex("space-between", "center"),
-        paddingHorizontal: 20,
-        paddingBottom: 32,
-    },
-    list: {
-        flex: 1,
-        paddingHorizontal: 20,
-    },
-    languageItem: {
-        ...baseFlex("space-between", "center"),
-        ...baseCorner,
-        paddingVertical: 16,
-        paddingHorizontal: 16,
-        marginBottom: 8,
-    },
-    languageItemSelected: {
-        backgroundColor: linkColor,
-    },
-    languageInfo: {
-        flex: 1,
-    },
-    languageName: {
-        ...baseWeight,
-        ...baseSize,
-    },
-    languageNative: {
-        ...baseMini,
-        opacity: 0.7,
-        marginTop: 4,
-    },
-    checkmark: {
-        ...baseLarge,
-        ...baseBold,
-        color: whiteColor,
-    },
-    selectedText: {
-        color: whiteColor,
-    },
-});

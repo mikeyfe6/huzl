@@ -22,6 +22,7 @@ import {
     baseEmpty,
     baseEmptyText,
     baseFlex,
+    baseIcon,
     baseInput,
     baseLabel,
     baseList,
@@ -197,7 +198,7 @@ export default function HelpdeskScreen() {
                     pointerEvents: "none",
                 },
                 button: {
-                    ...baseButton,
+                    ...baseButton(theme),
                     marginTop: 8,
                     backgroundColor: greenColor,
                 },
@@ -209,6 +210,10 @@ export default function HelpdeskScreen() {
                 item: {
                     ...baseFlex("space-between", "flex-start"),
                     ...baseCard(theme),
+                },
+                icon: {
+                    ...baseIcon(theme),
+                    borderColor: redColor,
                 },
                 itemContent: {
                     ...baseSpace,
@@ -299,6 +304,7 @@ export default function HelpdeskScreen() {
                                 <TouchableOpacity
                                     onPress={() => confirmDeleteTicket(ticket.id, ticket.message)}
                                     disabled={loading}
+                                    style={styles.icon}
                                 >
                                     <Ionicons name="trash" size={18} color={redColor} />
                                 </TouchableOpacity>

@@ -45,7 +45,7 @@ export default function PrivacyScreen() {
                     fontStyle: "italic",
                 },
                 backButton: {
-                    ...baseButton,
+                    ...baseButton(theme),
                     backgroundColor: linkColor,
                     marginTop: 16,
                 },
@@ -157,7 +157,7 @@ export default function PrivacyScreen() {
                     KVK-nummer: 76045315{"\n"}
                     E-mail: info@menefex.nl{"\n"}
                     Website:{" "}
-                    <ExternalLink href="https://menefex.nl">
+                    <ExternalLink href="https://menefex.nl" theme={theme}>
                         <ThemedText type="link">menefex.nl</ThemedText>
                     </ExternalLink>
                 </ThemedText>

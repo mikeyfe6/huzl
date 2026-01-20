@@ -24,8 +24,11 @@ import {
     baseCorner,
     baseFlex,
     baseGap,
+    baseGreen,
     baseIcon,
     baseMain,
+    baseOutline,
+    baseRed,
     baseSelect,
     baseSize,
     baseSmall,
@@ -251,13 +254,14 @@ export default function IncomeScreen() {
                     marginLeft: 16,
                 },
                 icon: {
-                    ...baseIcon,
+                    ...baseIcon(theme),
                 },
                 input: {
+                    ...baseOutline(theme),
                     ...baseSize,
                     ...baseWeight,
                     color: theme.text,
-                    paddingVertical: 6,
+                    padding: 6,
                     marginBottom: 4,
                     outlineWidth: 0,
                 },
@@ -265,9 +269,11 @@ export default function IncomeScreen() {
                     borderTopWidth: StyleSheet.hairlineWidth,
                     borderTopColor: theme.inputBorder,
                     paddingTop: 10,
+                    paddingBottom: 4,
                     gap: 16,
                 },
                 type: {
+                    ...baseOutline(theme),
                     ...baseBorder,
                     borderRadius: 7,
                     paddingHorizontal: 14,
@@ -275,8 +281,7 @@ export default function IncomeScreen() {
                     borderColor: theme.inputBorder,
                 },
                 typeText: { ...baseSmall },
-                delete: { padding: 4 },
-                add: { marginTop: 8, marginBottom: 6 },
+                add: { ...baseOutline(theme), marginTop: 8, marginBottom: 6, padding: 4 },
                 addText: {
                     ...baseWeight,
                     color: greenColor,
@@ -295,8 +300,8 @@ export default function IncomeScreen() {
                     marginTop: 12,
                 },
                 saveButton: {
-                    ...baseButton,
-                    backgroundColor: greenColor,
+                    ...baseButton(theme),
+                    ...baseGreen,
                 },
                 saveButtonDisabled: {
                     opacity: 0.5,
@@ -305,8 +310,8 @@ export default function IncomeScreen() {
                     ...baseButtonText,
                 },
                 closeButton: {
-                    ...baseButton,
-                    backgroundColor: redColor,
+                    ...baseButton(theme),
+                    ...baseRed,
                 },
                 closeButtonText: {
                     ...baseButtonText,
@@ -329,7 +334,7 @@ export default function IncomeScreen() {
                         <ThemedText>Loading...</ThemedText>
                     :   sources.map((src, idx) => (
                             <View key={src.id ?? idx} style={styles.wrapper}>
-                                <TouchableOpacity style={[styles.item, { opacity: src.active ? 1 : 0.5 }]}>
+                                <View style={[styles.item, { opacity: src.active ? 1 : 0.5 }]}>
                                     <TextInput
                                         style={styles.input}
                                         value={src.amount}
@@ -363,7 +368,7 @@ export default function IncomeScreen() {
                                         }}
                                         showsHorizontalScrollIndicator={false}
                                     />
-                                </TouchableOpacity>
+                                </View>
                                 <View style={styles.icons}>
                                     <TouchableOpacity
                                         onPress={() => toggleActive(idx)}

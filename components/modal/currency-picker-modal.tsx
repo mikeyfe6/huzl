@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -10,16 +10,19 @@ import { supabase } from "@/utils/supabase";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { linkColor, whiteColor } from "@/constants/theme";
-import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseTitle, baseWeight } from "@/styles/base";
+import { Colors, linkColor, whiteColor } from "@/constants/theme";
+import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseOutline, baseTitle, baseWeight } from "@/styles/base";
+
+type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
 interface CurrencyPickerModalProps {
     readonly visible: boolean;
     readonly onClose: () => void;
     readonly currentSymbol: string;
+    readonly theme: ThemeShape;
 }
 
-export function CurrencyPickerModal({ visible, onClose, currentSymbol }: CurrencyPickerModalProps) {
+export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: CurrencyPickerModalProps) {
     const { t } = useTranslation();
     const { refreshUser } = useAuth();
     const availableCurrencies = useAvailableCurrencies();
@@ -52,12 +55,69 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol }: Currenc
         }
     };
 
+    const styles = useMemo(
+        () =>
+            StyleSheet.create({
+                container: {
+                    flex: 1,
+                    paddingTop: 60,
+                },
+                header: {
+                    ...baseFlex("space-between", "center"),
+                    paddingHorizontal: 20,
+                    paddingBottom: 32,
+                },
+                list: {
+                    flex: 1,
+                    paddingTop: 8,
+                    paddingHorizontal: 20,
+                },
+                currencyItem: {
+                    ...baseFlex("space-between", "center"),
+                    ...baseOutline(theme),
+                    ...baseCorner,
+                    paddingVertical: 16,
+                    paddingHorizontal: 16,
+                    marginBottom: 8,
+                },
+                currencyItemSelected: {
+                    backgroundColor: linkColor,
+                },
+                currencyInfo: {
+                    ...baseFlex("space-between", "center"),
+                    gap: 16,
+                },
+                currencySymbol: {
+                    ...baseTitle,
+                    width: 40,
+                    height: 40,
+                },
+                currencyName: {
+                    ...baseWeight,
+                },
+                currencyCode: {
+                    ...baseMini,
+                    opacity: 0.7,
+                    marginTop: 2,
+                },
+                checkmark: {
+                    ...baseLarge,
+                    ...baseBold,
+                    color: whiteColor,
+                },
+                selectedText: {
+                    color: whiteColor,
+                },
+            }),
+        [theme],
+    );
+
     return (
         <Modal visible={visible} animationType="fade" presentationStyle="pageSheet" onRequestClose={onClose}>
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("currency.selectCurrency")}</ThemedText>
-                    <TouchableOpacity onPress={onClose} disabled={saving}>
+                    <TouchableOpacity onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
                         <ThemedText type="danger">{t("currency.close")}</ThemedText>
                     </TouchableOpacity>
                 </ThemedView>
@@ -94,54 +154,3 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol }: Currenc
         </Modal>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 60,
-    },
-    header: {
-        ...baseFlex("space-between", "center"),
-        paddingHorizontal: 20,
-        paddingBottom: 32,
-    },
-    list: {
-        flex: 1,
-        paddingHorizontal: 20,
-    },
-    currencyItem: {
-        ...baseFlex("space-between", "center"),
-        ...baseCorner,
-        paddingVertical: 16,
-        paddingHorizontal: 16,
-        marginBottom: 8,
-    },
-    currencyItemSelected: {
-        backgroundColor: linkColor,
-    },
-    currencyInfo: {
-        ...baseFlex("space-between", "center"),
-        gap: 16,
-    },
-    currencySymbol: {
-        ...baseTitle,
-        width: 40,
-        height: 40,
-    },
-    currencyName: {
-        ...baseWeight,
-    },
-    currencyCode: {
-        ...baseMini,
-        opacity: 0.7,
-        marginTop: 2,
-    },
-    checkmark: {
-        ...baseLarge,
-        ...baseBold,
-        color: whiteColor,
-    },
-    selectedText: {
-        color: whiteColor,
-    },
-});

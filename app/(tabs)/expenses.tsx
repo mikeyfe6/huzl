@@ -41,6 +41,7 @@ import {
     baseEmptyText,
     baseFlex,
     baseGap,
+    baseGreen,
     baseIcon,
     baseIcons,
     baseInput,
@@ -50,6 +51,7 @@ import {
     baseMini,
     baseOutline,
     baseRadius,
+    baseRed,
     baseSelect,
     baseSize,
     baseSmall,
@@ -833,19 +835,13 @@ export default function ExpensesScreen() {
                     </View>
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity
-                            style={[styles.button, { backgroundColor: greenColor, borderColor: greenColor }]}
-                            onPress={handleAddExpense}
-                        >
+                        <TouchableOpacity style={[styles.button, { ...baseGreen }]} onPress={handleAddExpense}>
                             <ThemedText style={styles.buttonText}>
                                 {editingId ? t("expenses.button.updateExpense") : t("expenses.button.addExpense")}
                             </ThemedText>
                         </TouchableOpacity>
                         {editingId && (
-                            <TouchableOpacity
-                                style={[styles.button, { backgroundColor: redColor, borderColor: redColor }]}
-                                onPress={handleCancelEdit}
-                            >
+                            <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={handleCancelEdit}>
                                 <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                             </TouchableOpacity>
                         )}
@@ -1091,6 +1087,7 @@ export default function ExpensesScreen() {
                                 expenses={expenses}
                                 selectedCategory={category}
                                 onCategorySelect={setCategory}
+                                theme={theme}
                             />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>

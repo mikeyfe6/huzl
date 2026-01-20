@@ -6,6 +6,8 @@ import { ThemedView } from "@/components/themed-view";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useThemeColor } from "@/hooks/use-theme-color";
 
+// TODO: verwijderen door onactivisme
+
 const HEADER_HEIGHT = 250;
 
 type Props = PropsWithChildren<{
@@ -25,7 +27,7 @@ export default function ParallaxScrollView({ children, headerImage, headerBackgr
                     translateY: interpolate(
                         scrollOffset.value,
                         [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
-                        [-HEADER_HEIGHT / 2, 0, HEADER_HEIGHT * 0.75]
+                        [-HEADER_HEIGHT / 2, 0, HEADER_HEIGHT * 0.75],
                     ),
                 },
                 {

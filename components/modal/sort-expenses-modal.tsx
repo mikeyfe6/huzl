@@ -6,7 +6,7 @@ import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-nativ
 import { ThemedText } from "@/components/themed-text";
 
 import { Colors, linkColor } from "@/constants/theme";
-import { baseBorder, baseCorner, baseFlex } from "@/styles/base";
+import { baseBorder, baseCorner, baseFlex, baseOutline } from "@/styles/base";
 
 type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
@@ -60,6 +60,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                 },
                 item: {
                     ...baseFlex("space-between", "center"),
+                    ...baseOutline(theme),
                     paddingHorizontal: 16,
                     paddingVertical: 12,
                 },
@@ -73,6 +74,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                     gap: 10,
                 },
                 cancel: {
+                    ...baseOutline(theme),
                     paddingHorizontal: 16,
                     paddingVertical: 12,
                     alignItems: "center",

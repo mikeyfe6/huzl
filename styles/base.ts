@@ -1,4 +1,4 @@
-import { greenColor, redColor, whiteColor } from "@/constants/theme";
+import { blueColor, greenColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const baseGap = { gap: 12 };
@@ -62,8 +62,8 @@ export const baseButton = (theme: any) => ({
     flex: 1,
 });
 
-export const baseTrans = (color: string) => ({
-    ...baseButton,
+export const baseTrans = (theme: any, color: string) => ({
+    ...baseButton(theme),
     ...baseBorder,
     borderColor: color,
 });
@@ -164,4 +164,24 @@ export const baseError = {
 export const baseSuccess = {
     ...baseMessage,
     color: greenColor,
+};
+
+export const baseGreen = {
+    backgroundColor: greenColor,
+    borderColor: greenColor,
+};
+
+export const baseRed = {
+    backgroundColor: redColor,
+    borderColor: redColor,
+};
+
+export const baseBlue = {
+    backgroundColor: blueColor,
+    borderColor: blueColor,
+};
+
+export const baseOrange = {
+    backgroundColor: orangeColor,
+    borderColor: orangeColor,
 };

@@ -45,7 +45,7 @@ export default function TermsScreen() {
                     fontStyle: "italic",
                 },
                 backButton: {
-                    ...baseButton,
+                    ...baseButton(theme),
                     backgroundColor: linkColor,
                     marginTop: 16,
                 },
@@ -129,7 +129,7 @@ export default function TermsScreen() {
                     {t("terms.contact.email")}
                     {"\n"}
                     {t("terms.contact.website")}{" "}
-                    <ExternalLink href="https://menefex.nl">
+                    <ExternalLink href="https://menefex.nl" theme={theme}>
                         <ThemedText type="link">menefex.nl</ThemedText>
                     </ExternalLink>
                 </ThemedText>

@@ -20,16 +20,17 @@ import { TerminateAccountModal } from "@/components/modal/terminate-account-moda
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
+import { Colors, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
-    baseBorder,
     baseButton,
     baseButtonText,
     baseCenter,
     baseFlex,
     baseGap,
+    baseGreen,
     baseInput,
     baseMain,
+    baseOutline,
     baseSelect,
     baseSmall,
     baseSpace,
@@ -144,6 +145,7 @@ export default function SettingsScreen() {
                     color: silverColor,
                 },
                 settingItem: {
+                    ...baseOutline(theme),
                     paddingTop: 12,
                     paddingBottom: 20,
                     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -184,8 +186,8 @@ export default function SettingsScreen() {
                     ...baseSelect,
                 },
                 saveButton: {
-                    ...baseButton,
-                    backgroundColor: greenColor,
+                    ...baseButton(theme),
+                    ...baseGreen,
                 },
                 saveButtonDisabled: {
                     opacity: 0.5,
@@ -195,8 +197,7 @@ export default function SettingsScreen() {
                     color: whiteColor,
                 },
                 passwordButton: {
-                    ...baseBorder,
-                    ...baseButton,
+                    ...baseButton(theme),
                     marginTop: 16,
                     borderColor: mediumGreyColor,
                 },
@@ -238,8 +239,7 @@ export default function SettingsScreen() {
                     ...baseSmall,
                 },
                 logOutButton: {
-                    ...baseBorder,
-                    ...baseButton,
+                    ...baseButton(theme),
                     borderColor: redColor,
                 },
                 logOutButtonText: {
@@ -409,7 +409,10 @@ export default function SettingsScreen() {
                         </ThemedText>
                         <ThemedView style={[styles.settingItem]}>
                             <ThemedText style={styles.settingLabel}>{t("settings.label.helpdesk")}</ThemedText>
-                            <TouchableOpacity onPress={() => router.push("/helpdesk")}>
+                            <TouchableOpacity
+                                onPress={() => router.push("/helpdesk")}
+                                style={{ ...baseOutline(theme) }}
+                            >
                                 <View style={styles.settingBox}>
                                     <ThemedText style={[styles.settingLabel, styles.settingLink]}>
                                         {t("settings.link.submitTicket")}
@@ -431,7 +434,7 @@ export default function SettingsScreen() {
 
                     <ThemedView style={styles.linksContainer}>
                         <View style={styles.linksWrapper}>
-                            <Link href="/terms" asChild>
+                            <Link href="/terms" asChild style={{ ...baseOutline(theme) }}>
                                 <TouchableOpacity>
                                     <ThemedText type="link" style={styles.linkText}>
                                         {t("settings.link.terms")}
@@ -439,7 +442,7 @@ export default function SettingsScreen() {
                                 </TouchableOpacity>
                             </Link>
                             <ThemedText type="label">•</ThemedText>
-                            <Link href="/privacy" asChild>
+                            <Link href="/privacy" asChild style={{ ...baseOutline(theme) }}>
                                 <TouchableOpacity>
                                     <ThemedText type="link" style={styles.linkText}>
                                         {t("settings.link.privacy")}
@@ -448,7 +451,10 @@ export default function SettingsScreen() {
                             </Link>
                         </View>
                         <View style={styles.linksWrapper}>
-                            <TouchableOpacity onPress={() => setTerminateAccountVisible(true)}>
+                            <TouchableOpacity
+                                onPress={() => setTerminateAccountVisible(true)}
+                                style={{ ...baseOutline(theme) }}
+                            >
                                 <ThemedText type="link" style={styles.linkText}>
                                     {user?.user_metadata?.deleteRequested ?
                                         t("settings.link.undoTermination")
@@ -472,12 +478,22 @@ export default function SettingsScreen() {
                     visible={currencyModalVisible}
                     onClose={() => setCurrencyModalVisible(false)}
                     currentSymbol={currencySymbol}
+                    theme={theme}
                 />
-                <LanguagePickerModal visible={languageModalVisible} onClose={() => setLanguageModalVisible(false)} />
-                <ChangePasswordModal visible={changePasswordVisible} onClose={() => setChangePasswordVisible(false)} />
+                <LanguagePickerModal
+                    visible={languageModalVisible}
+                    onClose={() => setLanguageModalVisible(false)}
+                    theme={theme}
+                />
+                <ChangePasswordModal
+                    visible={changePasswordVisible}
+                    onClose={() => setChangePasswordVisible(false)}
+                    theme={theme}
+                />
                 <TerminateAccountModal
                     visible={terminateAccountVisible}
                     onClose={() => setTerminateAccountVisible(false)}
+                    theme={theme}
                 />
             </ScrollView>
         </AuthGate>

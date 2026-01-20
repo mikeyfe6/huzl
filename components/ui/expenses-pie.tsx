@@ -1,10 +1,12 @@
-import { TouchableOpacity, useColorScheme, useWindowDimensions } from "react-native";
+import { TouchableOpacity, useWindowDimensions } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
 import { businessColor, Colors, entertainmentColor, familyColor, investColor, personalColor } from "@/constants/theme";
 import { baseOutline } from "@/styles/base";
 
 type Category = "personal" | "business" | "family" | "invest" | "entertainment";
+
+type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
 interface ExpenseItem {
     id: string;
@@ -18,9 +20,10 @@ interface ExpensePieChartProps {
     readonly expenses: ReadonlyArray<ExpenseItem>;
     readonly selectedCategory: Category;
     readonly onCategorySelect: (category: Category) => void;
+    readonly theme: ThemeShape;
 }
 
-export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: ExpensePieChartProps) {
+export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, theme }: ExpensePieChartProps) {
     const { width: windowWidth } = useWindowDimensions();
 
     // Calculate totals
@@ -102,9 +105,6 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
     const strokeSelected = 0.95;
     const strokeOpacity = 0.75;
 
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
-
     return (
         <TouchableOpacity
             activeOpacity={1}
@@ -114,6 +114,7 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
                 height: responsiveSize,
                 justifyContent: "center",
                 alignItems: "center",
+                borderRadius: responsiveSize / 2,
             }}
         >
             <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: strokePie }}>

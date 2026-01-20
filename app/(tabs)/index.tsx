@@ -468,7 +468,11 @@ export default function HomeScreen() {
                         </View>
                     </View>
                 </ThemedView>
-                <ForgotPasswordModal visible={forgotPasswordVisible} onClose={() => setForgotPasswordVisible(false)} />
+                <ForgotPasswordModal
+                    visible={forgotPasswordVisible}
+                    onClose={() => setForgotPasswordVisible(false)}
+                    theme={theme}
+                />
             </ScrollView>
         );
     }

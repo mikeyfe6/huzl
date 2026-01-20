@@ -4,33 +4,33 @@ import { Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-nati
 
 import { supabase } from "@/utils/supabase";
 
-import { useColorScheme } from "@/hooks/use-color-scheme";
-
 import { ThemedText } from "@/components/themed-text";
 
-import { Colors, greenColor, redColor } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
     baseError,
     baseFlex,
     baseGap,
+    baseGreen,
     baseInput,
     baseModal,
     baseOverlay,
+    baseRed,
     baseSelect,
 } from "@/styles/base";
+
+type ThemeShape = (typeof Colors)[keyof typeof Colors];
 
 interface ChangePasswordModalProps {
     visible: boolean;
     onClose: () => void;
+    theme: ThemeShape;
 }
 
-export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswordModalProps>) {
+export function ChangePasswordModal({ visible, onClose, theme }: Readonly<ChangePasswordModalProps>) {
     const { t } = useTranslation();
-
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
 
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -96,7 +96,7 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                     marginTop: 24,
                 },
                 button: {
-                    ...baseButton,
+                    ...baseButton(theme),
                 },
                 buttonText: {
                     ...baseButtonText,
@@ -139,15 +139,11 @@ export function ChangePasswordModal({ visible, onClose }: Readonly<ChangePasswor
                         autoComplete="off"
                     />
                     <View style={styles.buttons}>
-                        <TouchableOpacity
-                            style={[styles.button, { backgroundColor: redColor }]}
-                            onPress={onClose}
-                            disabled={loading}
-                        >
+                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.button, { backgroundColor: greenColor }]}
+                            style={[styles.button, { ...baseGreen }]}
                             onPress={handleChangePassword}
                             disabled={loading}
                         >

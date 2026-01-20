@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useColorScheme } from "@/hooks/use-color-scheme";
 
 import { supabase } from "@/utils/supabase";
 
@@ -18,22 +17,23 @@ import {
     baseInput,
     baseModal,
     baseOverlay,
+    baseRed,
     baseSelect,
     baseTrans,
     baseTransText,
 } from "@/styles/base";
 
+type ThemeShape = (typeof Colors)[keyof typeof Colors];
+
 interface TerminateAccountModalProps {
     visible: boolean;
     onClose: () => void;
+    theme: ThemeShape;
 }
 
-export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAccountModalProps>) {
+export function TerminateAccountModal({ visible, onClose, theme }: Readonly<TerminateAccountModalProps>) {
     const { t } = useTranslation();
-    const colorScheme = useColorScheme();
     const { user, signOut } = useAuth();
-
-    const theme = Colors[colorScheme ?? "light"];
 
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
@@ -74,44 +74,48 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
         }
     };
 
-    const styles = StyleSheet.create({
-        overlay: {
-            ...baseOverlay,
-        },
-        modal: {
-            ...baseModal(theme),
-        },
-        title: {
-            marginBottom: 16,
-        },
-        subtitle: {
-            marginBottom: 24,
-        },
-        input: {
-            ...baseInput(theme),
-            ...baseSelect,
-        },
-        buttons: {
-            ...baseFlex("center", "center"),
-            ...baseGap,
-            flexWrap: "wrap",
-            marginTop: 24,
-        },
-        button: {
-            ...baseButton,
-        },
-        buttonText: {
-            ...baseButtonText,
-        },
-        transButton: {
-            ...baseTrans(redColor),
-            backgroundColor: whiteColor,
-        },
-        transButtonText: {
-            ...baseTransText,
-            color: redColor,
-        },
-    });
+    const styles = useMemo(
+        () =>
+            StyleSheet.create({
+                overlay: {
+                    ...baseOverlay,
+                },
+                modal: {
+                    ...baseModal(theme),
+                },
+                title: {
+                    marginBottom: 16,
+                },
+                subtitle: {
+                    marginBottom: 24,
+                },
+                input: {
+                    ...baseInput(theme),
+                    ...baseSelect,
+                },
+                buttons: {
+                    ...baseFlex("center", "center"),
+                    ...baseGap,
+                    flexWrap: "wrap",
+                    marginTop: 24,
+                },
+                button: {
+                    ...baseButton(theme),
+                },
+                buttonText: {
+                    ...baseButtonText,
+                },
+                transButton: {
+                    ...baseTrans(theme, redColor),
+                    backgroundColor: whiteColor,
+                },
+                transButtonText: {
+                    ...baseTransText,
+                    color: redColor,
+                },
+            }),
+        [theme],
+    );
 
     let buttonLabel;
     if (loading) {
@@ -139,11 +143,7 @@ export function TerminateAccountModal({ visible, onClose }: Readonly<TerminateAc
                         onChangeText={setEmail}
                     />
                     <View style={styles.buttons}>
-                        <TouchableOpacity
-                            style={[styles.button, { backgroundColor: redColor }]}
-                            onPress={onClose}
-                            disabled={loading}
-                        >
+                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.transButton} onPress={handleTerminateOrUndo} disabled={loading}>
