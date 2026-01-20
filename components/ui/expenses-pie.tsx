@@ -108,35 +108,35 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
                 alignItems: "center",
             }}
         >
-            <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: 0.5 }}>
+            <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: 0.75 }}>
                 <Path
                     d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
                     fill={personalColor}
-                    opacity={selectedCategory === "personal" ? 1 : 0.75}
+                    opacity={selectedCategory === "personal" ? 1 : 0.625}
                     onPress={() => onCategorySelect("personal")}
                 />
                 <Path
                     d={getPieSlicePath(businessStartAngle, businessEndAngle, chartRadius, 0)}
                     fill={businessColor}
-                    opacity={selectedCategory === "business" ? 1 : 0.75}
+                    opacity={selectedCategory === "business" ? 1 : 0.625}
                     onPress={() => onCategorySelect("business")}
                 />
                 <Path
                     d={getPieSlicePath(familyStartAngle, familyEndAngle, chartRadius, 0)}
                     fill={familyColor}
-                    opacity={selectedCategory === "family" ? 1 : 0.75}
+                    opacity={selectedCategory === "family" ? 1 : 0.625}
                     onPress={() => onCategorySelect("family")}
                 />
                 <Path
                     d={getPieSlicePath(entertainmentStartAngle, entertainmentEndAngle, chartRadius, 0)}
                     fill={entertainmentColor}
-                    opacity={selectedCategory === "entertainment" ? 1 : 0.75}
+                    opacity={selectedCategory === "entertainment" ? 1 : 0.625}
                     onPress={() => onCategorySelect("entertainment")}
                 />
                 <Path
                     d={getPieSlicePath(investStartAngle, investEndAngle, chartRadius, 0)}
                     fill={investColor}
-                    opacity={selectedCategory === "invest" ? 1 : 0.75}
+                    opacity={selectedCategory === "invest" ? 1 : 0.625}
                     onPress={() => onCategorySelect("invest")}
                 />
                 <Circle
