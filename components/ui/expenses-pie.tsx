@@ -97,6 +97,8 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
     };
 
     const strokeColor = getStrokeColor(selectedCategory);
+    const strokeSelected = 0.95;
+    const strokeOpacity = 0.625;
 
     return (
         <TouchableOpacity
@@ -112,31 +114,31 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
                 <Path
                     d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
                     fill={personalColor}
-                    opacity={selectedCategory === "personal" ? 1 : 0.625}
+                    opacity={selectedCategory === "personal" ? strokeSelected : strokeOpacity}
                     onPress={() => onCategorySelect("personal")}
                 />
                 <Path
                     d={getPieSlicePath(businessStartAngle, businessEndAngle, chartRadius, 0)}
                     fill={businessColor}
-                    opacity={selectedCategory === "business" ? 1 : 0.625}
+                    opacity={selectedCategory === "business" ? strokeSelected : strokeOpacity}
                     onPress={() => onCategorySelect("business")}
                 />
                 <Path
                     d={getPieSlicePath(familyStartAngle, familyEndAngle, chartRadius, 0)}
                     fill={familyColor}
-                    opacity={selectedCategory === "family" ? 1 : 0.625}
+                    opacity={selectedCategory === "family" ? strokeSelected : strokeOpacity}
                     onPress={() => onCategorySelect("family")}
                 />
                 <Path
                     d={getPieSlicePath(entertainmentStartAngle, entertainmentEndAngle, chartRadius, 0)}
                     fill={entertainmentColor}
-                    opacity={selectedCategory === "entertainment" ? 1 : 0.625}
+                    opacity={selectedCategory === "entertainment" ? strokeSelected : strokeOpacity}
                     onPress={() => onCategorySelect("entertainment")}
                 />
                 <Path
                     d={getPieSlicePath(investStartAngle, investEndAngle, chartRadius, 0)}
                     fill={investColor}
-                    opacity={selectedCategory === "invest" ? 1 : 0.625}
+                    opacity={selectedCategory === "invest" ? strokeSelected : strokeOpacity}
                     onPress={() => onCategorySelect("invest")}
                 />
                 <Circle
