@@ -97,8 +97,9 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
     };
 
     const strokeColor = getStrokeColor(selectedCategory);
+    const strokePie = 0.75;
     const strokeSelected = 0.95;
-    const strokeOpacity = 0.625;
+    const strokeOpacity = 0.75;
 
     return (
         <TouchableOpacity
@@ -110,7 +111,7 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect }: Ex
                 alignItems: "center",
             }}
         >
-            <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: 0.75 }}>
+            <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: strokePie }}>
                 <Path
                     d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
                     fill={personalColor}
