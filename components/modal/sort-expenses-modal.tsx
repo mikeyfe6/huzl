@@ -8,7 +8,7 @@ import { ThemedText } from "@/components/themed-text";
 import { Colors, linkColor } from "@/constants/theme";
 import { baseBorder, baseCorner, baseFlex, baseOutline } from "@/styles/base";
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 export type SortOption = "default" | "alphabetic-asc" | "alphabetic-desc" | "cost-asc" | "cost-desc";
 
@@ -25,7 +25,7 @@ type SortModalProps = Readonly<{
     sortOption: SortOption;
     onSelect: (opt: SortOption) => void;
     onRequestClose: () => void;
-    theme: ThemeShape;
+    theme: ThemeProps;
 }>;
 
 export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme }: SortModalProps) {

@@ -14,7 +14,7 @@ type Language = {
     nativeName: string;
 };
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 const AVAILABLE_LANGUAGES: Language[] = [
     { code: "nl", name: "Dutch", nativeName: "Nederlands" },
@@ -24,7 +24,7 @@ const AVAILABLE_LANGUAGES: Language[] = [
 interface LanguagePickerModalProps {
     readonly visible: boolean;
     readonly onClose: () => void;
-    readonly theme: ThemeShape;
+    readonly theme: ThemeProps;
 }
 
 export function LanguagePickerModal({ visible, onClose, theme }: LanguagePickerModalProps) {

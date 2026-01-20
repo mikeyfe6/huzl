@@ -5,13 +5,13 @@ import { type ComponentProps } from "react";
 import { Colors } from "@/constants/theme";
 import { baseOutline } from "@/styles/base";
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 type Props = Omit<ComponentProps<typeof Link>, "href"> & {
     href: Href & string;
 };
 
-export function ExternalLink({ href, theme, ...rest }: Props & { theme: ThemeShape }) {
+export function ExternalLink({ href, theme, ...rest }: Props & { theme: ThemeProps }) {
     return (
         <Link
             target="_blank"

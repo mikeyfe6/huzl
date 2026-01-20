@@ -6,7 +6,7 @@ import { baseOutline } from "@/styles/base";
 
 type Category = "personal" | "business" | "family" | "invest" | "entertainment";
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 interface ExpenseItem {
     id: string;
@@ -20,7 +20,7 @@ interface ExpensePieChartProps {
     readonly expenses: ReadonlyArray<ExpenseItem>;
     readonly selectedCategory: Category;
     readonly onCategorySelect: (category: Category) => void;
-    readonly theme: ThemeShape;
+    readonly theme: ThemeProps;
 }
 
 export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, theme }: ExpensePieChartProps) {

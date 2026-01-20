@@ -22,12 +22,12 @@ import {
 
 // TODO: add successmessage after filling in email correctly
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 interface ForgotPasswordModalProps {
     visible: boolean;
     onClose: () => void;
-    theme: ThemeShape;
+    theme: ThemeProps;
 }
 
 export function ForgotPasswordModal({ visible, onClose, theme }: Readonly<ForgotPasswordModalProps>) {

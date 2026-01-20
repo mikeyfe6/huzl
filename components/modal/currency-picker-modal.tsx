@@ -13,13 +13,13 @@ import { ThemedView } from "@/components/themed-view";
 import { Colors, linkColor, whiteColor } from "@/constants/theme";
 import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseOutline, baseTitle, baseWeight } from "@/styles/base";
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 interface CurrencyPickerModalProps {
     readonly visible: boolean;
     readonly onClose: () => void;
     readonly currentSymbol: string;
-    readonly theme: ThemeShape;
+    readonly theme: ThemeProps;
 }
 
 export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: CurrencyPickerModalProps) {

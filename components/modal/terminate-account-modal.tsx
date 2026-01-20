@@ -23,12 +23,12 @@ import {
     baseTransText,
 } from "@/styles/base";
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 interface TerminateAccountModalProps {
     visible: boolean;
     onClose: () => void;
-    theme: ThemeShape;
+    theme: ThemeProps;
 }
 
 export function TerminateAccountModal({ visible, onClose, theme }: Readonly<TerminateAccountModalProps>) {

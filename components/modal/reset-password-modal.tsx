@@ -21,12 +21,12 @@ import {
     baseSelect,
 } from "@/styles/base";
 
-type ThemeShape = (typeof Colors)[keyof typeof Colors];
+type ThemeProps = (typeof Colors)[keyof typeof Colors];
 
 interface ChangePasswordModalProps {
     visible: boolean;
     onClose: () => void;
-    theme: ThemeShape;
+    theme: ThemeProps;
 }
 
 export function ChangePasswordModal({ visible, onClose, theme }: Readonly<ChangePasswordModalProps>) {
