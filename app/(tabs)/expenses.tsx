@@ -442,7 +442,7 @@ export default function ExpensesScreen() {
                     ...baseFlex("center", "center"),
                     ...baseInput(theme),
                     flex: 1,
-                    minWidth: 120,
+                    minWidth: 150,
                 },
                 categoryActive: {
                     borderColor: linkColor,
@@ -724,7 +724,7 @@ export default function ExpensesScreen() {
                     ...baseRadius,
                     ...baseBorder,
                     flex: 1,
-                    flexBasis: 225,
+                    flexBasis: 250,
                     minHeight: 44,
                     paddingHorizontal: 18,
                 },

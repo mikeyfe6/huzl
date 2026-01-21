@@ -99,7 +99,7 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
         return angles;
     });
 
-    const strokePie = isLight ? 0.75 : 1;
+    const strokePie = isLight ? 0.75 : 0.625;
     const strokeSelected = 0.95;
     const strokeOpacity = isLight ? 0.75 : 0.625;
 
