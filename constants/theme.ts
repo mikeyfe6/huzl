@@ -27,6 +27,12 @@ export const businessColor = "#ffd044";
 export const familyColor = "#599edb";
 export const investColor = "#88B93E";
 export const entertainmentColor = "#865ab9";
+export const housingColor = "#5D9094";
+export const taxesColor = "#7F8EAF";
+export const travelColor = "#E44946";
+export const petColor = "#BD6C3B";
+export const careColor = "#F0B582";
+export const healthColor = "#9BEC37";
 
 export const lightGreyColor = "#ddd";
 export const mediumGreyColor = "#999";

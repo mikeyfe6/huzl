@@ -3,33 +3,24 @@ import { useTranslation } from "react-i18next";
 import { Alert, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useAvailableCurrencies, type Currency } from "@/hooks/use-currency";
+import { useAvailableCurrencies } from "@/hooks/use-currency";
 
 import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, linkColor, whiteColor } from "@/constants/theme";
+import { linkColor, whiteColor } from "@/constants/theme";
 import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseOutline, baseTitle, baseWeight } from "@/styles/base";
 
-type ThemeProps = (typeof Colors)[keyof typeof Colors];
-
-interface CurrencyPickerModalProps {
-    readonly visible: boolean;
-    readonly onClose: () => void;
-    readonly currentSymbol: string;
-    readonly theme: ThemeProps;
-}
-
-export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: CurrencyPickerModalProps) {
+export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: Readonly<CurrencyPickerModalProps>) {
     const { t } = useTranslation();
     const { refreshUser } = useAuth();
     const availableCurrencies = useAvailableCurrencies();
 
     const [saving, setSaving] = useState(false);
 
-    const handleSelect = async (currency: Currency) => {
+    const handleSelect = async (currency: CurrencyItem) => {
         setSaving(true);
         try {
             const { error } = await supabase.auth.updateUser({

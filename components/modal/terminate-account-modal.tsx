@@ -8,7 +8,7 @@ import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 
-import { Colors, redColor, whiteColor } from "@/constants/theme";
+import { redColor, whiteColor } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
@@ -22,14 +22,6 @@ import {
     baseTrans,
     baseTransText,
 } from "@/styles/base";
-
-type ThemeProps = (typeof Colors)[keyof typeof Colors];
-
-interface TerminateAccountModalProps {
-    visible: boolean;
-    onClose: () => void;
-    theme: ThemeProps;
-}
 
 export function TerminateAccountModal({ visible, onClose, theme }: Readonly<TerminateAccountModalProps>) {
     const { t } = useTranslation();

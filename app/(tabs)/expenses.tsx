@@ -12,23 +12,31 @@ import { formatCurrency, formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
-import { SORT_OPTIONS, SortModal, SortOption } from "@/components/modal/sort-expenses-modal";
+import { SORT_OPTIONS, SortModal } from "@/components/modal/sort-expenses-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { ExpensesPie } from "@/components/ui/expenses-pie";
 
+// TODO: file dry maken
+
 import {
     businessColor,
+    careColor,
     Colors,
     entertainmentColor,
     familyColor,
     greenColor,
+    healthColor,
+    housingColor,
     investColor,
     linkColor,
     mediumGreyColor,
     personalColor,
+    petColor,
     redColor,
     slateColor,
+    taxesColor,
+    travelColor,
 } from "@/constants/theme";
 import {
     baseBold,
@@ -58,18 +66,6 @@ import {
     baseSpace,
     baseWeight,
 } from "@/styles/base";
-
-type Frequency = "daily" | "weekly" | "monthly" | "quarterly" | "halfyearly" | "yearly";
-type Category = "personal" | "business" | "family" | "invest" | "entertainment";
-interface ExpenseItem {
-    id: string;
-    name: string;
-    amount: number;
-    frequency: Frequency;
-    category: Category;
-    yearlyTotal: number;
-    active: boolean;
-}
 
 export default function ExpensesScreen() {
     const { t } = useTranslation();
@@ -276,6 +272,12 @@ export default function ExpensesScreen() {
             family: t("expenses.category.family"),
             invest: t("expenses.category.invest"),
             entertainment: t("expenses.category.entertainment"),
+            housing: t("expenses.category.housing"),
+            taxes: t("expenses.category.taxes"),
+            travel: t("expenses.category.travel"),
+            pet: t("expenses.category.pet"),
+            care: t("expenses.category.care"),
+            health: t("expenses.category.health"),
         }),
         [t],
     );
@@ -329,6 +331,30 @@ export default function ExpensesScreen() {
 
     const entertainmentYearlySpend = expenses
         .filter((e) => e.active && e.category === "entertainment")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const housingYearlySpend = expenses
+        .filter((e) => e.active && e.category === "housing")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const taxesYearlySpend = expenses
+        .filter((e) => e.active && e.category === "taxes")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const travelYearlySpend = expenses
+        .filter((e) => e.active && e.category === "travel")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const petYearlySpend = expenses
+        .filter((e) => e.active && e.category === "pet")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const careYearlySpend = expenses
+        .filter((e) => e.active && e.category === "care")
+        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+
+    const healthYearlySpend = expenses
+        .filter((e) => e.active && e.category === "health")
         .reduce((sum, e) => sum + e.yearlyTotal, 0);
 
     const getFrequencyLabel = (freq: Frequency): string => {
@@ -566,6 +592,30 @@ export default function ExpensesScreen() {
                     backgroundColor: entertainmentColor + "50",
                     borderColor: entertainmentColor,
                 },
+                badgeHousing: {
+                    backgroundColor: housingColor + "50",
+                    borderColor: housingColor,
+                },
+                badgeTaxes: {
+                    backgroundColor: taxesColor + "50",
+                    borderColor: taxesColor,
+                },
+                badgeTravel: {
+                    backgroundColor: travelColor + "50",
+                    borderColor: travelColor,
+                },
+                badgePet: {
+                    backgroundColor: petColor + "50",
+                    borderColor: petColor,
+                },
+                badgeCare: {
+                    backgroundColor: careColor + "50",
+                    borderColor: careColor,
+                },
+                badgeHealth: {
+                    backgroundColor: healthColor + "50",
+                    borderColor: healthColor,
+                },
                 badgeText: {
                     ...baseWeight,
                     fontSize: 11,
@@ -616,7 +666,7 @@ export default function ExpensesScreen() {
                     paddingBottom: 12,
                 },
                 totalContent: { display: "flex", alignItems: "center" },
-                totalLabel: { minWidth: 100 },
+                totalLabel: { minWidth: 150 },
                 totalDetails: {
                     ...baseFlex("space-between", "center"),
                     flexWrap: "wrap",
@@ -657,9 +707,11 @@ export default function ExpensesScreen() {
                 },
                 chartStats: {
                     width: "100%",
-                    maxWidth: 700,
+                    maxWidth: 900,
+                    minWidth: 300,
                     gap: 24,
                     marginVertical: 8,
+                    flex: 1,
                 },
                 chartButtons: {
                     ...baseFlex("center"),
@@ -801,6 +853,66 @@ export default function ExpensesScreen() {
                         >
                             <ThemedText>{t("expenses.category.entertainment")}</ThemedText>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "housing" && styles.categoryActive]}
+                            onPress={() => setCategory("housing")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "housing",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.category.housing")}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "taxes" && styles.categoryActive]}
+                            onPress={() => setCategory("taxes")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "taxes",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.category.taxes")}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "travel" && styles.categoryActive]}
+                            onPress={() => setCategory("travel")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "travel",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.category.travel")}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "pet" && styles.categoryActive]}
+                            onPress={() => setCategory("pet")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "pet",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.category.pet")}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "care" && styles.categoryActive]}
+                            onPress={() => setCategory("care")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "care",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.category.care")}</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.categoryOption, category === "health" && styles.categoryActive]}
+                            onPress={() => setCategory("health")}
+                            accessibilityRole="radio"
+                            accessibilityState={{
+                                selected: category === "health",
+                            }}
+                        >
+                            <ThemedText>{t("expenses.category.health")}</ThemedText>
+                        </TouchableOpacity>
                     </View>
 
                     <ThemedText style={styles.label}>{t("expenses.label.frequency")}</ThemedText>
@@ -871,7 +983,7 @@ export default function ExpensesScreen() {
                             visible={sortModalVisible}
                             sortOption={sortOption}
                             onSelect={setSortAndClose}
-                            onRequestClose={() => setSortModalVisible(false)}
+                            onClose={() => setSortModalVisible(false)}
                             theme={theme}
                         />
 
@@ -900,6 +1012,12 @@ export default function ExpensesScreen() {
                                                     expense.category === "family" && styles.badgeFamily,
                                                     expense.category === "invest" && styles.badgeInvest,
                                                     expense.category === "entertainment" && styles.badgeEntertainment,
+                                                    expense.category === "housing" && styles.badgeHousing,
+                                                    expense.category === "taxes" && styles.badgeTaxes,
+                                                    expense.category === "travel" && styles.badgeTravel,
+                                                    expense.category === "pet" && styles.badgePet,
+                                                    expense.category === "care" && styles.badgeCare,
+                                                    expense.category === "health" && styles.badgeHealth,
                                                 ]}
                                             >
                                                 <ThemedText style={styles.badgeText}>
@@ -973,84 +1091,216 @@ export default function ExpensesScreen() {
                             <ThemedText style={[styles.totalAmount, { fontSize: 32, marginBottom: 24 }]}>
                                 {formatCurrency(totalYearlySpend, currencySymbol)}
                             </ThemedText>
-                            <ThemedText style={styles.totalContent}>
-                                <View
-                                    style={[
-                                        styles.totalDots,
-                                        {
-                                            backgroundColor: personalColor,
-                                        },
-                                    ]}
-                                />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.category.personal")}:</ThemedText>{" "}
-                                <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(personalYearlySpend, currencySymbol)}
+
+                            {personalYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: personalColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}>
+                                        {" "}
+                                        {t("expenses.category.personal")}:
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(personalYearlySpend, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
-                            </ThemedText>
-                            <ThemedText style={styles.totalContent}>
-                                <View
-                                    style={[
-                                        styles.totalDots,
-                                        {
-                                            backgroundColor: businessColor,
-                                        },
-                                    ]}
-                                />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.category.business")}:</ThemedText>{" "}
-                                <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(businessYearlySpend, currencySymbol)}
+                            )}
+
+                            {businessYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: businessColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}>
+                                        {" "}
+                                        {t("expenses.category.business")}:
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(businessYearlySpend, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
-                            </ThemedText>
-                            <ThemedText style={styles.totalContent}>
-                                <View
-                                    style={[
-                                        styles.totalDots,
-                                        {
-                                            backgroundColor: familyColor,
-                                        },
-                                    ]}
-                                />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.category.family")}:</ThemedText>{" "}
-                                <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(familyYearlySpend, currencySymbol)}
+                            )}
+
+                            {familyYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: familyColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}> {t("expenses.category.family")}:</ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(familyYearlySpend, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
-                            </ThemedText>
-                            <ThemedText style={styles.totalContent}>
-                                <View
-                                    style={[
-                                        styles.totalDots,
-                                        {
-                                            backgroundColor: investColor,
-                                        },
-                                    ]}
-                                />{" "}
-                                <ThemedText style={styles.totalLabel}> {t("expenses.category.invest")}:</ThemedText>{" "}
-                                <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(investYearlySpend, currencySymbol)}
+                            )}
+
+                            {investYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: investColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}> {t("expenses.category.invest")}:</ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(investYearlySpend, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
-                            </ThemedText>
-                            <ThemedText style={styles.totalContent}>
-                                <View
-                                    style={[
-                                        styles.totalDots,
-                                        {
-                                            backgroundColor: entertainmentColor,
-                                        },
-                                    ]}
-                                />{" "}
-                                <ThemedText style={styles.totalLabel}>
-                                    {" "}
-                                    {t("expenses.category.entertainment")}:
-                                </ThemedText>{" "}
-                                <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(entertainmentYearlySpend, currencySymbol)}
+                            )}
+
+                            {entertainmentYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: entertainmentColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}>
+                                        {" "}
+                                        {t("expenses.category.entertainment")}:{" "}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(entertainmentYearlySpend, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
-                            </ThemedText>
+                            )}
+
+                            {housingYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: housingColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}>
+                                        {" "}
+                                        {t("expenses.category.housing")}:
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(housingYearlySpend, currencySymbol)}
+                                    </ThemedText>
+                                </ThemedText>
+                            )}
+
+                            {taxesYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: taxesColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}> {t("expenses.category.taxes")}:</ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(taxesYearlySpend, currencySymbol)}
+                                    </ThemedText>
+                                </ThemedText>
+                            )}
+
+                            {travelYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: travelColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}> {t("expenses.category.travel")}:</ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(travelYearlySpend, currencySymbol)}
+                                    </ThemedText>
+                                </ThemedText>
+                            )}
+
+                            {petYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: petColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}> {t("expenses.category.pet")}:</ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(petYearlySpend, currencySymbol)}
+                                    </ThemedText>
+                                </ThemedText>
+                            )}
+
+                            {careYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: careColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}> {t("expenses.category.care")}:</ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(careYearlySpend, currencySymbol)}
+                                    </ThemedText>
+                                </ThemedText>
+                            )}
+
+                            {healthYearlySpend > 0 && (
+                                <ThemedText style={styles.totalContent}>
+                                    <View
+                                        style={[
+                                            styles.totalDots,
+                                            {
+                                                backgroundColor: healthColor,
+                                            },
+                                        ]}
+                                    />{" "}
+                                    <ThemedText style={styles.totalLabel}> {t("expenses.category.health")}:</ThemedText>{" "}
+                                    <ThemedText style={styles.totalInline}>
+                                        {" "}
+                                        {formatCurrency(healthYearlySpend, currencySymbol)}
+                                    </ThemedText>
+                                </ThemedText>
+                            )}
                         </ThemedView>
 
                         <View style={styles.totalDetails}>
@@ -1091,88 +1341,142 @@ export default function ExpensesScreen() {
                             />
                             <View style={styles.chartStats}>
                                 <View style={styles.chartButtons}>
-                                    {(["personal", "business", "family", "invest", "entertainment"] as Category[]).map(
-                                        (cat) => {
-                                            let btnBgColor = theme.inputBackground;
-                                            let btnBorderColor = theme.inputBorder;
-                                            let dotColor = slateColor;
-                                            let percent = 0;
+                                    {(
+                                        [
+                                            "personal",
+                                            "business",
+                                            "family",
+                                            "invest",
+                                            "entertainment",
+                                            "housing",
+                                            "taxes",
+                                            "travel",
+                                            "pet",
+                                            "care",
+                                            "health",
+                                        ] as Category[]
+                                    ).map((cat) => {
+                                        let btnBgColor = theme.inputBackground;
+                                        let btnBorderColor = theme.inputBorder;
+                                        let dotColor = slateColor;
+                                        let percent = 0;
 
-                                            switch (cat) {
-                                                case "personal":
-                                                    dotColor = personalColor;
-                                                    percent =
-                                                        totalYearlySpend > 0 ?
-                                                            (personalYearlySpend / totalYearlySpend) * 100
-                                                        :   0;
-                                                    break;
-                                                case "business":
-                                                    dotColor = businessColor;
-                                                    percent =
-                                                        totalYearlySpend > 0 ?
-                                                            (businessYearlySpend / totalYearlySpend) * 100
-                                                        :   0;
-                                                    break;
-                                                case "family":
-                                                    dotColor = familyColor;
-                                                    percent =
-                                                        totalYearlySpend > 0 ?
-                                                            (familyYearlySpend / totalYearlySpend) * 100
-                                                        :   0;
-                                                    break;
-                                                case "invest":
-                                                    dotColor = investColor;
-                                                    percent =
-                                                        totalYearlySpend > 0 ?
-                                                            (investYearlySpend / totalYearlySpend) * 100
-                                                        :   0;
-                                                    break;
-                                                case "entertainment":
-                                                    dotColor = entertainmentColor;
-                                                    percent =
-                                                        totalYearlySpend > 0 ?
-                                                            (entertainmentYearlySpend / totalYearlySpend) * 100
-                                                        :   0;
-                                                    break;
-                                            }
+                                        switch (cat) {
+                                            case "personal":
+                                                dotColor = personalColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (personalYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "business":
+                                                dotColor = businessColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (businessYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "family":
+                                                dotColor = familyColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (familyYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "invest":
+                                                dotColor = investColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (investYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "entertainment":
+                                                dotColor = entertainmentColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (entertainmentYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "housing":
+                                                dotColor = housingColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (housingYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "taxes":
+                                                dotColor = taxesColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (taxesYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "travel":
+                                                dotColor = travelColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (travelYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "pet":
+                                                dotColor = petColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (petYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "care":
+                                                dotColor = careColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (careYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                            case "health":
+                                                dotColor = healthColor;
+                                                percent =
+                                                    totalYearlySpend > 0 ?
+                                                        (healthYearlySpend / totalYearlySpend) * 100
+                                                    :   0;
+                                                break;
+                                        }
 
-                                            if (category === cat) {
-                                                btnBgColor = dotColor + "50";
-                                                btnBorderColor = dotColor;
-                                            }
+                                        if (percent === 0) return null;
 
-                                            return (
-                                                <TouchableOpacity
-                                                    key={cat}
-                                                    onPress={() => setCategory(cat)}
+                                        if (category === cat) {
+                                            btnBgColor = dotColor + "50";
+                                            btnBorderColor = dotColor;
+                                        }
+
+                                        return (
+                                            <TouchableOpacity
+                                                key={cat}
+                                                onPress={() => setCategory(cat)}
+                                                style={[
+                                                    styles.chartButton,
+                                                    {
+                                                        backgroundColor: btnBgColor,
+                                                        borderColor: btnBorderColor,
+                                                    },
+                                                ]}
+                                            >
+                                                <View
                                                     style={[
-                                                        styles.chartButton,
+                                                        styles.chartButtonDot,
                                                         {
-                                                            backgroundColor: btnBgColor,
-                                                            borderColor: btnBorderColor,
+                                                            backgroundColor: dotColor,
                                                         },
                                                     ]}
-                                                >
-                                                    <View
-                                                        style={[
-                                                            styles.chartButtonDot,
-                                                            {
-                                                                backgroundColor: dotColor,
-                                                            },
-                                                        ]}
-                                                    />
-                                                    <ThemedText style={styles.chartButtonText}>
-                                                        {t(`expenses.category.${cat}`)}
-                                                    </ThemedText>
-                                                    <ThemedText
-                                                        style={[styles.chartButtonText, styles.chartButtonLabel]}
-                                                    >
-                                                        {percent.toFixed(1)}%
-                                                    </ThemedText>
-                                                </TouchableOpacity>
-                                            );
-                                        },
-                                    )}
+                                                />
+                                                <ThemedText style={styles.chartButtonText}>
+                                                    {t(`expenses.category.${cat}`)}
+                                                </ThemedText>
+                                                <ThemedText style={[styles.chartButtonText, styles.chartButtonLabel]}>
+                                                    {percent.toFixed(1)}%
+                                                </ThemedText>
+                                            </TouchableOpacity>
+                                        );
+                                    })}
                                 </View>
                                 <View style={styles.chartItems}>
                                     {expenses.filter((e) => e.active && e.category === category).length === 0 ?

@@ -38,17 +38,6 @@ import {
     baseWeight,
 } from "@/styles/base";
 
-// TODO: active state for expenses it not working yet...
-
-type BudgetItem = {
-    id: string;
-    name: string;
-    total: number;
-    spent: number;
-    active: boolean;
-    expenses: { id: string; name: string; amount: number; active: boolean }[];
-};
-
 export default function BudgetsScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();

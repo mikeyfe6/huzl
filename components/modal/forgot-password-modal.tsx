@@ -6,7 +6,6 @@ import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 
-import { Colors } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
@@ -21,14 +20,6 @@ import {
 } from "@/styles/base";
 
 // TODO: add successmessage after filling in email correctly
-
-type ThemeProps = (typeof Colors)[keyof typeof Colors];
-
-interface ForgotPasswordModalProps {
-    visible: boolean;
-    onClose: () => void;
-    theme: ThemeProps;
-}
 
 export function ForgotPasswordModal({ visible, onClose, theme }: Readonly<ForgotPasswordModalProps>) {
     const { t } = useTranslation();

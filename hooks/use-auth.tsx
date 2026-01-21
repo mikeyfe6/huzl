@@ -1,19 +1,7 @@
 import { logEvent, setUserId } from "@/utils/analytics";
 import { supabase } from "@/utils/supabase";
-import type { AuthError, User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-
-type AuthContextValue = {
-    user: User | null;
-    loading: boolean;
-    signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-    signUp: (
-        email: string,
-        password: string,
-    ) => Promise<{ error: AuthError | null; success: boolean; user: User | null }>;
-    signOut: () => Promise<void>;
-    refreshUser: () => Promise<void>;
-};
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 

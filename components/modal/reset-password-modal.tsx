@@ -6,7 +6,6 @@ import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 
-import { Colors } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
@@ -20,14 +19,6 @@ import {
     baseRed,
     baseSelect,
 } from "@/styles/base";
-
-type ThemeProps = (typeof Colors)[keyof typeof Colors];
-
-interface ChangePasswordModalProps {
-    visible: boolean;
-    onClose: () => void;
-    theme: ThemeProps;
-}
 
 export function ChangePasswordModal({ visible, onClose, theme }: Readonly<ChangePasswordModalProps>) {
     const { t } = useTranslation();

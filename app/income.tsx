@@ -35,8 +35,6 @@ import {
     baseWeight,
 } from "@/styles/base";
 
-type IncomeSource = { id?: number; type: string; amount: string; active?: boolean };
-
 export default function IncomeScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
@@ -59,16 +57,7 @@ export default function IncomeScreen() {
 
             if (!b) return true;
 
-            const aAmount = Number.parseFloat(a.amount);
-            const bAmount = Number.parseFloat(b.amount);
-
-            if (
-                a.type !== b.type ||
-                a.active !== b.active ||
-                (Number.isNaN(aAmount) && !Number.isNaN(bAmount)) ||
-                (!Number.isNaN(aAmount) && Number.isNaN(bAmount)) ||
-                (!Number.isNaN(aAmount) && !Number.isNaN(bAmount) && aAmount !== bAmount)
-            ) {
+            if (a.type !== b.type || a.active !== b.active || a.amount !== b.amount) {
                 return true;
             }
         }
@@ -81,8 +70,7 @@ export default function IncomeScreen() {
         const activeSources = sources.filter((src) => src.active !== false);
         if (activeSources.length === 0) return true;
         for (const src of activeSources) {
-            const parsed = Number.parseFloat(src.amount);
-            if (src.amount === "" || Number.isNaN(parsed) || parsed < 0) return true;
+            if (typeof src.amount !== "number" || Number.isNaN(src.amount) || src.amount < 0) return true;
         }
         return false;
     }, [saving, hasIncomeChanges, sources]);
@@ -98,7 +86,7 @@ export default function IncomeScreen() {
     ];
 
     const addSource = () => {
-        setSources((prev) => [...prev, { type: "salary", amount: "", active: true }]);
+        setSources((prev) => [...prev, { type: "salary", amount: 0, active: true }]);
     };
 
     const removeSource = async (idx: number) => {
@@ -115,7 +103,16 @@ export default function IncomeScreen() {
     };
 
     const updateSource = (idx: number, field: "type" | "amount", value: string) => {
-        setSources((prev) => prev.map((src, i) => (i === idx ? { ...src, [field]: value } : src)));
+        setSources((prev) =>
+            prev.map((src, i) =>
+                i === idx ?
+                    {
+                        ...src,
+                        [field]: field === "amount" ? Number.parseFloat(value) || 0 : value,
+                    }
+                :   src,
+            ),
+        );
     };
 
     const toggleActive = (idx: number) => {
@@ -126,7 +123,7 @@ export default function IncomeScreen() {
         if (!user) return;
         for (const src of sources) {
             if (src.active === false) continue;
-            const parsed = Number.parseFloat(src.amount);
+            const parsed = Number.parseFloat(String(src.amount));
             if (Number.isNaN(parsed) || parsed < 0) {
                 Alert.alert(t("income.error.invalidAmountTitle"), t("income.error.invalidAmountMsg"));
                 return;
@@ -143,7 +140,7 @@ export default function IncomeScreen() {
                     .from("incomes")
                     .update({
                         type: src.type,
-                        amount: Number.parseFloat(src.amount),
+                        amount: Number.parseFloat(String(src.amount)),
                         active: src.active !== false,
                     })
                     .eq("id", src.id);
@@ -159,7 +156,7 @@ export default function IncomeScreen() {
                     inserts.map((src: IncomeSource) => ({
                         user_id: user.id,
                         type: src.type,
-                        amount: Number.parseFloat(src.amount),
+                        amount: Number.parseFloat(String(src.amount)),
                         active: src.active !== false,
                     })),
                 );
@@ -185,7 +182,7 @@ export default function IncomeScreen() {
 
     const total = sources.reduce((sum, src) => {
         if (src.active === false) return sum;
-        const parsed = Number.parseFloat(src.amount);
+        const parsed = Number.parseFloat(String(src.amount));
         return sum + (Number.isNaN(parsed) ? 0 : parsed);
     }, 0);
 
@@ -207,12 +204,12 @@ export default function IncomeScreen() {
                         (row): IncomeSource => ({
                             id: row.id,
                             type: row.type,
-                            amount: typeof row.amount === "number" ? row.amount.toFixed(2) : String(row.amount),
+                            amount: typeof row.amount === "number" ? row.amount : Number.parseFloat(row.amount) || 0,
                             active: row.active !== false,
                         }),
                     );
                 } else {
-                    mappedSources = [{ type: "salary", amount: "", active: true }];
+                    mappedSources = [{ type: "salary", amount: 0, active: true }];
                 }
                 setSources(mappedSources);
                 setOriginalSources(mappedSources);
@@ -337,7 +334,7 @@ export default function IncomeScreen() {
                                 <View style={[styles.item, { opacity: src.active ? 1 : 0.5 }]}>
                                     <TextInput
                                         style={styles.input}
-                                        value={src.amount}
+                                        value={String(src.amount)}
                                         placeholder="0.00"
                                         placeholderTextColor={theme.placeholder}
                                         keyboardType="decimal-pad"

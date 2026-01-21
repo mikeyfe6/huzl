@@ -33,13 +33,6 @@ import {
     baseSpace,
 } from "@/styles/base";
 
-type Ticket = {
-    id: string;
-    type: string;
-    message: string;
-    created_at: string;
-};
-
 export default function HelpdeskScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
@@ -50,7 +43,7 @@ export default function HelpdeskScreen() {
     const [message, setMessage] = useState("");
     const [type, setType] = useState("feedback");
     const [submitting, setSubmitting] = useState(false);
-    const [tickets, setTickets] = useState<Ticket[]>([]);
+    const [tickets, setTickets] = useState<TicketItem[]>([]);
     const [loading, setLoading] = useState(false);
 
     const handleDeleteTicket = async (id: string) => {

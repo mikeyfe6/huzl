@@ -93,7 +93,13 @@
             "business": "Zakelijk",
             "family": "Familie",
             "invest": "Investering",
-            "entertainment": "Entertainment"
+            "entertainment": "Entertainment",
+            "housing": "Huisvesting",
+            "taxes": "Belastingen",
+            "travel": "Reizen",
+            "pet": "Huisdier",
+            "care": "Zorg",
+            "health": "Gezondheid"
         },
         "frequency": {
             "daily": "Dagelijks",
@@ -359,7 +365,7 @@
         },
         "section10": {
             "title": "10. Minderjarigen",
-            "content": "Huzl is bedoeld voor personen van 16 jaar en ouder. We verzamelen niet bewust gegevens van personen jonger dan 16 jaar."
+            "content": "Huzl is niet bedoeld voor kinderen jonger dan 16 jaar. We verzamelen niet bewust persoonsgegevens van kinderen onder de 16 jaar. Als wij constateren dat wij onbedoeld persoonsgegevens hebben verzameld van een persoon jonger dan 16 jaar, zullen wij passende maatregelen nemen om deze gegevens zo snel mogelijk te verwijderen."
         },
         "section11": {
             "title": "11. Wijzigingen in dit Beleid",

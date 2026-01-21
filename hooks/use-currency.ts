@@ -2,12 +2,6 @@ import { useTranslation } from "react-i18next";
 
 import { useAuth } from "./use-auth";
 
-export interface Currency {
-    symbol: string;
-    code: string;
-    name: string;
-}
-
 const CURRENCY_CONFIGS = [
     { symbol: "€", code: "EUR", nameKey: "currency.eur" },
     { symbol: "$", code: "USD", nameKey: "currency.usd" },
@@ -21,7 +15,7 @@ const CURRENCY_CONFIGS = [
     { symbol: "kr", code: "SEK", nameKey: "currency.sek" },
 ] as const;
 
-export function useAvailableCurrencies(): Currency[] {
+export function useAvailableCurrencies(): CurrencyItem[] {
     const { t } = useTranslation();
 
     return CURRENCY_CONFIGS.map((config) => ({

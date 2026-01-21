@@ -38,16 +38,6 @@ import {
     baseWeight,
 } from "@/styles/base";
 
-type DebtItem = {
-    id: string;
-    user_id: string;
-    name: string;
-    amount: number;
-    pay_per_month?: number | null;
-    active: boolean;
-    created_at?: string;
-};
-
 export default function DebtsScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();

@@ -5,12 +5,8 @@ import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-nativ
 
 import { ThemedText } from "@/components/themed-text";
 
-import { Colors, linkColor } from "@/constants/theme";
+import { linkColor } from "@/constants/theme";
 import { baseBorder, baseCorner, baseFlex, baseOutline } from "@/styles/base";
-
-type ThemeProps = (typeof Colors)[keyof typeof Colors];
-
-export type SortOption = "default" | "alphabetic-asc" | "alphabetic-desc" | "cost-asc" | "cost-desc";
 
 export const SORT_OPTIONS = [
     { value: "default" as const, labelKey: "sorting.dateAdded", icon: "time-outline" as const },
@@ -20,15 +16,7 @@ export const SORT_OPTIONS = [
     { value: "cost-desc" as const, labelKey: "sorting.amountHighToLow", icon: "trending-up" as const },
 ] as const;
 
-type SortModalProps = Readonly<{
-    visible: boolean;
-    sortOption: SortOption;
-    onSelect: (opt: SortOption) => void;
-    onRequestClose: () => void;
-    theme: ThemeProps;
-}>;
-
-export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme }: SortModalProps) {
+export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Readonly<SortModalProps>) {
     const { t } = useTranslation();
 
     const styles = useMemo(
@@ -84,7 +72,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
     );
 
     return (
-        <Modal visible={visible} transparent animationType="fade" onRequestClose={onRequestClose}>
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
             <View style={styles.backdrop}>
                 <View style={styles.sheet}>
                     <ThemedText type="subtitle" style={styles.header}>
@@ -103,7 +91,7 @@ export function SortModal({ visible, sortOption, onSelect, onRequestClose, theme
                             {sortOption === option.value && <Ionicons name="checkmark" size={18} color={linkColor} />}
                         </TouchableOpacity>
                     ))}
-                    <TouchableOpacity style={styles.cancel} onPress={onRequestClose}>
+                    <TouchableOpacity style={styles.cancel} onPress={onClose}>
                         <ThemedText type="danger">{t("common.close")}</ThemedText>
                     </TouchableOpacity>
                 </View>

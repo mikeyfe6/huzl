@@ -5,29 +5,15 @@ import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-nat
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, linkColor, whiteColor } from "@/constants/theme";
+import { linkColor, whiteColor } from "@/constants/theme";
 import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseOutline, baseSize, baseWeight } from "@/styles/base";
 
-type Language = {
-    code: string;
-    name: string;
-    nativeName: string;
-};
-
-type ThemeProps = (typeof Colors)[keyof typeof Colors];
-
-const AVAILABLE_LANGUAGES: Language[] = [
+const AVAILABLE_LANGUAGES: LanguageItem[] = [
     { code: "nl", name: "Dutch", nativeName: "Nederlands" },
     { code: "en", name: "English", nativeName: "English" },
 ];
 
-interface LanguagePickerModalProps {
-    readonly visible: boolean;
-    readonly onClose: () => void;
-    readonly theme: ThemeProps;
-}
-
-export function LanguagePickerModal({ visible, onClose, theme }: LanguagePickerModalProps) {
+export function LanguagePickerModal({ visible, onClose, theme }: Readonly<LanguagePickerModalProps>) {
     const { i18n, t } = useTranslation();
     const [saving, setSaving] = useState(false);
 

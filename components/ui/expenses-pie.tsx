@@ -1,60 +1,70 @@
 import { TouchableOpacity, useWindowDimensions } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
-import { businessColor, Colors, entertainmentColor, familyColor, investColor, personalColor } from "@/constants/theme";
+import {
+    businessColor,
+    careColor,
+    Colors,
+    entertainmentColor,
+    familyColor,
+    healthColor,
+    housingColor,
+    investColor,
+    personalColor,
+    petColor,
+    taxesColor,
+    travelColor,
+} from "@/constants/theme";
 import { baseOutline } from "@/styles/base";
 
-type Category = "personal" | "business" | "family" | "invest" | "entertainment";
+const CATEGORY_COLORS: Record<Category, string> = {
+    personal: personalColor,
+    business: businessColor,
+    family: familyColor,
+    invest: investColor,
+    entertainment: entertainmentColor,
+    housing: housingColor,
+    taxes: taxesColor,
+    travel: travelColor,
+    pet: petColor,
+    care: careColor,
+    health: healthColor,
+};
 
-type ThemeProps = (typeof Colors)[keyof typeof Colors];
+const CATEGORIES: Category[] = [
+    "personal",
+    "business",
+    "family",
+    "invest",
+    "entertainment",
+    "housing",
+    "taxes",
+    "travel",
+    "pet",
+    "care",
+    "health",
+];
 
-interface ExpenseItem {
-    id: string;
-    name: string;
-    category: Category;
-    yearlyTotal: number;
-    active: boolean;
-}
-
-interface ExpensePieChartProps {
-    readonly expenses: ReadonlyArray<ExpenseItem>;
-    readonly selectedCategory: Category;
-    readonly onCategorySelect: (category: Category) => void;
-    readonly theme: ThemeProps;
-}
-
-export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, theme }: ExpensePieChartProps) {
+export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, theme }: ExpensePieProps) {
     const { width: windowWidth } = useWindowDimensions();
+    const isLight = theme.background === Colors.light.background;
 
     // Calculate totals
     const totalYearlySpend = expenses.filter((e) => e.active).reduce((sum, expense) => sum + expense.yearlyTotal, 0);
 
-    const personalYearlySpend = expenses
-        .filter((e) => e.active && e.category === "personal")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+    // Calculate yearly spend per category
+    const categorySpends = CATEGORIES.map((cat) =>
+        expenses.filter((e) => e.active && e.category === cat).reduce((sum, e) => sum + e.yearlyTotal, 0),
+    );
 
-    const businessYearlySpend = expenses
-        .filter((e) => e.active && e.category === "business")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
-
-    const familyYearlySpend = expenses
-        .filter((e) => e.active && e.category === "family")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
-
-    const entertainmentYearlySpend = expenses
-        .filter((e) => e.active && e.category === "entertainment")
-        .reduce((sum, e) => sum + e.yearlyTotal, 0);
+    // Calculate percentages
+    const percents = categorySpends.map((spend) => (totalYearlySpend > 0 ? (spend / totalYearlySpend) * 100 : 0));
 
     // Pie chart calculations - responsive
     const responsiveSize = Math.min(windowWidth * 0.9, 450);
     const chartRadius = 145;
     const chartCenterX = 150;
     const chartCenterY = 150;
-
-    const personalPercent = totalYearlySpend > 0 ? (personalYearlySpend / totalYearlySpend) * 100 : 0;
-    const businessPercent = totalYearlySpend > 0 ? (businessYearlySpend / totalYearlySpend) * 100 : 0;
-    const familyPercent = totalYearlySpend > 0 ? (familyYearlySpend / totalYearlySpend) * 100 : 0;
-    const entertainmentPercent = totalYearlySpend > 0 ? (entertainmentYearlySpend / totalYearlySpend) * 100 : 0;
 
     // Helper function to create SVG pie slice path with offset for selected slice
     const getPieSlicePath = (startAngle: number, endAngle: number, radius: number, offsetAmount: number = 0) => {
@@ -81,29 +91,17 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
     };
 
     // Calculate angles for each slice (starting from top)
-    const personalStartAngle = 0;
-    const personalEndAngle = (personalPercent / 100) * 360;
-    const businessStartAngle = personalEndAngle;
-    const businessEndAngle = businessStartAngle + (businessPercent / 100) * 360;
-    const familyStartAngle = businessEndAngle;
-    const familyEndAngle = familyStartAngle + (familyPercent / 100) * 360;
-    const entertainmentStartAngle = familyEndAngle;
-    const entertainmentEndAngle = entertainmentStartAngle + (entertainmentPercent / 100) * 360;
-    const investStartAngle = entertainmentEndAngle;
-    const investEndAngle = 360;
+    let startAngle = 0;
+    const angles = percents.map((percent) => {
+        const endAngle = startAngle + (percent / 100) * 360;
+        const angles = [startAngle, endAngle];
+        startAngle = endAngle;
+        return angles;
+    });
 
-    const getStrokeColor = (category: Category): string => {
-        if (category === "personal") return personalColor;
-        if (category === "business") return businessColor;
-        if (category === "entertainment") return entertainmentColor;
-        if (category === "invest") return investColor;
-        return familyColor;
-    };
-
-    const strokeColor = getStrokeColor(selectedCategory);
-    const strokePie = 0.75;
+    const strokePie = isLight ? 0.75 : 1;
     const strokeSelected = 0.95;
-    const strokeOpacity = 0.75;
+    const strokeOpacity = isLight ? 0.75 : 0.625;
 
     return (
         <TouchableOpacity
@@ -118,43 +116,22 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
             }}
         >
             <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: strokePie }}>
-                <Path
-                    d={getPieSlicePath(personalStartAngle, personalEndAngle, chartRadius, 0)}
-                    fill={personalColor}
-                    opacity={selectedCategory === "personal" ? strokeSelected : strokeOpacity}
-                    onPress={() => onCategorySelect("personal")}
-                />
-                <Path
-                    d={getPieSlicePath(businessStartAngle, businessEndAngle, chartRadius, 0)}
-                    fill={businessColor}
-                    opacity={selectedCategory === "business" ? strokeSelected : strokeOpacity}
-                    onPress={() => onCategorySelect("business")}
-                />
-                <Path
-                    d={getPieSlicePath(familyStartAngle, familyEndAngle, chartRadius, 0)}
-                    fill={familyColor}
-                    opacity={selectedCategory === "family" ? strokeSelected : strokeOpacity}
-                    onPress={() => onCategorySelect("family")}
-                />
-                <Path
-                    d={getPieSlicePath(entertainmentStartAngle, entertainmentEndAngle, chartRadius, 0)}
-                    fill={entertainmentColor}
-                    opacity={selectedCategory === "entertainment" ? strokeSelected : strokeOpacity}
-                    onPress={() => onCategorySelect("entertainment")}
-                />
-                <Path
-                    d={getPieSlicePath(investStartAngle, investEndAngle, chartRadius, 0)}
-                    fill={investColor}
-                    opacity={selectedCategory === "invest" ? strokeSelected : strokeOpacity}
-                    onPress={() => onCategorySelect("invest")}
-                />
+                {CATEGORIES.map((cat, i) => (
+                    <Path
+                        key={cat}
+                        d={getPieSlicePath(angles[i][0], angles[i][1], chartRadius, 0)}
+                        fill={CATEGORY_COLORS[cat]}
+                        opacity={selectedCategory === cat ? strokeSelected : strokeOpacity}
+                        onPress={() => onCategorySelect(cat)}
+                    />
+                ))}
                 <Circle
                     cx={chartCenterX}
                     cy={chartCenterY}
                     r={chartRadius}
                     fill="none"
-                    stroke={strokeColor}
-                    strokeWidth={1}
+                    stroke={CATEGORY_COLORS[selectedCategory]}
+                    strokeWidth={1.5}
                 />
             </Svg>
         </TouchableOpacity>
