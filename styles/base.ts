@@ -1,6 +1,7 @@
 import { blueColor, greenColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
+export const baseSeparation = { gap: 24 };
 export const baseGap = { gap: 12 };
 export const baseSpace = { gap: 8 };
 
@@ -17,6 +18,12 @@ export const baseLarge = { fontSize: 24 };
 export const baseSize = { fontSize: 16 };
 export const baseSmall = { fontSize: 14 };
 export const baseMini = { fontSize: 13 };
+
+export const baseInactive = { opacity: 0.5 };
+export const baseOpacity = { opacity: 0.6 };
+
+export const baseHorizontal = { paddingHorizontal: 16 };
+export const baseVertical = { paddingVertical: 16 };
 
 export const baseFlex = (
     justify: "flex-start" | "center" | "space-between" | undefined = undefined,
@@ -86,8 +93,7 @@ export const baseLabel = (theme: any) => ({
 });
 
 export const baseList = {
-    ...baseGap,
-    paddingHorizontal: 16,
+    ...baseHorizontal,
     paddingTop: 12,
     paddingBottom: 20,
 };
@@ -98,13 +104,14 @@ export const baseCard = (theme: any) => ({
     backgroundColor: theme.cardBackground,
     borderColor: theme.borderColor,
     padding: 12,
+    marginHorizontal: 16,
+    marginBottom: 16,
 });
 
-export const baseMain = {
+export const baseFieldset = {
     ...baseGap,
-    paddingHorizontal: 16,
-    paddingTop: 24,
-    paddingBottom: 16,
+    ...baseHorizontal,
+    paddingVertical: 24,
 };
 
 export const baseEmpty = {
@@ -113,10 +120,10 @@ export const baseEmpty = {
 };
 
 export const baseEmptyText = (theme: any) => ({
+    ...baseOpacity,
     color: theme.emptyStateText,
     textAlign: "center" as const,
     fontSize: 18,
-    opacity: 0.6,
 });
 
 export const baseIcons = {

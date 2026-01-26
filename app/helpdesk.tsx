@@ -21,12 +21,12 @@ import {
     baseCard,
     baseEmpty,
     baseEmptyText,
+    baseFieldset,
     baseFlex,
     baseIcon,
     baseInput,
     baseLabel,
     baseList,
-    baseMain,
     baseMini,
     baseSelect,
     baseSize,
@@ -87,6 +87,7 @@ export default function HelpdeskScreen() {
     };
 
     const handleSubmit = async () => {
+        if (!user) return;
         if (!message.trim()) {
             Alert.alert("Please enter your feedback.");
             return;
@@ -95,7 +96,7 @@ export default function HelpdeskScreen() {
         try {
             const { error } = await supabase.from("helpdesk").insert([
                 {
-                    user_id: user?.id,
+                    user_id: user.id,
                     message,
                     type,
                     created_at: new Date().toISOString(),
@@ -128,7 +129,7 @@ export default function HelpdeskScreen() {
                     paddingBottom: 24,
                 },
                 fieldset: {
-                    ...baseMain,
+                    ...baseFieldset,
                 },
                 heading: {
                     marginBottom: 16,

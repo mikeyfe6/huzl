@@ -193,7 +193,8 @@ export default function HomeScreen() {
                 const { data, error } = await supabase
                     .from("expenses")
                     .select("amount,frequency,active")
-                    .eq("active", true);
+                    .eq("active", true)
+                    .eq("user_id", user.id);
                 if (!error && data && isMounted) {
                     setExpenses(data);
                 }
@@ -203,7 +204,11 @@ export default function HomeScreen() {
         };
         const fetchDebts = async () => {
             try {
-                const { data, error } = await supabase.from("debts").select("pay_per_month,active").eq("active", true);
+                const { data, error } = await supabase
+                    .from("debts")
+                    .select("pay_per_month,active")
+                    .eq("active", true)
+                    .eq("user_id", user.id);
                 if (!error && data && isMounted) {
                     setDebts(data);
                 }
@@ -362,6 +367,8 @@ export default function HomeScreen() {
                 accessible
                 accessibilityLabel="Huzl logo"
                 resizeMode="contain"
+                width={100}
+                height={100}
             />
             <ThemedText type="logo">huzl</ThemedText>
         </View>
@@ -498,7 +505,7 @@ export default function HomeScreen() {
                 )}
 
                 <ThemedView style={styles.statsContainer}>
-                    {monthlyIncome !== null && (
+                    {monthlyIncome !== null && monthlyIncome > 0 && (
                         <ThemedView style={styles.statCard}>
                             <ThemedText style={styles.statLabel}>{t("home.monthlyIncome")}</ThemedText>
                             <View style={styles.statWrapper}>
@@ -510,25 +517,30 @@ export default function HomeScreen() {
                         </ThemedView>
                     )}
 
-                    <ThemedView style={styles.statCard}>
-                        <ThemedText style={styles.statLabel}>{t("home.monthlyCosts")}</ThemedText>
-                        <View style={styles.statWrapper}>
-                            <Ionicons name="remove-outline" size={16} color={redColor} />
-                            <ThemedText style={styles.statValue}>
-                                {currencySymbol} {totals.monthlyTotal.toFixed(2).replace(".", ",")}
-                            </ThemedText>
-                        </View>
-                    </ThemedView>
+                    {totals.monthlyTotal > 0 && (
+                        <ThemedView style={styles.statCard}>
+                            <ThemedText style={styles.statLabel}>{t("home.monthlyCosts")}</ThemedText>
+                            <View style={styles.statWrapper}>
+                                <Ionicons name="remove-outline" size={16} color={redColor} />
+                                <ThemedText style={styles.statValue}>
+                                    {currencySymbol} {totals.monthlyTotal.toFixed(2).replace(".", ",")}
+                                </ThemedText>
+                            </View>
+                        </ThemedView>
+                    )}
 
-                    <ThemedView style={styles.statCard}>
-                        <ThemedText style={styles.statLabel}>{t("home.monthlyDebts")}</ThemedText>
-                        <View style={styles.statWrapper}>
-                            <Ionicons name="alert" size={16} color={orangeColor} />
-                            <ThemedText style={styles.statValue}>
-                                {currencySymbol} {monthlyDebts.toFixed(2).replace(".", ",")}
-                            </ThemedText>
-                        </View>
-                    </ThemedView>
+                    {monthlyDebts > 0 && (
+                        <ThemedView style={styles.statCard}>
+                            <ThemedText style={styles.statLabel}>{t("home.monthlyDebts")}</ThemedText>
+                            <View style={styles.statWrapper}>
+                                <Ionicons name="alert" size={16} color={orangeColor} />
+                                <ThemedText style={styles.statValue}>
+                                    {currencySymbol} {monthlyDebts.toFixed(2).replace(".", ",")}
+                                </ThemedText>
+                            </View>
+                        </ThemedView>
+                    )}
+
                     {monthlyDisposable !== null && (
                         <ThemedView
                             style={[

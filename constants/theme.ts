@@ -27,11 +27,11 @@ export const businessColor = "#ffd044";
 export const familyColor = "#599edb";
 export const investColor = "#5AC4C9";
 export const entertainmentColor = "#865ab9";
-export const housingColor = "#5D9094";
+export const housingColor = "#F09C0B";
 export const taxesColor = "#7F8EAF";
 export const travelColor = "#E44946";
 export const petColor = "#BD6C3B";
-export const careColor = "#F0B582";
+export const careColor = "#d9b495";
 export const healthColor = "#88B93E";
 
 export const lightGreyColor = "#ddd";
@@ -41,6 +41,7 @@ export const veryDarkGreyColor = "#333";
 export const almostBlackColor = "#2a2a2a";
 export const charcoalColor = "#151718";
 export const lightTextColor = "#ecedee";
+export const smokeColor = "#f1f1f1";
 export const slateColor = "#687076";
 export const silverColor = "#9ba1a6";
 
@@ -54,6 +55,7 @@ export const Colors = {
         tint: linkColor,
         icon: slateColor,
         focus: charcoalColor,
+        main: smokeColor,
 
         cardPositiveBackground: greenLightColor,
         cardNegativeBackground: redLightColor,
@@ -77,6 +79,7 @@ export const Colors = {
         tint: linkColor,
         icon: silverColor,
         focus: "transparent" as const,
+        main: blackColor,
 
         cardPositiveBackground: greenDarkColor,
         cardNegativeBackground: redDarkColor,

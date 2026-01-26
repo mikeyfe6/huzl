@@ -1,4 +1,4 @@
-import { TouchableOpacity, useWindowDimensions } from "react-native";
+import { Pressable, useWindowDimensions } from "react-native";
 import Svg, { Circle, Path } from "react-native-svg";
 
 import {
@@ -45,28 +45,23 @@ const CATEGORIES: Category[] = [
     "health",
 ];
 
-export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, theme }: ExpensePieProps) {
+export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, theme }: Readonly<ExpensePieProps>) {
     const { width: windowWidth } = useWindowDimensions();
     const isLight = theme.background === Colors.light.background;
 
-    // Calculate totals
     const totalYearlySpend = expenses.filter((e) => e.active).reduce((sum, expense) => sum + expense.yearlyTotal, 0);
 
-    // Calculate yearly spend per category
     const categorySpends = CATEGORIES.map((cat) =>
         expenses.filter((e) => e.active && e.category === cat).reduce((sum, e) => sum + e.yearlyTotal, 0),
     );
 
-    // Calculate percentages
     const percents = categorySpends.map((spend) => (totalYearlySpend > 0 ? (spend / totalYearlySpend) * 100 : 0));
 
-    // Pie chart calculations - responsive
     const responsiveSize = Math.min(windowWidth * 0.9, 450);
     const chartRadius = 145;
     const chartCenterX = 150;
     const chartCenterY = 150;
 
-    // Helper function to create SVG pie slice path with offset for selected slice
     const getPieSlicePath = (startAngle: number, endAngle: number, radius: number, offsetAmount: number = 0) => {
         const midAngle = (startAngle + endAngle) / 2;
         const midRad = (midAngle - 90) * (Math.PI / 180);
@@ -90,7 +85,6 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
         return `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
     };
 
-    // Calculate angles for each slice (starting from top)
     let startAngle = 0;
     const angles = percents.map((percent) => {
         const endAngle = startAngle + (percent / 100) * 360;
@@ -99,13 +93,12 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
         return angles;
     });
 
-    const strokePie = isLight ? 0.75 : 0.625;
+    const strokePie = isLight ? 0.75 : 0.7;
     const strokeSelected = 0.95;
-    const strokeOpacity = isLight ? 0.75 : 0.625;
+    const strokeOpacity = isLight ? 0.75 : 0.7;
 
     return (
-        <TouchableOpacity
-            activeOpacity={1}
+        <Pressable
             style={{
                 ...baseOutline(theme),
                 width: responsiveSize,
@@ -116,15 +109,30 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
             }}
         >
             <Svg width={responsiveSize} height={responsiveSize} viewBox="0 0 300 300" style={{ opacity: strokePie }}>
-                {CATEGORIES.map((cat, i) => (
-                    <Path
-                        key={cat}
-                        d={getPieSlicePath(angles[i][0], angles[i][1], chartRadius, 0)}
-                        fill={CATEGORY_COLORS[cat]}
-                        opacity={selectedCategory === cat ? strokeSelected : strokeOpacity}
-                        onPress={() => onCategorySelect(cat)}
-                    />
-                ))}
+                {CATEGORIES.map((cat, i) => {
+                    if (percents[i] === 100) {
+                        return (
+                            <Circle
+                                key={cat}
+                                cx={chartCenterX}
+                                cy={chartCenterY}
+                                r={chartRadius}
+                                fill={CATEGORY_COLORS[cat]}
+                                opacity={selectedCategory === cat ? strokeSelected : strokeOpacity}
+                                onPress={() => onCategorySelect(cat)}
+                            />
+                        );
+                    }
+                    return (
+                        <Path
+                            key={cat}
+                            d={getPieSlicePath(angles[i][0], angles[i][1], chartRadius, 0)}
+                            fill={CATEGORY_COLORS[cat]}
+                            opacity={selectedCategory === cat ? strokeSelected : strokeOpacity}
+                            onPress={() => onCategorySelect(cat)}
+                        />
+                    );
+                })}
                 <Circle
                     cx={chartCenterX}
                     cy={chartCenterY}
@@ -134,6 +142,6 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
                     strokeWidth={1.5}
                 />
             </Svg>
-        </TouchableOpacity>
+        </Pressable>
     );
 }

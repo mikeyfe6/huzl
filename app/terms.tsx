@@ -11,7 +11,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { Colors, linkColor, whiteColor } from "@/constants/theme";
-import { baseButton, baseButtonText, baseSpace } from "@/styles/base";
+import { baseButton, baseButtonText, baseOpacity, baseSpace } from "@/styles/base";
 
 export default function TermsScreen() {
     const { t } = useTranslation();
@@ -41,7 +41,7 @@ export default function TermsScreen() {
                 },
                 updated: {
                     ...baseSpace,
-                    opacity: 0.6,
+                    ...baseOpacity,
                     fontStyle: "italic",
                 },
                 backButton: {

@@ -25,11 +25,12 @@ import {
     baseButton,
     baseButtonText,
     baseCenter,
+    baseFieldset,
     baseFlex,
     baseGap,
     baseGreen,
+    baseInactive,
     baseInput,
-    baseMain,
     baseOutline,
     baseSelect,
     baseSmall,
@@ -133,7 +134,7 @@ export default function SettingsScreen() {
                     paddingBottom: 24,
                 },
                 wrapper: {
-                    ...baseMain,
+                    ...baseFieldset,
                 },
                 heading: {
                     marginBottom: 16,
@@ -188,9 +189,6 @@ export default function SettingsScreen() {
                 saveButton: {
                     ...baseButton(theme),
                     ...baseGreen,
-                },
-                saveButtonDisabled: {
-                    opacity: 0.5,
                 },
                 saveButtonText: {
                     ...baseButtonText,
@@ -288,7 +286,7 @@ export default function SettingsScreen() {
                             />
                         </ThemedView>
                         <TouchableOpacity
-                            style={[styles.saveButton, (!hasProfileChanges || loading) && styles.saveButtonDisabled]}
+                            style={[styles.saveButton, (!hasProfileChanges || loading) && baseInactive]}
                             onPress={handleSaveProfile}
                             disabled={loading || !hasProfileChanges}
                         >

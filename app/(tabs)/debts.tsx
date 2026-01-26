@@ -1,49 +1,29 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Platform, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
+import { formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { DebtItem } from "@/components/ui/debt-item";
 
-import { blueColor, Colors, greenColor, mediumGreyColor, redColor, slateColor } from "@/constants/theme";
-import {
-    baseButton,
-    baseButtonText,
-    baseCard,
-    baseEmpty,
-    baseEmptyText,
-    baseFlex,
-    baseGap,
-    baseGreen,
-    baseIcon,
-    baseIcons,
-    baseInput,
-    baseLabel,
-    baseList,
-    baseMain,
-    baseMini,
-    baseOrange,
-    baseRed,
-    baseSelect,
-    baseSmall,
-    baseWeight,
-} from "@/styles/base";
+import { Colors } from "@/constants/theme";
+import { baseOrange, baseRed } from "@/styles/base";
+import { getDebtsStyles } from "@/styles/debts";
 
 export default function DebtsScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
 
     const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
     const { symbol: currencySymbol } = useCurrency();
 
     const nameInputRef = useRef<TextInput>(null);
@@ -58,14 +38,17 @@ export default function DebtsScreen() {
     const [paymentAmount, setPaymentAmount] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleEditDebt = (debt: DebtItem) => {
+    const theme = Colors[colorScheme ?? "light"];
+    const styles = useMemo(() => getDebtsStyles(theme), [theme]);
+
+    const handleEditDebt = useCallback((debt: DebtItem) => {
         setName(debt.name);
         setAmount(debt.amount.toFixed(2));
         setPayPerMonth(debt.pay_per_month?.toFixed(2) || "");
         setEditingId(debt.id);
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
-    };
+    }, []);
 
     const handleCancelEdit = () => {
         setName("");
@@ -111,31 +94,35 @@ export default function DebtsScreen() {
         setLoading(false);
     };
 
-    const handleMakePayment = async (debtId: string) => {
-        if (!user || !paymentAmount.trim()) return;
-        const payment = Number.parseFloat(paymentAmount);
-        if (Number.isNaN(payment) || payment <= 0) return;
+    const handleMakePayment = useCallback(
+        async (debtId: string, amount: number) => {
+            if (!user || !paymentAmount.trim()) return { error: "No user or payment amount" };
+            const payment = Number.isFinite(amount) ? amount : Number.parseFloat(paymentAmount);
+            if (Number.isNaN(payment) || payment <= 0) return { error: "Invalid payment amount" };
 
-        const debt = debts.find((d) => d.id === debtId);
-        if (!debt) return;
+            const debt = debts.find((d) => d.id === debtId);
+            if (!debt) return { error: "Debt not found" };
 
-        const newAmount = Math.max(0, debt.amount - payment);
-        setLoading(true);
+            const newAmount = Math.max(0, debt.amount - payment);
+            setLoading(true);
 
-        const { data, error } = await supabase
-            .from("debts")
-            .update({ amount: newAmount })
-            .eq("id", debtId)
-            .eq("user_id", user.id)
-            .select();
+            const { data, error } = await supabase
+                .from("debts")
+                .update({ amount: newAmount })
+                .eq("id", debtId)
+                .eq("user_id", user.id)
+                .select();
 
-        if (!error && data && data.length > 0) {
-            setDebts((prev) => prev.map((d) => (d.id === debtId ? { ...d, amount: newAmount } : d)));
-            setPaymentId(null);
-            setPaymentAmount("");
-        }
-        setLoading(false);
-    };
+            if (!error && data && data.length > 0) {
+                setDebts((prev) => prev.map((d) => (d.id === debtId ? { ...d, amount: newAmount } : d)));
+                setPaymentId(null);
+                setPaymentAmount("");
+            }
+            setLoading(false);
+            return { error: error ? error.message : null };
+        },
+        [paymentAmount, user],
+    );
 
     const handleAddOrUpdateDebt = async () => {
         if (!user || !name.trim() || !amount.trim()) return;
@@ -196,324 +183,130 @@ export default function DebtsScreen() {
         fetchDebts();
     }, [user]);
 
-    const styles = useMemo(
-        () =>
-            StyleSheet.create({
-                container: {
-                    paddingBottom: 24,
-                },
-                fieldset: {
-                    ...baseMain,
-                },
-                heading: {
-                    marginBottom: 16,
-                },
-                label: {
-                    ...baseLabel(theme),
-                },
-                input: {
-                    ...baseInput(theme),
-                    ...baseSelect,
-                },
-                buttons: {
-                    ...baseFlex("center"),
-                    ...baseGap,
-                    marginTop: 8,
-                },
-                button: {
-                    ...baseButton(theme),
-                },
-                buttonText: { ...baseButtonText },
-                list: { ...baseList },
-                header: {
-                    marginBottom: 12,
-                },
-                item: {
-                    ...baseCard(theme),
-                },
-                itemHeader: {
-                    ...baseFlex("space-between", "flex-start"),
-                    ...baseGap,
-                },
-                itemTitle: {
-                    flex: 1,
-                },
-                itemLabel: {
-                    ...baseWeight,
-                    ...baseSmall,
-                    opacity: 0.7,
-                    marginTop: 4,
-                },
-                itemIcons: {
-                    ...baseIcons,
-                },
-                itemIcon: {
-                    ...baseIcon(theme),
-                },
-                itemAmount: {
-                    ...baseFlex("space-between"),
-                    flexWrap: "wrap",
-                    gap: 4,
-                    paddingTop: 8,
-                    borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: theme.dividerColor,
-                },
-                itemPayment: {
-                    ...baseMini,
-                    color: slateColor,
-                },
-                itemRemaining: {
-                    ...baseWeight,
-                    ...baseMini,
-                    opacity: 0.6,
-                },
-                paymentSection: {
-                    ...baseFlex("center"),
-                    ...baseGap,
-                    flexWrap: "wrap",
-                },
-                paymentInput: {
-                    ...baseInput(theme),
-                    ...baseSelect,
-                    flex: 2,
-                    minWidth: 150,
-                },
-                paymentButton: {
-                    ...baseButton(theme),
-                    minWidth: 100,
-                },
-                paymentButtonDisabled: {
-                    opacity: 0.5,
-                },
-                paymentButtonText: {
-                    ...baseButtonText,
-                },
-                emptyState: {
-                    ...baseEmpty,
-                },
-                emptyStateText: {
-                    ...baseEmptyText(theme),
-                },
-            }),
-        [theme],
+    const Header = (
+        <>
+            <ThemedView style={styles.fieldset}>
+                <ThemedText type="title" style={styles.heading}>
+                    {t("debts.title")}
+                </ThemedText>
+                <ThemedText style={styles.label}>{t("debts.label.name")}</ThemedText>
+                <TextInput
+                    ref={nameInputRef}
+                    style={styles.input}
+                    placeholder={t("debts.placeholder.name")}
+                    placeholderTextColor={theme.placeholder}
+                    value={name}
+                    onChangeText={setName}
+                />
+                <ThemedText style={styles.label}>
+                    {t("debts.label.totalAmount")} ({currencySymbol})
+                </ThemedText>
+                <TextInput
+                    style={styles.input}
+                    placeholder={t("debts.placeholder.totalAmount")}
+                    placeholderTextColor={theme.placeholder}
+                    value={amount}
+                    onChangeText={(text) => setAmount(formatNumber(text))}
+                    keyboardType="decimal-pad"
+                />
+                <ThemedText style={styles.label}>
+                    {t("debts.label.monthlyPayment")} ({currencySymbol})
+                </ThemedText>
+                <TextInput
+                    style={styles.input}
+                    placeholder={t("debts.placeholder.monthlyPayment")}
+                    placeholderTextColor={theme.placeholder}
+                    value={payPerMonth}
+                    onChangeText={(text) => setPayPerMonth(formatNumber(text))}
+                    keyboardType="decimal-pad"
+                />
+                <View style={styles.buttons}>
+                    <TouchableOpacity
+                        style={[styles.button, { ...baseOrange }]}
+                        onPress={handleAddOrUpdateDebt}
+                        disabled={loading}
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            {editingId ? t("debts.button.updateDebt") : t("debts.button.addDebt")}
+                        </ThemedText>
+                    </TouchableOpacity>
+                    {editingId && (
+                        <TouchableOpacity
+                            style={[styles.button, { ...baseRed }]}
+                            onPress={handleCancelEdit}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </ThemedView>
+
+            {debts.length > 0 && (
+                <ThemedView style={styles.list}>
+                    <ThemedText type="subtitle" style={styles.header}>
+                        {t("debts.yourDebts")}
+                    </ThemedText>
+                </ThemedView>
+            )}
+        </>
+    );
+
+    const renderItem = useCallback(
+        (props: { item: DebtItem }) => (
+            <DebtItem
+                debt={props.item}
+                currencySymbol={currencySymbol}
+                onToggleActive={handleToggleActive}
+                onEdit={handleEditDebt}
+                onDelete={confirmDeleteDebt}
+                styles={styles}
+                paymentId={paymentId}
+                setPaymentId={setPaymentId}
+                paymentAmount={paymentAmount}
+                setPaymentAmount={setPaymentAmount}
+                onPayment={handleMakePayment}
+                loading={loading}
+                theme={theme}
+                t={t}
+            />
+        ),
+        [
+            currencySymbol,
+            handleToggleActive,
+            handleEditDebt,
+            confirmDeleteDebt,
+            styles,
+            paymentId,
+            paymentAmount,
+            setPaymentId,
+            setPaymentAmount,
+            handleMakePayment,
+            loading,
+            theme,
+        ],
     );
 
     return (
         <AuthGate>
-            <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container}>
-                <ThemedView style={styles.fieldset}>
-                    <ThemedText type="title" style={styles.heading}>
-                        {t("debts.title")}
-                    </ThemedText>
-                    <ThemedText style={styles.label}>{t("debts.label.name")}</ThemedText>
-                    <TextInput
-                        ref={nameInputRef}
-                        style={styles.input}
-                        placeholder={t("debts.placeholder.name")}
-                        placeholderTextColor={theme.placeholder}
-                        value={name}
-                        onChangeText={setName}
-                    />
-                    <ThemedText style={styles.label}>
-                        {t("debts.label.totalAmount")} ({currencySymbol})
-                    </ThemedText>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={t("debts.placeholder.totalAmount")}
-                        placeholderTextColor={theme.placeholder}
-                        value={amount}
-                        onChangeText={(text) => setAmount(formatNumber(text))}
-                        keyboardType="decimal-pad"
-                    />
-                    <ThemedText style={styles.label}>
-                        {t("debts.label.monthlyPayment")} ({currencySymbol})
-                    </ThemedText>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={t("debts.placeholder.monthlyPayment")}
-                        placeholderTextColor={theme.placeholder}
-                        value={payPerMonth}
-                        onChangeText={(text) => setPayPerMonth(formatNumber(text))}
-                        keyboardType="decimal-pad"
-                    />
-                    <View style={styles.buttons}>
-                        <TouchableOpacity
-                            style={[styles.button, { ...baseOrange }]}
-                            onPress={handleAddOrUpdateDebt}
-                            disabled={loading}
-                        >
-                            <ThemedText style={styles.buttonText}>
-                                {editingId ? t("debts.button.updateDebt") : t("debts.button.addDebt")}
-                            </ThemedText>
-                        </TouchableOpacity>
-                        {editingId && (
-                            <TouchableOpacity
-                                style={[styles.button, { ...baseRed }]}
-                                onPress={handleCancelEdit}
-                                disabled={loading}
-                            >
-                                <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                </ThemedView>
-
-                {debts.length > 0 && (
-                    <ThemedView style={styles.list}>
-                        <ThemedText type="subtitle" style={styles.header}>
-                            {t("debts.yourDebts")}
-                        </ThemedText>
-
-                        {debts.map((debt) => (
-                            <ThemedView key={debt.id} style={[styles.item, !debt.active && { opacity: 0.5 }]}>
-                                <View style={styles.itemHeader}>
-                                    <View style={styles.itemTitle}>
-                                        <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
-                                            {debt.name}
-                                        </ThemedText>
-                                        <ThemedText style={styles.itemLabel}>
-                                            {t("debts.total")}: {formatCurrency(debt.amount, currencySymbol)}
-                                        </ThemedText>
-                                    </View>
-                                    <View style={styles.itemIcons}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setPaymentId(paymentId === debt.id ? null : debt.id);
-                                                setPaymentAmount("");
-                                            }}
-                                            style={[
-                                                styles.itemIcon,
-                                                {
-                                                    borderColor: blueColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="cash-outline" size={16} color={blueColor} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => handleToggleActive(debt.id, debt.active)}
-                                            style={[
-                                                styles.itemIcon,
-                                                {
-                                                    borderColor: debt.active ? greenColor : mediumGreyColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons
-                                                name={debt.active ? "eye" : "eye-off"}
-                                                size={16}
-                                                color={debt.active ? greenColor : mediumGreyColor}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => handleEditDebt(debt)}
-                                            style={[
-                                                styles.itemIcon,
-                                                {
-                                                    borderColor: mediumGreyColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="pencil" size={16} color={mediumGreyColor} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => confirmDeleteDebt(debt.id, debt.name)}
-                                            style={[
-                                                styles.itemIcon,
-                                                {
-                                                    borderColor: redColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="trash" size={16} color={redColor} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <View style={styles.itemAmount}>
-                                    <ThemedText style={styles.itemPayment}>
-                                        {t("debts.monthly")}:{" "}
-                                        {debt.pay_per_month ?
-                                            `${formatCurrency(
-                                                Math.min(debt.pay_per_month, debt.amount),
-                                                currencySymbol,
-                                            )}`
-                                        :   "—"}
-                                    </ThemedText>
-                                    {debt.pay_per_month && debt.pay_per_month > 0 ?
-                                        (() => {
-                                            const months = Math.ceil(debt.amount / debt.pay_per_month);
-                                            const lastPayment =
-                                                debt.amount % debt.pay_per_month === 0 ?
-                                                    formatAmount(debt.pay_per_month)
-                                                :   formatAmount(debt.amount % debt.pay_per_month);
-                                            return (
-                                                <ThemedText style={styles.itemRemaining}>
-                                                    {t("debts.terms")}: {months}{" "}
-                                                    {months > 1 ?
-                                                        `(${months - 1} × ${currencySymbol} ${formatAmount(
-                                                            debt.pay_per_month,
-                                                        )} — 1 x: ${currencySymbol} ${lastPayment})`
-                                                    :   ""}
-                                                </ThemedText>
-                                            );
-                                        })()
-                                    :   <ThemedText style={styles.itemRemaining}>{t("debts.terms")}: —</ThemedText>}
-                                </View>
-                                {paymentId === debt.id && (
-                                    <View style={styles.paymentSection}>
-                                        <TextInput
-                                            style={styles.paymentInput}
-                                            placeholder={`${t("debts.placeholder.amountPaid")} (${currencySymbol})`}
-                                            placeholderTextColor={theme.placeholder}
-                                            value={paymentAmount}
-                                            onChangeText={(text) => setPaymentAmount(formatNumber(text))}
-                                            keyboardType="decimal-pad"
-                                            autoFocus
-                                        />
-                                        <TouchableOpacity
-                                            style={[
-                                                styles.paymentButton,
-                                                { ...baseGreen },
-                                                (!paymentAmount.trim() || loading) && styles.paymentButtonDisabled,
-                                            ]}
-                                            onPress={() => handleMakePayment(debt.id)}
-                                            disabled={loading || !paymentAmount.trim()}
-                                        >
-                                            <ThemedText style={styles.paymentButtonText}>{t("common.save")}</ThemedText>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            style={[styles.paymentButton, { ...baseRed }]}
-                                            onPress={() => {
-                                                setPaymentId(null);
-                                                setPaymentAmount("");
-                                            }}
-                                            disabled={loading}
-                                        >
-                                            <ThemedText style={styles.paymentButtonText}>
-                                                {t("common.cancel")}
-                                            </ThemedText>
-                                        </TouchableOpacity>
-                                    </View>
-                                )}
-                            </ThemedView>
-                        ))}
-                    </ThemedView>
-                )}
-
-                {loading ?
-                    <ThemedView style={styles.emptyState}>
-                        <ThemedText style={styles.emptyStateText}>
-                            <Ionicons name="time-outline" size={24} color={theme.inputText} />
-                        </ThemedText>
-                    </ThemedView>
-                :   !loading &&
-                    debts.length === 0 && (
+            <FlatList
+                data={debts}
+                keyExtractor={(debt) => debt.id}
+                contentContainerStyle={debts.length > 0 ? { backgroundColor: theme.background } : undefined}
+                ListHeaderComponent={Header}
+                renderItem={renderItem}
+                ListEmptyComponent={
+                    loading ?
                         <ThemedView style={styles.emptyState}>
+                            <ThemedText style={styles.emptyStateText}>
+                                <Ionicons name="time-outline" size={24} color={theme.inputText} />
+                            </ThemedText>
+                        </ThemedView>
+                    :   <ThemedView style={styles.emptyState}>
                             <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
                         </ThemedView>
-                    )
                 }
-            </ScrollView>
+            />
         </AuthGate>
     );
 }

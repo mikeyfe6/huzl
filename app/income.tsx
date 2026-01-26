@@ -22,11 +22,12 @@ import {
     baseButtonText,
     baseCenter,
     baseCorner,
+    baseFieldset,
     baseFlex,
     baseGap,
     baseGreen,
     baseIcon,
-    baseMain,
+    baseInactive,
     baseOutline,
     baseRed,
     baseSelect,
@@ -90,10 +91,11 @@ export default function IncomeScreen() {
     };
 
     const removeSource = async (idx: number) => {
+        if (!user) return;
         const src = sources[idx];
         if (src.id) {
             setSaving(true);
-            const { error } = await supabase.from("incomes").delete().eq("id", src.id);
+            const { error } = await supabase.from("incomes").delete().eq("id", src.id).eq("user_id", user.id);
             if (error) {
                 Alert.alert("Error", `Failed to delete income: ${error.message}`);
             }
@@ -143,7 +145,8 @@ export default function IncomeScreen() {
                         amount: Number.parseFloat(String(src.amount)),
                         active: src.active !== false,
                     })
-                    .eq("id", src.id);
+                    .eq("id", src.id)
+                    .eq("user_id", user.id);
                 if (error) {
                     updateError = error;
                     break;
@@ -224,7 +227,7 @@ export default function IncomeScreen() {
                     paddingBottom: 24,
                 },
                 fieldset: {
-                    ...baseMain,
+                    ...baseFieldset,
                 },
                 subtitle: {
                     color: silverColor,
@@ -300,9 +303,6 @@ export default function IncomeScreen() {
                     ...baseButton(theme),
                     ...baseGreen,
                 },
-                saveButtonDisabled: {
-                    opacity: 0.5,
-                },
                 saveButtonText: {
                     ...baseButtonText,
                 },
@@ -331,7 +331,7 @@ export default function IncomeScreen() {
                         <ThemedText>Loading...</ThemedText>
                     :   sources.map((src, idx) => (
                             <View key={src.id ?? idx} style={styles.wrapper}>
-                                <View style={[styles.item, { opacity: src.active ? 1 : 0.5 }]}>
+                                <View style={[styles.item, !src.active && baseInactive]}>
                                     <TextInput
                                         style={styles.input}
                                         value={String(src.amount)}
@@ -411,7 +411,7 @@ export default function IncomeScreen() {
                             <ThemedText style={styles.closeButtonText}>{t("common.close")}</ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.saveButton, saveButtonDisabled && styles.saveButtonDisabled]}
+                            style={[styles.saveButton, saveButtonDisabled && baseInactive]}
                             disabled={saveButtonDisabled}
                             onPress={handleSave}
                         >

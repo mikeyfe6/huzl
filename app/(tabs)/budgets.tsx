@@ -1,49 +1,29 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Platform, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
+import { formatAmount, formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { BudgetItem, ExpenseItem } from "@/components/ui/budget-item";
 
-import { blueColor, Colors, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
-import {
-    baseBlue,
-    baseButton,
-    baseButtonText,
-    baseCard,
-    baseEmpty,
-    baseEmptyText,
-    baseFlex,
-    baseGap,
-    baseGreen,
-    baseIcon,
-    baseIcons,
-    baseInput,
-    baseLabel,
-    baseList,
-    baseMain,
-    baseRed,
-    baseSelect,
-    baseSmall,
-    baseSpace,
-    baseWeight,
-} from "@/styles/base";
+import { blueColor, Colors, greenColor, redColor } from "@/constants/theme";
+import { baseBlue, baseGreen, baseRed } from "@/styles/base";
+import { getBudgetsStyles } from "@/styles/budgets";
 
 export default function BudgetsScreen() {
     const { t } = useTranslation();
     const { user } = useAuth();
 
     const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
     const { symbol: currencySymbol } = useCurrency();
 
     const nameInputRef = useRef<TextInput>(null);
@@ -60,23 +40,177 @@ export default function BudgetsScreen() {
     const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const fetchBudgetExpenses = async (budgetId: string) => {
-        const { data: expensesData } = await supabase
-            .from("budget_expenses")
-            .select("*")
-            .eq("budget_id", budgetId)
-            .order("created_at", { ascending: false });
+    const selectedBudget = budgets.find((b) => b.id === selectedBudgetId);
+    const remainingAmount = selectedBudget ? selectedBudget.total - selectedBudget.spent : 0;
 
-        const expenses = expensesData || [];
-        return {
-            expenses: expenses.map((exp) => ({
-                id: exp.id,
-                name: exp.name,
-                amount: exp.amount,
-                active: exp.active ?? true,
-            })),
-            spent: expenses.reduce((sum, exp) => sum + exp.amount, 0),
-        };
+    const theme = Colors[colorScheme ?? "light"];
+    const styles = useMemo(() => getBudgetsStyles(theme), [theme]);
+
+    const budgetData = useMemo(() => {
+        if (budgets.length === 0) {
+            return [];
+        }
+
+        const data: any[] = [];
+
+        budgets.forEach((budget) => {
+            data.push({ type: "budget", budget });
+        });
+
+        if (selectedBudget) {
+            data.push({ type: "expenseHeader" });
+
+            selectedBudget.expenses.forEach((expense) => {
+                data.push({ type: "expense", expense });
+            });
+        }
+
+        return data;
+    }, [budgets, selectedBudget]);
+
+    const handleEditBudget = useCallback((budget: BudgetItem) => {
+        setBudgetName(budget.name);
+        setTotalAmount(budget.total.toFixed(2));
+        setEditingId(budget.id);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        setTimeout(() => nameInputRef.current?.focus(), 100);
+    }, []);
+
+    const handleEditExpense = useCallback((expense: { id: string; name: string; amount: number; active: boolean }) => {
+        setExpenseName(expense.name);
+        setExpenseAmount(expense.amount.toFixed(2));
+        setEditingExpenseId(expense.id);
+        setTimeout(() => expenseNameInputRef.current?.focus(), 100);
+    }, []);
+
+    const handleToggleExpenseActive = useCallback(
+        async (expenseId: string, currentActive: boolean) => {
+            if (!user) return;
+            setLoading(true);
+            try {
+                const { error } = await supabase
+                    .from("budget_expenses")
+                    .update({ active: !currentActive })
+                    .eq("id", expenseId);
+                if (!error) {
+                    setBudgets((prev) => prev.map((b) => updateExpenseActive(b, expenseId, !currentActive)));
+                }
+            } finally {
+                setLoading(false);
+            }
+        },
+        [user, selectedBudgetId],
+    );
+
+    const handleToggleBudgetActive = useCallback(
+        async (budgetId: string, currentActive: boolean) => {
+            if (!user) return;
+            setLoading(true);
+            try {
+                const { error } = await supabase
+                    .from("budgets")
+                    .update({ active: !currentActive })
+                    .eq("id", budgetId)
+                    .eq("user_id", user.id);
+                if (!error) {
+                    setBudgets((prev) => prev.map((b) => (b.id === budgetId ? { ...b, active: !currentActive } : b)));
+                }
+            } finally {
+                setLoading(false);
+            }
+        },
+        [user],
+    );
+
+    const handleDeleteBudget = useCallback(
+        async (budgetId: string) => {
+            if (!user) return;
+
+            setLoading(true);
+            try {
+                const { error } = await supabase.from("budgets").delete().eq("id", budgetId);
+
+                if (!error) {
+                    setBudgets((prev) => prev.filter((b) => b.id !== budgetId));
+                    if (selectedBudgetId === budgetId) {
+                        setSelectedBudgetId(null);
+                    }
+                }
+            } finally {
+                setLoading(false);
+            }
+        },
+        [selectedBudgetId, user, budgets],
+    );
+
+    const handleDeleteExpense = useCallback(
+        async (expenseId: string) => {
+            if (!user) return;
+
+            setLoading(true);
+            try {
+                const { error } = await supabase.from("budget_expenses").delete().eq("id", expenseId);
+
+                if (!error) {
+                    setBudgets((prev) =>
+                        prev.map((budget) => {
+                            if (budget.id !== selectedBudgetId) return budget;
+
+                            const expense = budget.expenses.find((e) => e.id === expenseId);
+
+                            return {
+                                ...budget,
+                                expenses: budget.expenses.filter((e) => e.id !== expenseId),
+                                spent: budget.spent - (expense?.amount || 0),
+                            };
+                        }),
+                    );
+                }
+            } finally {
+                setLoading(false);
+            }
+        },
+        [user, selectedBudgetId],
+    );
+
+    const confirmDelete = useCallback(
+        (id: string, name: string, type: "budget" | "expense") => {
+            if (Platform.OS === "web") {
+                const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
+                if (ok) {
+                    type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
+                }
+                return;
+            }
+
+            Alert.alert(`${t("budgets.deleteBudget")} ${type}`, `${t("common.delete")} "${name}"?`, [
+                { text: t("common.cancel"), style: "cancel" },
+                {
+                    text: t("common.delete"),
+                    style: "destructive",
+                    onPress: () => {
+                        type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
+                    },
+                },
+            ]);
+        },
+        [t, handleDeleteBudget, handleDeleteExpense],
+    );
+
+    const handleDeleteBudgetItem = useCallback(
+        (id: string, name: string) => confirmDelete(id, name, "budget"),
+        [confirmDelete],
+    );
+
+    const handleDeleteExpenseItem = useCallback(
+        (id: string, name: string) => confirmDelete(id, name, "expense"),
+        [confirmDelete],
+    );
+
+    const handleCancelEdit = () => {
+        setBudgetName("");
+        setTotalAmount("");
+        setEditingId(null);
     };
 
     const transformBudgetData = async (budget: any) => {
@@ -89,72 +223,6 @@ export default function BudgetsScreen() {
             active: budget.active ?? true,
             expenses,
         };
-    };
-
-    const handleEditBudget = (budget: BudgetItem) => {
-        setBudgetName(budget.name);
-        setTotalAmount(budget.total.toFixed(2));
-        setEditingId(budget.id);
-        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-        setTimeout(() => nameInputRef.current?.focus(), 100);
-    };
-
-    const handleCancelEdit = () => {
-        setBudgetName("");
-        setTotalAmount("");
-        setEditingId(null);
-    };
-
-    const handleEditExpense = (expense: { id: string; name: string; amount: number; active: boolean }) => {
-        setExpenseName(expense.name);
-        setExpenseAmount(expense.amount.toFixed(2));
-        setEditingExpenseId(expense.id);
-        setTimeout(() => expenseNameInputRef.current?.focus(), 100);
-    };
-
-    const handleCancelExpenseEdit = () => {
-        setExpenseName("");
-        setExpenseAmount("");
-        setEditingExpenseId(null);
-    };
-
-    const handleToggleActive = async (budgetId: string, currentActive: boolean) => {
-        if (!user) return;
-        setLoading(true);
-        try {
-            const { error } = await supabase.from("budgets").update({ active: !currentActive }).eq("id", budgetId);
-            if (!error) {
-                setBudgets((prev) => prev.map((b) => (b.id === budgetId ? { ...b, active: !currentActive } : b)));
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const updateExpenseActive = (b: BudgetItem, expenseId: string, newActive: boolean): BudgetItem => {
-        if (b.id === selectedBudgetId) {
-            return {
-                ...b,
-                expenses: b.expenses.map((e) => (e.id === expenseId ? { ...e, active: newActive } : e)),
-            };
-        }
-        return b;
-    };
-
-    const handleToggleExpenseActive = async (expenseId: string, currentActive: boolean) => {
-        if (!user) return;
-        setLoading(true);
-        try {
-            const { error } = await supabase
-                .from("budget_expenses")
-                .update({ active: !currentActive })
-                .eq("id", expenseId);
-            if (!error) {
-                setBudgets((prev) => prev.map((b) => updateExpenseActive(b, expenseId, !currentActive)));
-            }
-        } finally {
-            setLoading(false);
-        }
     };
 
     const handleCreateBudget = async () => {
@@ -289,73 +357,41 @@ export default function BudgetsScreen() {
         }
     };
 
-    const handleDeleteBudget = async (budgetId: string) => {
-        if (!user) return;
-
-        setLoading(true);
-        try {
-            const { error } = await supabase.from("budgets").delete().eq("id", budgetId);
-
-            if (!error) {
-                setBudgets(budgets.filter((b) => b.id !== budgetId));
-                if (selectedBudgetId === budgetId) {
-                    setSelectedBudgetId(null);
-                }
-            }
-        } finally {
-            setLoading(false);
+    const updateExpenseActive = (b: BudgetItem, expenseId: string, newActive: boolean): BudgetItem => {
+        if (b.id === selectedBudgetId) {
+            return {
+                ...b,
+                expenses: b.expenses.map((e) => (e.id === expenseId ? { ...e, active: newActive } : e)),
+            };
         }
+        return b;
     };
 
-    const handleDeleteExpense = async (expenseId: string) => {
-        if (!user) return;
-
-        setLoading(true);
-        try {
-            const { error } = await supabase.from("budget_expenses").delete().eq("id", expenseId);
-
-            if (!error) {
-                const updatedBudgets = budgets.map((budget) => {
-                    if (budget.id === selectedBudgetId) {
-                        const expense = budget.expenses.find((e) => e.id === expenseId);
-                        return {
-                            ...budget,
-                            expenses: budget.expenses.filter((e) => e.id !== expenseId),
-                            spent: budget.spent - (expense?.amount || 0),
-                        };
-                    }
-                    return budget;
-                });
-                setBudgets(updatedBudgets);
-            }
-        } finally {
-            setLoading(false);
-        }
+    const handleCancelExpenseEdit = () => {
+        setExpenseName("");
+        setExpenseAmount("");
+        setEditingExpenseId(null);
     };
 
-    const confirmDelete = (id: string, name: string, type: "budget" | "expense") => {
-        if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
-            if (ok) {
-                type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
-            }
-            return;
-        }
+    const fetchBudgetExpenses = async (budgetId: string) => {
+        if (!user) return { expenses: [], spent: 0 };
+        const { data: expensesData } = await supabase
+            .from("budget_expenses")
+            .select("*")
+            .eq("budget_id", budgetId)
+            .order("created_at", { ascending: false });
 
-        Alert.alert(`${t("budgets.deleteBudget")} ${type}`, `${t("common.delete")} "${name}"?`, [
-            { text: t("common.cancel"), style: "cancel" },
-            {
-                text: t("common.delete"),
-                style: "destructive",
-                onPress: () => {
-                    type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
-                },
-            },
-        ]);
+        const expenses = expensesData || [];
+        return {
+            expenses: expenses.map((exp) => ({
+                id: exp.id,
+                name: exp.name,
+                amount: exp.amount,
+                active: exp.active ?? true,
+            })),
+            spent: expenses.reduce((sum, exp) => sum + exp.amount, 0),
+        };
     };
-
-    const selectedBudget = budgets.find((b) => b.id === selectedBudgetId);
-    const remainingAmount = selectedBudget ? selectedBudget.total - selectedBudget.spent : 0;
 
     useEffect(() => {
         if (!user) return;
@@ -384,401 +420,205 @@ export default function BudgetsScreen() {
         fetchBudgets();
     }, [user]);
 
-    const styles = useMemo(
-        () =>
-            StyleSheet.create({
-                container: {
-                    paddingBottom: 24,
-                },
-                fieldset: {
-                    ...baseMain,
-                },
-                heading: {
-                    marginBottom: 16,
-                },
-                label: {
-                    ...baseLabel(theme),
-                },
-                input: {
-                    ...baseInput(theme),
-                    ...baseSelect,
-                },
-                buttons: {
-                    ...baseFlex("center"),
-                    ...baseGap,
-                    marginTop: 8,
-                },
-                button: {
-                    ...baseButton(theme),
-                    backgroundColor: blueColor,
-                },
-                buttonText: {
-                    ...baseButtonText,
-                },
-                budgetList: {
-                    ...baseList,
-                },
-                budgetHeader: {
-                    marginBottom: 12,
-                },
-                budgetCard: {
-                    ...baseCard(theme),
-                },
-                budgetSelected: {
-                    borderColor: blueColor,
-                    backgroundColor: theme.cardBackground,
-                },
-                budgetTitle: {
-                    ...baseFlex("space-between", "flex-start"),
-                    ...baseGap,
-                },
-                budgetAmount: {
-                    ...baseSmall,
-                    opacity: 0.8,
-                    color: theme.label,
-                },
-                budgetInline: {
-                    ...baseWeight,
-                },
-                budgetIcons: {
-                    ...baseIcons,
-                },
-                budgetIcon: {
-                    ...baseIcon(theme),
-                },
-                progressBar: {
-                    height: 8,
-                    backgroundColor: theme.inputBorder,
-                    borderRadius: 4,
-                    overflow: "hidden",
-                    marginTop: 4,
-                },
-                progressFill: {
-                    height: "100%",
-                    backgroundColor: blueColor,
-                },
-                expenseSection: {
-                    ...baseList,
-                },
-                expenseHeader: {
-                    marginBottom: 4,
-                },
-                expenseRemaining: {
-                    ...baseWeight,
-                    marginBottom: 12,
-                    color: theme.label,
-                },
-                expenseList: {
-                    marginTop: 20,
-                    marginBottom: 10,
-                },
-                expenseItem: {
-                    ...baseFlex("space-between", "center"),
-                    ...baseCard(theme),
-                },
-                expenseInfo: {
-                    ...baseSpace,
-                    flex: 1,
-                },
-                expenseLabel: {
-                    ...baseSmall,
-                    opacity: 0.7,
-                    color: theme.label,
-                },
-                emptyState: {
-                    ...baseEmpty,
-                },
-                emptyStateText: {
-                    ...baseEmptyText(theme),
-                },
-            }),
-        [theme],
+    const BudgetHeader = (
+        <>
+            <ThemedView style={styles.fieldset}>
+                <ThemedText type="title" style={styles.heading}>
+                    {t("budgets.title")}
+                </ThemedText>
+
+                <ThemedText style={styles.label}>{t("budgets.label.name")}</ThemedText>
+                <TextInput
+                    ref={nameInputRef}
+                    style={styles.input}
+                    placeholder={t("budgets.placeholder.name")}
+                    placeholderTextColor={theme.placeholder}
+                    value={budgetName}
+                    onChangeText={setBudgetName}
+                />
+
+                <ThemedText style={styles.label}>
+                    {t("budgets.label.totalAmount")} ({currencySymbol})
+                </ThemedText>
+                <TextInput
+                    style={styles.input}
+                    placeholder="0.00"
+                    placeholderTextColor={theme.placeholder}
+                    value={totalAmount}
+                    onChangeText={(text) => setTotalAmount(formatNumber(text))}
+                    keyboardType="decimal-pad"
+                />
+
+                <View style={styles.buttons}>
+                    <TouchableOpacity
+                        style={[styles.button, { ...baseBlue }]}
+                        onPress={handleCreateBudget}
+                        disabled={loading}
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            {editingId ? t("budgets.button.updateBudget") : t("budgets.button.addBudget")}
+                        </ThemedText>
+                    </TouchableOpacity>
+                    {editingId && (
+                        <TouchableOpacity
+                            style={[styles.button, { ...baseRed }]}
+                            onPress={handleCancelEdit}
+                            disabled={loading}
+                        >
+                            <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </ThemedView>
+
+            {budgets.length > 0 && (
+                <ThemedText type="subtitle" style={styles.budgetHeader}>
+                    {t("budgets.yourBudgets")}
+                </ThemedText>
+            )}
+        </>
     );
 
-    return (
-        <AuthGate>
-            <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container}>
-                <ThemedView style={styles.fieldset}>
-                    <ThemedText type="title" style={styles.heading}>
-                        {t("budgets.title")}
+    const ExpenseHeader = (
+        <>
+            {selectedBudget && (
+                <View style={styles.fieldset}>
+                    <ThemedText type="subtitle" style={styles.expenseHeader}>
+                        <Ionicons name="caret-forward" size={16} color={blueColor} /> {selectedBudget.name}
+                    </ThemedText>
+                    <ThemedText style={styles.expenseRemaining}>
+                        {t("budgets.remaining")} ({currencySymbol}):{" "}
+                        <ThemedText
+                            style={{
+                                color: remainingAmount < 0 ? redColor : greenColor,
+                            }}
+                        >
+                            {formatAmount(remainingAmount)}
+                        </ThemedText>
                     </ThemedText>
 
-                    <ThemedText style={styles.label}>{t("budgets.label.name")}</ThemedText>
+                    <ThemedText style={styles.label}>{t("budgets.label.expenseName")}</ThemedText>
                     <TextInput
-                        ref={nameInputRef}
+                        ref={expenseNameInputRef}
                         style={styles.input}
-                        placeholder={t("budgets.placeholder.name")}
+                        placeholder={t("budgets.placeholder.expenseName")}
                         placeholderTextColor={theme.placeholder}
-                        value={budgetName}
-                        onChangeText={setBudgetName}
+                        value={expenseName}
+                        onChangeText={setExpenseName}
                     />
 
                     <ThemedText style={styles.label}>
-                        {t("budgets.label.totalAmount")} ({currencySymbol})
+                        {t("budgets.label.expenseAmount")} ({currencySymbol})
                     </ThemedText>
                     <TextInput
                         style={styles.input}
                         placeholder="0.00"
                         placeholderTextColor={theme.placeholder}
-                        value={totalAmount}
-                        onChangeText={(text) => setTotalAmount(formatNumber(text))}
+                        value={expenseAmount}
+                        onChangeText={(text) => setExpenseAmount(formatNumber(text))}
                         keyboardType="decimal-pad"
                     />
 
                     <View style={styles.buttons}>
                         <TouchableOpacity
-                            style={[styles.button, { ...baseBlue }]}
-                            onPress={handleCreateBudget}
+                            style={[styles.button, { ...baseGreen }]}
+                            onPress={handleAddExpense}
                             disabled={loading}
                         >
                             <ThemedText style={styles.buttonText}>
-                                {editingId ? t("budgets.button.updateBudget") : t("budgets.button.addBudget")}
+                                {editingExpenseId ? t("budgets.button.updateExpense") : t("budgets.button.addExpense")}
                             </ThemedText>
                         </TouchableOpacity>
-                        {editingId && (
+                        {editingExpenseId && (
                             <TouchableOpacity
                                 style={[styles.button, { ...baseRed }]}
-                                onPress={handleCancelEdit}
+                                onPress={handleCancelExpenseEdit}
                                 disabled={loading}
                             >
                                 <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                             </TouchableOpacity>
                         )}
                     </View>
-                </ThemedView>
 
-                {budgets.length > 0 && (
-                    <ThemedView style={styles.budgetList}>
-                        <ThemedText type="subtitle" style={styles.budgetHeader}>
-                            {t("budgets.yourBudgets")}
-                        </ThemedText>
-                        {budgets.map((budget) => (
-                            <View
-                                key={budget.id}
-                                style={[
-                                    styles.budgetCard,
-                                    selectedBudgetId === budget.id && styles.budgetSelected,
-                                    !budget.active && { opacity: 0.5 },
-                                ]}
-                            >
-                                <View style={styles.budgetTitle}>
-                                    <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
-                                        {budget.name}
-                                    </ThemedText>
-                                    <View style={styles.budgetIcons}>
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                setSelectedBudgetId(selectedBudgetId === budget.id ? null : budget.id)
-                                            }
-                                            style={[
-                                                styles.budgetIcon,
-                                                {
-                                                    borderColor: blueColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="cash-outline" size={16} color={blueColor} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => handleToggleActive(budget.id, budget.active)}
-                                            style={[
-                                                styles.budgetIcon,
-                                                {
-                                                    borderColor: budget.active ? greenColor : mediumGreyColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons
-                                                name={budget.active ? "eye" : "eye-off"}
-                                                size={16}
-                                                color={budget.active ? greenColor : mediumGreyColor}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => handleEditBudget(budget)}
-                                            style={[
-                                                styles.budgetIcon,
-                                                {
-                                                    borderColor: mediumGreyColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="pencil" size={16} color={mediumGreyColor} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => confirmDelete(budget.id, budget.name, "budget")}
-                                            style={[
-                                                styles.budgetIcon,
-                                                {
-                                                    borderColor: redColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="trash" size={16} color={redColor} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <ThemedText style={styles.budgetAmount}>
-                                    {formatCurrency(budget.spent, currencySymbol)} -{" "}
-                                    <ThemedText style={[styles.budgetAmount, styles.budgetInline]}>
-                                        {formatCurrency(budget.total, currencySymbol)}
-                                    </ThemedText>
-                                </ThemedText>
-                                <View style={styles.progressBar}>
-                                    <View
-                                        style={[
-                                            styles.progressFill,
-                                            {
-                                                width: `${Math.min((budget.spent / budget.total) * 100, 100)}%`,
-                                            },
-                                        ]}
-                                    />
-                                </View>
-                            </View>
-                        ))}
-                    </ThemedView>
-                )}
-
-                {selectedBudget && (
-                    <ThemedView style={styles.expenseSection}>
-                        <ThemedText type="subtitle" style={styles.expenseHeader}>
-                            {selectedBudget.name}
-                        </ThemedText>
-                        <ThemedText style={styles.expenseRemaining}>
-                            {t("budgets.remaining")} ({currencySymbol}):{" "}
-                            <ThemedText
-                                style={{
-                                    color: remainingAmount < 0 ? redColor : greenColor,
-                                }}
-                            >
-                                {formatAmount(remainingAmount)}
-                            </ThemedText>
-                        </ThemedText>
-
-                        <ThemedText style={styles.label}>{t("budgets.label.expenseName")}</ThemedText>
-                        <TextInput
-                            ref={expenseNameInputRef}
-                            style={styles.input}
-                            placeholder={t("budgets.placeholder.expenseName")}
-                            placeholderTextColor={theme.placeholder}
-                            value={expenseName}
-                            onChangeText={setExpenseName}
-                        />
-
-                        <ThemedText style={styles.label}>
-                            {t("budgets.label.expenseAmount")} ({currencySymbol})
-                        </ThemedText>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="0.00"
-                            placeholderTextColor={theme.placeholder}
-                            value={expenseAmount}
-                            onChangeText={(text) => setExpenseAmount(formatNumber(text))}
-                            keyboardType="decimal-pad"
-                        />
-
-                        <View style={styles.buttons}>
-                            <TouchableOpacity
-                                style={[styles.button, { ...baseGreen }]}
-                                onPress={handleAddExpense}
-                                disabled={loading}
-                            >
-                                <ThemedText style={styles.buttonText}>
-                                    {editingExpenseId ?
-                                        t("budgets.button.updateExpense")
-                                    :   t("budgets.button.addExpense")}
-                                </ThemedText>
-                            </TouchableOpacity>
-                            {editingExpenseId && (
-                                <TouchableOpacity
-                                    style={[styles.button, { ...baseRed }]}
-                                    onPress={handleCancelExpenseEdit}
-                                    disabled={loading}
-                                >
-                                    <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                                </TouchableOpacity>
-                            )}
-                        </View>
-
+                    {selectedBudget.expenses.length > 0 ?
                         <ThemedText type="subtitle" style={styles.expenseList}>
                             {t("budgets.expenses")}
                         </ThemedText>
-                        {selectedBudget.expenses.length === 0 ?
-                            <ThemedView style={styles.emptyState}>
-                                <ThemedText style={styles.emptyStateText}>{t("budgets.noExpenses")}</ThemedText>
-                            </ThemedView>
-                        :   selectedBudget.expenses.map((expense) => (
-                                <View
-                                    key={expense.id}
-                                    style={[styles.expenseItem, !expense.active && { opacity: 0.5 }]}
-                                >
-                                    <View style={styles.expenseInfo}>
-                                        <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
-                                            {expense.name}
-                                        </ThemedText>
-                                        <ThemedText style={styles.expenseLabel}>
-                                            {formatCurrency(expense.amount, currencySymbol)}
-                                        </ThemedText>
-                                    </View>
-                                    <View style={styles.budgetIcons}>
-                                        <TouchableOpacity
-                                            onPress={() => handleToggleExpenseActive(expense.id, expense.active)}
-                                            style={[
-                                                styles.budgetIcon,
-                                                {
-                                                    borderColor: expense.active ? greenColor : mediumGreyColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons
-                                                name={expense.active ? "eye" : "eye-off"}
-                                                size={16}
-                                                color={expense.active ? greenColor : mediumGreyColor}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => handleEditExpense(expense)}
-                                            style={[
-                                                styles.budgetIcon,
-                                                {
-                                                    borderColor: mediumGreyColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="pencil" size={16} color={mediumGreyColor} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => confirmDelete(expense.id, expense.name, "expense")}
-                                            style={[
-                                                styles.budgetIcon,
-                                                {
-                                                    borderColor: redColor,
-                                                },
-                                            ]}
-                                        >
-                                            <Ionicons name="trash" size={16} color={redColor} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            ))
-                        }
-                    </ThemedView>
-                )}
+                    :   <ThemedView style={styles.emptyState}>
+                            <ThemedText style={styles.emptyStateText}>{t("budgets.noExpenses")}</ThemedText>
+                        </ThemedView>
+                    }
+                </View>
+            )}
+        </>
+    );
 
-                {loading ?
-                    <ThemedView style={styles.emptyState}>
-                        <ThemedText style={styles.emptyStateText}>
-                            <Ionicons name="time-outline" size={24} color={theme.inputText} />
-                        </ThemedText>
-                    </ThemedView>
-                :   !loading &&
-                    budgets.length === 0 && (
+    const renderItem = useCallback(
+        (props: { item: BudgetListItem }) => {
+            const { item } = props;
+            if (item.type === "budget")
+                return (
+                    <BudgetItem
+                        budget={item.budget}
+                        currencySymbol={currencySymbol}
+                        onToggleActive={handleToggleBudgetActive}
+                        onEdit={handleEditBudget}
+                        onDelete={handleDeleteBudgetItem}
+                        styles={styles}
+                        selectedBudgetId={selectedBudgetId}
+                        setSelectedBudgetId={setSelectedBudgetId}
+                    />
+                );
+            if (item.type === "expenseHeader") return ExpenseHeader;
+            if (item.type === "expense")
+                return (
+                    <ExpenseItem
+                        expense={item.expense}
+                        currencySymbol={currencySymbol}
+                        onToggleExpenseActive={handleToggleExpenseActive}
+                        onEditExpense={handleEditExpense}
+                        onDelete={handleDeleteExpenseItem}
+                        styles={styles}
+                    />
+                );
+            return null;
+        },
+        [
+            currencySymbol,
+            handleToggleBudgetActive,
+            handleEditBudget,
+            confirmDelete,
+            styles,
+            selectedBudgetId,
+            setSelectedBudgetId,
+            ExpenseHeader,
+            handleToggleExpenseActive,
+            handleEditExpense,
+        ],
+    );
+
+    return (
+        <AuthGate>
+            <FlatList
+                data={budgetData}
+                keyExtractor={(item, index) => {
+                    if (item.type === "budget") return `budget-${item.budget.id}`;
+                    if (item.type === "expense") return `expense-${item.expense.id}`;
+                    return item.type + "-" + index;
+                }}
+                ListHeaderComponent={BudgetHeader}
+                contentContainerStyle={budgetData.length > 0 ? { backgroundColor: theme.background } : undefined}
+                renderItem={renderItem}
+                ListEmptyComponent={
+                    loading ?
                         <ThemedView style={styles.emptyState}>
+                            <Ionicons name="time-outline" size={24} color={theme.inputText} />
+                        </ThemedView>
+                    :   <ThemedView style={styles.emptyState}>
                             <ThemedText style={styles.emptyStateText}>{t("budgets.addFirstBudget")}</ThemedText>
                         </ThemedView>
-                    )
                 }
-            </ScrollView>
+            />
         </AuthGate>
     );
 }
