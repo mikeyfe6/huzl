@@ -147,7 +147,7 @@ export default function ExpensesScreen() {
         ].filter((cat) => expenses.some((e) => e.active && e.category === cat)) as Category[];
     }, [expenses]);
 
-    const handleEditExpense = useCallback((expense: ExpenseItem) => {
+    const handleEdit = useCallback((expense: ExpenseItem) => {
         setExpenseName(expense.name);
         setExpenseAmount(expense.amount.toFixed(2));
         setFrequency(expense.frequency);
@@ -291,7 +291,7 @@ export default function ExpensesScreen() {
         }
     };
 
-    const handleAddExpense = async () => {
+    const handleCreate = async () => {
         if (!user) return;
         if (!expenseName.trim() || !expenseAmount.trim()) return;
 
@@ -383,7 +383,7 @@ export default function ExpensesScreen() {
         }
     };
 
-    const handleCancelEdit = () => {
+    const handleCancel = () => {
         setExpenseName("");
         setExpenseAmount("");
         setFrequency("monthly");
@@ -630,13 +630,13 @@ export default function ExpensesScreen() {
                 </View>
 
                 <View style={styles.buttons}>
-                    <TouchableOpacity style={[styles.button, { ...baseGreen }]} onPress={handleAddExpense}>
+                    <TouchableOpacity style={[styles.button, { ...baseGreen }]} onPress={handleCreate}>
                         <ThemedText style={styles.buttonText}>
                             {editingId ? t("expenses.button.updateExpense") : t("expenses.button.addExpense")}
                         </ThemedText>
                     </TouchableOpacity>
                     {editingId && (
-                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={handleCancelEdit}>
+                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={handleCancel}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                         </TouchableOpacity>
                     )}
@@ -1079,24 +1079,15 @@ export default function ExpensesScreen() {
                 expense={props.item}
                 currencySymbol={currencySymbol}
                 onToggleActive={handleToggleActive}
-                onEdit={handleEditExpense}
+                onEdit={handleEdit}
                 onDelete={confirmDelete}
-                getFrequencyLabel={getFrequencyLabel}
+                frequencyLabel={getFrequencyLabel(props.item.frequency)}
                 categoryLabelMap={categoryLabelMap}
-                periodLabel={t("expenses.period")}
                 styles={styles}
+                t={t}
             />
         ),
-        [
-            currencySymbol,
-            handleToggleActive,
-            handleEditExpense,
-            confirmDelete,
-            getFrequencyLabel,
-            categoryLabelMap,
-            t,
-            styles,
-        ],
+        [currencySymbol, handleToggleActive, handleEdit, confirmDelete, getFrequencyLabel, categoryLabelMap, t, styles],
     );
 
     return (

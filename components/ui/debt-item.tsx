@@ -2,11 +2,12 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { memo } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { blueColor, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
 
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+
+import { blueColor, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import { baseGreen, baseInactive, baseRed } from "@/styles/base";
 
 export const DebtItem = memo(

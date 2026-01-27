@@ -67,32 +67,38 @@ export default function DebtsScreen() {
         setLoading(false);
     };
 
-    const confirmDeleteDebt = (id: string, name: string) => {
-        if (Platform.OS === "web") {
-            const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
-            if (ok) handleDeleteDebt(id);
-            return;
-        }
+    const confirmDelete = useCallback(
+        (id: string, name: string) => {
+            if (Platform.OS === "web") {
+                const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
+                if (ok) handleDeleteDebt(id);
+                return;
+            }
 
-        Alert.alert(`${t("debts.deleteDebt")}`, `${t("common.delete")} "${name}"?`, [
-            { text: t("common.cancel"), style: "cancel" },
-            { text: t("common.delete"), style: "destructive", onPress: () => handleDeleteDebt(id) },
-        ]);
-    };
+            Alert.alert(`${t("debts.deleteDebt")}`, `${t("common.delete")} "${name}"?`, [
+                { text: t("common.cancel"), style: "cancel" },
+                { text: t("common.delete"), style: "destructive", onPress: () => handleDeleteDebt(id) },
+            ]);
+        },
+        [t, user],
+    );
 
-    const handleToggleActive = async (id: string, currentActive: boolean) => {
-        if (!user) return;
-        setLoading(true);
-        const { error } = await supabase
-            .from("debts")
-            .update({ active: !currentActive })
-            .eq("id", id)
-            .eq("user_id", user.id);
-        if (!error) {
-            setDebts((prev) => prev.map((d) => (d.id === id ? { ...d, active: !currentActive } : d)));
-        }
-        setLoading(false);
-    };
+    const handleToggleActive = useCallback(
+        async (id: string, currentActive: boolean) => {
+            if (!user) return;
+            setLoading(true);
+            const { error } = await supabase
+                .from("debts")
+                .update({ active: !currentActive })
+                .eq("id", id)
+                .eq("user_id", user.id);
+            if (!error) {
+                setDebts((prev) => prev.map((d) => (d.id === id ? { ...d, active: !currentActive } : d)));
+            }
+            setLoading(false);
+        },
+        [user],
+    );
 
     const handleMakePayment = useCallback(
         async (debtId: string, amount: number) => {
@@ -259,7 +265,7 @@ export default function DebtsScreen() {
                 currencySymbol={currencySymbol}
                 onToggleActive={handleToggleActive}
                 onEdit={handleEditDebt}
-                onDelete={confirmDeleteDebt}
+                onDelete={confirmDelete}
                 styles={styles}
                 paymentId={paymentId}
                 setPaymentId={setPaymentId}
@@ -275,11 +281,9 @@ export default function DebtsScreen() {
             currencySymbol,
             handleToggleActive,
             handleEditDebt,
-            confirmDeleteDebt,
+            confirmDelete,
             styles,
             paymentId,
-            paymentAmount,
-            setPaymentId,
             setPaymentAmount,
             handleMakePayment,
             loading,

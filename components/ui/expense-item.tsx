@@ -2,10 +2,11 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { memo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import { formatCurrency } from "@/utils/helpers";
 
+import { ThemedText } from "@/components/themed-text";
+
+import { greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import { baseInactive } from "@/styles/base";
 
 export const ExpenseItem = memo(
@@ -15,10 +16,10 @@ export const ExpenseItem = memo(
         onToggleActive,
         onEdit,
         onDelete,
-        getFrequencyLabel,
+        frequencyLabel,
         categoryLabelMap,
-        periodLabel,
         styles,
+        t,
     }: ExpenseListProps) => {
         console.log("Rendering ExpenseItem:", expense.id);
         return (
@@ -33,7 +34,7 @@ export const ExpenseItem = memo(
                                 <ThemedText style={styles.expenseAmount}>
                                     {formatCurrency(expense.amount, currencySymbol)}
                                 </ThemedText>{" "}
-                                - {getFrequencyLabel(expense.frequency)}
+                                - {frequencyLabel}
                             </ThemedText>
                             <View
                                 style={[
@@ -73,7 +74,7 @@ export const ExpenseItem = memo(
                     </View>
                 </View>
                 <View style={styles.expenseTotal}>
-                    <ThemedText style={styles.expensePeriod}>{periodLabel}:</ThemedText>
+                    <ThemedText style={styles.expensePeriod}>{t("expenses.period")}:</ThemedText>
                     <View style={styles.expenseAmounts}>
                         <ThemedText style={styles.expenseYearly}>
                             {formatCurrency(expense.yearlyTotal, currencySymbol)}

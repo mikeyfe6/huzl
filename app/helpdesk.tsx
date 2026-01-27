@@ -46,7 +46,7 @@ export default function HelpdeskScreen() {
     const [tickets, setTickets] = useState<TicketItem[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const handleDeleteTicket = async (id: string) => {
+    const handleDelete = async (id: string) => {
         if (!user) return;
         setLoading(true);
         const { error } = await supabase.from("helpdesk").delete().eq("id", id).eq("user_id", user.id);
@@ -56,10 +56,10 @@ export default function HelpdeskScreen() {
         setLoading(false);
     };
 
-    const confirmDeleteTicket = (id: string, message: string) => {
+    const confirmDelete = (id: string, message: string) => {
         if (Platform.OS === "web") {
             const ok = globalThis.confirm(`${t("common.delete")} "${message.slice(0, 20)}"?`);
-            if (ok) handleDeleteTicket(id);
+            if (ok) handleDelete(id);
             return;
         }
         Alert.alert(t("helpdesk.deleteTicket"), `${t("common.delete")} "${message.slice(0, 20)}"?`, [
@@ -68,7 +68,7 @@ export default function HelpdeskScreen() {
                 text: t("common.delete"),
                 style: "destructive",
                 onPress: () => {
-                    void handleDeleteTicket(id);
+                    void handleDelete(id);
                 },
             },
         ]);
@@ -296,7 +296,7 @@ export default function HelpdeskScreen() {
                                     </ThemedText>
                                 </View>
                                 <TouchableOpacity
-                                    onPress={() => confirmDeleteTicket(ticket.id, ticket.message)}
+                                    onPress={() => confirmDelete(ticket.id, ticket.message)}
                                     disabled={loading}
                                     style={styles.icon}
                                 >

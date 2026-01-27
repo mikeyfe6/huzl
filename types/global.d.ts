@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/theme";
 import { getBudgetsStyles } from "@/styles/budgets";
+import { getDebtsStyles } from "@/styles/debts";
 import { getExpensesStyles } from "@/styles/expenses";
 import type { AuthError, User } from "@supabase/supabase-js";
 
@@ -28,12 +29,23 @@ declare global {
     interface itemTypeProp {
         readonly type: string;
     }
-
     interface itemThemeProp {
         readonly theme: ThemeProps;
     }
     interface itemCodeProp {
         readonly code: string;
+    }
+    interface itemLoadingProp {
+        readonly loading: boolean;
+    }
+    interface itemTranslationProp {
+        readonly t: (key: string) => string;
+    }
+
+    interface baseItemProps {
+        readonly currencySymbol: string;
+        readonly onToggleActive: (id: string, active: boolean) => void;
+        readonly onDelete: (id: string, name: string) => void;
     }
 
     interface baseModalProps extends itemThemeProp {
@@ -127,64 +139,46 @@ declare global {
         symbol: string;
     }
 
-    type ExpenseListProps = {
+    interface ExpenseListProps extends baseItemProps, itemTranslationProp {
         expense: ExpenseItem;
-        currencySymbol: string;
-        onToggleActive: (id: string, active: boolean) => void;
         onEdit: (expense: ExpenseItem) => void;
-        onDelete: (id: string, name: string) => void;
-        getFrequencyLabel: (freq: Frequency) => string;
+        frequencyLabel: string;
         categoryLabelMap: Record<string, string>;
-        periodLabel: string;
         styles: ReturnType<typeof getExpensesStyles>;
-    };
+    }
 
-    type BudgetListProps = {
+    interface BudgetListProps extends baseItemProps {
         budget: BudgetItem;
-        currencySymbol: string;
-        onToggleActive: (id: string, active: boolean) => void;
         onEdit: (budget: BudgetItem) => void;
-        onDelete: (id: string, name: string) => void;
         styles: ReturnType<typeof getBudgetsStyles>;
         selectedBudgetId: string | null;
         setSelectedBudgetId: (id: string | null) => void;
-    };
+    }
 
-    type BudgetExpenseListProps = {
+    interface BudgetExpenseListProps extends baseItemProps {
         expense: BudgetExpenseItem;
-        currencySymbol: string;
-        onToggleExpenseActive: (id: string, active: boolean) => void;
-        onEditExpense: (expense: BudgetExpenseItem) => void;
-        onDelete: (id: string, name: string) => void;
+        onEdit: (expense: BudgetExpenseItem) => void;
         styles: ReturnType<typeof getBudgetsStyles>;
-    };
+    }
 
-    type DebtListProps = {
+    interface DebtListProps extends itemThemeProp, itemLoadingProp, baseItemProps, itemTranslationProp {
         debt: DebtItem;
-        currencySymbol: string;
-        onToggleActive: (id: string, active: boolean) => void;
         onEdit: (debt: DebtItem) => void;
-        onDelete: (id: string, name: string) => void;
-        styles: ReturnType<typeof getExpensesStyles>;
-        loading: boolean;
-        theme: ThemeProps;
+        styles: ReturnType<typeof getDebtsStyles>;
         paymentAmount: string;
         setPaymentAmount: (amount: string) => void;
-        onToggleActive: (id: string, active: boolean) => void;
         paymentId: string | null;
         setPaymentId: (id: string | null) => void;
         onPayment: (debtId: string, amount: number) => Promise<{ error: string | null }>;
-        t: (key: string) => string;
-    };
+    }
 
     type BudgetListItem =
         | { type: "budget"; budget: BudgetItem }
         | { type: "expenseHeader" }
         | { type: "expense"; expense: BudgetExpenseItem };
 
-    type AuthContextValue = {
+    interface AuthContextValue extends itemLoadingProp {
         user: User | null;
-        loading: boolean;
         signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
         signUp: (
             email: string,
@@ -192,5 +186,5 @@ declare global {
         ) => Promise<{ error: AuthError | null; success: boolean; user: User | null }>;
         signOut: () => Promise<void>;
         refreshUser: () => Promise<void>;
-    };
+    }
 }

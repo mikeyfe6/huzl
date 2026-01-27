@@ -2,10 +2,11 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { memo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "@/components/themed-text";
-import { blueColor, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import { formatCurrency } from "@/utils/helpers";
 
+import { ThemedText } from "@/components/themed-text";
+
+import { blueColor, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
 import { baseInactive } from "@/styles/base";
 
 export const BudgetItem = memo(
@@ -107,7 +108,7 @@ export const BudgetItem = memo(
 );
 
 export const ExpenseItem = memo(
-    ({ expense, currencySymbol, onToggleExpenseActive, onEditExpense, onDelete, styles }: BudgetExpenseListProps) => {
+    ({ expense, currencySymbol, onToggleActive, onEdit, onDelete, styles }: BudgetExpenseListProps) => {
         return (
             <View key={expense.id} style={[styles.expenseItem, !expense.active && baseInactive]}>
                 <View style={styles.expenseInfo}>
@@ -120,7 +121,7 @@ export const ExpenseItem = memo(
                 </View>
                 <View style={styles.budgetIcons}>
                     <TouchableOpacity
-                        onPress={() => onToggleExpenseActive(expense.id, expense.active)}
+                        onPress={() => onToggleActive(expense.id, expense.active)}
                         style={[
                             styles.budgetIcon,
                             {
@@ -135,7 +136,7 @@ export const ExpenseItem = memo(
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={() => onEditExpense(expense)}
+                        onPress={() => onEdit(expense)}
                         style={[
                             styles.budgetIcon,
                             {

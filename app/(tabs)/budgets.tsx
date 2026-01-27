@@ -86,14 +86,27 @@ export default function BudgetsScreen() {
     const handleToggleExpenseActive = useCallback(
         async (expenseId: string, currentActive: boolean) => {
             if (!user) return;
+
             setLoading(true);
             try {
                 const { error } = await supabase
                     .from("budget_expenses")
                     .update({ active: !currentActive })
                     .eq("id", expenseId);
+
                 if (!error) {
-                    setBudgets((prev) => prev.map((b) => updateExpenseActive(b, expenseId, !currentActive)));
+                    setBudgets((prev) =>
+                        prev.map((b) =>
+                            b.id === selectedBudgetId ?
+                                {
+                                    ...b,
+                                    expenses: b.expenses.map((e) =>
+                                        e.id === expenseId ? { ...e, active: !currentActive } : e,
+                                    ),
+                                }
+                            :   b,
+                        ),
+                    );
                 }
             } finally {
                 setLoading(false);
@@ -140,7 +153,7 @@ export default function BudgetsScreen() {
                 setLoading(false);
             }
         },
-        [selectedBudgetId, user, budgets],
+        [selectedBudgetId, user],
     );
 
     const handleDeleteExpense = useCallback(
@@ -357,16 +370,6 @@ export default function BudgetsScreen() {
         }
     };
 
-    const updateExpenseActive = (b: BudgetItem, expenseId: string, newActive: boolean): BudgetItem => {
-        if (b.id === selectedBudgetId) {
-            return {
-                ...b,
-                expenses: b.expenses.map((e) => (e.id === expenseId ? { ...e, active: newActive } : e)),
-            };
-        }
-        return b;
-    };
-
     const handleCancelExpenseEdit = () => {
         setExpenseName("");
         setExpenseAmount("");
@@ -564,9 +567,9 @@ export default function BudgetsScreen() {
                         onToggleActive={handleToggleBudgetActive}
                         onEdit={handleEditBudget}
                         onDelete={handleDeleteBudgetItem}
-                        styles={styles}
                         selectedBudgetId={selectedBudgetId}
                         setSelectedBudgetId={setSelectedBudgetId}
+                        styles={styles}
                     />
                 );
             if (item.type === "expenseHeader") return ExpenseHeader;
@@ -575,8 +578,8 @@ export default function BudgetsScreen() {
                     <ExpenseItem
                         expense={item.expense}
                         currencySymbol={currencySymbol}
-                        onToggleExpenseActive={handleToggleExpenseActive}
-                        onEditExpense={handleEditExpense}
+                        onToggleActive={handleToggleExpenseActive}
+                        onEdit={handleEditExpense}
                         onDelete={handleDeleteExpenseItem}
                         styles={styles}
                     />
