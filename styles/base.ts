@@ -1,6 +1,10 @@
 import { blueColor, greenColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
+export const baseFamily = { fontFamily: "System-ui" };
+
+export const baseBlur = { backgroundColor: "rgba(0,0,0,0.75)" };
+
 export const baseSeparation = { gap: 24 };
 export const baseGap = { gap: 12 };
 export const baseSpace = { gap: 8 };
@@ -25,6 +29,8 @@ export const baseOpacity = { opacity: 0.6 };
 export const baseHorizontal = { paddingHorizontal: 16 };
 export const baseVertical = { paddingVertical: 16 };
 
+export const baseHeight = { minHeight: 44 };
+
 export const baseFlex = (
     justify: "flex-start" | "center" | "space-between" | undefined = undefined,
     align: "flex-start" | "center" | "flex-end" | undefined = undefined,
@@ -46,10 +52,10 @@ export const baseInput = (theme: any) => ({
     ...baseRadius,
     ...baseBorder,
     ...baseSize,
+    ...baseHeight,
     borderColor: theme.inputBorder,
     backgroundColor: theme.inputBackground,
     color: theme.inputText,
-    minHeight: 44,
 });
 
 export const baseSelect = {
@@ -62,7 +68,7 @@ export const baseButton = (theme: any) => ({
     ...baseOutline(theme),
     ...baseRadius,
     ...baseBorder,
-    minHeight: 44,
+    ...baseHeight,
     minWidth: "auto" as const,
     paddingVertical: 12,
     paddingHorizontal: 24,
@@ -142,8 +148,8 @@ export const baseIcon = (theme: any) => ({
 
 export const baseOverlay = {
     ...baseCenter,
+    ...baseBlur,
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.75)",
 };
 
 export const baseModal = (theme: any) => ({

@@ -12,7 +12,8 @@
         "delete": "Delete",
         "save": "Save",
         "saving": "Saving …",
-        "back": "Back"
+        "back": "Back",
+        "clear": "Clear"
     },
     "tabs": {
         "home": "Home",
@@ -75,7 +76,9 @@
         "monthlyIncome": "Monthly Income",
         "monthlyCosts": "Monthly Costs",
         "monthlyDebts": "Monthly Debts",
-        "monthlyDisposable": "Monthly Disposable"
+        "monthlyDisposable": "Monthly Disposable",
+        "weeklyDisposable": "Weekly Disposable",
+        "dailyDisposable": "Daily Disposable"
     },
     "expenses": {
         "title": "Expenses",
@@ -161,13 +164,15 @@
         "label": {
             "name": "Name",
             "totalAmount": "Total Amount",
-            "monthlyPayment": "Monthly Payment"
+            "monthlyPayment": "Monthly Payment",
+            "nextPaymentDate": "Next Payment Date"
         },
         "placeholder": {
             "name": "e.g. Student Loan",
             "totalAmount": "e.g. 5000",
             "monthlyPayment": "e.g. 200",
-            "amountPaid": "Amount paid"
+            "amountPaid": "Amount paid",
+            "nextPaymentDate": "Select date"
         },
         "button": {
             "addDebt": "Add Debt",

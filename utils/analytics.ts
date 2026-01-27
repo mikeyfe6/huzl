@@ -3,7 +3,6 @@ if (__DEV__) {
 }
 
 import type { Analytics } from "@react-native-firebase/analytics";
-import { getApps } from "@react-native-firebase/app";
 import { Platform } from "react-native";
 
 type AnalyticsModule = Analytics;
@@ -43,11 +42,6 @@ function getNativeAnalyticsInstance(): AnalyticsModule | null {
     try {
         const getAnalytics = rnfbAnalyticsMod.getAnalytics as ((app?: any) => AnalyticsModule) | undefined;
         const getApp = rnfbAppMod?.getApp as (() => any) | undefined;
-
-        if (getApps().length === 0) {
-            return null;
-        }
-
         const app = getApp ? getApp() : undefined;
         nativeAnalyticsInstance = getAnalytics ? getAnalytics(app) : null;
         // Ensure collection is enabled even if plist/json flags were off
@@ -105,10 +99,6 @@ export async function logScreenView(name: string, title?: string) {
 
     try {
         const inst = getNativeAnalyticsInstance();
-        if (rnfbAppMod?.getApps?.().length === 0) {
-            return null;
-        }
-
         if (inst && typeof rnfbAnalyticsMod?.logScreenView === "function") {
             await rnfbAnalyticsMod.logScreenView(inst, {
                 screen_name: screenName,

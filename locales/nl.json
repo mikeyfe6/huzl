@@ -12,7 +12,8 @@
         "delete": "Verwijder",
         "save": "Opslaan",
         "saving": "Opslaan …",
-        "back": "Terug"
+        "back": "Terug",
+        "clear": "Wissen"
     },
     "tabs": {
         "home": "Home",
@@ -75,7 +76,9 @@
         "monthlyIncome": "Maandelijks Inkomen",
         "monthlyCosts": "Maandelijkse Kosten",
         "monthlyDebts": "Maandelijkse Schulden",
-        "monthlyDisposable": "Maandelijks Beschikbaar"
+        "monthlyDisposable": "Maandelijks Beschikbaar",
+        "weeklyDisposable": "Wekelijks Beschikbaar",
+        "dailyDisposable": "Dagelijks Beschikbaar"
     },
     "expenses": {
         "title": "Uitgaven",
@@ -161,13 +164,15 @@
         "label": {
             "name": "Naam",
             "totalAmount": "Totaal Bedrag",
-            "monthlyPayment": "Maandelijkse Betaling"
+            "monthlyPayment": "Maandelijkse Betaling",
+            "nextPaymentDate": "Volgende Betalingsdatum"
         },
         "placeholder": {
             "name": "Bijv. Studielening",
             "totalAmount": "Bijv. 5000",
             "monthlyPayment": "Bijv. 200",
-            "amountPaid": "Betaald bedrag"
+            "amountPaid": "Betaald bedrag",
+            "nextPaymentDate": "Selecteer datum"
         },
         "button": {
             "addDebt": "Schuld Toevoegen",

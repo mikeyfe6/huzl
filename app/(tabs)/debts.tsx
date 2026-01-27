@@ -1,7 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Platform, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import {
+    Alert,
+    FlatList,
+    Modal,
+    Platform,
+    Pressable,
+    ScrollView,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -15,9 +26,11 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { DebtItem } from "@/components/ui/debt-item";
 
-import { Colors } from "@/constants/theme";
+import { Colors, whiteColor } from "@/constants/theme";
 import { baseOrange, baseRed } from "@/styles/base";
 import { getDebtsStyles } from "@/styles/debts";
+
+// TODO: Test android datepicker....
 
 export default function DebtsScreen() {
     const { t } = useTranslation();
@@ -36,6 +49,9 @@ export default function DebtsScreen() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [paymentId, setPaymentId] = useState<string | null>(null);
     const [paymentAmount, setPaymentAmount] = useState("");
+    const [nextPaymentDate, setNextPaymentDate] = useState<string>("");
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(null);
     const [loading, setLoading] = useState(false);
 
     const theme = Colors[colorScheme ?? "light"];
@@ -45,6 +61,7 @@ export default function DebtsScreen() {
         setName(debt.name);
         setAmount(debt.amount.toFixed(2));
         setPayPerMonth(debt.pay_per_month?.toFixed(2) || "");
+        setNextPaymentDate(debt.next_payment_date || "");
         setEditingId(debt.id);
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
@@ -54,6 +71,7 @@ export default function DebtsScreen() {
         setName("");
         setAmount("");
         setPayPerMonth("");
+        setNextPaymentDate("");
         setEditingId(null);
     };
 
@@ -135,6 +153,7 @@ export default function DebtsScreen() {
         setLoading(true);
         try {
             const payPerMonthValue = payPerMonth.trim() ? Number.parseFloat(payPerMonth) : null;
+            const nextPaymentDateValue = nextPaymentDate.trim() ? nextPaymentDate : null;
             if (editingId) {
                 const { data, error } = await supabase
                     .from("debts")
@@ -142,6 +161,7 @@ export default function DebtsScreen() {
                         name,
                         amount: Number.parseFloat(amount),
                         pay_per_month: payPerMonthValue,
+                        next_payment_date: nextPaymentDateValue,
                     })
                     .eq("id", editingId)
                     .eq("user_id", user.id)
@@ -158,6 +178,7 @@ export default function DebtsScreen() {
                         name,
                         amount: Number.parseFloat(amount),
                         pay_per_month: payPerMonthValue,
+                        next_payment_date: nextPaymentDateValue,
                         active: true,
                     })
                     .select()
@@ -167,6 +188,7 @@ export default function DebtsScreen() {
                     setName("");
                     setAmount("");
                     setPayPerMonth("");
+                    setNextPaymentDate("");
                 }
             }
         } finally {
@@ -226,6 +248,111 @@ export default function DebtsScreen() {
                     onChangeText={(text) => setPayPerMonth(formatNumber(text))}
                     keyboardType="decimal-pad"
                 />
+                <ThemedText style={styles.label}>{t("debts.label.nextPaymentDate")}</ThemedText>
+                {Platform.OS === "web" ?
+                    <View style={styles.dateWrapper}>
+                        <input
+                            type="date"
+                            style={styles.dateInput}
+                            value={nextPaymentDate ? nextPaymentDate.slice(0, 10) : ""}
+                            onChange={(e) =>
+                                setNextPaymentDate(e.target.value ? new Date(e.target.value).toISOString() : "")
+                            }
+                            placeholder={t("debts.placeholder.nextPaymentDate")}
+                        />
+                        {nextPaymentDate && (
+                            <Pressable
+                                accessibilityRole="button"
+                                style={styles.cancel}
+                                onPress={() => setNextPaymentDate("")}
+                                accessibilityLabel={t("common.clear")}
+                            >
+                                <Ionicons name="close" size={24} color={whiteColor} />
+                            </Pressable>
+                        )}
+                    </View>
+                :   <>
+                        <View style={styles.dateWrapperMob}>
+                            <TouchableOpacity
+                                style={styles.input}
+                                onPress={() => {
+                                    setTempSelectedDate(nextPaymentDate ? new Date(nextPaymentDate) : new Date());
+                                    setShowDatePicker(true);
+                                }}
+                                activeOpacity={0.7}
+                                accessibilityRole="button"
+                                accessibilityLabel={t("debts.label.nextPaymentDate")}
+                            >
+                                <ThemedText style={{ color: nextPaymentDate ? theme.inputText : theme.placeholder }}>
+                                    {nextPaymentDate ?
+                                        new Date(nextPaymentDate).toLocaleDateString()
+                                    :   t("debts.placeholder.nextPaymentDate")}
+                                </ThemedText>
+                            </TouchableOpacity>
+                            {nextPaymentDate && (
+                                <Pressable
+                                    accessibilityRole="button"
+                                    style={styles.cancel}
+                                    onPress={() => setNextPaymentDate("")}
+                                    accessibilityLabel={t("common.clear")}
+                                >
+                                    <Ionicons name="close" size={24} color={whiteColor} />
+                                </Pressable>
+                            )}
+                        </View>
+                        {Platform.OS === "ios" && (
+                            <Modal
+                                transparent
+                                animationType="fade"
+                                visible={showDatePicker}
+                                onRequestClose={() => setShowDatePicker(false)}
+                            >
+                                <View style={styles.modal}>
+                                    <View style={styles.datepicker}>
+                                        <DateTimePicker
+                                            value={
+                                                tempSelectedDate ||
+                                                (nextPaymentDate ? new Date(nextPaymentDate) : new Date())
+                                            }
+                                            mode="date"
+                                            display="spinner"
+                                            textColor={theme.inputText}
+                                            onChange={(_, selectedDate) => {
+                                                if (selectedDate) {
+                                                    setTempSelectedDate(selectedDate);
+                                                }
+                                            }}
+                                        />
+                                        <TouchableOpacity
+                                            style={styles.saveButton}
+                                            onPress={() => {
+                                                if (tempSelectedDate) {
+                                                    setNextPaymentDate(tempSelectedDate.toISOString());
+                                                }
+                                                setShowDatePicker(false);
+                                            }}
+                                        >
+                                            <ThemedText style={styles.buttonText}>{t("common.save")}</ThemedText>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </Modal>
+                        )}
+                        {Platform.OS === "android" && showDatePicker && (
+                            <DateTimePicker
+                                value={nextPaymentDate ? new Date(nextPaymentDate) : new Date()}
+                                mode="date"
+                                display="default"
+                                onChange={(_, selectedDate) => {
+                                    setShowDatePicker(false);
+                                    if (selectedDate) {
+                                        setNextPaymentDate(selectedDate.toISOString());
+                                    }
+                                }}
+                            />
+                        )}
+                    </>
+                }
                 <View style={styles.buttons}>
                     <TouchableOpacity
                         style={[styles.button, { ...baseOrange }]}

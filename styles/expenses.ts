@@ -25,6 +25,7 @@ import {
     baseCorner,
     baseEmpty,
     baseEmptyText,
+    baseFamily,
     baseFieldset,
     baseFlex,
     baseGap,
@@ -90,8 +91,8 @@ export const getExpensesStyles = (theme: any) =>
         },
         selectInput: {
             ...baseInput(theme),
+            ...baseFamily,
             borderWidth: 0,
-            fontFamily: "System",
             color: theme.inputText,
             height: Platform.select({
                 ios: 216,

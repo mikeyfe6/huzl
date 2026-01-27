@@ -119,6 +119,7 @@ declare global {
 
     interface DebtItem extends itemUserIdProp, itemIdProp, itemNameProp, itemAmountProp, itemActiveProp {
         pay_per_month?: number | null;
+        next_payment_date?: string | null;
         created_at?: string;
     }
 

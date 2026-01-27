@@ -21,6 +21,7 @@ import {
     baseCard,
     baseEmpty,
     baseEmptyText,
+    baseFamily,
     baseFieldset,
     baseFlex,
     baseIcon,
@@ -157,9 +158,9 @@ export default function HelpdeskScreen() {
                     }),
                 },
                 selectInput: {
+                    ...baseFamily,
                     ...baseInput(theme),
                     borderWidth: 0,
-                    fontFamily: "System",
                     color: theme.inputText,
                     height: Platform.select({
                         ios: 216,

@@ -6,7 +6,7 @@ import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-nativ
 import { ThemedText } from "@/components/themed-text";
 
 import { linkColor } from "@/constants/theme";
-import { baseBorder, baseCorner, baseFlex, baseOutline } from "@/styles/base";
+import { baseBlur, baseBorder, baseCorner, baseFlex, baseOutline } from "@/styles/base";
 
 export const SORT_OPTIONS = [
     { value: "default" as const, labelKey: "sorting.dateAdded", icon: "time-outline" as const },
@@ -24,8 +24,8 @@ export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Rea
             StyleSheet.create({
                 backdrop: {
                     ...baseFlex("center", "center"),
+                    ...baseBlur,
                     flex: 1,
-                    backgroundColor: "rgba(0,0,0,0.4)",
                     paddingHorizontal: 24,
                 },
                 sheet: {

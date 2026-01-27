@@ -7,7 +7,7 @@ import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { blueColor, greenColor, mediumGreyColor, redColor } from "@/constants/theme";
+import { blueColor, greenColor, mediumGreyColor, orangeColor, redColor } from "@/constants/theme";
 import { baseGreen, baseInactive, baseRed } from "@/styles/base";
 
 export const DebtItem = memo(
@@ -93,20 +93,27 @@ export const DebtItem = memo(
                     </View>
                 </View>
                 <View style={styles.itemAmount}>
-                    <ThemedText style={styles.itemPayment}>
-                        {t("debts.monthly")}:{" "}
-                        {debt.pay_per_month ?
-                            `${formatCurrency(Math.min(debt.pay_per_month, debt.amount), currencySymbol)}`
-                        :   "—"}
-                    </ThemedText>
+                    <View style={styles.itemPayment}>
+                        <Ionicons name="time-outline" size={16} color={orangeColor} />
+                        <ThemedText style={styles.itemPaymentText}>
+                            {debt.next_payment_date ? new Date(debt.next_payment_date).toLocaleDateString() : "—"}
+                        </ThemedText>
+                    </View>
                     {debt.pay_per_month && debt.pay_per_month > 0 ?
                         (() => {
                             const months = Math.ceil(debt.amount / debt.pay_per_month);
                             const remainder = debt.amount % debt.pay_per_month;
-                            if (remainder === 0) {
+                            if (months === 1) {
                                 return (
                                     <ThemedText style={styles.itemRemaining}>
-                                        {t("debts.terms")}: {months}
+                                        {t("debts.terms")}: 1 ({formatCurrency(debt.amount, currencySymbol)})
+                                    </ThemedText>
+                                );
+                            } else if (remainder === 0) {
+                                return (
+                                    <ThemedText style={styles.itemRemaining}>
+                                        {t("debts.terms")}: {months} (
+                                        {formatCurrency(debt.pay_per_month, currencySymbol)})
                                     </ThemedText>
                                 );
                             } else {

@@ -206,6 +206,18 @@ export default function HomeScreen() {
         return monthlyIncome - totals.monthlyTotal - monthlyDebts;
     }, [monthlyIncome, totals, monthlyDebts]);
 
+    const [disposableToggle, setDisposableToggle] = useState(0);
+
+    const disposableValues = useMemo(() => {
+        if (monthlyDisposable === null) return [null, null, null];
+        const monthly = monthlyDisposable;
+        const weekly = monthly / 4.34524;
+        const daily = monthly / 30.4369;
+        return [monthly, weekly, daily];
+    }, [monthlyDisposable]);
+
+    const disposableLabels = [t("home.monthlyDisposable"), t("home.weeklyDisposable"), t("home.dailyDisposable")];
+
     useEffect(() => {
         if (!error) return;
         const timeout = setTimeout(() => setError(null), 7000);
@@ -536,17 +548,30 @@ export default function HomeScreen() {
                     )}
 
                     {monthlyDisposable !== null && (
-                        <ThemedView
-                            style={[
-                                styles.statCard,
-                                monthlyDisposable >= 0 ? styles.statCardPositive : styles.statCardNegative,
-                            ]}
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => setDisposableToggle((prev) => (prev + 1) % 3)}
                         >
-                            <ThemedText style={styles.statLabel}>{t("home.monthlyDisposable")}</ThemedText>
-                            <ThemedText style={styles.statValue}>
-                                {currencySymbol} {monthlyDisposable.toFixed(2).replace(".", ",")}
-                            </ThemedText>
-                        </ThemedView>
+                            <ThemedView
+                                style={[
+                                    styles.statCard,
+                                    (
+                                        disposableValues[disposableToggle] !== null &&
+                                        disposableValues[disposableToggle] >= 0
+                                    ) ?
+                                        styles.statCardPositive
+                                    :   styles.statCardNegative,
+                                ]}
+                            >
+                                <ThemedText style={styles.statLabel}>{disposableLabels[disposableToggle]}</ThemedText>
+                                <ThemedText style={styles.statValue}>
+                                    {disposableValues[disposableToggle] === null ?
+                                        "-"
+                                    :   `${currencySymbol} ${disposableValues[disposableToggle].toFixed(2).replace(".", ",")}`
+                                    }
+                                </ThemedText>
+                            </ThemedView>
+                        </TouchableOpacity>
                     )}
                 </ThemedView>
             </ThemedView>

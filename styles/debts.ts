@@ -1,15 +1,21 @@
 import { StyleSheet } from "react-native";
 
-import { slateColor } from "@/constants/theme";
+import { redColor, slateColor, whiteColor } from "@/constants/theme";
 import {
+    baseBlur,
     baseButton,
     baseButtonText,
     baseCard,
+    baseCenter,
+    baseCorner,
     baseEmpty,
     baseEmptyText,
+    baseFamily,
     baseFieldset,
     baseFlex,
     baseGap,
+    baseGreen,
+    baseHeight,
     baseIcon,
     baseIcons,
     baseInput,
@@ -17,6 +23,7 @@ import {
     baseList,
     baseMini,
     baseOpacity,
+    baseRadius,
     baseSelect,
     baseSmall,
     baseWeight,
@@ -39,6 +46,47 @@ export const getDebtsStyles = (theme: any) =>
         input: {
             ...baseInput(theme),
             ...baseSelect,
+            flex: 1,
+        },
+        dateWrapper: {
+            ...baseFlex("center"),
+            ...baseGap,
+        },
+        dateWrapperMob: {
+            ...baseFlex("center"),
+            ...baseGap,
+        },
+        dateInput: {
+            ...baseInput(theme),
+            ...baseFamily,
+            borderStyle: "solid",
+            paddingLeft: 12,
+            paddingRight: 12,
+            height: 44,
+            flex: 1,
+        },
+        cancel: {
+            ...baseCenter,
+            ...baseRadius,
+            ...baseHeight,
+            backgroundColor: redColor,
+            color: whiteColor,
+            width: 44,
+            borderWidth: 0,
+        },
+        modal: { ...baseBlur, flex: 1, justifyContent: "center" },
+        datepicker: {
+            ...baseCorner,
+            ...baseCenter,
+            backgroundColor: theme.inputBackground,
+            margin: 24,
+            padding: 16,
+            height: 300,
+        },
+        saveButton: {
+            ...baseButton(theme),
+            ...baseGreen,
+            width: "100%",
         },
         buttons: {
             ...baseFlex("center"),
@@ -84,6 +132,10 @@ export const getDebtsStyles = (theme: any) =>
             borderTopColor: theme.dividerColor,
         },
         itemPayment: {
+            ...baseFlex("center", "center"),
+            gap: 4,
+        },
+        itemPaymentText: {
             ...baseMini,
             color: slateColor,
         },
