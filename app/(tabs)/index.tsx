@@ -53,6 +53,7 @@ export default function HomeScreen() {
     const [debts, setDebts] = useState<any[]>([]);
     const [isSignUp, setIsSignUp] = useState(false);
     const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
+    const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
 
     const mapAuthError = (err: unknown) => {
         const code = (err as any)?.code;
@@ -104,15 +105,21 @@ export default function HomeScreen() {
         }
     };
 
-    const calculateYearlyTotal = (amount: number, freq: "daily" | "monthly" | "yearly"): number => {
+    const calculateYearlyTotal = (amount: number, freq: string): number => {
         const num = Number.parseFloat(amount.toString());
         if (Number.isNaN(num)) return 0;
 
         switch (freq) {
             case "daily":
                 return num * 365;
+            case "weekly":
+                return num * 52;
             case "monthly":
                 return num * 12;
+            case "quarterly":
+                return num * 4;
+            case "halfyearly":
+                return num * 2;
             case "yearly":
                 return num;
             default:
@@ -120,14 +127,15 @@ export default function HomeScreen() {
         }
     };
 
-    const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
-
     useFocusEffect(
         useCallback(() => {
             if (!user) {
                 setMonthlyIncome(null);
+                setExpenses([]);
+                setDebts([]);
                 return;
             }
+
             supabase
                 .from("incomes")
                 .select("amount")
@@ -144,7 +152,33 @@ export default function HomeScreen() {
                         setMonthlyIncome(total);
                     }
                 });
-        }, [user]),
+
+            supabase
+                .from("expenses")
+                .select("amount,frequency,active")
+                .eq("active", true)
+                .eq("user_id", user.id)
+                .then(({ data, error }) => {
+                    if (!error && Array.isArray(data)) {
+                        setExpenses(data);
+                    } else {
+                        setExpenses([]);
+                    }
+                });
+
+            supabase
+                .from("debts")
+                .select("pay_per_month,active")
+                .eq("active", true)
+                .eq("user_id", user.id)
+                .then(({ data, error }) => {
+                    if (!error && Array.isArray(data)) {
+                        setDebts(data);
+                    } else {
+                        setDebts([]);
+                    }
+                });
+        }, [user, refreshFlag]),
     );
 
     const totals = useMemo(() => {
@@ -183,46 +217,6 @@ export default function HomeScreen() {
         const timeout = setTimeout(() => setRegistrationSuccess(false), 10000);
         return () => clearTimeout(timeout);
     }, [registrationSuccess]);
-
-    useEffect(() => {
-        if (!user) return;
-
-        let isMounted = true;
-        const fetchExpenses = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("expenses")
-                    .select("amount,frequency,active")
-                    .eq("active", true)
-                    .eq("user_id", user.id);
-                if (!error && data && isMounted) {
-                    setExpenses(data);
-                }
-            } catch (err) {
-                console.error("Error fetching expenses:", err);
-            }
-        };
-        const fetchDebts = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("debts")
-                    .select("pay_per_month,active")
-                    .eq("active", true)
-                    .eq("user_id", user.id);
-                if (!error && data && isMounted) {
-                    setDebts(data);
-                }
-            } catch (err) {
-                console.error("Error fetching debts:", err);
-            }
-        };
-
-        fetchExpenses();
-        fetchDebts();
-        return () => {
-            isMounted = false;
-        };
-    }, [user, refreshFlag]);
 
     const styles = useMemo(
         () =>
