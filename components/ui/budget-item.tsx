@@ -20,8 +20,6 @@ export const BudgetItem = memo(
         selectedBudgetId,
         setSelectedBudgetId,
     }: BudgetListProps) => {
-        console.log("Rendering BudgetItem:", budget.id);
-
         return (
             <View
                 key={budget.id}

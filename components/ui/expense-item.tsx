@@ -21,7 +21,6 @@ export const ExpenseItem = memo(
         styles,
         t,
     }: ExpenseListProps) => {
-        console.log("Rendering ExpenseItem:", expense.id);
         return (
             <View style={[styles.expenseCard, !expense.active && baseInactive]}>
                 <View style={styles.expenseWrapper}>

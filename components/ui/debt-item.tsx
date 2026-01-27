@@ -27,8 +27,6 @@ export const DebtItem = memo(
         onPayment,
         t,
     }: DebtListProps) => {
-        console.log("DebtItem render", debt.id);
-
         return (
             <ThemedView key={debt.id} style={[styles.item, !debt.active && baseInactive]}>
                 <View style={styles.itemHeader}>
