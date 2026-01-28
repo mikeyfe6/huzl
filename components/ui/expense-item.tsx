@@ -66,7 +66,9 @@ export const ExpenseItem = memo(
                     <View
                         style={[
                             styles.badge,
-                            styles[`badge${expense.category.charAt(0).toUpperCase() + expense.category.slice(1)}`],
+                            (styles as any)[
+                                `badge${expense.category.charAt(0).toUpperCase() + expense.category.slice(1)}`
+                            ],
                         ]}
                     >
                         <ThemedText style={styles.badgeText}>{categoryLabelMap[expense.category]}</ThemedText>

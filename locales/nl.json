@@ -78,7 +78,8 @@
         "monthlyDebts": "Maandelijkse Schulden",
         "monthlyDisposable": "Maandelijks Beschikbaar",
         "weeklyDisposable": "Wekelijks Beschikbaar",
-        "dailyDisposable": "Dagelijks Beschikbaar"
+        "dailyDisposable": "Dagelijks Beschikbaar",
+        "nextPayment": "Volgende Betaling"
     },
     "expenses": {
         "title": "Uitgaven",

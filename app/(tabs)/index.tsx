@@ -29,6 +29,7 @@ import {
     baseHorizontal,
     baseInput,
     baseLarge,
+    baseMini,
     baseOutline,
     baseSelect,
     baseSmall,
@@ -56,6 +57,7 @@ export default function HomeScreen() {
     const [isSignUp, setIsSignUp] = useState(false);
     const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
+    const [disposableToggle, setDisposableToggle] = useState(0);
 
     const mapAuthError = (err: unknown) => {
         const code = (err as any)?.code;
@@ -66,6 +68,83 @@ export default function HomeScreen() {
 
         return t("auth.error.generic");
     };
+
+    const nextDebt = useMemo(() => {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const debtsWithDate = debts
+            .filter((d) => d.next_payment_date && !Number.isNaN(Date.parse(d.next_payment_date)))
+            .map((d) => ({
+                ...d,
+                nextDate: new Date(d.next_payment_date),
+            }))
+            .filter((d) => {
+                const date = new Date(d.nextDate);
+                date.setHours(0, 0, 0, 0);
+                return date >= now;
+            });
+        if (debtsWithDate.length === 0) return null;
+
+        debtsWithDate.sort((a, b) => a.nextDate - b.nextDate);
+        return debtsWithDate[0];
+    }, [debts]);
+
+    const calculateYearlyTotal = (amount: number, freq: string): number => {
+        const num = Number.parseFloat(amount.toString());
+        if (Number.isNaN(num)) return 0;
+
+        switch (freq) {
+            case "daily":
+                return num * 365;
+            case "weekly":
+                return num * 52;
+            case "monthly":
+                return num * 12;
+            case "quarterly":
+                return num * 4;
+            case "halfyearly":
+                return num * 2;
+            case "yearly":
+                return num;
+            default:
+                return 0;
+        }
+    };
+
+    const totals = useMemo(() => {
+        let monthlyTotal = 0;
+        let yearlyTotal = 0;
+
+        expenses.forEach((expense) => {
+            const amount = Number.parseFloat(String(expense.amount));
+            const yearly = calculateYearlyTotal(amount, expense.frequency);
+            yearlyTotal += yearly;
+            monthlyTotal += yearly / 12;
+        });
+
+        return { monthlyTotal, yearlyTotal };
+    }, [expenses]);
+
+    const monthlyDebts = useMemo(() => {
+        return debts
+            .filter((d) => d.pay_per_month && !Number.isNaN(Number(d.pay_per_month)))
+            .reduce((sum, d) => sum + Number(d.pay_per_month), 0);
+    }, [debts]);
+
+    const monthlyDisposable = useMemo(() => {
+        if (monthlyIncome === null) return null;
+        return monthlyIncome - totals.monthlyTotal - monthlyDebts;
+    }, [monthlyIncome, totals, monthlyDebts]);
+
+    const disposableValues = useMemo(() => {
+        if (monthlyDisposable === null) return [null, null, null];
+        const monthly = monthlyDisposable;
+        const weekly = monthly / 4.34524;
+        const daily = monthly / 30.4369;
+        return [monthly, weekly, daily];
+    }, [monthlyDisposable]);
+
+    const disposableLabels = [t("home.monthlyDisposable"), t("home.weeklyDisposable"), t("home.dailyDisposable")];
 
     const handleSignIn = async () => {
         setError(null);
@@ -107,27 +186,17 @@ export default function HomeScreen() {
         }
     };
 
-    const calculateYearlyTotal = (amount: number, freq: string): number => {
-        const num = Number.parseFloat(amount.toString());
-        if (Number.isNaN(num)) return 0;
+    useEffect(() => {
+        if (!error) return;
+        const timeout = setTimeout(() => setError(null), 7000);
+        return () => clearTimeout(timeout);
+    }, [error]);
 
-        switch (freq) {
-            case "daily":
-                return num * 365;
-            case "weekly":
-                return num * 52;
-            case "monthly":
-                return num * 12;
-            case "quarterly":
-                return num * 4;
-            case "halfyearly":
-                return num * 2;
-            case "yearly":
-                return num;
-            default:
-                return 0;
-        }
-    };
+    useEffect(() => {
+        if (!registrationSuccess) return;
+        const timeout = setTimeout(() => setRegistrationSuccess(false), 10000);
+        return () => clearTimeout(timeout);
+    }, [registrationSuccess]);
 
     useFocusEffect(
         useCallback(() => {
@@ -170,7 +239,7 @@ export default function HomeScreen() {
 
             supabase
                 .from("debts")
-                .select("pay_per_month,active")
+                .select("pay_per_month,active,name,next_payment_date")
                 .eq("active", true)
                 .eq("user_id", user.id)
                 .then(({ data, error }) => {
@@ -182,55 +251,6 @@ export default function HomeScreen() {
                 });
         }, [user, refreshFlag]),
     );
-
-    const totals = useMemo(() => {
-        let monthlyTotal = 0;
-        let yearlyTotal = 0;
-
-        expenses.forEach((expense) => {
-            const amount = Number.parseFloat(String(expense.amount));
-            const yearly = calculateYearlyTotal(amount, expense.frequency);
-            yearlyTotal += yearly;
-            monthlyTotal += yearly / 12;
-        });
-
-        return { monthlyTotal, yearlyTotal };
-    }, [expenses]);
-
-    const monthlyDebts = useMemo(() => {
-        return debts
-            .filter((d) => d.pay_per_month && !Number.isNaN(Number(d.pay_per_month)))
-            .reduce((sum, d) => sum + Number(d.pay_per_month), 0);
-    }, [debts]);
-
-    const monthlyDisposable = useMemo(() => {
-        if (monthlyIncome === null) return null;
-        return monthlyIncome - totals.monthlyTotal - monthlyDebts;
-    }, [monthlyIncome, totals, monthlyDebts]);
-
-    const [disposableToggle, setDisposableToggle] = useState(0);
-
-    const disposableValues = useMemo(() => {
-        if (monthlyDisposable === null) return [null, null, null];
-        const monthly = monthlyDisposable;
-        const weekly = monthly / 4.34524;
-        const daily = monthly / 30.4369;
-        return [monthly, weekly, daily];
-    }, [monthlyDisposable]);
-
-    const disposableLabels = [t("home.monthlyDisposable"), t("home.weeklyDisposable"), t("home.dailyDisposable")];
-
-    useEffect(() => {
-        if (!error) return;
-        const timeout = setTimeout(() => setError(null), 7000);
-        return () => clearTimeout(timeout);
-    }, [error]);
-
-    useEffect(() => {
-        if (!registrationSuccess) return;
-        const timeout = setTimeout(() => setRegistrationSuccess(false), 10000);
-        return () => clearTimeout(timeout);
-    }, [registrationSuccess]);
 
     const styles = useMemo(
         () =>
@@ -362,6 +382,12 @@ export default function HomeScreen() {
                 },
                 statCardNegative: {
                     backgroundColor: theme.cardNegativeBackground,
+                },
+                nextDebt: {
+                    ...baseMini,
+                    marginTop: 6,
+                    color: orangeColor,
+                    textAlign: "center",
                 },
             }),
         [theme],
@@ -574,6 +600,12 @@ export default function HomeScreen() {
                                 </ThemedText>
                             </ThemedView>
                         </TouchableOpacity>
+                    )}
+
+                    {nextDebt && (
+                        <ThemedText style={styles.nextDebt}>
+                            {`${t("home.nextPayment")}: ${nextDebt.name}・${nextDebt.nextDate.toLocaleDateString("nl-NL")}`}
+                        </ThemedText>
                     )}
                 </ThemedView>
             </ThemedView>

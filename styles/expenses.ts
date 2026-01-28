@@ -153,8 +153,21 @@ export const getExpensesStyles = (theme: any) =>
             ...baseOpacity,
         },
         expenseSearch: {
+            ...baseFlex("center"),
             ...baseHorizontal,
+            position: "relative",
             marginBottom: 16,
+        },
+        searchInput: {
+            flex: 1,
+            paddingRight: 32,
+        },
+        searchIcon: {
+            position: "absolute",
+            right: 28,
+            top: "50%",
+            marginTop: -11,
+            pointerEvents: "none",
         },
         sortTrigger: {
             ...baseFlex("center", "center"),
@@ -198,9 +211,9 @@ export const getExpensesStyles = (theme: any) =>
             ...baseBorder,
             ...baseCorner,
             ...baseCenter,
-            paddingHorizontal: 8,
+            paddingHorizontal: 10,
             opacity: 0.75,
-            height: 22,
+            height: 21,
         },
         badgePersonal: {
             backgroundColor: personalColor + "50",
@@ -269,22 +282,22 @@ export const getExpensesStyles = (theme: any) =>
             ...baseMini,
             color: slateColor,
         },
-        expenseYearly: { ...baseFlex("center") },
+        expenseYearly: { ...baseFlex("center", "center") },
         expenseYearlyLabel: {
             ...baseMini,
             opacity: 0.8,
             color: theme.text,
         },
-        expenseYearlyValue: { ...baseWeight, ...baseSmall, color: theme.text },
+        expenseYearlyValue: { ...baseWeight, ...baseMini, color: theme.text },
         expenseMonthly: {
-            ...baseFlex("center"),
+            ...baseFlex("center", "center"),
         },
         expenseMonthlyLabel: {
             ...baseMini,
             opacity: 0.8,
             color: mediumGreyColor,
         },
-        expenseMonthlyValue: { ...baseWeight, ...baseSmall, color: mediumGreyColor },
+        expenseMonthlyValue: { ...baseWeight, ...baseMini, color: mediumGreyColor },
         totalSection: {
             ...baseBorder,
             ...baseSpace,
@@ -403,4 +416,4 @@ export const getExpensesStyles = (theme: any) =>
         emptyStateText: {
             ...baseEmptyText(theme),
         },
-    }) as Record<string, any>;
+    });

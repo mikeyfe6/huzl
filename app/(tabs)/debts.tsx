@@ -272,7 +272,7 @@ export default function DebtsScreen() {
                         )}
                     </View>
                 :   <>
-                        <View style={styles.dateWrapperMob}>
+                        <View style={styles.dateWrapperFallback}>
                             <TouchableOpacity
                                 style={styles.input}
                                 onPress={() => {

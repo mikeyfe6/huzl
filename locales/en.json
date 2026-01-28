@@ -78,7 +78,8 @@
         "monthlyDebts": "Monthly Debts",
         "monthlyDisposable": "Monthly Disposable",
         "weeklyDisposable": "Weekly Disposable",
-        "dailyDisposable": "Daily Disposable"
+        "dailyDisposable": "Daily Disposable",
+        "nextPayment": "Next Payment"
     },
     "expenses": {
         "title": "Expenses",

@@ -27,6 +27,28 @@ export const DebtItem = memo(
         onPayment,
         t,
     }: DebtListProps) => {
+        const renderNextPaymentDate = (dateString: string | null | undefined) => {
+            if (!dateString) return <ThemedText style={[styles.itemPaymentText]}>—</ThemedText>;
+
+            const dateObj = new Date(dateString);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            dateObj.setHours(0, 0, 0, 0);
+            const formatted = dateObj.toLocaleDateString();
+
+            if (dateObj.getTime() === today.getTime()) {
+                return <ThemedText style={[styles.itemPaymentText, { fontWeight: "bold" }]}>{formatted} ◀︎</ThemedText>;
+            } else if (dateObj < today) {
+                return (
+                    <ThemedText style={[styles.itemPaymentText, { fontWeight: "bold", color: redColor }]}>
+                        {formatted}
+                    </ThemedText>
+                );
+            } else {
+                return <ThemedText style={[styles.itemPaymentText]}>{formatted}</ThemedText>;
+            }
+        };
+
         return (
             <ThemedView key={debt.id} style={[styles.item, !debt.active && baseInactive]}>
                 <View style={styles.itemHeader}>
@@ -95,9 +117,7 @@ export const DebtItem = memo(
                 <View style={styles.itemAmount}>
                     <View style={styles.itemPayment}>
                         <Ionicons name="time-outline" size={16} color={orangeColor} />
-                        <ThemedText style={styles.itemPaymentText}>
-                            {debt.next_payment_date ? new Date(debt.next_payment_date).toLocaleDateString() : "—"}
-                        </ThemedText>
+                        {renderNextPaymentDate(debt.next_payment_date)}
                     </View>
                     {debt.pay_per_month && debt.pay_per_month > 0 ?
                         (() => {

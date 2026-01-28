@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Platform, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, NativeMethods, Platform, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -48,6 +48,7 @@ export default function ExpensesScreen() {
     const nameInputRef = useRef<TextInput>(null);
     const listSectionRef = useRef<any>(null);
     const flatListRef = useRef<FlatList>(null);
+    const searchBarRef = useRef<View>(null);
 
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
@@ -667,15 +668,37 @@ export default function ExpensesScreen() {
                             <Ionicons name="chevron-down" size={16} color={theme.label} />
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.expenseSearch}>
+                    <View ref={searchBarRef} collapsable={false} style={styles.expenseSearch}>
                         <TextInput
-                            style={styles.input}
+                            style={[styles.input, styles.searchInput]}
                             placeholder={t("expenses.placeholder.search")}
                             placeholderTextColor={theme.placeholder}
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                             returnKeyType="search"
+                            onFocus={() => {
+                                if (!flatListRef.current || !searchBarRef.current) return;
+
+                                requestAnimationFrame(() => {
+                                    const scrollView =
+                                        flatListRef?.current?.getNativeScrollRef?.() as unknown as NativeMethods;
+
+                                    if (!scrollView) return;
+
+                                    searchBarRef?.current?.measureLayout(
+                                        scrollView,
+                                        (_x, y) => {
+                                            flatListRef.current?.scrollToOffset({
+                                                offset: Math.max(0, y - 72),
+                                                animated: true,
+                                            });
+                                        },
+                                        () => console.warn("measureLayout failed"),
+                                    );
+                                });
+                            }}
                         />
+                        <Ionicons name="search" size={20} color={theme.placeholder} style={styles.searchIcon} />
                     </View>
                     <SortModal
                         visible={sortModalVisible}
