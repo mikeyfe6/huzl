@@ -89,7 +89,8 @@
             "frequency": "Frequency"
         },
         "placeholder": {
-            "name": "e.g. Spotify"
+            "name": "e.g. Spotify",
+            "search": "Search for an expense..."
         },
         "category": {
             "personal": "Personal",

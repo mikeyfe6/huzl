@@ -89,7 +89,8 @@
             "frequency": "Frequentie"
         },
         "placeholder": {
-            "name": "Bijv. Spotify"
+            "name": "Bijv. Spotify",
+            "search": "Zoek een uitgave..."
         },
         "category": {
             "personal": "Persoonlijk",

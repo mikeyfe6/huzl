@@ -58,6 +58,7 @@ export default function ExpensesScreen() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption>("default");
     const [sortModalVisible, setSortModalVisible] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const theme = Colors[colorScheme ?? "light"];
     const styles = useMemo(() => getExpensesStyles(theme), [theme]);
@@ -84,8 +85,13 @@ export default function ExpensesScreen() {
         [t],
     );
 
+    const filteredExpenses = useMemo(() => {
+        if (!searchQuery.trim()) return expenses;
+        return expenses.filter((e) => e.name.toLowerCase().includes(searchQuery.trim().toLowerCase()));
+    }, [expenses, searchQuery]);
+
     const sortedExpenses = useMemo(() => {
-        const sorted = [...expenses];
+        const sorted = [...filteredExpenses];
 
         switch (sortOption) {
             case "alphabetic-asc":
@@ -104,7 +110,7 @@ export default function ExpensesScreen() {
             default:
                 return sorted;
         }
-    }, [expenses, sortOption]);
+    }, [filteredExpenses, sortOption]);
 
     const totals = useMemo(() => {
         const result: Record<string, number> = {
@@ -660,6 +666,16 @@ export default function ExpensesScreen() {
                             <ThemedText style={styles.sortTriggerText}>{sortLabelMap[sortOption]}</ThemedText>
                             <Ionicons name="chevron-down" size={16} color={theme.label} />
                         </TouchableOpacity>
+                    </View>
+                    <View style={styles.expenseSearch}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={t("expenses.placeholder.search")}
+                            placeholderTextColor={theme.placeholder}
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                            returnKeyType="search"
+                        />
                     </View>
                     <SortModal
                         visible={sortModalVisible}

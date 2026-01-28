@@ -142,7 +142,7 @@ export const getExpensesStyles = (theme: any) =>
             ...baseFlex("space-between", "center"),
             ...baseSpace,
             ...baseHorizontal,
-            marginBottom: 24,
+            marginBottom: 16,
         },
         expenseTitle: {
             ...baseFlex("center", "center"),
@@ -151,6 +151,10 @@ export const getExpensesStyles = (theme: any) =>
         expenseNumber: {
             ...baseSize,
             ...baseOpacity,
+        },
+        expenseSearch: {
+            ...baseHorizontal,
+            marginBottom: 16,
         },
         sortTrigger: {
             ...baseFlex("center", "center"),
