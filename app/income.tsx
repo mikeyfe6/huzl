@@ -248,9 +248,9 @@ export default function IncomeScreen() {
                     borderRadius: 6,
                 },
                 icons: {
+                    ...baseGap,
                     ...baseCenter,
                     flexDirection: "column",
-                    gap: 12,
                     marginLeft: 16,
                 },
                 icon: {

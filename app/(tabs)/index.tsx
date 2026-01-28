@@ -25,6 +25,8 @@ import {
     baseError,
     baseFlex,
     baseGap,
+    baseHeight,
+    baseHorizontal,
     baseInput,
     baseLarge,
     baseOutline,
@@ -233,7 +235,7 @@ export default function HomeScreen() {
     const styles = useMemo(
         () =>
             StyleSheet.create({
-                logo: { ...baseFlex("center", "center"), gap: 8, marginBottom: 32 },
+                logo: { ...baseFlex("center", "center"), ...baseSpace, marginBottom: 32 },
                 image: {
                     maxWidth: 100,
                     height: 100,
@@ -279,7 +281,7 @@ export default function HomeScreen() {
                 forgetButton: {
                     ...baseFlex("center", "center"),
                     ...baseOutline(theme),
-                    minHeight: 44,
+                    ...baseHeight,
                 },
                 forgetButtonText: {
                     ...baseSmall,
@@ -310,7 +312,7 @@ export default function HomeScreen() {
                         default: 12,
                     }),
                 },
-                errorContainer: { ...baseCenter, minHeight: 44 },
+                errorContainer: { ...baseCenter, ...baseHeight },
                 errorText: {
                     ...baseError,
                 },
@@ -336,7 +338,7 @@ export default function HomeScreen() {
                 statCard: {
                     ...baseSpace,
                     ...baseCorner,
-                    paddingHorizontal: 16,
+                    ...baseHorizontal,
                     paddingTop: 14,
                     paddingBottom: 18,
                     backgroundColor: theme.cardBackground,

@@ -6,7 +6,18 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { linkColor, whiteColor } from "@/constants/theme";
-import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseOutline, baseSize, baseWeight } from "@/styles/base";
+import {
+    baseBold,
+    baseCorner,
+    baseFlex,
+    baseHorizontal,
+    baseLarge,
+    baseMini,
+    baseOutline,
+    baseSize,
+    baseVertical,
+    baseWeight,
+} from "@/styles/base";
 
 const AVAILABLE_LANGUAGES: LanguageItem[] = [
     { code: "nl", name: "Dutch", nativeName: "Nederlands" },
@@ -50,8 +61,8 @@ export function LanguagePickerModal({ visible, onClose, theme }: Readonly<Langua
                     ...baseFlex("space-between", "center"),
                     ...baseOutline(theme),
                     ...baseCorner,
-                    paddingVertical: 16,
-                    paddingHorizontal: 16,
+                    ...baseHorizontal,
+                    ...baseVertical,
                     marginBottom: 8,
                 },
                 languageItemSelected: {

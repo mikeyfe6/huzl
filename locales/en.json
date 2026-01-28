@@ -117,7 +117,8 @@
             "updateExpense": "Update Expense"
         },
         "yourExpenses": "Your Expenses",
-        "period": "P/Y - P/M",
+        "perYear": "P/Y",
+        "perMonth": "P/M",
         "yearlySpend": "Total Yearly Spend",
         "monthlySpend": "Total Monthly Spend",
         "weeklySpend": "Total Weekly Spend",

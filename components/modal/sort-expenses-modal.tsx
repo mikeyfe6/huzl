@@ -6,7 +6,7 @@ import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-nativ
 import { ThemedText } from "@/components/themed-text";
 
 import { linkColor } from "@/constants/theme";
-import { baseBlur, baseBorder, baseCorner, baseFlex, baseOutline } from "@/styles/base";
+import { baseBlur, baseBorder, baseCorner, baseFlex, baseHorizontal, baseOutline } from "@/styles/base";
 
 export const SORT_OPTIONS = [
     { value: "default" as const, labelKey: "sorting.dateAdded", icon: "time-outline" as const },
@@ -42,14 +42,14 @@ export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Rea
                     paddingVertical: 8,
                 },
                 header: {
-                    paddingHorizontal: 16,
+                    ...baseHorizontal,
                     paddingVertical: 12,
                     color: theme.label,
                 },
                 item: {
                     ...baseFlex("space-between", "center"),
                     ...baseOutline(theme),
-                    paddingHorizontal: 16,
+                    ...baseHorizontal,
                     paddingVertical: 12,
                 },
                 itemDivider: {
@@ -63,7 +63,7 @@ export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Rea
                 },
                 cancel: {
                     ...baseOutline(theme),
-                    paddingHorizontal: 16,
+                    ...baseHorizontal,
                     paddingVertical: 12,
                     alignItems: "center",
                 },

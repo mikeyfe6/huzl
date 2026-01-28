@@ -35,16 +35,6 @@ export const ExpenseItem = memo(
                                 </ThemedText>{" "}
                                 - {frequencyLabel}
                             </ThemedText>
-                            <View
-                                style={[
-                                    styles.badge,
-                                    styles[
-                                        `badge${expense.category.charAt(0).toUpperCase() + expense.category.slice(1)}`
-                                    ],
-                                ]}
-                            >
-                                <ThemedText style={styles.badgeText}>{categoryLabelMap[expense.category]}</ThemedText>
-                            </View>
                         </View>
                     </View>
                     <View style={styles.expenseIcons}>
@@ -73,14 +63,28 @@ export const ExpenseItem = memo(
                     </View>
                 </View>
                 <View style={styles.expenseTotal}>
-                    <ThemedText style={styles.expensePeriod}>{t("expenses.period")}:</ThemedText>
+                    <View
+                        style={[
+                            styles.badge,
+                            styles[`badge${expense.category.charAt(0).toUpperCase() + expense.category.slice(1)}`],
+                        ]}
+                    >
+                        <ThemedText style={styles.badgeText}>{categoryLabelMap[expense.category]}</ThemedText>
+                    </View>
                     <View style={styles.expenseAmounts}>
-                        <ThemedText style={styles.expenseYearly}>
-                            {formatCurrency(expense.yearlyTotal, currencySymbol)}
-                        </ThemedText>
-                        <ThemedText style={styles.expenseMonthly}>
-                            {formatCurrency(expense.yearlyTotal / 12, currencySymbol)}
-                        </ThemedText>
+                        <View style={styles.expenseYearly}>
+                            <ThemedText style={styles.expenseYearlyLabel}>{t("expenses.perYear")}: </ThemedText>
+                            <ThemedText style={styles.expenseYearlyValue}>
+                                {formatCurrency(expense.yearlyTotal, currencySymbol)}
+                            </ThemedText>
+                        </View>
+
+                        <View style={styles.expenseMonthly}>
+                            <ThemedText style={styles.expenseMonthlyLabel}> {t("expenses.perMonth")}: </ThemedText>
+                            <ThemedText style={styles.expenseMonthlyValue}>
+                                {formatCurrency(expense.yearlyTotal / 12, currencySymbol)}
+                            </ThemedText>
+                        </View>
                     </View>
                 </View>
             </View>

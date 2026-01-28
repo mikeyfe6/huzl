@@ -127,7 +127,7 @@ export const getDebtsStyles = (theme: any) =>
             ...baseFlex("space-between"),
             flexWrap: "wrap",
             gap: 4,
-            paddingTop: 8,
+            paddingTop: 12,
             borderTopWidth: StyleSheet.hairlineWidth,
             borderTopColor: theme.dividerColor,
         },

@@ -117,7 +117,8 @@
             "updateExpense": "Uitgave Bijwerken"
         },
         "yourExpenses": "Jouw Uitgaven",
-        "period": "P/J - P/M",
+        "perYear": "P/J",
+        "perMonth": "P/M",
         "yearlySpend": "Totale Jaarlijkse Uitgaven",
         "monthlySpend": "Totale Maandelijkse Uitgaven",
         "weeklySpend": "Totale Wekelijkse Uitgaven",

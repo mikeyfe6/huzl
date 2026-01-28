@@ -11,7 +11,18 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { linkColor, whiteColor } from "@/constants/theme";
-import { baseBold, baseCorner, baseFlex, baseLarge, baseMini, baseOutline, baseTitle, baseWeight } from "@/styles/base";
+import {
+    baseBold,
+    baseCorner,
+    baseFlex,
+    baseHorizontal,
+    baseLarge,
+    baseMini,
+    baseOutline,
+    baseTitle,
+    baseVertical,
+    baseWeight,
+} from "@/styles/base";
 
 export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: Readonly<CurrencyPickerModalProps>) {
     const { t } = useTranslation();
@@ -67,8 +78,8 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: 
                     ...baseFlex("space-between", "center"),
                     ...baseOutline(theme),
                     ...baseCorner,
-                    paddingVertical: 16,
-                    paddingHorizontal: 16,
+                    ...baseHorizontal,
+                    ...baseVertical,
                     marginBottom: 8,
                 },
                 currencyItemSelected: {
