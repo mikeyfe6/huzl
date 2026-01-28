@@ -10,8 +10,16 @@
             "environment": "development",
             "channel": "development",
             "ios": {
-                "simulator": true
+                "simulator": false
             }
+        },
+        "development-simulator": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "ios": {
+                "simulator": true
+            },
+            "environment": "development"
         },
         "preview": {
             "distribution": "internal",
