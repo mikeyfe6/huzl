@@ -698,7 +698,15 @@ export default function ExpensesScreen() {
                                 });
                             }}
                         />
-                        <Ionicons name="search" size={20} color={theme.placeholder} style={styles.searchIcon} />
+                        {searchQuery.trim().length > 0 ?
+                            <Ionicons
+                                name="close"
+                                size={20}
+                                color={theme.placeholder}
+                                style={styles.searchIcon}
+                                onPress={() => setSearchQuery("")}
+                            />
+                        :   <Ionicons name="search" size={20} color={theme.placeholder} style={styles.searchIcon} />}
                     </View>
                     <SortModal
                         visible={sortModalVisible}
@@ -1148,7 +1156,11 @@ export default function ExpensesScreen() {
                             </ThemedText>
                         </ThemedView>
                     :   <ThemedView style={styles.emptyState}>
-                            <ThemedText style={styles.emptyStateText}>{t("expenses.addFirstExpense")}</ThemedText>
+                            <ThemedText style={styles.emptyStateText}>
+                                {searchQuery.trim().length > 0 ?
+                                    t("expenses.noSearchResults")
+                                :   t("expenses.addFirstExpense")}
+                            </ThemedText>
                         </ThemedView>
                 }
             />

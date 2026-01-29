@@ -142,7 +142,8 @@ export const getExpensesStyles = (theme: any) =>
             ...baseFlex("space-between", "center"),
             ...baseSpace,
             ...baseHorizontal,
-            marginBottom: 16,
+            paddingBottom: 16,
+            backgroundColor: theme.background,
         },
         expenseTitle: {
             ...baseFlex("center", "center"),
@@ -156,7 +157,8 @@ export const getExpensesStyles = (theme: any) =>
             ...baseFlex("center"),
             ...baseHorizontal,
             position: "relative",
-            marginBottom: 16,
+            paddingBottom: 16,
+            backgroundColor: theme.background,
         },
         searchInput: {
             flex: 1,
@@ -164,10 +166,9 @@ export const getExpensesStyles = (theme: any) =>
         },
         searchIcon: {
             position: "absolute",
+            top: 23,
             right: 28,
-            top: "50%",
             marginTop: -11,
-            pointerEvents: "none",
         },
         sortTrigger: {
             ...baseFlex("center", "center"),

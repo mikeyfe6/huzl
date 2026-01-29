@@ -91,7 +91,7 @@
         },
         "placeholder": {
             "name": "e.g. Spotify",
-            "search": "Search for an expense..."
+            "search": "Search for an expense…"
         },
         "category": {
             "personal": "Personal",
@@ -127,7 +127,8 @@
         "dailySpend": "Total Daily Spend",
         "addFirstExpense": "Add your first expense!",
         "deleteExpense": "Delete expense",
-        "noExpensesInPie": "No expenses in this category."
+        "noExpensesInPie": "No expenses in this category.",
+        "noSearchResults": "No expenses found…"
     },
     "sorting": {
         "sortBy": "Sort By",
@@ -293,7 +294,7 @@
             "support": "Support"
         },
         "placeholder": {
-            "message": "Type your message here..."
+            "message": "Type your message here…"
         },
         "yourTickets": "Your Tickets",
         "deleteTicket": "Delete ticket",

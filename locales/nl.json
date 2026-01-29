@@ -91,7 +91,7 @@
         },
         "placeholder": {
             "name": "Bijv. Spotify",
-            "search": "Zoek een uitgave..."
+            "search": "Zoek een uitgave…"
         },
         "category": {
             "personal": "Persoonlijk",
@@ -127,7 +127,8 @@
         "dailySpend": "Totale Dagelijkse Uitgaven",
         "addFirstExpense": "Voeg je eerste uitgave toe!",
         "deleteExpense": "Verwijder uitgave",
-        "noExpensesInPie": "Geen uitgaven in deze categorie."
+        "noExpensesInPie": "Geen uitgaven in deze categorie.",
+        "noSearchResults": "Geen uitgaven gevonden…"
     },
     "sorting": {
         "sortBy": "Sorteren op",
@@ -293,7 +294,7 @@
             "support": "Ondersteuning"
         },
         "placeholder": {
-            "message": "Typ hier je bericht..."
+            "message": "Typ hier je bericht…"
         },
         "yourTickets": "Jouw Tickets",
         "deleteTicket": "Verwijder ticket",
