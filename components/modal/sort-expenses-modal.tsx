@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 
@@ -79,7 +79,7 @@ export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Rea
                         {t("sorting.sortBy")}
                     </ThemedText>
                     {SORT_OPTIONS.map((option, index) => (
-                        <TouchableOpacity
+                        <Pressable
                             key={option.value}
                             style={[styles.item, index < SORT_OPTIONS.length - 1 && styles.itemDivider]}
                             onPress={() => onSelect(option.value)}
@@ -89,11 +89,11 @@ export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Rea
                                 <ThemedText>{t(option.labelKey)}</ThemedText>
                             </View>
                             {sortOption === option.value && <Ionicons name="checkmark" size={18} color={linkColor} />}
-                        </TouchableOpacity>
+                        </Pressable>
                     ))}
-                    <TouchableOpacity style={styles.cancel} onPress={onClose}>
+                    <Pressable style={styles.cancel} onPress={onClose}>
                         <ThemedText type="danger">{t("common.close")}</ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </View>
         </Modal>

@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -348,7 +348,7 @@ export default function IncomeScreen() {
                                         renderItem={({ item, index }) => {
                                             const isLast = index === incomeTypes.length - 1;
                                             return (
-                                                <TouchableOpacity
+                                                <Pressable
                                                     style={[
                                                         styles.type,
                                                         {
@@ -360,14 +360,14 @@ export default function IncomeScreen() {
                                                     onPress={() => updateSource(idx, "type", item.key)}
                                                 >
                                                     <ThemedText style={styles.typeText}>{item.label}</ThemedText>
-                                                </TouchableOpacity>
+                                                </Pressable>
                                             );
                                         }}
                                         showsHorizontalScrollIndicator={false}
                                     />
                                 </View>
                                 <View style={styles.icons}>
-                                    <TouchableOpacity
+                                    <Pressable
                                         onPress={() => toggleActive(idx)}
                                         style={[
                                             styles.icon,
@@ -381,9 +381,9 @@ export default function IncomeScreen() {
                                             size={16}
                                             color={src.active ? greenColor : mediumGreyColor}
                                         />
-                                    </TouchableOpacity>
+                                    </Pressable>
                                     {sources.length > 1 && (
-                                        <TouchableOpacity
+                                        <Pressable
                                             onPress={() => removeSource(idx)}
                                             style={[
                                                 styles.icon,
@@ -393,24 +393,24 @@ export default function IncomeScreen() {
                                             ]}
                                         >
                                             <Ionicons name="trash" size={16} color={redColor} />
-                                        </TouchableOpacity>
+                                        </Pressable>
                                     )}
                                 </View>
                             </View>
                         ))
                     }
-                    <TouchableOpacity onPress={addSource} style={styles.add}>
+                    <Pressable onPress={addSource} style={styles.add}>
                         <ThemedText style={styles.addText}>+ {t("income.addSource")}</ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                     <View style={styles.total}>
                         <ThemedText> {t("income.total")}:</ThemedText>
                         <ThemedText type="defaultSemiBold"> {formatCurrency(total, currencySymbol)}</ThemedText>
                     </View>
                     <ThemedView style={styles.buttons}>
-                        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+                        <Pressable style={styles.closeButton} onPress={() => router.back()}>
                             <ThemedText style={styles.closeButtonText}>{t("common.close")}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             style={[styles.saveButton, saveButtonDisabled && baseInactive]}
                             disabled={saveButtonDisabled}
                             onPress={handleSave}
@@ -418,7 +418,7 @@ export default function IncomeScreen() {
                             <ThemedText style={styles.saveButtonText}>
                                 {saving ? t("common.saving") : t("common.save")}
                             </ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     </ThemedView>
                 </ThemedView>
             </ScrollView>

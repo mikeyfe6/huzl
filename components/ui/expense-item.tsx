@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { memo } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { formatCurrency } from "@/utils/helpers";
 
@@ -38,7 +38,7 @@ export const ExpenseItem = memo(
                         </View>
                     </View>
                     <View style={styles.expenseIcons}>
-                        <TouchableOpacity
+                        <Pressable
                             onPress={() => onToggleActive(expense.id, expense.active)}
                             style={[styles.expenseIcon, { borderColor: expense.active ? greenColor : mediumGreyColor }]}
                         >
@@ -47,19 +47,19 @@ export const ExpenseItem = memo(
                                 size={16}
                                 color={expense.active ? greenColor : mediumGreyColor}
                             />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onEdit(expense)}
                             style={[styles.expenseIcon, { borderColor: mediumGreyColor }]}
                         >
                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onDelete(expense.id, expense.name)}
                             style={[styles.expenseIcon, { borderColor: redColor }]}
                         >
                             <Ionicons name="trash" size={16} color={redColor} />
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
                 <View style={styles.expenseTotal}>

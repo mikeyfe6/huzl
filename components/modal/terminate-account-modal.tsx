@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 
@@ -135,14 +135,14 @@ export function TerminateAccountModal({ visible, onClose, theme }: Readonly<Term
                         onChangeText={setEmail}
                     />
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
+                        <Pressable style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.transButton} onPress={handleTerminateOrUndo} disabled={loading}>
+                        </Pressable>
+                        <Pressable style={styles.transButton} onPress={handleTerminateOrUndo} disabled={loading}>
                             <ThemedText style={styles.transButtonText} numberOfLines={1}>
                                 {buttonLabel}
                             </ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
             </View>

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { memo } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { formatCurrency } from "@/utils/helpers";
 
@@ -34,7 +34,7 @@ export const BudgetItem = memo(
                         {budget.name}
                     </ThemedText>
                     <View style={styles.budgetIcons}>
-                        <TouchableOpacity
+                        <Pressable
                             onPress={() => setSelectedBudgetId(selectedBudgetId === budget.id ? null : budget.id)}
                             style={[
                                 styles.budgetIcon,
@@ -44,8 +44,8 @@ export const BudgetItem = memo(
                             ]}
                         >
                             <Ionicons name="cash-outline" size={16} color={blueColor} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onToggleActive(budget.id, budget.active)}
                             style={[
                                 styles.budgetIcon,
@@ -59,8 +59,8 @@ export const BudgetItem = memo(
                                 size={16}
                                 color={budget.active ? greenColor : mediumGreyColor}
                             />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onEdit(budget)}
                             style={[
                                 styles.budgetIcon,
@@ -70,8 +70,8 @@ export const BudgetItem = memo(
                             ]}
                         >
                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onDelete(budget.id, budget.name)}
                             style={[
                                 styles.budgetIcon,
@@ -81,7 +81,7 @@ export const BudgetItem = memo(
                             ]}
                         >
                             <Ionicons name="trash" size={16} color={redColor} />
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
                 <ThemedText style={styles.budgetAmount}>
@@ -118,7 +118,7 @@ export const ExpenseItem = memo(
                     </ThemedText>
                 </View>
                 <View style={styles.budgetIcons}>
-                    <TouchableOpacity
+                    <Pressable
                         onPress={() => onToggleActive(expense.id, expense.active)}
                         style={[
                             styles.budgetIcon,
@@ -132,8 +132,8 @@ export const ExpenseItem = memo(
                             size={16}
                             color={expense.active ? greenColor : mediumGreyColor}
                         />
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         onPress={() => onEdit(expense)}
                         style={[
                             styles.budgetIcon,
@@ -143,8 +143,8 @@ export const ExpenseItem = memo(
                         ]}
                     >
                         <Ionicons name="pencil" size={16} color={mediumGreyColor} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         onPress={() => onDelete(expense.id, expense.name)}
                         style={[
                             styles.budgetIcon,
@@ -154,7 +154,7 @@ export const ExpenseItem = memo(
                         ]}
                     >
                         <Ionicons name="trash" size={16} color={redColor} />
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </View>
         );

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { memo } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 
 import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
 
@@ -61,7 +61,7 @@ export const DebtItem = memo(
                         </ThemedText>
                     </View>
                     <View style={styles.itemIcons}>
-                        <TouchableOpacity
+                        <Pressable
                             onPress={() => {
                                 setPaymentId(paymentId === debt.id ? null : debt.id);
                                 setPaymentAmount("");
@@ -74,8 +74,8 @@ export const DebtItem = memo(
                             ]}
                         >
                             <Ionicons name="cash-outline" size={16} color={blueColor} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onToggleActive(debt.id, debt.active)}
                             style={[
                                 styles.itemIcon,
@@ -89,8 +89,8 @@ export const DebtItem = memo(
                                 size={16}
                                 color={debt.active ? greenColor : mediumGreyColor}
                             />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onEdit(debt)}
                             style={[
                                 styles.itemIcon,
@@ -100,8 +100,8 @@ export const DebtItem = memo(
                             ]}
                         >
                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             onPress={() => onDelete(debt.id, debt.name)}
                             style={[
                                 styles.itemIcon,
@@ -111,7 +111,7 @@ export const DebtItem = memo(
                             ]}
                         >
                             <Ionicons name="trash" size={16} color={redColor} />
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
                 <View style={styles.itemAmount}>
@@ -159,7 +159,7 @@ export const DebtItem = memo(
                             keyboardType="decimal-pad"
                             autoFocus
                         />
-                        <TouchableOpacity
+                        <Pressable
                             style={[
                                 styles.paymentButton,
                                 { ...baseGreen },
@@ -169,8 +169,8 @@ export const DebtItem = memo(
                             disabled={loading || !paymentAmount.trim()}
                         >
                             <ThemedText style={styles.paymentButtonText}>{t("common.save")}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             style={[styles.paymentButton, { ...baseRed }]}
                             onPress={() => {
                                 setPaymentId(null);
@@ -179,7 +179,7 @@ export const DebtItem = memo(
                             disabled={loading}
                         >
                             <ThemedText style={styles.paymentButtonText}>{t("common.cancel")}</ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 )}
             </ThemedView>

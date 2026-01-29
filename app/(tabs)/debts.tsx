@@ -2,17 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-    Alert,
-    FlatList,
-    Modal,
-    Platform,
-    Pressable,
-    ScrollView,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -273,13 +263,12 @@ export default function DebtsScreen() {
                     </View>
                 :   <>
                         <View style={styles.dateWrapperFallback}>
-                            <TouchableOpacity
+                            <Pressable
                                 style={styles.input}
                                 onPress={() => {
                                     setTempSelectedDate(nextPaymentDate ? new Date(nextPaymentDate) : new Date());
                                     setShowDatePicker(true);
                                 }}
-                                activeOpacity={0.7}
                                 accessibilityRole="button"
                                 accessibilityLabel={t("debts.label.nextPaymentDate")}
                             >
@@ -288,7 +277,7 @@ export default function DebtsScreen() {
                                         new Date(nextPaymentDate).toLocaleDateString()
                                     :   t("debts.placeholder.nextPaymentDate")}
                                 </ThemedText>
-                            </TouchableOpacity>
+                            </Pressable>
                             {nextPaymentDate && (
                                 <Pressable
                                     accessibilityRole="button"
@@ -323,7 +312,7 @@ export default function DebtsScreen() {
                                                 }
                                             }}
                                         />
-                                        <TouchableOpacity
+                                        <Pressable
                                             style={styles.saveButton}
                                             onPress={() => {
                                                 if (tempSelectedDate) {
@@ -333,7 +322,7 @@ export default function DebtsScreen() {
                                             }}
                                         >
                                             <ThemedText style={styles.buttonText}>{t("common.save")}</ThemedText>
-                                        </TouchableOpacity>
+                                        </Pressable>
                                     </View>
                                 </View>
                             </Modal>
@@ -354,7 +343,7 @@ export default function DebtsScreen() {
                     </>
                 }
                 <View style={styles.buttons}>
-                    <TouchableOpacity
+                    <Pressable
                         style={[styles.button, { ...baseOrange }]}
                         onPress={handleAddOrUpdateDebt}
                         disabled={loading}
@@ -362,15 +351,15 @@ export default function DebtsScreen() {
                         <ThemedText style={styles.buttonText}>
                             {editingId ? t("debts.button.updateDebt") : t("debts.button.addDebt")}
                         </ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                     {editingId && (
-                        <TouchableOpacity
+                        <Pressable
                             style={[styles.button, { ...baseRed }]}
                             onPress={handleCancelEdit}
                             disabled={loading}
                         >
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     )}
                 </View>
             </ThemedView>

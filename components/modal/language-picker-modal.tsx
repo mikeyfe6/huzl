@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -97,16 +97,16 @@ export function LanguagePickerModal({ visible, onClose, theme }: Readonly<Langua
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("language.title")}</ThemedText>
-                    <TouchableOpacity onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
+                    <Pressable onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
                         <ThemedText type="danger">{t("common.close")}</ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                 </ThemedView>
 
                 <ScrollView style={styles.list}>
                     {AVAILABLE_LANGUAGES.map((language) => {
                         const isSelected = language.code === i18n.language;
                         return (
-                            <TouchableOpacity
+                            <Pressable
                                 key={language.code}
                                 style={[styles.languageItem, isSelected && styles.languageItemSelected]}
                                 onPress={() => handleSelect(language.code)}
@@ -121,7 +121,7 @@ export function LanguagePickerModal({ visible, onClose, theme }: Readonly<Langua
                                     </ThemedText>
                                 </View>
                                 {isSelected && <ThemedText style={styles.checkmark}>✓</ThemedText>}
-                            </TouchableOpacity>
+                            </Pressable>
                         );
                     })}
                 </ScrollView>

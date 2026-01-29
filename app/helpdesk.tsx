@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -14,7 +14,7 @@ import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, greenColor, redColor } from "@/constants/theme";
+import { Colors, redColor } from "@/constants/theme";
 import {
     baseButton,
     baseButtonText,
@@ -24,6 +24,7 @@ import {
     baseFamily,
     baseFieldset,
     baseFlex,
+    baseGreen,
     baseIcon,
     baseInput,
     baseLabel,
@@ -194,8 +195,8 @@ export default function HelpdeskScreen() {
                 },
                 button: {
                     ...baseButton(theme),
+                    ...baseGreen,
                     marginTop: 8,
-                    backgroundColor: greenColor,
                 },
                 buttonText: { ...baseButtonText },
                 list: { ...baseList },
@@ -275,11 +276,11 @@ export default function HelpdeskScreen() {
                         multiline
                     />
 
-                    <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading || submitting}>
+                    <Pressable style={styles.button} onPress={handleSubmit} disabled={loading || submitting}>
                         <ThemedText style={styles.buttonText}>
                             {submitting ? t("common.sending") : t("common.send")}
                         </ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                 </ThemedView>
 
                 {tickets.length > 0 && (
@@ -296,13 +297,13 @@ export default function HelpdeskScreen() {
                                         {new Date(ticket.created_at).toLocaleString()}
                                     </ThemedText>
                                 </View>
-                                <TouchableOpacity
+                                <Pressable
                                     onPress={() => confirmDelete(ticket.id, ticket.message)}
                                     disabled={loading}
                                     style={styles.icon}
                                 >
                                     <Ionicons name="trash" size={18} color={redColor} />
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
                         ))}
                     </ThemedView>

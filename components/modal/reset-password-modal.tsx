@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import { supabase } from "@/utils/supabase";
 
@@ -130,10 +130,10 @@ export function ChangePasswordModal({ visible, onClose, theme }: Readonly<Change
                         autoComplete="off"
                     />
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
+                        <Pressable style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             style={[styles.button, { ...baseGreen }]}
                             onPress={handleChangePassword}
                             disabled={loading}
@@ -141,7 +141,7 @@ export function ChangePasswordModal({ visible, onClose, theme }: Readonly<Change
                             <ThemedText style={styles.buttonText}>
                                 {loading ? t("common.saving") : t("common.save")}
                             </ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                     {error ?
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">

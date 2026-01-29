@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, NativeMethods, Platform, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, NativeMethods, Platform, Pressable, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -493,7 +493,7 @@ export default function ExpensesScreen() {
 
                 <ThemedText style={styles.label}>{t("expenses.label.category")}</ThemedText>
                 <View style={styles.categoryGroup}>
-                    <TouchableOpacity
+                    <Pressable
                         style={[styles.categoryOption, category === "personal" && styles.categoryActive]}
                         onPress={() => setCategory("personal")}
                         accessibilityRole="radio"
@@ -502,8 +502,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.personal")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "business" && styles.categoryActive]}
                         onPress={() => setCategory("business")}
                         accessibilityRole="radio"
@@ -512,8 +512,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.business")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "family" && styles.categoryActive]}
                         onPress={() => setCategory("family")}
                         accessibilityRole="radio"
@@ -522,8 +522,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.family")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "invest" && styles.categoryActive]}
                         onPress={() => setCategory("invest")}
                         accessibilityRole="radio"
@@ -532,8 +532,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.invest")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "entertainment" && styles.categoryActive]}
                         onPress={() => setCategory("entertainment")}
                         accessibilityRole="radio"
@@ -542,8 +542,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.entertainment")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "housing" && styles.categoryActive]}
                         onPress={() => setCategory("housing")}
                         accessibilityRole="radio"
@@ -552,8 +552,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.housing")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "taxes" && styles.categoryActive]}
                         onPress={() => setCategory("taxes")}
                         accessibilityRole="radio"
@@ -562,8 +562,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.taxes")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "travel" && styles.categoryActive]}
                         onPress={() => setCategory("travel")}
                         accessibilityRole="radio"
@@ -572,8 +572,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.travel")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "pet" && styles.categoryActive]}
                         onPress={() => setCategory("pet")}
                         accessibilityRole="radio"
@@ -582,8 +582,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.pet")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "care" && styles.categoryActive]}
                         onPress={() => setCategory("care")}
                         accessibilityRole="radio"
@@ -592,8 +592,8 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.care")}</ThemedText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={[styles.categoryOption, category === "health" && styles.categoryActive]}
                         onPress={() => setCategory("health")}
                         accessibilityRole="radio"
@@ -602,7 +602,7 @@ export default function ExpensesScreen() {
                         }}
                     >
                         <ThemedText>{t("expenses.category.health")}</ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
 
                 <ThemedText style={styles.label}>{t("expenses.label.frequency")}</ThemedText>
@@ -637,15 +637,15 @@ export default function ExpensesScreen() {
                 </View>
 
                 <View style={styles.buttons}>
-                    <TouchableOpacity style={[styles.button, { ...baseGreen }]} onPress={handleCreate}>
+                    <Pressable style={[styles.button, { ...baseGreen }]} onPress={handleCreate}>
                         <ThemedText style={styles.buttonText}>
                             {editingId ? t("expenses.button.updateExpense") : t("expenses.button.addExpense")}
                         </ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                     {editingId && (
-                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={handleCancel}>
+                        <Pressable style={[styles.button, { ...baseRed }]} onPress={handleCancel}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     )}
                 </View>
             </ThemedView>
@@ -657,7 +657,7 @@ export default function ExpensesScreen() {
                             <ThemedText type="subtitle">{t("expenses.yourExpenses")}</ThemedText>
                             <ThemedText style={styles.expenseNumber}>({sortedExpenses.length})</ThemedText>
                         </View>
-                        <TouchableOpacity
+                        <Pressable
                             style={styles.sortTrigger}
                             onPress={() => setSortModalVisible(true)}
                             accessibilityRole="button"
@@ -666,7 +666,7 @@ export default function ExpensesScreen() {
                             <Ionicons name="swap-vertical" size={16} color={theme.label} />
                             <ThemedText style={styles.sortTriggerText}>{sortLabelMap[sortOption]}</ThemedText>
                             <Ionicons name="chevron-down" size={16} color={theme.label} />
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                     <View ref={searchBarRef} collapsable={false} style={styles.expenseSearch}>
                         <TextInput
@@ -1055,7 +1055,7 @@ export default function ExpensesScreen() {
                                     }
 
                                     return (
-                                        <TouchableOpacity
+                                        <Pressable
                                             key={cat}
                                             onPress={() => {
                                                 setCategory(cat);
@@ -1083,7 +1083,7 @@ export default function ExpensesScreen() {
                                             <ThemedText style={[styles.chartButtonText, styles.chartButtonLabel]}>
                                                 {percent.toFixed(1)}%
                                             </ThemedText>
-                                        </TouchableOpacity>
+                                        </Pressable>
                                     );
                                 })}
                             </View>

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Modal, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import { supabase } from "@/utils/supabase";
 
@@ -107,10 +107,10 @@ export function ForgotPasswordModal({ visible, onClose, theme }: Readonly<Forgot
                         onChangeText={setEmail}
                     />
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
+                        <Pressable style={[styles.button, { ...baseRed }]} onPress={onClose} disabled={loading}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                        </Pressable>
+                        <Pressable
                             style={[styles.button, { ...baseGreen }]}
                             onPress={handleForgotPassword}
                             disabled={loading}
@@ -118,7 +118,7 @@ export function ForgotPasswordModal({ visible, onClose, theme }: Readonly<Forgot
                             <ThemedText style={styles.buttonText}>
                                 {loading ? t("common.sending") : t("common.send")}
                             </ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                 </View>
             </View>

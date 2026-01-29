@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Platform, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -453,23 +453,19 @@ export default function BudgetsScreen() {
                 />
 
                 <View style={styles.buttons}>
-                    <TouchableOpacity
-                        style={[styles.button, { ...baseBlue }]}
-                        onPress={handleCreateBudget}
-                        disabled={loading}
-                    >
+                    <Pressable style={[styles.button, { ...baseBlue }]} onPress={handleCreateBudget} disabled={loading}>
                         <ThemedText style={styles.buttonText}>
                             {editingId ? t("budgets.button.updateBudget") : t("budgets.button.addBudget")}
                         </ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                     {editingId && (
-                        <TouchableOpacity
+                        <Pressable
                             style={[styles.button, { ...baseRed }]}
                             onPress={handleCancelEdit}
                             disabled={loading}
                         >
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                     )}
                 </View>
             </ThemedView>
@@ -523,7 +519,7 @@ export default function BudgetsScreen() {
                     />
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity
+                        <Pressable
                             style={[styles.button, { ...baseGreen }]}
                             onPress={handleAddExpense}
                             disabled={loading}
@@ -531,15 +527,15 @@ export default function BudgetsScreen() {
                             <ThemedText style={styles.buttonText}>
                                 {editingExpenseId ? t("budgets.button.updateExpense") : t("budgets.button.addExpense")}
                             </ThemedText>
-                        </TouchableOpacity>
+                        </Pressable>
                         {editingExpenseId && (
-                            <TouchableOpacity
+                            <Pressable
                                 style={[styles.button, { ...baseRed }]}
                                 onPress={handleCancelExpenseEdit}
                                 disabled={loading}
                             >
                                 <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
-                            </TouchableOpacity>
+                            </Pressable>
                         )}
                     </View>
 

@@ -3,7 +3,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Image, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -460,29 +460,26 @@ export default function HomeScreen() {
                         )}
                         {isSignUp ?
                             <>
-                                <TouchableOpacity onPress={handleSignUp} style={styles.signInButton}>
+                                <Pressable onPress={handleSignUp} style={styles.signInButton}>
                                     <ThemedText style={styles.signInText}>{t("auth.createAccount")}</ThemedText>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => setIsSignUp(false)} style={styles.signUpButton}>
+                                </Pressable>
+                                <Pressable onPress={() => setIsSignUp(false)} style={styles.signUpButton}>
                                     <ThemedText style={styles.signUpText}>{t("auth.alreadyHaveAccount")}</ThemedText>
-                                </TouchableOpacity>
+                                </Pressable>
                             </>
                         :   <>
-                                <TouchableOpacity onPress={handleSignIn} style={styles.signInButton}>
+                                <Pressable onPress={handleSignIn} style={styles.signInButton}>
                                     <ThemedText style={styles.signInText}>{t("auth.signIn")}</ThemedText>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => setIsSignUp(true)} style={styles.signUpButton}>
+                                </Pressable>
+                                <Pressable onPress={() => setIsSignUp(true)} style={styles.signUpButton}>
                                     <ThemedText style={styles.signUpText}>{t("auth.signUp")}</ThemedText>
-                                </TouchableOpacity>
+                                </Pressable>
                             </>
                         }
                         {!isSignUp && (
-                            <TouchableOpacity
-                                onPress={() => setForgotPasswordVisible(true)}
-                                style={styles.forgetButton}
-                            >
+                            <Pressable onPress={() => setForgotPasswordVisible(true)} style={styles.forgetButton}>
                                 <ThemedText style={styles.forgetButtonText}>{t("auth.forgotPassword")}</ThemedText>
-                            </TouchableOpacity>
+                            </Pressable>
                         )}
                         <ThemedText style={styles.termsText}>
                             {t("auth.disclaimer.first")}{" "}
@@ -576,10 +573,7 @@ export default function HomeScreen() {
                     )}
 
                     {monthlyDisposable !== null && (
-                        <TouchableOpacity
-                            activeOpacity={0.7}
-                            onPress={() => setDisposableToggle((prev) => (prev + 1) % 3)}
-                        >
+                        <Pressable onPress={() => setDisposableToggle((prev) => (prev + 1) % 3)}>
                             <ThemedView
                                 style={[
                                     styles.statCard,
@@ -599,7 +593,7 @@ export default function HomeScreen() {
                                     }
                                 </ThemedText>
                             </ThemedView>
-                        </TouchableOpacity>
+                        </Pressable>
                     )}
 
                     {nextDebt && (

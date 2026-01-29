@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useAvailableCurrencies } from "@/hooks/use-currency";
@@ -119,16 +119,16 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: 
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("currency.selectCurrency")}</ThemedText>
-                    <TouchableOpacity onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
+                    <Pressable onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
                         <ThemedText type="danger">{t("currency.close")}</ThemedText>
-                    </TouchableOpacity>
+                    </Pressable>
                 </ThemedView>
 
                 <ScrollView style={styles.list}>
                     {availableCurrencies.map((currency) => {
                         const isSelected = currency.symbol === currentSymbol;
                         return (
-                            <TouchableOpacity
+                            <Pressable
                                 key={currency.code}
                                 style={[styles.currencyItem, isSelected && styles.currencyItemSelected]}
                                 onPress={() => handleSelect(currency)}
@@ -148,7 +148,7 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: 
                                     </View>
                                 </View>
                                 {isSelected && <ThemedText style={styles.checkmark}>✓</ThemedText>}
-                            </TouchableOpacity>
+                            </Pressable>
                         );
                     })}
                 </ScrollView>

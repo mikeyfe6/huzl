@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import Head from "expo-router/head";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet } from "react-native";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
@@ -134,9 +134,9 @@ export default function TermsScreen() {
                     </ExternalLink>
                 </ThemedText>
 
-                <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                <Pressable style={styles.backButton} onPress={() => router.back()}>
                     <ThemedText style={styles.backButtonText}>{t("common.back")}</ThemedText>
-                </TouchableOpacity>
+                </Pressable>
             </ScrollView>
         </ThemedView>
     );
