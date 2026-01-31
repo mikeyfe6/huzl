@@ -187,6 +187,7 @@
         "total": "Total",
         "monthly": "P/M",
         "terms": "Terms",
+        "paidOff": "Paid Off",
         "deleteDebt": "Delete debt"
     },
     "settings": {

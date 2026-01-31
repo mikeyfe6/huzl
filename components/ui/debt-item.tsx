@@ -29,6 +29,12 @@ export const DebtItem = memo(
     }: DebtListProps) => {
         const renderNextPaymentDate = (dateString: string | null | undefined) => {
             if (!dateString) return <ThemedText style={[styles.itemPaymentText]}>—</ThemedText>;
+            if (debt.amount === 0)
+                return (
+                    <ThemedText style={[styles.itemPaymentText, { fontWeight: "bold", color: greenColor }]}>
+                        {t("debts.paidOff")}
+                    </ThemedText>
+                );
 
             const dateObj = new Date(dateString);
             const today = new Date();
@@ -46,6 +52,38 @@ export const DebtItem = memo(
                 );
             } else {
                 return <ThemedText style={[styles.itemPaymentText]}>{formatted}</ThemedText>;
+            }
+        };
+
+        const renderPayPerMonth = () => {
+            if (debt.pay_per_month && debt.pay_per_month > 0) {
+                const months = Math.ceil(debt.amount / debt.pay_per_month);
+                const remainder = debt.amount % debt.pay_per_month;
+
+                if (months === 0) {
+                    return <ThemedText style={styles.itemRemaining}>{t("debts.terms")}: 0</ThemedText>;
+                } else if (months === 1) {
+                    return (
+                        <ThemedText style={styles.itemRemaining}>
+                            {t("debts.terms")}: 1 ({formatCurrency(debt.amount, currencySymbol)})
+                        </ThemedText>
+                    );
+                } else if (remainder === 0) {
+                    return (
+                        <ThemedText style={styles.itemRemaining}>
+                            {t("debts.terms")}: {months} ({formatCurrency(debt.pay_per_month, currencySymbol)})
+                        </ThemedText>
+                    );
+                } else {
+                    return (
+                        <ThemedText style={styles.itemRemaining}>
+                            {t("debts.terms")}: {months} ({months - 1} × {currencySymbol}{" "}
+                            {formatAmount(debt.pay_per_month)} — 1 x: {currencySymbol} {formatAmount(remainder)})
+                        </ThemedText>
+                    );
+                }
+            } else {
+                return <ThemedText style={styles.itemRemaining}>{t("debts.terms")}: —</ThemedText>;
             }
         };
 
@@ -119,34 +157,7 @@ export const DebtItem = memo(
                         <Ionicons name="time-outline" size={16} color={orangeColor} />
                         {renderNextPaymentDate(debt.next_payment_date)}
                     </View>
-                    {debt.pay_per_month && debt.pay_per_month > 0 ?
-                        (() => {
-                            const months = Math.ceil(debt.amount / debt.pay_per_month);
-                            const remainder = debt.amount % debt.pay_per_month;
-                            if (months === 1) {
-                                return (
-                                    <ThemedText style={styles.itemRemaining}>
-                                        {t("debts.terms")}: 1 ({formatCurrency(debt.amount, currencySymbol)})
-                                    </ThemedText>
-                                );
-                            } else if (remainder === 0) {
-                                return (
-                                    <ThemedText style={styles.itemRemaining}>
-                                        {t("debts.terms")}: {months} (
-                                        {formatCurrency(debt.pay_per_month, currencySymbol)})
-                                    </ThemedText>
-                                );
-                            } else {
-                                return (
-                                    <ThemedText style={styles.itemRemaining}>
-                                        {t("debts.terms")}: {months} ({months - 1} × {currencySymbol}{" "}
-                                        {formatAmount(debt.pay_per_month)} — 1 x: {currencySymbol}{" "}
-                                        {formatAmount(remainder)})
-                                    </ThemedText>
-                                );
-                            }
-                        })()
-                    :   <ThemedText style={styles.itemRemaining}>{t("debts.terms")}: —</ThemedText>}
+                    {renderPayPerMonth()}
                 </View>
                 {paymentId === debt.id && (
                     <View style={styles.paymentSection}>

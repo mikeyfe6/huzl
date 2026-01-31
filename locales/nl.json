@@ -187,6 +187,7 @@
         "total": "Totaal",
         "monthly": "P/M",
         "terms": "Termijnen",
+        "paidOff": "Afgerond",
         "deleteDebt": "Verwijder schuld"
     },
     "settings": {
