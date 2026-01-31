@@ -56,6 +56,7 @@ export const baseInput = (theme: any) => ({
     borderColor: theme.inputBorder,
     backgroundColor: theme.inputBackground,
     color: theme.inputText,
+    colorScheme: theme.inputIcon,
 });
 
 export const baseSelect = {
