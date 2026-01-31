@@ -34,6 +34,7 @@ export default {
             favicon: "./assets/images/favicon.png",
         },
         plugins: [
+            "@react-native-firebase/app",
             "@react-native-community/datetimepicker",
             [
                 "expo-router",
