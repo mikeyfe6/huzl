@@ -327,7 +327,9 @@ export default function BudgetsScreen() {
                             return {
                                 ...budget,
                                 expenses: budget.expenses.map((e) =>
-                                    e.id === editingExpenseId ? { ...e, name: data.name, amount: data.amount } : e,
+                                    e.id === editingExpenseId ?
+                                        { ...e, name: data.name, amount: data.amount, created_at: data.created_at }
+                                    :   e,
                                 ),
                                 spent: budget.spent + amountDiff,
                             };
@@ -356,7 +358,8 @@ export default function BudgetsScreen() {
                                 id: data.id,
                                 name: data.name,
                                 amount: data.amount,
-                                active: true,
+                                active: data.active,
+                                created_at: data.created_at,
                             };
                             return {
                                 ...budget,
