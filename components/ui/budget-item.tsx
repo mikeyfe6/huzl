@@ -106,7 +106,7 @@ export const BudgetItem = memo(
 );
 
 export const ExpenseItem = memo(
-    ({ expense, currencySymbol, onToggleActive, onEdit, onDelete, styles }: BudgetExpenseListProps) => {
+    ({ expense, currencySymbol, onToggleActive, onEdit, onDelete, styles, t }: BudgetExpenseListProps) => {
         return (
             <View key={expense.id} style={[styles.expenseItem, !expense.active && baseInactive]}>
                 <View style={styles.expenseInfo}>
@@ -114,7 +114,9 @@ export const ExpenseItem = memo(
                         {expense.name}
                     </ThemedText>
                     <ThemedText style={styles.expenseLabel}>
-                        {formatCurrency(expense.amount, currencySymbol)}
+                        {formatCurrency(expense.amount, currencySymbol)} (
+                        {new Date(expense.created_at ?? 0).toLocaleDateString(t("seo.lang"))},{" "}
+                        {new Date(expense.created_at ?? 0).toLocaleTimeString(t("seo.lang"))})
                     </ThemedText>
                 </View>
                 <View style={styles.budgetIcons}>

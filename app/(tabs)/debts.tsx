@@ -274,7 +274,7 @@ export default function DebtsScreen() {
                             >
                                 <ThemedText style={{ color: nextPaymentDate ? theme.inputText : theme.placeholder }}>
                                     {nextPaymentDate ?
-                                        new Date(nextPaymentDate).toLocaleDateString()
+                                        new Date(nextPaymentDate).toLocaleDateString(t("seo.lang"))
                                     :   t("debts.placeholder.nextPaymentDate")}
                                 </ThemedText>
                             </Pressable>

@@ -391,6 +391,7 @@ export default function BudgetsScreen() {
                 name: exp.name,
                 amount: exp.amount,
                 active: exp.active ?? true,
+                created_at: exp.created_at,
             })),
             spent: expenses.reduce((sum, exp) => sum + exp.amount, 0),
         };
@@ -578,6 +579,7 @@ export default function BudgetsScreen() {
                         onEdit={handleEditExpense}
                         onDelete={handleDeleteExpenseItem}
                         styles={styles}
+                        t={t}
                     />
                 );
             return null;

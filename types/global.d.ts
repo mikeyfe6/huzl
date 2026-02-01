@@ -38,6 +38,9 @@ declare global {
     interface itemLoadingProp {
         readonly loading: boolean;
     }
+    interface itemCreatedAtProp {
+        readonly created_at?: string;
+    }
     interface itemTranslationProp {
         readonly t: (key: string) => string;
     }
@@ -115,17 +118,16 @@ declare global {
         expenses: { id: string; name: string; amount: number; active: boolean }[];
     }
 
-    interface BudgetExpenseItem extends itemIdProp, itemNameProp, itemAmountProp, itemActiveProp {}
+    interface BudgetExpenseItem extends itemIdProp, itemNameProp, itemAmountProp, itemActiveProp, itemCreatedAtProp {}
 
-    interface DebtItem extends itemUserIdProp, itemIdProp, itemNameProp, itemAmountProp, itemActiveProp {
+    interface DebtItem
+        extends itemUserIdProp, itemIdProp, itemNameProp, itemAmountProp, itemActiveProp, itemCreatedAtProp {
         pay_per_month?: number | null;
         next_payment_date?: string | null;
-        created_at?: string;
     }
 
-    interface TicketItem extends itemIdProp, itemTypeProp {
+    interface TicketItem extends itemIdProp, itemTypeProp, itemCreatedAtProp {
         message: string;
-        created_at: string;
     }
 
     interface IncomeSource extends itemAmountProp, itemTypeProp, itemActiveProp {
@@ -156,7 +158,7 @@ declare global {
         setSelectedBudgetId: (id: string | null) => void;
     }
 
-    interface BudgetExpenseListProps extends baseItemProps {
+    interface BudgetExpenseListProps extends baseItemProps, itemTranslationProp {
         expense: BudgetExpenseItem;
         onEdit: (expense: BudgetExpenseItem) => void;
         styles: ReturnType<typeof getBudgetsStyles>;

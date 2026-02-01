@@ -40,7 +40,7 @@ export const DebtItem = memo(
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             dateObj.setHours(0, 0, 0, 0);
-            const formatted = dateObj.toLocaleDateString();
+            const formatted = dateObj.toLocaleDateString(t("seo.lang"));
 
             if (dateObj.getTime() === today.getTime()) {
                 return <ThemedText style={[styles.itemPaymentText, { fontWeight: "bold" }]}>{formatted} ◀︎</ThemedText>;

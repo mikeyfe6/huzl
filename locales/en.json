@@ -1,7 +1,8 @@
 {
     "seo": {
         "title": "Huzl • Money Management Simplified",
-        "description": "Manage budgets, track expenses, monitor debts and monthly income with Huzl's clear summaries."
+        "description": "Manage budgets, track expenses, monitor debts and monthly income with Huzl's clear summaries.",
+        "lang": "en-US"
     },
     "common": {
         "loading": "Loading …",
