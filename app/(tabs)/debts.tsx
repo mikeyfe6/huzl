@@ -240,7 +240,7 @@ export default function DebtsScreen() {
                 />
                 <ThemedText style={styles.label}>{t("debts.label.nextPaymentDate")}</ThemedText>
                 {Platform.OS === "web" ?
-                    <View style={styles.dateWrapper}>
+                    <div style={styles.dateWrapper}>
                         <input
                             type="date"
                             style={styles.dateInput}
@@ -260,7 +260,7 @@ export default function DebtsScreen() {
                                 <Ionicons name="close" size={24} color={whiteColor} />
                             </Pressable>
                         )}
-                    </View>
+                    </div>
                 :   <>
                         <View style={styles.dateWrapperFallback}>
                             <Pressable

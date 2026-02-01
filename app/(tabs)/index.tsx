@@ -16,7 +16,7 @@ import { ForgotPasswordModal } from "@/components/modal/forgot-password-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
+import { blueColor, Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import {
     baseBold,
     baseButton,
@@ -53,6 +53,7 @@ export default function HomeScreen() {
     const [error, setError] = useState<string | null>(null);
     const [registrationSuccess, setRegistrationSuccess] = useState(false);
     const [expenses, setExpenses] = useState<any[]>([]);
+    const [budgetExpenses, setBudgetExpenses] = useState<any[]>([]);
     const [debts, setDebts] = useState<any[]>([]);
     const [isSignUp, setIsSignUp] = useState(false);
     const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
@@ -113,7 +114,7 @@ export default function HomeScreen() {
         }
     };
 
-    const totals = useMemo(() => {
+    const monthlyExpenses = useMemo(() => {
         let monthlyTotal = 0;
         let yearlyTotal = 0;
 
@@ -127,6 +128,11 @@ export default function HomeScreen() {
         return { monthlyTotal, yearlyTotal };
     }, [expenses]);
 
+    const monthlyBudgetExpenses = useMemo(() => {
+        if (!budgetExpenses || budgetExpenses.length === 0) return 0;
+        return budgetExpenses.reduce((sum, e) => sum + (typeof e.amount === "number" ? e.amount : 0), 0);
+    }, [budgetExpenses]);
+
     const monthlyDebts = useMemo(() => {
         return debts
             .filter((d) => d.pay_per_month && !Number.isNaN(Number(d.pay_per_month)))
@@ -135,8 +141,8 @@ export default function HomeScreen() {
 
     const monthlyDisposable = useMemo(() => {
         if (monthlyIncome === null) return null;
-        return monthlyIncome - totals.monthlyTotal - monthlyDebts;
-    }, [monthlyIncome, totals, monthlyDebts]);
+        return monthlyIncome - monthlyExpenses.monthlyTotal - monthlyDebts - monthlyBudgetExpenses;
+    }, [monthlyIncome, monthlyExpenses, monthlyDebts, monthlyBudgetExpenses]);
 
     const disposableValues = useMemo(() => {
         if (monthlyDisposable === null) return [null, null, null];
@@ -240,6 +246,18 @@ export default function HomeScreen() {
                 });
 
             supabase
+                .from("budget_expenses")
+                .select("amount")
+                .eq("active", true)
+                .then(({ data, error }) => {
+                    if (!error && Array.isArray(data)) {
+                        setBudgetExpenses(data);
+                    } else {
+                        setBudgetExpenses([]);
+                    }
+                });
+
+            supabase
                 .from("debts")
                 .select("pay_per_month,active,name,next_payment_date,amount")
                 .eq("active", true)
@@ -257,7 +275,7 @@ export default function HomeScreen() {
     const styles = useMemo(
         () =>
             StyleSheet.create({
-                logo: { ...baseFlex("center", "center"), ...baseSpace, marginBottom: 32, pointerEvents: "none" },
+                logo: { ...baseFlex("center", "center"), ...baseSpace, marginBottom: 16, pointerEvents: "none" },
                 image: {
                     maxWidth: 100,
                     height: 100,
@@ -355,14 +373,14 @@ export default function HomeScreen() {
                     width: "100%",
                     maxWidth: 500,
                     marginTop: 24,
-                    marginBottom: 40,
+                    marginBottom: 16,
                 },
                 statCard: {
                     ...baseSpace,
                     ...baseCorner,
                     ...baseHorizontal,
                     paddingTop: 14,
-                    paddingBottom: 18,
+                    paddingBottom: 16,
                     backgroundColor: theme.cardBackground,
                 },
                 statLabel: {
@@ -550,13 +568,25 @@ export default function HomeScreen() {
                         </ThemedView>
                     )}
 
-                    {totals.monthlyTotal > 0 && (
+                    {monthlyExpenses.monthlyTotal > 0 && (
                         <ThemedView style={styles.statCard}>
-                            <ThemedText style={styles.statLabel}>{t("home.monthlyCosts")}</ThemedText>
+                            <ThemedText style={styles.statLabel}>{t("home.monthlyExpenses")}</ThemedText>
                             <View style={styles.statWrapper}>
                                 <Ionicons name="remove-outline" size={16} color={redColor} />
                                 <ThemedText style={styles.statValue}>
-                                    {currencySymbol} {totals.monthlyTotal.toFixed(2).replace(".", ",")}
+                                    {currencySymbol} {monthlyExpenses.monthlyTotal.toFixed(2).replace(".", ",")}
+                                </ThemedText>
+                            </View>
+                        </ThemedView>
+                    )}
+
+                    {monthlyBudgetExpenses > 0 && (
+                        <ThemedView style={styles.statCard}>
+                            <ThemedText style={styles.statLabel}>{t("home.monthlyBudgetExpenses")}</ThemedText>
+                            <View style={styles.statWrapper}>
+                                <Ionicons name="remove-outline" size={16} color={blueColor} />
+                                <ThemedText style={styles.statValue}>
+                                    {currencySymbol} {monthlyBudgetExpenses.toFixed(2).replace(".", ",")}
                                 </ThemedText>
                             </View>
                         </ThemedView>
@@ -566,7 +596,7 @@ export default function HomeScreen() {
                         <ThemedView style={styles.statCard}>
                             <ThemedText style={styles.statLabel}>{t("home.monthlyDebts")}</ThemedText>
                             <View style={styles.statWrapper}>
-                                <Ionicons name="alert" size={16} color={orangeColor} />
+                                <Ionicons name="remove-outline" size={16} color={orangeColor} />
                                 <ThemedText style={styles.statValue}>
                                     {currencySymbol} {monthlyDebts.toFixed(2).replace(".", ",")}
                                 </ThemedText>

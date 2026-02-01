@@ -96,16 +96,22 @@ export default function BudgetsScreen() {
 
                 if (!error) {
                     setBudgets((prev) =>
-                        prev.map((b) =>
-                            b.id === selectedBudgetId ?
-                                {
-                                    ...b,
-                                    expenses: b.expenses.map((e) =>
-                                        e.id === expenseId ? { ...e, active: !currentActive } : e,
-                                    ),
-                                }
-                            :   b,
-                        ),
+                        prev.map((b) => {
+                            if (b.id !== selectedBudgetId) return b;
+
+                            const updatedExpenses = b.expenses.map((e) =>
+                                e.id === expenseId ? { ...e, active: !currentActive } : e,
+                            );
+
+                            const newSpent = updatedExpenses
+                                .filter((e) => e.active)
+                                .reduce((sum, e) => sum + e.amount, 0);
+                            return {
+                                ...b,
+                                expenses: updatedExpenses,
+                                spent: newSpent,
+                            };
+                        }),
                     );
                 }
             } finally {
@@ -393,7 +399,7 @@ export default function BudgetsScreen() {
                 active: exp.active ?? true,
                 created_at: exp.created_at,
             })),
-            spent: expenses.reduce((sum, exp) => sum + exp.amount, 0),
+            spent: expenses.filter((exp) => exp.active).reduce((sum, exp) => sum + exp.amount, 0),
         };
     };
 

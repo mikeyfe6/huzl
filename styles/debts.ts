@@ -51,6 +51,7 @@ export const getDebtsStyles = (theme: any) =>
         dateWrapper: {
             ...baseFlex("center"),
             ...baseGap,
+            display: "flex",
         },
         dateWrapperFallback: {
             ...baseFlex("center"),
