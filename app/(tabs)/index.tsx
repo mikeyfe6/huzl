@@ -257,7 +257,7 @@ export default function HomeScreen() {
     const styles = useMemo(
         () =>
             StyleSheet.create({
-                logo: { ...baseFlex("center", "center"), ...baseSpace, marginBottom: 32 },
+                logo: { ...baseFlex("center", "center"), ...baseSpace, marginBottom: 32, pointerEvents: "none" },
                 image: {
                     maxWidth: 100,
                     height: 100,
@@ -396,7 +396,7 @@ export default function HomeScreen() {
     );
 
     const HeaderImage = () => (
-        <View style={styles.logo} pointerEvents="none">
+        <View style={styles.logo}>
             <Image
                 source={require("../../assets/images/huzl-icon.png")}
                 style={styles.image}
