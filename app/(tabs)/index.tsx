@@ -73,6 +73,8 @@ export default function HomeScreen() {
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         const debtsWithDate = debts
+            .filter((d) => d.amount !== 0)
+            .filter((d) => d.active !== false)
             .filter((d) => d.next_payment_date && !Number.isNaN(Date.parse(d.next_payment_date)))
             .map((d) => ({
                 ...d,
@@ -239,7 +241,7 @@ export default function HomeScreen() {
 
             supabase
                 .from("debts")
-                .select("pay_per_month,active,name,next_payment_date")
+                .select("pay_per_month,active,name,next_payment_date,amount")
                 .eq("active", true)
                 .eq("user_id", user.id)
                 .then(({ data, error }) => {
