@@ -39,7 +39,7 @@ declare global {
         readonly loading: boolean;
     }
     interface itemCreatedAtProp {
-        readonly created_at?: string;
+        readonly created_at: string;
     }
     interface itemTranslationProp {
         readonly t: (key: string) => string;
