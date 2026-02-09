@@ -312,17 +312,27 @@ export default function DebtsScreen() {
                                                 }
                                             }}
                                         />
-                                        <Pressable
-                                            style={styles.saveButton}
-                                            onPress={() => {
-                                                if (tempSelectedDate) {
-                                                    setNextPaymentDate(tempSelectedDate.toISOString());
-                                                }
-                                                setShowDatePicker(false);
-                                            }}
-                                        >
-                                            <ThemedText style={styles.buttonText}>{t("common.save")}</ThemedText>
-                                        </Pressable>
+                                        <View style={styles.dateButtons}>
+                                            <Pressable
+                                                style={styles.cancelButton}
+                                                onPress={() => {
+                                                    setShowDatePicker(false);
+                                                }}
+                                            >
+                                                <Ionicons name="close" size={24} color={whiteColor} />
+                                            </Pressable>
+                                            <Pressable
+                                                style={styles.saveButton}
+                                                onPress={() => {
+                                                    if (tempSelectedDate) {
+                                                        setNextPaymentDate(tempSelectedDate.toISOString());
+                                                    }
+                                                    setShowDatePicker(false);
+                                                }}
+                                            >
+                                                <ThemedText style={styles.buttonText}>{t("common.save")}</ThemedText>
+                                            </Pressable>
+                                        </View>
                                     </View>
                                 </View>
                             </Modal>

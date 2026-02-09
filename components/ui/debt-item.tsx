@@ -7,8 +7,8 @@ import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { blueColor, greenColor, mediumGreyColor, orangeColor, redColor } from "@/constants/theme";
-import { baseGreen, baseInactive, baseRed } from "@/styles/base";
+import { blueColor, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
+import { baseInactive } from "@/styles/base";
 
 export const DebtItem = memo(
     ({
@@ -170,27 +170,25 @@ export const DebtItem = memo(
                             keyboardType="decimal-pad"
                             autoFocus
                         />
-                        <Pressable
-                            style={[
-                                styles.paymentButton,
-                                { ...baseGreen },
-                                (!paymentAmount.trim() || loading) && baseInactive,
-                            ]}
-                            onPress={() => onPayment(debt.id, Number.parseFloat(paymentAmount))}
-                            disabled={loading || !paymentAmount.trim()}
-                        >
-                            <ThemedText style={styles.paymentButtonText}>{t("common.save")}</ThemedText>
-                        </Pressable>
-                        <Pressable
-                            style={[styles.paymentButton, { ...baseRed }]}
-                            onPress={() => {
-                                setPaymentId(null);
-                                setPaymentAmount("");
-                            }}
-                            disabled={loading}
-                        >
-                            <ThemedText style={styles.paymentButtonText}>{t("common.cancel")}</ThemedText>
-                        </Pressable>
+                        <View style={styles.paymentButtons}>
+                            <Pressable
+                                style={[styles.saveButton, (!paymentAmount.trim() || loading) && baseInactive]}
+                                onPress={() => onPayment(debt.id, Number.parseFloat(paymentAmount))}
+                                disabled={loading || !paymentAmount.trim()}
+                            >
+                                <ThemedText style={styles.buttonText}>{t("common.save")}</ThemedText>
+                            </Pressable>
+                            <Pressable
+                                style={styles.cancelButton}
+                                onPress={() => {
+                                    setPaymentId(null);
+                                    setPaymentAmount("");
+                                }}
+                                disabled={loading}
+                            >
+                                <Ionicons name="close" size={20} color={whiteColor} />
+                            </Pressable>
+                        </View>
                     </View>
                 )}
             </ThemedView>

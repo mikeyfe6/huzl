@@ -24,6 +24,7 @@ import {
     baseMini,
     baseOpacity,
     baseRadius,
+    baseRed,
     baseSelect,
     baseSmall,
     baseWeight,
@@ -84,10 +85,18 @@ export const getDebtsStyles = (theme: any) =>
             padding: 16,
             height: 300,
         },
+        dateButtons: {
+            ...baseFlex("center"),
+            ...baseGap,
+            marginTop: 16,
+        },
         saveButton: {
             ...baseButton(theme),
             ...baseGreen,
-            width: "100%",
+        },
+        cancelButton: {
+            ...baseButton(theme, 0),
+            ...baseRed,
         },
         buttons: {
             ...baseFlex("center"),
@@ -153,15 +162,16 @@ export const getDebtsStyles = (theme: any) =>
         paymentInput: {
             ...baseInput(theme),
             ...baseSelect,
-            flex: 2,
-            minWidth: 150,
+            backgroundColor: theme.inputSpecial,
+            flex: 11,
+            minWidth: 200,
         },
-        paymentButton: {
-            ...baseButton(theme),
-            minWidth: 100,
-        },
-        paymentButtonText: {
-            ...baseButtonText,
+        paymentButtons: {
+            ...baseFlex(),
+            ...baseGap,
+            flex: 1,
+            minWidth: 200,
+            maxHeight: 44,
         },
         emptyState: {
             ...baseEmpty,

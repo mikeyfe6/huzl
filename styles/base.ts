@@ -64,7 +64,7 @@ export const baseSelect = {
     paddingVertical: 10,
 };
 
-export const baseButton = (theme: any) => ({
+export const baseButton = (theme: any, flex?: number | undefined) => ({
     ...baseFlex("center", "center"),
     ...baseOutline(theme),
     ...baseRadius,
@@ -73,7 +73,7 @@ export const baseButton = (theme: any) => ({
     minWidth: "auto" as const,
     paddingVertical: 12,
     paddingHorizontal: 24,
-    flex: 1,
+    flex: flex ?? 1,
 });
 
 export const baseTrans = (theme: any, color: string) => ({
