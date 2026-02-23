@@ -630,7 +630,10 @@ export default function HomeScreen() {
 
                     {nextDebt && (
                         <ThemedText style={styles.nextDebt}>
-                            {`${t("home.nextPayment")}: ${nextDebt.name}・${nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}`}
+                            {`${t("home.nextPayment")}: `}
+                            <ThemedText style={{ color: theme.text, ...baseMini }}>
+                                {`${nextDebt.name}・${nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}`}
+                            </ThemedText>
                         </ThemedText>
                     )}
                 </ThemedView>

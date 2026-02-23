@@ -186,6 +186,10 @@ export default function DebtsScreen() {
         }
     };
 
+    const sortedDebts = useMemo(() => {
+        return [...debts].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+    }, [debts]);
+
     useEffect(() => {
         if (!user) return;
         const fetchDebts = async () => {
@@ -420,7 +424,7 @@ export default function DebtsScreen() {
     return (
         <AuthGate>
             <FlatList
-                data={debts}
+                data={sortedDebts}
                 keyExtractor={(debt) => debt.id}
                 contentContainerStyle={debts.length > 0 ? { backgroundColor: theme.background } : undefined}
                 ListHeaderComponent={Header}
