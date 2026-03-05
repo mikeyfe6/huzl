@@ -45,36 +45,9 @@ export default function IncomeScreen() {
     const { symbol: currencySymbol } = useCurrency();
 
     const [sources, setSources] = useState<IncomeSource[]>([]);
+    const [originalSources, setOriginalSources] = useState<IncomeSource[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [originalSources, setOriginalSources] = useState<IncomeSource[]>([]);
-
-    const hasIncomeChanges = useMemo(() => {
-        if (originalSources.length !== sources.length) return true;
-
-        for (let i = 0; i < sources.length; i++) {
-            const a = sources[i];
-            const b = originalSources[i];
-
-            if (!b) return true;
-
-            if (a.type !== b.type || a.active !== b.active || a.amount !== b.amount) {
-                return true;
-            }
-        }
-
-        return false;
-    }, [sources, originalSources]);
-
-    const saveButtonDisabled = useMemo(() => {
-        if (saving || !hasIncomeChanges) return true;
-        const activeSources = sources.filter((src) => src.active !== false);
-        if (activeSources.length === 0) return true;
-        for (const src of activeSources) {
-            if (typeof src.amount !== "number" || Number.isNaN(src.amount) || src.amount < 0) return true;
-        }
-        return false;
-    }, [saving, hasIncomeChanges, sources]);
 
     const incomeTypes = [
         { key: "salary", label: t("income.category.salary") },
@@ -86,134 +59,178 @@ export default function IncomeScreen() {
         { key: "other", label: t("income.category.other") },
     ];
 
-    const addSource = () => {
-        setSources((prev) => [...prev, { type: "salary", amount: 0, active: true }]);
-    };
-
-    const removeSource = async (idx: number) => {
-        if (!user) return;
-        const src = sources[idx];
-        if (src.id) {
-            setSaving(true);
-            const { error } = await supabase.from("incomes").delete().eq("id", src.id).eq("user_id", user.id);
-            if (error) {
-                Alert.alert("Error", `Failed to delete income: ${error.message}`);
-            }
-        }
-        setSources((prev) => prev.filter((_, i) => i !== idx));
-        setSaving(false);
-    };
-
     const updateSource = (idx: number, field: "type" | "amount", value: string) => {
         setSources((prev) =>
             prev.map((src, i) =>
                 i === idx ?
                     {
                         ...src,
-                        [field]: field === "amount" ? Number.parseFloat(value) || 0 : value,
+                        [field]: value,
                     }
                 :   src,
             ),
         );
     };
 
+    const addSource = () => {
+        setSources((prev) => [...prev, { type: "salary", amount: "", active: true }]);
+    };
+
     const toggleActive = (idx: number) => {
         setSources((prev) => prev.map((src, i) => (i === idx ? { ...src, active: !src.active } : src)));
     };
 
+    const removeSource = async (idx: number) => {
+        if (!user) return;
+
+        const src = sources[idx];
+
+        if (src.id) {
+            setSaving(true);
+
+            const { error } = await supabase.from("incomes").delete().eq("id", src.id).eq("user_id", user.id);
+
+            if (error) {
+                Alert.alert("Error", `Failed to delete income: ${error.message}`);
+            }
+
+            setSaving(false);
+        }
+
+        setSources((prev) => prev.filter((_, i) => i !== idx));
+    };
+
+    const hasIncomeChanges = useMemo(() => {
+        if (sources.length !== originalSources.length) return true;
+
+        for (let i = 0; i < sources.length; i++) {
+            const a = sources[i];
+            const b = originalSources[i];
+
+            if (!b) return true;
+
+            if (a.type !== b.type || a.amount !== b.amount || a.active !== b.active) return true;
+        }
+
+        return false;
+    }, [sources, originalSources]);
+
+    const saveButtonDisabled = useMemo(() => {
+        if (saving || !hasIncomeChanges) return true;
+
+        const activeSources = sources.filter((src) => src.active !== false);
+
+        if (activeSources.length === 0) return true;
+
+        for (const src of activeSources) {
+            const parsed = Number.parseFloat(formatNumber(src.amount));
+
+            if (src.amount.trim() === "" || Number.isNaN(parsed) || parsed < 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }, [saving, hasIncomeChanges, sources]);
+
+    const total = sources.reduce((sum, src) => {
+        if (src.active === false) return sum;
+
+        const parsed = Number.parseFloat(formatNumber(src.amount));
+
+        return sum + (Number.isNaN(parsed) ? 0 : parsed);
+    }, 0);
+
     const handleSave = async () => {
         if (!user) return;
+
         for (const src of sources) {
             if (src.active === false) continue;
-            const parsed = Number.parseFloat(String(src.amount));
-            if (Number.isNaN(parsed) || parsed < 0) {
+
+            const parsed = Number.parseFloat(formatNumber(src.amount));
+
+            if (src.amount.trim() === "" || Number.isNaN(parsed) || parsed < 0) {
                 Alert.alert(t("income.error.invalidAmountTitle"), t("income.error.invalidAmountMsg"));
                 return;
             }
         }
+
         setSaving(true);
+
         try {
             const updates = sources.filter((src) => src.id);
             const inserts = sources.filter((src) => !src.id);
 
-            let updateError = null;
             for (const src of updates) {
                 const { error } = await supabase
                     .from("incomes")
                     .update({
                         type: src.type,
-                        amount: Number.parseFloat(String(src.amount)),
+                        amount: Number.parseFloat(formatNumber(src.amount)),
                         active: src.active !== false,
                     })
                     .eq("id", src.id)
                     .eq("user_id", user.id);
+
                 if (error) {
-                    updateError = error;
-                    break;
+                    Alert.alert("Error", error.message);
+                    return;
                 }
             }
 
-            let insertError = null;
             if (inserts.length > 0) {
                 const { error } = await supabase.from("incomes").insert(
-                    inserts.map((src: IncomeSource) => ({
+                    inserts.map((src) => ({
                         user_id: user.id,
                         type: src.type,
-                        amount: Number.parseFloat(String(src.amount)),
+                        amount: Number.parseFloat(formatNumber(src.amount)),
                         active: src.active !== false,
                     })),
                 );
+
                 if (error) {
-                    insertError = error;
+                    Alert.alert("Error", error.message);
+                    return;
                 }
             }
 
-            if (updateError || insertError) {
-                Alert.alert("Error", `Failed to save income: ${updateError?.message || insertError?.message}`);
-                return;
-            }
             setOriginalSources(sources);
+
             Alert.alert(t("income.saved"), t("income.savedMsg"));
         } catch (e) {
-            console.error("Save income error:", e);
-            const msg = e instanceof Error ? e.message : "An unexpected error occurred.";
-            Alert.alert("Error", msg);
+            console.error(e);
+            Alert.alert("Error", "Unexpected error");
         } finally {
             setSaving(false);
         }
     };
 
-    const total = sources.reduce((sum, src) => {
-        if (src.active === false) return sum;
-        const parsed = Number.parseFloat(String(src.amount));
-        return sum + (Number.isNaN(parsed) ? 0 : parsed);
-    }, 0);
-
     useEffect(() => {
         if (!user) return;
+
         setLoading(true);
+
         supabase
             .from("incomes")
             .select("id, type, amount, active")
             .eq("user_id", user.id)
-            .eq("active", true)
             .then(({ data, error }) => {
                 let mappedSources: IncomeSource[];
+
                 if (error) {
-                    Alert.alert("Error", `Failed to load incomes: ${error.message}`);
+                    Alert.alert("Error", error.message);
                     mappedSources = [];
-                } else if (Array.isArray(data) && data.length > 0) {
-                    mappedSources = data.map(
-                        (row): IncomeSource => ({
-                            id: row.id,
-                            type: row.type,
-                            amount: typeof row.amount === "number" ? row.amount : Number.parseFloat(row.amount) || 0,
-                            active: row.active !== false,
-                        }),
-                    );
+                } else if (data && data.length > 0) {
+                    mappedSources = data.map((row) => ({
+                        id: row.id,
+                        type: row.type,
+                        amount: String(row.amount ?? ""),
+                        active: row.active !== false,
+                    }));
                 } else {
-                    mappedSources = [{ type: "salary", amount: 0, active: true }];
+                    mappedSources = [{ type: "salary", amount: "", active: true }];
                 }
+
                 setSources(mappedSources);
                 setOriginalSources(mappedSources);
                 setLoading(false);
@@ -323,9 +340,6 @@ export default function IncomeScreen() {
                 <ThemedView style={styles.fieldset}>
                     <ThemedText type="title">{t("income.title")}</ThemedText>
                     <ThemedText style={styles.subtitle}>{t("income.subtitle")}</ThemedText>
-                    <ThemedText type="subtitle" style={styles.label}>
-                        {t("income.label")}
-                    </ThemedText>
 
                     {loading ?
                         <ThemedText>Loading...</ThemedText>
@@ -334,17 +348,18 @@ export default function IncomeScreen() {
                                 <View style={[styles.item, !src.active && baseInactive]}>
                                     <TextInput
                                         style={styles.input}
-                                        value={String(src.amount)}
+                                        value={src.amount}
                                         placeholder="0.00"
                                         placeholderTextColor={theme.placeholder}
                                         keyboardType="decimal-pad"
                                         onChangeText={(text) => updateSource(idx, "amount", formatNumber(text))}
                                     />
+
                                     <FlatList
                                         data={incomeTypes}
                                         horizontal
-                                        style={styles.category}
                                         keyExtractor={(item) => item.key}
+                                        style={styles.category}
                                         renderItem={({ item, index }) => {
                                             const isLast = index === incomeTypes.length - 1;
                                             return (
@@ -366,6 +381,7 @@ export default function IncomeScreen() {
                                         showsHorizontalScrollIndicator={false}
                                     />
                                 </View>
+
                                 <View style={styles.icons}>
                                     <Pressable
                                         onPress={() => toggleActive(idx)}
@@ -382,15 +398,11 @@ export default function IncomeScreen() {
                                             color={src.active ? greenColor : mediumGreyColor}
                                         />
                                     </Pressable>
+
                                     {sources.length > 1 && (
                                         <Pressable
                                             onPress={() => removeSource(idx)}
-                                            style={[
-                                                styles.icon,
-                                                {
-                                                    borderColor: redColor,
-                                                },
-                                            ]}
+                                            style={[styles.icon, { borderColor: redColor }]}
                                         >
                                             <Ionicons name="trash" size={16} color={redColor} />
                                         </Pressable>
@@ -399,17 +411,21 @@ export default function IncomeScreen() {
                             </View>
                         ))
                     }
+
                     <Pressable onPress={addSource} style={styles.add}>
                         <ThemedText style={styles.addText}>+ {t("income.addSource")}</ThemedText>
                     </Pressable>
+
                     <View style={styles.total}>
-                        <ThemedText> {t("income.total")}:</ThemedText>
-                        <ThemedText type="defaultSemiBold"> {formatCurrency(total, currencySymbol)}</ThemedText>
+                        <ThemedText>{t("income.total")}:</ThemedText>
+                        <ThemedText type="defaultSemiBold">{formatCurrency(total, currencySymbol)}</ThemedText>
                     </View>
+
                     <ThemedView style={styles.buttons}>
                         <Pressable style={styles.closeButton} onPress={() => router.back()}>
                             <ThemedText style={styles.closeButtonText}>{t("common.close")}</ThemedText>
                         </Pressable>
+
                         <Pressable
                             style={[styles.saveButton, saveButtonDisabled && baseInactive]}
                             disabled={saveButtonDisabled}

@@ -130,8 +130,9 @@ declare global {
         message: string;
     }
 
-    interface IncomeSource extends itemAmountProp, itemTypeProp, itemActiveProp {
+    interface IncomeSource extends itemTypeProp, itemActiveProp {
         id?: string;
+        amount: string;
     }
 
     interface LanguageItem extends itemNameProp, itemCodeProp {
