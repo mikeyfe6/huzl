@@ -100,6 +100,13 @@ export default function IncomeScreen() {
         setSources((prev) => prev.filter((_, i) => i !== idx));
     };
 
+    const formatAmount = (value: string): string => {
+        if (!value) return "";
+        const num = Number.parseFloat(formatNumber(value));
+        if (Number.isNaN(num)) return value;
+        return num.toFixed(2);
+    };
+
     const hasIncomeChanges = useMemo(() => {
         if (sources.length !== originalSources.length) return true;
 
@@ -348,7 +355,7 @@ export default function IncomeScreen() {
                                 <View style={[styles.item, !src.active && baseInactive]}>
                                     <TextInput
                                         style={styles.input}
-                                        value={src.amount}
+                                        value={formatAmount(src.amount)}
                                         placeholder="0.00"
                                         placeholderTextColor={theme.placeholder}
                                         keyboardType="decimal-pad"
