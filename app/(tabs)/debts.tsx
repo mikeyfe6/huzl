@@ -14,6 +14,7 @@ import { supabase } from "@/utils/supabase";
 import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { Collapsible } from "@/components/ui/collapsible";
 import { DebtItem } from "@/components/ui/debt-item";
 
 import { Colors, whiteColor } from "@/constants/theme";
@@ -21,6 +22,7 @@ import { baseOrange, baseRed } from "@/styles/base";
 import { getDebtsStyles } from "@/styles/debts";
 
 // TODO: Test android datepicker....
+// TODO: Checken of ik de originele bedrag toon en dan al betaalde bedrag ook ernaast toon...
 
 export default function DebtsScreen() {
     const { t } = useTranslation();
@@ -421,10 +423,38 @@ export default function DebtsScreen() {
         ],
     );
 
+    const activeDebts = sortedDebts.filter((d) => d.amount > 0);
+    const paidOffDebts = sortedDebts.filter((d) => d.amount === 0);
+
+    const PaidOffList =
+        paidOffDebts.length > 0 ?
+            <Collapsible title={t("debts.paidOff")}>
+                {paidOffDebts.map((debt) => (
+                    <DebtItem
+                        key={debt.id}
+                        debt={debt}
+                        currencySymbol={currencySymbol}
+                        onToggleActive={handleToggleActive}
+                        onEdit={handleEditDebt}
+                        onDelete={confirmDelete}
+                        styles={styles}
+                        paymentId={paymentId}
+                        setPaymentId={setPaymentId}
+                        paymentAmount={paymentAmount}
+                        setPaymentAmount={setPaymentAmount}
+                        onPayment={handleMakePayment}
+                        loading={loading}
+                        theme={theme}
+                        t={t}
+                    />
+                ))}
+            </Collapsible>
+        :   null;
+
     return (
         <AuthGate>
             <FlatList
-                data={sortedDebts}
+                data={activeDebts}
                 keyExtractor={(debt) => debt.id}
                 contentContainerStyle={debts.length > 0 ? { backgroundColor: theme.background } : undefined}
                 ListHeaderComponent={Header}
@@ -440,6 +470,7 @@ export default function DebtsScreen() {
                             <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
                         </ThemedView>
                 }
+                ListFooterComponent={PaidOffList}
             />
         </AuthGate>
     );

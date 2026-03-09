@@ -7,6 +7,8 @@ import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
+import { baseFlex, baseHorizontal, baseSpace } from "@/styles/base";
+
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const theme = useColorScheme() ?? "light";
@@ -26,19 +28,16 @@ export function Collapsible({ children, title }: PropsWithChildren & { title: st
 
                 <ThemedText type="defaultSemiBold">{title}</ThemedText>
             </Pressable>
-            {isOpen && <ThemedView style={styles.content}>{children}</ThemedView>}
+            {isOpen && <ThemedView>{children}</ThemedView>}
         </ThemedView>
     );
 }
 
 const styles = StyleSheet.create({
     heading: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 6,
-    },
-    content: {
-        marginTop: 6,
-        marginLeft: 24,
+        ...baseFlex("flex-start", "center"),
+        ...baseHorizontal,
+        ...baseSpace,
+        marginBottom: 16,
     },
 });
