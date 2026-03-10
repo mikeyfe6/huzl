@@ -10,10 +10,10 @@ import { useCurrency } from "@/hooks/use-currency";
 import { formatAmount, formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
-import { AuthGate } from "@/components/loading";
+import { BudgetItem, ExpenseItem } from "@/components/list/budget-item";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { BudgetItem, ExpenseItem } from "@/components/ui/budget-item";
+import { AuthGate } from "@/components/ui/loading";
 
 import { blueColor, Colors, greenColor, redColor } from "@/constants/theme";
 import { baseBlue, baseGreen, baseRed } from "@/styles/base";

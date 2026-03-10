@@ -11,9 +11,9 @@ import { useCurrency } from "@/hooks/use-currency";
 import { formatCurrency, formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
-import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { AuthGate } from "@/components/ui/loading";
 
 import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor } from "@/constants/theme";
 import {

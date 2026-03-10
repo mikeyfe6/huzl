@@ -10,9 +10,9 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { formatCapitalize } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
-import { AuthGate } from "@/components/loading";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { AuthGate } from "@/components/ui/loading";
 
 import { Colors, redColor } from "@/constants/theme";
 import {

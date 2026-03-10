@@ -11,11 +11,11 @@ import { useCurrency } from "@/hooks/use-currency";
 import { formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
-import { AuthGate } from "@/components/loading";
+import { DebtItem } from "@/components/list/debt-item";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Collapsible } from "@/components/ui/collapsible";
-import { DebtItem } from "@/components/ui/debt-item";
+import { AuthGate } from "@/components/ui/loading";
 
 import { Colors, whiteColor } from "@/constants/theme";
 import { baseOrange, baseRed } from "@/styles/base";

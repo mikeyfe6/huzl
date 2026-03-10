@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, NativeMethods, Platform, Pressable, TextInput, View } from "react-native";
+import { Alert, FlatList, Platform, Pressable, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -11,12 +11,12 @@ import { useCurrency } from "@/hooks/use-currency";
 import { formatCurrency, formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
-import { AuthGate } from "@/components/loading";
+import { ExpenseItem } from "@/components/list/expense-item";
 import { SORT_OPTIONS, SortModal } from "@/components/modal/sort-expenses-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { ExpenseItem } from "@/components/ui/expense-item";
 import { ExpensesPie } from "@/components/ui/expenses-pie";
+import { AuthGate } from "@/components/ui/loading";
 
 // TODO: file dry maken
 
@@ -680,13 +680,12 @@ export default function ExpensesScreen() {
                                 if (!flatListRef.current || !searchBarRef.current) return;
 
                                 requestAnimationFrame(() => {
-                                    const scrollView =
-                                        flatListRef?.current?.getNativeScrollRef?.() as unknown as NativeMethods;
+                                    const scrollView = flatListRef?.current?.getNativeScrollRef?.();
 
                                     if (!scrollView) return;
 
                                     searchBarRef?.current?.measureLayout(
-                                        scrollView,
+                                        scrollView as any,
                                         (_x, y) => {
                                             flatListRef.current?.scrollToOffset({
                                                 offset: Math.max(0, y - 72),

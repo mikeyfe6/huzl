@@ -12,13 +12,13 @@ import { useThemePreference } from "@/hooks/use-theme-preference";
 import { formatAmount } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
-import { AuthGate } from "@/components/loading";
 import { CurrencyPickerModal } from "@/components/modal/currency-picker-modal";
 import { LanguagePickerModal } from "@/components/modal/language-picker-modal";
 import { ChangePasswordModal } from "@/components/modal/reset-password-modal";
 import { TerminateAccountModal } from "@/components/modal/terminate-account-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { AuthGate } from "@/components/ui/loading";
 
 import { Colors, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
