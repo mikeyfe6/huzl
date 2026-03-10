@@ -75,6 +75,12 @@ declare global {
         readonly onSelect: (opt: SortOption) => void;
     }
 
+    interface FilterFrequencyModalProps extends baseModalProps {
+        readonly frequencies: ReadonlyArray<Frequency>;
+        readonly selected: Frequency | null;
+        onSelect: (freq: Frequency | null) => void;
+    }
+
     // components
 
     interface ExpensePieProps extends itemThemeProp {

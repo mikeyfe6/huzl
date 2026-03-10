@@ -1,22 +1,20 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-
 import { linkColor } from "@/constants/theme";
 import { baseBlur, baseBorder, baseCorner, baseFlex, baseHorizontal, baseOutline, baseSpace } from "@/styles/base";
 
-export const SORT_OPTIONS = [
-    { value: "default" as const, labelKey: "sorting.dateAdded", icon: "time-outline" as const },
-    { value: "alphabetic-asc" as const, labelKey: "sorting.nameAToZ", icon: "sort-alphabetical-ascending" as const },
-    { value: "alphabetic-desc" as const, labelKey: "sorting.nameZToA", icon: "sort-alphabetical-descending" as const },
-    { value: "cost-asc" as const, labelKey: "sorting.amountLowToHigh", icon: "trending-down" as const },
-    { value: "cost-desc" as const, labelKey: "sorting.amountHighToLow", icon: "trending-up" as const },
-] as const;
-
-export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Readonly<SortModalProps>) {
+export function FilterFrequencyModal({
+    visible,
+    frequencies,
+    selected,
+    onSelect,
+    onClose,
+    theme,
+}: Readonly<FilterFrequencyModalProps>) {
     const { t } = useTranslation();
 
     const styles = useMemo(
@@ -75,21 +73,30 @@ export function SortModal({ visible, sortOption, onSelect, onClose, theme }: Rea
             <View style={styles.backdrop}>
                 <View style={styles.sheet}>
                     <ThemedText type="subtitle" style={styles.header}>
-                        {t("sorting.sortBy")}
+                        {t("filtering.filterBy")}
                     </ThemedText>
-                    {SORT_OPTIONS.map((option, index) => (
+
+                    <Pressable
+                        key="reset"
+                        style={[styles.item, frequencies.length > 0 && styles.itemDivider]}
+                        onPress={() => onSelect(null)}
+                    >
+                        <View style={styles.itemLeft}>
+                            <Ionicons name="close" size={18} color={theme.label} />
+                            <ThemedText>{t("filtering.resetFilter")}</ThemedText>
+                        </View>
+                    </Pressable>
+                    {frequencies.map((freq, index) => (
                         <Pressable
-                            key={option.value}
-                            style={[styles.item, index < SORT_OPTIONS.length - 1 && styles.itemDivider]}
-                            onPress={() => onSelect(option.value)}
+                            key={freq}
+                            style={[styles.item, index < frequencies.length - 1 && styles.itemDivider]}
+                            onPress={() => onSelect(freq)}
                         >
                             <View style={styles.itemLeft}>
-                                {option.value === "alphabetic-asc" || option.value === "alphabetic-desc" ?
-                                    <MaterialCommunityIcons name={option.icon} size={18} color={theme.label} />
-                                :   <Ionicons name={option.icon} size={18} color={theme.label} />}
-                                <ThemedText>{t(option.labelKey)}</ThemedText>
+                                <Ionicons name="repeat" size={18} color={theme.label} />
+                                <ThemedText>{t(`expenses.frequency.${freq}`)}</ThemedText>
                             </View>
-                            {sortOption === option.value && <Ionicons name="checkmark" size={18} color={linkColor} />}
+                            {selected === freq && <Ionicons name="checkmark" size={18} color={linkColor} />}
                         </Pressable>
                     ))}
                     <Pressable style={styles.cancel} onPress={onClose}>

@@ -140,6 +140,10 @@
         "amountLowToHigh": "Laag naar Hoog",
         "amountHighToLow": "Hoog naar Laag"
     },
+    "filtering": {
+        "filterBy": "Filter op",
+        "resetFilter": "Reset filter"
+    },
     "budgets": {
         "title": "Budgetten",
         "label": {

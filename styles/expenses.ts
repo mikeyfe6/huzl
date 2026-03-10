@@ -170,16 +170,18 @@ export const getExpensesStyles = (theme: any) =>
             right: 28,
             marginTop: -11,
         },
-        sortTrigger: {
+        modalButtons: { ...baseFlex("center"), ...baseGap },
+        modalTrigger: {
             ...baseFlex("center", "center"),
             ...baseInput(theme),
             ...baseSpace,
             ...baseSelect,
         },
-        sortTriggerText: {
+        modalTriggerText: {
             ...baseWeight,
             ...baseSmall,
             color: theme.label,
+            paddingRight: 4,
         },
         expenseAmounts: {
             ...baseFlex("center"),

@@ -1,8 +1,8 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Platform, Pressable, TextInput, View } from "react-native";
+import { Alert, FlatList, Platform, Pressable, TextInput, useWindowDimensions, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -12,6 +12,7 @@ import { formatCurrency, formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { ExpenseItem } from "@/components/list/expense-item";
+import { FilterFrequencyModal } from "@/components/modal/filter-frequency-modal";
 import { SORT_OPTIONS, SortModal } from "@/components/modal/sort-expenses-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -61,6 +62,11 @@ export default function ExpensesScreen() {
     const [sortModalVisible, setSortModalVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
+    const [frequencyFilter, setFrequencyFilter] = useState<Frequency | null>(null);
+    const [frequencyModalVisible, setFrequencyModalVisible] = useState(false);
+
+    const { width: screenWidth } = useWindowDimensions();
+
     const theme = Colors[colorScheme ?? "light"];
     const styles = useMemo(() => getExpensesStyles(theme), [theme]);
 
@@ -86,14 +92,27 @@ export default function ExpensesScreen() {
         [t],
     );
 
+    const currentSort = SORT_OPTIONS.find((opt) => opt.value === sortOption);
+
+    const availableFrequencies = useMemo(() => {
+        const set = new Set<Frequency>();
+        expenses.forEach((e) => set.add(e.frequency));
+        return Array.from(set);
+    }, [expenses]);
+
     const filteredExpenses = useMemo(() => {
-        if (!searchQuery.trim()) return expenses;
-        return expenses.filter((e) => e.name.toLowerCase().includes(searchQuery.trim().toLowerCase()));
-    }, [expenses, searchQuery]);
+        let result = expenses;
+        if (searchQuery.trim()) {
+            result = result.filter((e) => e.name.toLowerCase().includes(searchQuery.trim().toLowerCase()));
+        }
+        if (frequencyFilter) {
+            result = result.filter((e) => e.frequency === frequencyFilter);
+        }
+        return result;
+    }, [expenses, searchQuery, frequencyFilter]);
 
     const sortedExpenses = useMemo(() => {
         const sorted = [...filteredExpenses];
-
         switch (sortOption) {
             case "alphabetic-asc":
                 return sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -657,16 +676,35 @@ export default function ExpensesScreen() {
                             <ThemedText type="subtitle">{t("expenses.yourExpenses")}</ThemedText>
                             <ThemedText style={styles.expenseNumber}>({sortedExpenses.length})</ThemedText>
                         </View>
-                        <Pressable
-                            style={styles.sortTrigger}
-                            onPress={() => setSortModalVisible(true)}
-                            accessibilityRole="button"
-                            accessibilityLabel="Open sort options"
-                        >
-                            <Ionicons name="swap-vertical" size={16} color={theme.label} />
-                            <ThemedText style={styles.sortTriggerText}>{sortLabelMap[sortOption]}</ThemedText>
-                            <Ionicons name="chevron-down" size={16} color={theme.label} />
-                        </Pressable>
+                        <View style={styles.modalButtons}>
+                            <Pressable
+                                style={styles.modalTrigger}
+                                onPress={() => setFrequencyModalVisible(true)}
+                                accessibilityRole="button"
+                                accessibilityLabel="Open frequency filter"
+                            >
+                                <Ionicons name="repeat" size={16} color={theme.label} />
+                                <ThemedText style={styles.modalTriggerText}>
+                                    {frequencyFilter ?
+                                        t(`expenses.frequency.${frequencyFilter}`)
+                                    :   t("filtering.filterBy")}
+                                </ThemedText>
+                            </Pressable>
+                            <Pressable
+                                style={styles.modalTrigger}
+                                onPress={() => setSortModalVisible(true)}
+                                accessibilityRole="button"
+                                accessibilityLabel="Open sort options"
+                            >
+                                {currentSort &&
+                                    (currentSort.value === "alphabetic-asc" || currentSort.value === "alphabetic-desc" ?
+                                        <MaterialCommunityIcons name={currentSort.icon} size={18} color={theme.label} />
+                                    :   <Ionicons name={currentSort.icon} size={16} color={theme.label} />)}
+                                {screenWidth > 568 && (
+                                    <ThemedText style={styles.modalTriggerText}>{sortLabelMap[sortOption]}</ThemedText>
+                                )}
+                            </Pressable>
+                        </View>
                     </View>
                     <View ref={searchBarRef} collapsable={false} style={styles.expenseSearch}>
                         <TextInput
@@ -707,6 +745,17 @@ export default function ExpensesScreen() {
                             />
                         :   <Ionicons name="search" size={20} color={theme.placeholder} style={styles.searchIcon} />}
                     </View>
+                    <FilterFrequencyModal
+                        visible={frequencyModalVisible}
+                        frequencies={availableFrequencies}
+                        selected={frequencyFilter}
+                        onSelect={(freq) => {
+                            setFrequencyFilter(freq);
+                            setFrequencyModalVisible(false);
+                        }}
+                        onClose={() => setFrequencyModalVisible(false)}
+                        theme={theme}
+                    />
                     <SortModal
                         visible={sortModalVisible}
                         sortOption={sortOption}
