@@ -34,7 +34,14 @@ export default {
             favicon: "./assets/images/favicon.png",
         },
         plugins: [
-            "@react-native-firebase/app",
+            [
+                "@react-native-firebase/app",
+                {
+                    ios: {
+                        disableSPM: true,
+                    },
+                },
+            ],
             "@react-native-community/datetimepicker",
             [
                 "expo-router",
@@ -62,8 +69,9 @@ export default {
                         useFrameworks: "static",
                         podfileProperties: {
                             "use_modular_headers!": true,
+                            forceStaticLinking: ["RNFBApp", "RNFBAnalytics"],
                         },
-                        buildReactNativeFromSource: true,
+                        buildReactNativeFromSource: false,
                     },
                 },
             ],
