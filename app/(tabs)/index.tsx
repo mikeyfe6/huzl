@@ -92,6 +92,22 @@ export default function HomeScreen() {
         return debtsWithDate[0];
     }, [debts]);
 
+    const overdueDebtsCount = useMemo(() => {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+
+        return debts
+            .filter((d) => d.amount !== 0)
+            .filter((d) => d.active !== false)
+            .filter((d) => d.next_payment_date && !Number.isNaN(Date.parse(d.next_payment_date)))
+            .map((d) => {
+                const dueDate = new Date(d.next_payment_date);
+                dueDate.setHours(0, 0, 0, 0);
+                return dueDate;
+            })
+            .filter((dueDate) => dueDate < now).length;
+    }, [debts]);
+
     const calculateYearlyTotal = (amount: number, freq: string): number => {
         const num = Number.parseFloat(amount.toString());
         if (Number.isNaN(num)) return 0;
@@ -409,6 +425,13 @@ export default function HomeScreen() {
                     color: orangeColor,
                     textAlign: "center",
                 },
+                overdueDebts: {
+                    ...baseMini,
+                    ...baseBold,
+                    color: redColor,
+                    textAlign: "center",
+                    lineHeight: 13,
+                },
             }),
         [theme],
     );
@@ -634,6 +657,14 @@ export default function HomeScreen() {
                             <ThemedText style={{ color: theme.text, ...baseMini }}>
                                 {`${nextDebt.name}・${nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}`}
                             </ThemedText>
+                        </ThemedText>
+                    )}
+
+                    {overdueDebtsCount > 0 && (
+                        <ThemedText style={styles.overdueDebts}>
+                            {overdueDebtsCount === 1 ?
+                                t("home.overdueDebtsSingle", { count: overdueDebtsCount })
+                            :   t("home.overdueDebtsMultiple", { count: overdueDebtsCount })}
                         </ThemedText>
                     )}
                 </ThemedView>

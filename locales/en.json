@@ -81,7 +81,9 @@
         "monthlyDisposable": "Monthly Disposable",
         "weeklyDisposable": "Weekly Disposable",
         "dailyDisposable": "Daily Disposable",
-        "nextPayment": "Next Payment"
+        "nextPayment": "Next Payment",
+        "overdueDebtsSingle": "{{count}} debt overdue",
+        "overdueDebtsMultiple": "{{count}} debts overdue"
     },
     "expenses": {
         "title": "Expenses",

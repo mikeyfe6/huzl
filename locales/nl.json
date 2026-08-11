@@ -81,7 +81,9 @@
         "monthlyDisposable": "Maandelijks Beschikbaar",
         "weeklyDisposable": "Wekelijks Beschikbaar",
         "dailyDisposable": "Dagelijks Beschikbaar",
-        "nextPayment": "Volgende Betaling"
+        "nextPayment": "Volgende Betaling",
+        "overdueDebtsSingle": "{{count}} betalingsachterstand",
+        "overdueDebtsMultiple": "{{count}} betalingsachterstanden"
     },
     "expenses": {
         "title": "Uitgaven",
