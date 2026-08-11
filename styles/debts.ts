@@ -30,7 +30,7 @@ import {
     baseWeight,
 } from "@/styles/base";
 
-export const getDebtsStyles = (theme: any) =>
+export const getDebtsStyles = (theme: any, screenWidth = 0) =>
     StyleSheet.create({
         container: {
             paddingBottom: 24,
@@ -53,6 +53,9 @@ export const getDebtsStyles = (theme: any) =>
             ...baseFlex("center"),
             ...baseGap,
             display: "flex",
+        },
+        dateWrapperMobile: {
+            width: screenWidth < 579 ? "100%" : "auto",
         },
         dateWrapperFallback: {
             ...baseFlex("center"),
@@ -165,6 +168,26 @@ export const getDebtsStyles = (theme: any) =>
             backgroundColor: theme.inputSpecial,
             flex: 11,
             minWidth: 200,
+        },
+        paymentMetaRow: {
+            ...baseFlex("center"),
+            ...baseGap,
+        },
+        paymentMetaRowMobile: {
+            width: screenWidth < 579 ? "100%" : "auto",
+        },
+        paymentDateButton: {
+            ...baseInput(theme),
+            ...baseSelect,
+            ...baseFlex("center"),
+            backgroundColor: theme.inputSpecial,
+            flex: 1,
+            minHeight: 44,
+        },
+        paymentDateText: {
+            ...baseWeight,
+            ...baseMini,
+            color: slateColor,
         },
         paymentButtons: {
             ...baseFlex(),

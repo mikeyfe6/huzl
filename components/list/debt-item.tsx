@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { memo } from "react";
-import { Pressable, TextInput, View } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { memo, useEffect, useState } from "react";
+import { Modal, Platform, Pressable, TextInput, View } from "react-native";
 
 import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
 
@@ -27,6 +28,17 @@ export const DebtItem = memo(
         onPayment,
         t,
     }: DebtListProps) => {
+        const [paymentDate, setPaymentDate] = useState<string>(debt.next_payment_date ?? "");
+        const [showDatePicker, setShowDatePicker] = useState(false);
+        const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(null);
+
+        useEffect(() => {
+            if (paymentId === debt.id) {
+                setPaymentDate(debt.next_payment_date ?? "");
+                setTempSelectedDate(debt.next_payment_date ? new Date(debt.next_payment_date) : new Date());
+            }
+        }, [paymentId, debt.id, debt.next_payment_date]);
+
         const renderNextPaymentDate = (dateString: string | null | undefined) => {
             if (!dateString) return <ThemedText style={[styles.itemPaymentText]}>—</ThemedText>;
             if (debt.amount === 0)
@@ -170,10 +182,45 @@ export const DebtItem = memo(
                             keyboardType="decimal-pad"
                             autoFocus
                         />
+                        <View style={{ ...styles.paymentMetaRow, ...styles.paymentMetaRowMobile }}>
+                            {Platform.OS === "web" ?
+                                <div style={{ ...styles.dateWrapper, ...styles.dateWrapperMobile }}>
+                                    <input
+                                        type="date"
+                                        style={styles.dateInput}
+                                        value={paymentDate ? paymentDate.slice(0, 10) : ""}
+                                        onChange={(e) =>
+                                            setPaymentDate(e.target.value ? new Date(e.target.value).toISOString() : "")
+                                        }
+                                        placeholder={t("debts.placeholder.nextPaymentDate")}
+                                    />
+                                </div>
+                            :   <Pressable
+                                    style={styles.paymentDateButton}
+                                    onPress={() => {
+                                        setTempSelectedDate(paymentDate ? new Date(paymentDate) : new Date());
+                                        setShowDatePicker(true);
+                                    }}
+                                    accessibilityRole="button"
+                                    accessibilityLabel={t("debts.label.nextPaymentDate")}
+                                >
+                                    <Ionicons name="calendar-outline" size={16} color={orangeColor} />
+                                    <ThemedText
+                                        style={[styles.paymentDateText, !paymentDate && { color: theme.placeholder }]}
+                                    >
+                                        {paymentDate ?
+                                            new Date(paymentDate).toLocaleDateString(t("seo.lang"))
+                                        :   t("debts.placeholder.nextPaymentDate")}
+                                    </ThemedText>
+                                </Pressable>
+                            }
+                        </View>
                         <View style={styles.paymentButtons}>
                             <Pressable
                                 style={[styles.saveButton, (!paymentAmount.trim() || loading) && baseInactive]}
-                                onPress={() => onPayment(debt.id, Number.parseFloat(paymentAmount))}
+                                onPress={() =>
+                                    onPayment(debt.id, Number.parseFloat(paymentAmount), paymentDate || null)
+                                }
                                 disabled={loading || !paymentAmount.trim()}
                             >
                                 <ThemedText style={styles.buttonText}>{t("common.save")}</ThemedText>
@@ -183,12 +230,73 @@ export const DebtItem = memo(
                                 onPress={() => {
                                     setPaymentId(null);
                                     setPaymentAmount("");
+                                    setShowDatePicker(false);
                                 }}
                                 disabled={loading}
                             >
                                 <Ionicons name="close" size={20} color={whiteColor} />
                             </Pressable>
                         </View>
+
+                        {Platform.OS === "ios" && (
+                            <Modal
+                                transparent
+                                animationType="fade"
+                                visible={showDatePicker}
+                                onRequestClose={() => setShowDatePicker(false)}
+                            >
+                                <View style={styles.modal}>
+                                    <View style={styles.datepicker}>
+                                        <DateTimePicker
+                                            value={
+                                                tempSelectedDate || (paymentDate ? new Date(paymentDate) : new Date())
+                                            }
+                                            mode="date"
+                                            display="spinner"
+                                            textColor={theme.inputText}
+                                            onChange={(_, selectedDate) => {
+                                                if (selectedDate) {
+                                                    setTempSelectedDate(selectedDate);
+                                                }
+                                            }}
+                                        />
+                                        <View style={styles.dateButtons}>
+                                            <Pressable
+                                                style={styles.cancelButton}
+                                                onPress={() => setShowDatePicker(false)}
+                                            >
+                                                <Ionicons name="close" size={24} color={whiteColor} />
+                                            </Pressable>
+                                            <Pressable
+                                                style={styles.saveButton}
+                                                onPress={() => {
+                                                    if (tempSelectedDate) {
+                                                        setPaymentDate(tempSelectedDate.toISOString());
+                                                    }
+                                                    setShowDatePicker(false);
+                                                }}
+                                            >
+                                                <ThemedText style={styles.buttonText}>{t("common.save")}</ThemedText>
+                                            </Pressable>
+                                        </View>
+                                    </View>
+                                </View>
+                            </Modal>
+                        )}
+
+                        {Platform.OS === "android" && showDatePicker && (
+                            <DateTimePicker
+                                value={paymentDate ? new Date(paymentDate) : new Date()}
+                                mode="date"
+                                display="default"
+                                onChange={(_, selectedDate) => {
+                                    setShowDatePicker(false);
+                                    if (selectedDate) {
+                                        setPaymentDate(selectedDate.toISOString());
+                                    }
+                                }}
+                            />
+                        )}
                     </View>
                 )}
             </ThemedView>

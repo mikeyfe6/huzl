@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
+import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, TextInput, View, useWindowDimensions } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -30,6 +30,7 @@ export default function DebtsScreen() {
 
     const colorScheme = useColorScheme();
     const { symbol: currencySymbol } = useCurrency();
+    const { width: screenWidth } = useWindowDimensions();
 
     const nameInputRef = useRef<TextInput>(null);
     const scrollViewRef = useRef<ScrollView>(null);
@@ -47,7 +48,7 @@ export default function DebtsScreen() {
     const [loading, setLoading] = useState(false);
 
     const theme = Colors[colorScheme ?? "light"];
-    const styles = useMemo(() => getDebtsStyles(theme), [theme]);
+    const styles = useMemo(() => getDebtsStyles(theme, screenWidth), [theme, screenWidth]);
 
     const handleEditDebt = useCallback((debt: DebtItem) => {
         setName(debt.name);
@@ -111,7 +112,7 @@ export default function DebtsScreen() {
     );
 
     const handleMakePayment = useCallback(
-        async (debtId: string, amount: number) => {
+        async (debtId: string, amount: number, updatedNextPaymentDate?: string | null) => {
             if (!user || !paymentAmount.trim()) return { error: "No user or payment amount" };
             const payment = Number.isFinite(amount) ? amount : Number.parseFloat(paymentAmount);
             if (Number.isNaN(payment) || payment <= 0) return { error: "Invalid payment amount" };
@@ -120,24 +121,38 @@ export default function DebtsScreen() {
             if (!debt) return { error: "Debt not found" };
 
             const newAmount = Math.max(0, debt.amount - payment);
+            const updateData: { amount: number; next_payment_date?: string | null } = { amount: newAmount };
+            if (updatedNextPaymentDate !== undefined) {
+                updateData.next_payment_date = updatedNextPaymentDate;
+            }
             setLoading(true);
 
             const { data, error } = await supabase
                 .from("debts")
-                .update({ amount: newAmount })
+                .update(updateData)
                 .eq("id", debtId)
                 .eq("user_id", user.id)
                 .select();
 
             if (!error && data && data.length > 0) {
-                setDebts((prev) => prev.map((d) => (d.id === debtId ? { ...d, amount: newAmount } : d)));
+                setDebts((prev) =>
+                    prev.map((d) =>
+                        d.id === debtId ?
+                            {
+                                ...d,
+                                amount: newAmount,
+                                next_payment_date: updatedNextPaymentDate ?? d.next_payment_date,
+                            }
+                        :   d,
+                    ),
+                );
                 setPaymentId(null);
                 setPaymentAmount("");
             }
             setLoading(false);
             return { error: error ? error.message : null };
         },
-        [paymentAmount, user],
+        [debts, paymentAmount, user],
     );
 
     const handleAddOrUpdateDebt = async () => {

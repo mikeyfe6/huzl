@@ -24,7 +24,7 @@
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/elements": "^2.9.38",
     "@react-navigation/native": "^7.1.33",
-    "@supabase/supabase-js": "^2.112.2",
+    "@supabase/supabase-js": "^2.112.3",
     "color": "^5.0.3",
     "expo": "~55.0.28",
     "expo-build-properties": "~55.0.16",

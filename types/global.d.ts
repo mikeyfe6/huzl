@@ -179,7 +179,11 @@ declare global {
         setPaymentAmount: (amount: string) => void;
         paymentId: string | null;
         setPaymentId: (id: string | null) => void;
-        onPayment: (debtId: string, amount: number) => Promise<{ error: string | null }>;
+        onPayment: (
+            debtId: string,
+            amount: number,
+            nextPaymentDate?: string | null,
+        ) => Promise<{ error: string | null }>;
     }
 
     type BudgetListItem =
