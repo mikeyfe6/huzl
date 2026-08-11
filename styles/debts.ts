@@ -27,6 +27,7 @@ import {
     baseRed,
     baseSelect,
     baseSmall,
+    baseSpace,
     baseWeight,
 } from "@/styles/base";
 
@@ -179,7 +180,8 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         paymentDateButton: {
             ...baseInput(theme),
             ...baseSelect,
-            ...baseFlex("center"),
+            ...baseFlex("center", "center"),
+            ...baseSpace,
             backgroundColor: theme.inputSpecial,
             flex: 1,
             minHeight: 44,
@@ -187,7 +189,6 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         paymentDateText: {
             ...baseWeight,
             ...baseMini,
-            color: slateColor,
         },
         paymentButtons: {
             ...baseFlex(),
