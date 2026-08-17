@@ -24,7 +24,6 @@ export default {
                 backgroundImage: "./assets/images/android-icon-background.png",
                 monochromeImage: "./assets/images/android-icon-monochrome.png",
             },
-            edgeToEdgeEnabled: true,
             predictiveBackGestureEnabled: false,
             package: "com.menefex.huzl",
             googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? "./firebase/google-services.json",
@@ -76,6 +75,9 @@ export default {
                 },
             ],
             "expo-font",
+            "expo-image",
+            "expo-localization",
+            "expo-status-bar",
         ],
         experiments: {
             typedRoutes: true,
