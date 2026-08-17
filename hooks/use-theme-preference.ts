@@ -37,9 +37,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     };
 
     // Determine the actual color scheme to use
-    const colorScheme = useMemo(
-        () => (preference === "system" ? systemColorScheme ?? "light" : preference),
-        [preference, systemColorScheme]
+    const colorScheme = useMemo<"light" | "dark">(
+        () =>
+            preference === "system" ?
+                systemColorScheme === "dark" ?
+                    "dark"
+                :   "light"
+            :   preference,
+        [preference, systemColorScheme],
     );
 
     const value = useMemo(
@@ -49,7 +54,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             updatePreference,
             isLoaded,
         }),
-        [preference, colorScheme, isLoaded]
+        [preference, colorScheme, isLoaded],
     );
 
     return React.createElement(ThemeContext.Provider, { value }, children);

@@ -253,6 +253,9 @@ export default function IncomeScreen() {
                 fieldset: {
                     ...baseFieldset,
                 },
+                heading: {
+                    marginBottom: 16,
+                },
                 subtitle: {
                     color: silverColor,
                     fontSize: 18,
@@ -345,7 +348,9 @@ export default function IncomeScreen() {
         <AuthGate>
             <ScrollView contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
-                    <ThemedText type="title">{t("income.title")}</ThemedText>
+                    <ThemedText type="title" style={styles.heading}>
+                        {t("income.title")}
+                    </ThemedText>
                     <ThemedText style={styles.subtitle}>{t("income.subtitle")}</ThemedText>
 
                     {loading ?

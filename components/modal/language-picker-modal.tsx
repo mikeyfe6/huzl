@@ -1,6 +1,10 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
+
+import { useAuth } from "@/hooks/use-auth";
+
+import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -26,15 +30,28 @@ const AVAILABLE_LANGUAGES: LanguageItem[] = [
 
 export function LanguagePickerModal({ visible, onClose, theme }: Readonly<LanguagePickerModalProps>) {
     const { i18n, t } = useTranslation();
+    const { refreshUser } = useAuth();
     const [saving, setSaving] = useState(false);
 
     const handleSelect = async (languageCode: string) => {
         setSaving(true);
         try {
+            const { error } = await supabase.auth.updateUser({
+                data: { language_code: languageCode },
+            });
+
+            if (error) {
+                Alert.alert("Error", `Failed to update language: ${error.message}`);
+                return;
+            }
+
+            await refreshUser();
             await i18n.changeLanguage(languageCode);
             onClose();
         } catch (e) {
             console.error("Language change error:", e);
+            const message = e instanceof Error ? e.message : "An unexpected error occurred.";
+            Alert.alert("Error", message);
         } finally {
             setSaving(false);
         }

@@ -268,7 +268,7 @@
     },
     "income": {
         "title": "Set your monthly income",
-        "subtitle": "Add your income sources to get a clear overview of your monthly income and expenses.",
+        "subtitle": "Add your income sources to get a clear overview of your monthly income and expenses",
         "label": "Income Sources",
         "addSource": "Add Source",
         "total": "Total",
@@ -293,6 +293,13 @@
     },
     "helpdesk": {
         "title": "Bugs, Feedback & Support",
+        "supportIntro": "Have a question, found a bug, or need help with the Huzl app? ",
+        "supportMailUs": "Email us and we'll get back to you as soon as possible.",
+        "supportTicket": "Create a ticket below.",
+        "supportEmail": "huzl@menefex.nl",
+        "supportOr": "or ...",
+        "signInPrompt": "Login",
+        "signInText": "to submit a ticket and view your support history",
         "label": {
             "type": "Type",
             "message": "Message"

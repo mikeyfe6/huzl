@@ -268,7 +268,7 @@
     },
     "income": {
         "title": "Stel je maandelijkse inkomen in",
-        "subtitle": "Voeg je inkomstenbronnen toe om een duidelijk overzicht van je maandelijkse in- en uitgaven te krijgen.",
+        "subtitle": "Voeg je inkomstenbronnen toe om een duidelijk overzicht van je maandelijkse in- en uitgaven te krijgen",
         "label": "Inkomensbronnen",
         "addSource": "Bron toevoegen",
         "total": "Totaal",
@@ -293,6 +293,13 @@
     },
     "helpdesk": {
         "title": "Bugs, Feedback & Ondersteuning",
+        "supportIntro": "Heb je een vraag, een bug gevonden of hulp nodig met de Huzl app? ",
+        "supportMailUs": "Mail ons en we reageren zo snel mogelijk.",
+        "supportTicket": "Maak hieronder een ticket aan.",
+        "supportEmail": "huzl@menefex.nl",
+        "supportOr": "of ...",
+        "signInPrompt": "Log in",
+        "signInText": "om een ticket in te dienen en je supportgeschiedenis te bekijken",
         "label": {
             "type": "Type",
             "message": "Bericht"

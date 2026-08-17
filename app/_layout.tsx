@@ -22,13 +22,20 @@ export const unstable_settings = {
 };
 
 function RootContent() {
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation();
     const { user } = useAuth();
 
     const pathname: string = usePathname();
     const name = pathname?.replace(/^\//, "") || "home";
 
     const colorScheme = useColorScheme();
+
+    useEffect(() => {
+        const languageCode = user?.user_metadata?.language_code;
+        if (languageCode === "en" || languageCode === "nl") {
+            void i18n.changeLanguage(languageCode);
+        }
+    }, [i18n, user?.user_metadata?.language_code]);
 
     const pageTitle = (() => {
         if (name === "home") {

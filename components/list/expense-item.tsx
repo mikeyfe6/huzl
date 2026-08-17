@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { memo } from "react";
+import { memo } from "react";
 import { Pressable, View } from "react-native";
 
 import { formatCurrency } from "@/utils/helpers";

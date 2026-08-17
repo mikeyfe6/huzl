@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Alert, Linking, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -12,10 +13,10 @@ import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { AuthGate } from "@/components/ui/loading";
 
-import { Colors, redColor } from "@/constants/theme";
+import { Colors, redColor, silverColor } from "@/constants/theme";
 import {
+    baseBlue,
     baseButton,
     baseButtonText,
     baseCard,
@@ -25,6 +26,7 @@ import {
     baseFieldset,
     baseFlex,
     baseGreen,
+    baseHorizontal,
     baseIcon,
     baseInput,
     baseLabel,
@@ -33,11 +35,13 @@ import {
     baseSelect,
     baseSize,
     baseSpace,
+    baseWeight,
 } from "@/styles/base";
 
 export default function HelpdeskScreen() {
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
+    const router = useRouter();
 
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
@@ -136,6 +140,27 @@ export default function HelpdeskScreen() {
                 heading: {
                     marginBottom: 16,
                 },
+                subtitle: {
+                    color: silverColor,
+                    fontSize: 18,
+                },
+                email: {
+                    ...baseWeight,
+                },
+                login: {
+                    ...baseHorizontal,
+                },
+                loginText: {
+                    ...baseEmptyText(theme),
+                },
+                loginButton: {
+                    ...baseButton(theme),
+                    ...baseBlue,
+                    marginTop: 4,
+                },
+                loginButtonText: {
+                    ...baseButtonText,
+                },
                 label: {
                     ...baseLabel(theme),
                 },
@@ -231,13 +256,41 @@ export default function HelpdeskScreen() {
     );
 
     return (
-        <AuthGate>
-            <ScrollView contentContainerStyle={styles.container}>
-                <ThemedView style={styles.fieldset}>
-                    <ThemedText type="title" style={styles.heading}>
-                        {t("helpdesk.title")}
-                    </ThemedText>
+        <ScrollView contentContainerStyle={styles.container}>
+            <ThemedView style={styles.fieldset}>
+                <ThemedText type="title" style={styles.heading}>
+                    {t("helpdesk.title")}
+                </ThemedText>
 
+                <ThemedText style={styles.subtitle}>
+                    {t("helpdesk.supportIntro")}
+                    {(!authLoading && !user && t("helpdesk.supportMailUs")) || t("helpdesk.supportTicket")}
+                </ThemedText>
+
+                {!authLoading && !user && (
+                    <Pressable onPress={() => Linking.openURL(`mailto:${t("helpdesk.supportEmail")}`)}>
+                        <ThemedText type="link" style={styles.email}>
+                            {t("helpdesk.supportEmail")}
+                        </ThemedText>
+                        <br />
+                        <ThemedText>{t("helpdesk.supportOr")}</ThemedText>
+                    </Pressable>
+                )}
+            </ThemedView>
+
+            {!authLoading && !user && (
+                <ThemedView style={styles.login}>
+                    <Pressable onPress={() => router.push("/")} style={styles.loginButton}>
+                        <ThemedText style={styles.loginButtonText}>{t("helpdesk.signInPrompt")}</ThemedText>
+                    </Pressable>
+                    <ThemedView style={styles.emptyState}>
+                        <ThemedText style={styles.emptyStateText}>{t("helpdesk.signInText")}</ThemedText>
+                    </ThemedView>
+                </ThemedView>
+            )}
+
+            {user && (
+                <ThemedView style={styles.fieldset}>
                     <ThemedText style={styles.label}>{t("helpdesk.label.type")}</ThemedText>
                     <View style={styles.select}>
                         <Picker
@@ -282,47 +335,48 @@ export default function HelpdeskScreen() {
                         </ThemedText>
                     </Pressable>
                 </ThemedView>
+            )}
 
-                {tickets.length > 0 && (
-                    <ThemedView style={styles.list}>
-                        <ThemedText type="subtitle" style={styles.header}>
-                            {t("helpdesk.yourTickets")}
-                        </ThemedText>
-                        {tickets.map((ticket) => (
-                            <View key={ticket.id} style={styles.item}>
-                                <View style={styles.itemContent}>
-                                    <ThemedText type="defaultSemiBold">{formatCapitalize(ticket.type)}</ThemedText>
-                                    <ThemedText>{ticket.message}</ThemedText>
-                                    <ThemedText style={styles.time}>
-                                        {new Date(ticket.created_at).toLocaleString()}
-                                    </ThemedText>
-                                </View>
-                                <Pressable
-                                    onPress={() => confirmDelete(ticket.id, ticket.message)}
-                                    disabled={loading}
-                                    style={styles.icon}
-                                >
-                                    <Ionicons name="trash" size={18} color={redColor} />
-                                </Pressable>
+            {user && tickets.length > 0 && (
+                <ThemedView style={styles.list}>
+                    <ThemedText type="subtitle" style={styles.header}>
+                        {t("helpdesk.yourTickets")}
+                    </ThemedText>
+                    {tickets.map((ticket) => (
+                        <View key={ticket.id} style={styles.item}>
+                            <View style={styles.itemContent}>
+                                <ThemedText type="defaultSemiBold">{formatCapitalize(ticket.type)}</ThemedText>
+                                <ThemedText>{ticket.message}</ThemedText>
+                                <ThemedText style={styles.time}>
+                                    {new Date(ticket.created_at).toLocaleString()}
+                                </ThemedText>
                             </View>
-                        ))}
-                    </ThemedView>
-                )}
+                            <Pressable
+                                onPress={() => confirmDelete(ticket.id, ticket.message)}
+                                disabled={loading}
+                                style={styles.icon}
+                            >
+                                <Ionicons name="trash" size={18} color={redColor} />
+                            </Pressable>
+                        </View>
+                    ))}
+                </ThemedView>
+            )}
 
-                {loading ?
+            {user && loading ?
+                <ThemedView style={styles.emptyState}>
+                    <ThemedText style={styles.emptyStateText}>
+                        <Ionicons name="time-outline" size={24} color={theme.inputText} />
+                    </ThemedText>
+                </ThemedView>
+            :   user &&
+                !loading &&
+                tickets.length === 0 && (
                     <ThemedView style={styles.emptyState}>
-                        <ThemedText style={styles.emptyStateText}>
-                            <Ionicons name="time-outline" size={24} color={theme.inputText} />
-                        </ThemedText>
+                        <ThemedText style={styles.emptyStateText}>{t("helpdesk.noTickets")}</ThemedText>
                     </ThemedView>
-                :   !loading &&
-                    tickets.length === 0 && (
-                        <ThemedView style={styles.emptyState}>
-                            <ThemedText style={styles.emptyStateText}>{t("helpdesk.noTickets")}</ThemedText>
-                        </ThemedView>
-                    )
-                }
-            </ScrollView>
-        </AuthGate>
+                )
+            }
+        </ScrollView>
     );
 }
