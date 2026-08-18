@@ -16,7 +16,16 @@ import { ForgotPasswordModal } from "@/components/modal/forgot-password-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { blueColor, Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
+import {
+    blackColor,
+    blueColor,
+    Colors,
+    greenColor,
+    mediumGreyColor,
+    orangeColor,
+    redColor,
+    whiteColor,
+} from "@/constants/theme";
 import {
     baseBold,
     baseButton,
@@ -425,6 +434,16 @@ export default function HomeScreen() {
                     color: orangeColor,
                     textAlign: "center",
                 },
+                nextDebtDate: {
+                    color: blackColor,
+                    backgroundColor: orangeColor,
+                    borderRadius: 6,
+                    paddingHorizontal: 4,
+                    paddingVertical: 2,
+                    fontSize: 12,
+                    marginLeft: 2,
+                    opacity: 0.9,
+                },
                 overdueDebts: {
                     ...baseMini,
                     ...baseBold,
@@ -658,7 +677,10 @@ export default function HomeScreen() {
                         <ThemedText style={styles.nextDebt}>
                             {`${t("home.nextPayment")}: `}
                             <ThemedText style={{ color: theme.text, ...baseMini }}>
-                                {`${nextDebt.name}・${nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}`}
+                                {`${nextDebt.name}`}{" "}
+                                <ThemedText style={styles.nextDebtDate}>
+                                    {nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}
+                                </ThemedText>
                             </ThemedText>
                         </ThemedText>
                     )}
