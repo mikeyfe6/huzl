@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router/react-navigation";
 import { Link } from "expo-router";
+import { useFocusEffect } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
@@ -537,7 +537,10 @@ export default function HomeScreen() {
                                     {t("auth.disclaimer.fourth")}
                                 </ThemedText>
                             </Link>
-                            .
+                            .{" "}
+                            <Link href="/helpdesk">
+                                <Ionicons name="help-circle" size={18} color={orangeColor} style={{ opacity: 0.9 }} />
+                            </Link>
                         </ThemedText>
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
                             {registrationSuccess ?
