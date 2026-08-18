@@ -14,12 +14,14 @@ import { baseInactive } from "@/styles/base";
 export const DebtItem = memo(
     ({
         debt,
+        index,
         styles,
         currencySymbol,
         setPaymentId,
         setPaymentAmount,
         paymentId,
         onToggleActive,
+        onTogglePayment,
         onEdit,
         onDelete,
         loading,
@@ -112,10 +114,7 @@ export const DebtItem = memo(
                     </View>
                     <View style={styles.itemIcons}>
                         <Pressable
-                            onPress={() => {
-                                setPaymentId(paymentId === debt.id ? null : debt.id);
-                                setPaymentAmount("");
-                            }}
+                            onPress={() => onTogglePayment(debt.id, index)}
                             style={[
                                 styles.itemIcon,
                                 {

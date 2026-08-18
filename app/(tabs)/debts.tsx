@@ -2,7 +2,17 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, TextInput, View, useWindowDimensions } from "react-native";
+import {
+    Alert,
+    FlatList,
+    Modal,
+    Platform,
+    Pressable,
+    ScrollView,
+    TextInput,
+    View,
+    useWindowDimensions,
+} from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -34,6 +44,7 @@ export default function DebtsScreen() {
 
     const nameInputRef = useRef<TextInput>(null);
     const scrollViewRef = useRef<ScrollView>(null);
+    const flatListRef = useRef<FlatList<DebtItem>>(null);
 
     const [debts, setDebts] = useState<DebtItem[]>([]);
     const [name, setName] = useState("");
@@ -92,6 +103,18 @@ export default function DebtsScreen() {
             ]);
         },
         [t, user],
+    );
+
+    const handleTogglePayment = useCallback(
+        (id: string, index: number) => {
+            const opening = paymentId !== id;
+            setPaymentId(opening ? id : null);
+            setPaymentAmount("");
+            if (opening && index >= 0) {
+                setTimeout(() => flatListRef.current?.scrollToIndex({ index, viewPosition: 0.3, animated: true }), 150);
+            }
+        },
+        [paymentId],
     );
 
     const handleToggleActive = useCallback(
@@ -406,11 +429,13 @@ export default function DebtsScreen() {
     );
 
     const renderItem = useCallback(
-        (props: { item: DebtItem }) => (
+        (props: { item: DebtItem; index: number }) => (
             <DebtItem
                 debt={props.item}
+                index={props.index}
                 currencySymbol={currencySymbol}
                 onToggleActive={handleToggleActive}
+                onTogglePayment={handleTogglePayment}
                 onEdit={handleEditDebt}
                 onDelete={confirmDelete}
                 styles={styles}
@@ -427,6 +452,7 @@ export default function DebtsScreen() {
         [
             currencySymbol,
             handleToggleActive,
+            handleTogglePayment,
             handleEditDebt,
             confirmDelete,
             styles,
@@ -448,8 +474,10 @@ export default function DebtsScreen() {
                     <DebtItem
                         key={debt.id}
                         debt={debt}
+                        index={-1}
                         currencySymbol={currencySymbol}
                         onToggleActive={handleToggleActive}
+                        onTogglePayment={handleTogglePayment}
                         onEdit={handleEditDebt}
                         onDelete={confirmDelete}
                         styles={styles}
@@ -469,11 +497,15 @@ export default function DebtsScreen() {
     return (
         <AuthGate>
             <FlatList
+                ref={flatListRef}
                 data={activeDebts}
                 keyExtractor={(debt) => debt.id}
                 contentContainerStyle={debts.length > 0 ? { backgroundColor: theme.background } : undefined}
                 ListHeaderComponent={Header}
                 renderItem={renderItem}
+                onScrollToIndexFailed={(info) =>
+                    setTimeout(() => flatListRef.current?.scrollToIndex({ index: info.index, viewPosition: 0.3 }), 100)
+                }
                 ListEmptyComponent={
                     loading ?
                         <ThemedView style={styles.emptyState}>

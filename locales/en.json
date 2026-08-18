@@ -299,7 +299,7 @@
         "supportEmail": "huzl@menefex.nl",
         "supportOr": "or ...",
         "signInPrompt": "Login",
-        "signInText": "to submit a ticket and view your support history",
+        "signInText": "... to submit a ticket and view your support history",
         "label": {
             "type": "Type",
             "message": "Message"

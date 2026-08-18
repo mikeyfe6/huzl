@@ -173,12 +173,14 @@ declare global {
 
     interface DebtListProps extends itemThemeProp, itemLoadingProp, baseItemProps, itemTranslationProp {
         debt: DebtItem;
+        index: number;
         onEdit: (debt: DebtItem) => void;
         styles: ReturnType<typeof getDebtsStyles>;
         paymentAmount: string;
         setPaymentAmount: (amount: string) => void;
         paymentId: string | null;
         setPaymentId: (id: string | null) => void;
+        onTogglePayment: (id: string, index: number) => void;
         onPayment: (
             debtId: string,
             amount: number,
