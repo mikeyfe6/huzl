@@ -429,20 +429,29 @@ export default function HomeScreen() {
                     backgroundColor: theme.cardNegativeBackground,
                 },
                 nextDebt: {
-                    ...baseMini,
+                    ...baseFlex("center", "center"),
+                    flexWrap: "wrap",
                     marginTop: 6,
+                    gap: 4,
+                },
+                nextDebtIntro: {
+                    ...baseMini,
                     color: orangeColor,
                     textAlign: "center",
                 },
-                nextDebtDate: {
-                    color: blackColor,
+                nextDebtBadge: {
                     backgroundColor: orangeColor,
                     borderRadius: 6,
                     paddingHorizontal: 4,
-                    paddingVertical: 2,
-                    fontSize: 12,
+                    marginTop: 16,
                     marginLeft: 2,
                     opacity: 0.9,
+                },
+                nextDebtDate: {
+                    color: blackColor,
+                    fontSize: 12,
+                    fontWeight: "500",
+                    lineHeight: 18,
                 },
                 overdueDebts: {
                     ...baseMini,
@@ -674,15 +683,15 @@ export default function HomeScreen() {
                     )}
 
                     {nextDebt && (
-                        <ThemedText style={styles.nextDebt}>
-                            {`${t("home.nextPayment")}: `}
-                            <ThemedText style={{ color: theme.text, ...baseMini }}>
-                                {`${nextDebt.name}`}{" "}
+                        <View style={styles.nextDebt}>
+                            <ThemedText style={styles.nextDebtIntro}>{`${t("home.nextPayment")}:`}</ThemedText>
+                            <ThemedText style={{ color: theme.text, ...baseMini }}>{nextDebt.name}</ThemedText>
+                            <View style={styles.nextDebtBadge}>
                                 <ThemedText style={styles.nextDebtDate}>
                                     {nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}
                                 </ThemedText>
-                            </ThemedText>
-                        </ThemedText>
+                            </View>
+                        </View>
                     )}
 
                     {overdueDebtsCount > 0 && (
