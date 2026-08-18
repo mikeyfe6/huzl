@@ -538,7 +538,7 @@ export default function HomeScreen() {
                                 </ThemedText>
                             </Link>
                             .{" "}
-                            <Link href="/helpdesk">
+                            <Link href="/helpdesk" style={{ ...baseOutline(theme) }}>
                                 <Ionicons name="help-circle" size={18} color={orangeColor} style={{ opacity: 0.9 }} />
                             </Link>
                         </ThemedText>

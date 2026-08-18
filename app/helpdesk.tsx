@@ -147,6 +147,9 @@ export default function HelpdeskScreen() {
                 email: {
                     ...baseWeight,
                 },
+                or: {
+                    marginTop: 16,
+                },
                 login: {
                     ...baseHorizontal,
                 },
@@ -272,8 +275,7 @@ export default function HelpdeskScreen() {
                         <ThemedText type="link" style={styles.email}>
                             {t("helpdesk.supportEmail")}
                         </ThemedText>
-                        <br />
-                        <ThemedText>{t("helpdesk.supportOr")}</ThemedText>
+                        <ThemedText style={styles.or}>{t("helpdesk.supportOr")}</ThemedText>
                     </Pressable>
                 )}
             </ThemedView>
