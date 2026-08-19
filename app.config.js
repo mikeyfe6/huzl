@@ -1,9 +1,11 @@
+import packageJson from "./package.json";
+
 export default {
     expo: {
         name: "huzl",
         slug: "huzl",
         owner: "menefex",
-        version: "1.0.0",
+        version: packageJson.version,
         orientation: "portrait",
         icon: "./assets/images/huzl-square-icon.png",
         scheme: "huzl",
