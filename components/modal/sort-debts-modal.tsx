@@ -42,13 +42,13 @@ export const SORT_OPTIONS = [
     {
         value: "date-closest" as const,
         labelKey: "sorting.dateClosest",
-        icon: "sort-calendar-ascending" as const,
+        icon: "calendar-start" as const,
         iconSet: "material" as const,
     },
     {
         value: "date-farthest" as const,
         labelKey: "sorting.dateFarthest",
-        icon: "sort-calendar-descending" as const,
+        icon: "calendar-end" as const,
         iconSet: "material" as const,
     },
 ] as const;
