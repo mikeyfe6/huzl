@@ -39,9 +39,21 @@ export const SORT_OPTIONS = [
         icon: "trending-up" as const,
         iconSet: "ion" as const,
     },
+    {
+        value: "date-closest" as const,
+        labelKey: "sorting.dateClosest",
+        icon: "sort-calendar-ascending" as const,
+        iconSet: "material" as const,
+    },
+    {
+        value: "date-farthest" as const,
+        labelKey: "sorting.dateFarthest",
+        icon: "sort-calendar-descending" as const,
+        iconSet: "material" as const,
+    },
 ] as const;
 
-export function SortExpensesModal({ visible, sortOption, onSelect, onClose, theme }: Readonly<SortModalProps>) {
+export function SortDebtsModal({ visible, sortOption, onSelect, onClose, theme }: Readonly<SortModalProps>) {
     const { t } = useTranslation();
 
     const styles = useMemo(

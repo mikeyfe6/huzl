@@ -1,4 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,7 +14,7 @@ import { supabase } from "@/utils/supabase";
 
 import { ExpenseItem } from "@/components/list/expense-item";
 import { FilterFrequencyModal } from "@/components/modal/filter-frequency-modal";
-import { SORT_OPTIONS, SortModal } from "@/components/modal/sort-expenses-modal";
+import { SORT_OPTIONS, SortExpensesModal } from "@/components/modal/sort-expenses-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { ExpensesPie } from "@/components/ui/expenses-pie";
@@ -41,7 +42,7 @@ import { getExpensesStyles } from "@/styles/expenses";
 
 export default function ExpensesScreen() {
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
 
     const colorScheme = useColorScheme();
     const { symbol: currencySymbol } = useCurrency();
@@ -64,6 +65,8 @@ export default function ExpensesScreen() {
 
     const [frequencyFilter, setFrequencyFilter] = useState<Frequency | null>(null);
     const [frequencyModalVisible, setFrequencyModalVisible] = useState(false);
+
+    const expenseSortPreferenceKey = user ? `@huzl_expense_sort:${user.id}` : "@huzl_expense_sort:guest";
 
     const { width: screenWidth } = useWindowDimensions();
 
@@ -417,10 +420,62 @@ export default function ExpensesScreen() {
         setEditingId(null);
     };
 
-    const setSortAndClose = (opt: SortOption) => {
+    const setSortAndClose = async (opt: SortOption) => {
         setSortOption(opt);
         setSortModalVisible(false);
+
+        try {
+            await AsyncStorage.setItem(expenseSortPreferenceKey, opt);
+            if (user) {
+                const { data } = await supabase.auth.getSession();
+                if (data.session) {
+                    const { error } = await supabase.auth.updateUser({ data: { expense_sort: opt } });
+                    if (error) throw error;
+                    await refreshUser();
+                }
+            }
+        } catch (error) {
+            console.error("Failed to save expense sort preference:", error);
+        }
     };
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const loadSortPreference = async () => {
+            try {
+                if (user) {
+                    const { data: authUser } = await supabase.auth.getUser();
+                    const cloudSort = authUser.user?.user_metadata?.expense_sort;
+                    if (!cancelled && cloudSort && SORT_OPTIONS.some((option) => option.value === cloudSort)) {
+                        setSortOption(cloudSort as SortOption);
+                        await AsyncStorage.setItem(expenseSortPreferenceKey, cloudSort);
+                        return;
+                    }
+                }
+
+                const savedSort = await AsyncStorage.getItem(expenseSortPreferenceKey);
+                if (!cancelled && savedSort && SORT_OPTIONS.some((option) => option.value === savedSort)) {
+                    setSortOption(savedSort as SortOption);
+                    if (user) {
+                        const { data } = await supabase.auth.getSession();
+                        if (data.session) {
+                            const { error } = await supabase.auth.updateUser({ data: { expense_sort: savedSort } });
+                            if (error) throw error;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load expense sort preference:", error);
+            }
+        };
+
+        void loadSortPreference();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [expenseSortPreferenceKey, user]);
 
     const totalYearlySpend = totals.total;
     const totalMonthlySpend = totalYearlySpend / 12;
@@ -697,7 +752,7 @@ export default function ExpensesScreen() {
                                 accessibilityLabel="Open sort options"
                             >
                                 {currentSort &&
-                                    (currentSort.value === "alphabetic-asc" || currentSort.value === "alphabetic-desc" ?
+                                    (currentSort.iconSet === "material" ?
                                         <MaterialCommunityIcons name={currentSort.icon} size={18} color={theme.label} />
                                     :   <Ionicons name={currentSort.icon} size={16} color={theme.label} />)}
                                 {screenWidth > 568 && (
@@ -756,7 +811,7 @@ export default function ExpensesScreen() {
                         onClose={() => setFrequencyModalVisible(false)}
                         theme={theme}
                     />
-                    <SortModal
+                    <SortExpensesModal
                         visible={sortModalVisible}
                         sortOption={sortOption}
                         onSelect={setSortAndClose}

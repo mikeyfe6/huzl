@@ -140,7 +140,9 @@
         "nameAToZ": "Naam A tot Z",
         "nameZToA": "Naam Z tot A",
         "amountLowToHigh": "Laag naar Hoog",
-        "amountHighToLow": "Hoog naar Laag"
+        "amountHighToLow": "Hoog naar Laag",
+        "dateClosest": "Dichtstbijzijnde datum",
+        "dateFarthest": "Verste datum"
     },
     "filtering": {
         "filterBy": "Filter op",

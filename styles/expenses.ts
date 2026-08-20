@@ -17,6 +17,7 @@ import {
     travelColor,
 } from "@/constants/theme";
 import {
+    baseBlank,
     baseBold,
     baseBorder,
     baseButton,
@@ -41,11 +42,11 @@ import {
     baseOutline,
     baseRadius,
     baseSelect,
+    baseSemiBold,
     baseSeparation,
     baseSize,
     baseSmall,
     baseSpace,
-    baseWeight,
 } from "@/styles/base";
 
 export const getExpensesStyles = (theme: any) =>
@@ -147,7 +148,7 @@ export const getExpensesStyles = (theme: any) =>
         },
         expenseTitle: {
             ...baseFlex("center", "center"),
-            ...baseSpace,
+            ...baseBlank,
         },
         expenseNumber: {
             ...baseSize,
@@ -178,7 +179,7 @@ export const getExpensesStyles = (theme: any) =>
             ...baseSelect,
         },
         modalTriggerText: {
-            ...baseWeight,
+            ...baseSemiBold,
             ...baseSmall,
             color: theme.label,
             paddingRight: 4,
@@ -202,7 +203,7 @@ export const getExpensesStyles = (theme: any) =>
             opacity: 0.7,
         },
         expenseAmount: {
-            ...baseWeight,
+            ...baseSemiBold,
             ...baseMini,
         },
         expenseMeta: {
@@ -263,7 +264,7 @@ export const getExpensesStyles = (theme: any) =>
             borderColor: healthColor,
         },
         badgeText: {
-            ...baseWeight,
+            ...baseSemiBold,
             fontSize: 11,
             lineHeight: 12,
             color: theme.text,
@@ -291,7 +292,7 @@ export const getExpensesStyles = (theme: any) =>
             opacity: 0.8,
             color: theme.text,
         },
-        expenseYearlyValue: { ...baseWeight, ...baseMini, color: theme.text },
+        expenseYearlyValue: { ...baseSemiBold, ...baseMini, color: theme.text },
         expenseMonthly: {
             ...baseFlex("center", "center"),
         },
@@ -300,7 +301,7 @@ export const getExpensesStyles = (theme: any) =>
             opacity: 0.8,
             color: mediumGreyColor,
         },
-        expenseMonthlyValue: { ...baseWeight, ...baseMini, color: mediumGreyColor },
+        expenseMonthlyValue: { ...baseSemiBold, ...baseMini, color: mediumGreyColor },
         totalSection: {
             ...baseBorder,
             ...baseSpace,
@@ -386,7 +387,7 @@ export const getExpensesStyles = (theme: any) =>
             borderRadius: 25,
             opacity: 0.75,
         },
-        chartButtonText: { ...baseWeight },
+        chartButtonText: { ...baseSemiBold },
         chartButtonLabel: {
             ...baseSmall,
             color: theme.statLabel,
@@ -407,7 +408,7 @@ export const getExpensesStyles = (theme: any) =>
             borderColor: theme.borderColor,
         },
         chartItemText: {
-            ...baseWeight,
+            ...baseSemiBold,
         },
         chartItemLabel: {
             ...baseMini,

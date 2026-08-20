@@ -11,7 +11,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { Colors, linkColor, whiteColor } from "@/constants/theme";
-import { baseButton, baseButtonText, baseOpacity, baseSpace, baseWeight } from "@/styles/base";
+import { baseButton, baseButtonText, baseOpacity, baseSpace, baseSemiBold } from "@/styles/base";
 
 export default function PrivacyScreen() {
     const { t } = useTranslation();
@@ -80,13 +80,13 @@ export default function PrivacyScreen() {
                     {t("privacy.section2.title")}
                 </ThemedText>
                 <ThemedText style={styles.paragraph}>
-                    <ThemedText style={baseWeight}>{t("privacy.section2.accountData")}: </ThemedText>
+                    <ThemedText style={baseSemiBold}>{t("privacy.section2.accountData")}: </ThemedText>
                     {t("privacy.section2.accountDataDesc")}
                     {"\n\n"}
-                    <ThemedText style={baseWeight}>{t("privacy.section2.financialData")}: </ThemedText>
+                    <ThemedText style={baseSemiBold}>{t("privacy.section2.financialData")}: </ThemedText>
                     {t("privacy.section2.financialDataDesc")}
                     {"\n\n"}
-                    <ThemedText style={baseWeight}>{t("privacy.section2.usageData")}: </ThemedText>
+                    <ThemedText style={baseSemiBold}>{t("privacy.section2.usageData")}: </ThemedText>
                     {t("privacy.section2.usageDataDesc")}
                 </ThemedText>
 
@@ -110,15 +110,15 @@ export default function PrivacyScreen() {
                 </ThemedText>
                 <ThemedText style={styles.paragraph}>
                     {t("privacy.section6.intro")}
-                    {"\n\n"}• <ThemedText style={baseWeight}>{t("privacy.section6.right1")}:</ThemedText>{" "}
+                    {"\n\n"}• <ThemedText style={baseSemiBold}>{t("privacy.section6.right1")}:</ThemedText>{" "}
                     {t("privacy.section6.right1Desc")}
-                    {"\n"}• <ThemedText style={baseWeight}>{t("privacy.section6.right2")}:</ThemedText>{" "}
+                    {"\n"}• <ThemedText style={baseSemiBold}>{t("privacy.section6.right2")}:</ThemedText>{" "}
                     {t("privacy.section6.right2Desc")}
-                    {"\n"}• <ThemedText style={baseWeight}>{t("privacy.section6.right3")}:</ThemedText>{" "}
+                    {"\n"}• <ThemedText style={baseSemiBold}>{t("privacy.section6.right3")}:</ThemedText>{" "}
                     {t("privacy.section6.right3Desc")}
-                    {"\n"}• <ThemedText style={baseWeight}>{t("privacy.section6.right4")}:</ThemedText>{" "}
+                    {"\n"}• <ThemedText style={baseSemiBold}>{t("privacy.section6.right4")}:</ThemedText>{" "}
                     {t("privacy.section6.right4Desc")}
-                    {"\n"}• <ThemedText style={baseWeight}>{t("privacy.section6.right5")}:</ThemedText>{" "}
+                    {"\n"}• <ThemedText style={baseSemiBold}>{t("privacy.section6.right5")}:</ThemedText>{" "}
                     {t("privacy.section6.right5Desc")}
                 </ThemedText>
 

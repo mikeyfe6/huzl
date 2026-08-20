@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 import { redColor, slateColor, whiteColor } from "@/constants/theme";
 import {
+    baseBlank,
     baseBlur,
     baseButton,
     baseButtonText,
@@ -16,6 +17,7 @@ import {
     baseGap,
     baseGreen,
     baseHeight,
+    baseHorizontal,
     baseIcon,
     baseIcons,
     baseInput,
@@ -26,9 +28,10 @@ import {
     baseRadius,
     baseRed,
     baseSelect,
+    baseSemiBold,
+    baseSize,
     baseSmall,
     baseSpace,
-    baseWeight,
 } from "@/styles/base";
 
 export const getDebtsStyles = (theme: any, screenWidth = 0) =>
@@ -115,6 +118,34 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         header: {
             marginBottom: 12,
         },
+        debtHeader: {
+            ...baseFlex("space-between", "center"),
+            ...baseSpace,
+            ...baseHorizontal,
+            paddingBottom: 16,
+            backgroundColor: theme.background,
+        },
+        debtTitle: {
+            ...baseFlex("center", "center"),
+            ...baseBlank,
+        },
+        debtNumber: {
+            ...baseSize,
+            ...baseOpacity,
+        },
+        modalButtons: { ...baseFlex("center"), ...baseGap },
+        modalTrigger: {
+            ...baseFlex("center", "center"),
+            ...baseInput(theme),
+            ...baseSpace,
+            ...baseSelect,
+        },
+        modalTriggerText: {
+            ...baseSemiBold,
+            ...baseSmall,
+            color: theme.label,
+            paddingRight: 4,
+        },
         item: {
             ...baseCard(theme),
         },
@@ -126,7 +157,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             flex: 1,
         },
         itemLabel: {
-            ...baseWeight,
+            ...baseSemiBold,
             ...baseSmall,
             opacity: 0.7,
             marginTop: 4,
@@ -139,22 +170,22 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         },
         itemAmount: {
             ...baseFlex("space-between"),
+            ...baseBlank,
             flexWrap: "wrap",
-            gap: 4,
             paddingTop: 12,
             borderTopWidth: StyleSheet.hairlineWidth,
             borderTopColor: theme.dividerColor,
         },
         itemPayment: {
             ...baseFlex("center", "center"),
-            gap: 4,
+            ...baseBlank,
         },
         itemPaymentText: {
             ...baseMini,
             color: slateColor,
         },
         itemRemaining: {
-            ...baseWeight,
+            ...baseSemiBold,
             ...baseMini,
             ...baseOpacity,
         },
@@ -187,7 +218,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             minHeight: 44,
         },
         paymentDateText: {
-            ...baseWeight,
+            ...baseSemiBold,
             ...baseMini,
         },
         paymentButtons: {

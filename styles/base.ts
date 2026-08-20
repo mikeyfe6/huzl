@@ -8,8 +8,10 @@ export const baseBlur = { backgroundColor: "rgba(0,0,0,0.75)" };
 export const baseSeparation = { gap: 24 };
 export const baseGap = { gap: 12 };
 export const baseSpace = { gap: 8 };
+export const baseBlank = { gap: 4 };
 
-export const baseWeight = { fontWeight: "600" as const };
+export const baseMedium = { fontWeight: "500" as const };
+export const baseSemiBold = { fontWeight: "600" as const };
 export const baseBold = { fontWeight: "bold" as const };
 
 export const baseRadius = { borderRadius: 8 };
@@ -83,7 +85,7 @@ export const baseTrans = (theme: any, color: string) => ({
 });
 
 export const baseTransText = {
-    ...baseWeight,
+    ...baseSemiBold,
     whiteSpace: "nowrap" as const,
 };
 
@@ -93,7 +95,7 @@ export const baseButtonText = {
 };
 
 export const baseLabel = (theme: any) => ({
-    ...baseWeight,
+    ...baseSemiBold,
     ...baseSmall,
     color: theme.label,
     marginTop: 8,

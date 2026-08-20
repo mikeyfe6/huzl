@@ -140,7 +140,9 @@
         "nameAToZ": "Name A to Z",
         "nameZToA": "Name Z to A",
         "amountLowToHigh": "Low to High",
-        "amountHighToLow": "High to Low"
+        "amountHighToLow": "High to Low",
+        "dateClosest": "Closest Date",
+        "dateFarthest": "Farthest Date"
     },
     "filtering": {
         "filterBy": "Filter By",

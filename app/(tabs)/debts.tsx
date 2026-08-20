@@ -1,4 +1,5 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,6 +23,7 @@ import { formatNumber } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { DebtItem } from "@/components/list/debt-item";
+import { SORT_OPTIONS, SortDebtsModal } from "@/components/modal/sort-debts-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Collapsible } from "@/components/ui/collapsible";
@@ -36,7 +38,7 @@ import { getDebtsStyles } from "@/styles/debts";
 
 export default function DebtsScreen() {
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
 
     const colorScheme = useColorScheme();
     const { symbol: currencySymbol } = useCurrency();
@@ -57,6 +59,10 @@ export default function DebtsScreen() {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(null);
     const [loading, setLoading] = useState(false);
+    const [sortOption, setSortOption] = useState<SortOption>("default");
+    const [sortModalVisible, setSortModalVisible] = useState(false);
+
+    const debtSortPreferenceKey = user ? `@huzl_debt_sort:${user.id}` : "@huzl_debt_sort:guest";
 
     const theme = Colors[colorScheme ?? "light"];
     const styles = useMemo(() => getDebtsStyles(theme, screenWidth), [theme, screenWidth]);
@@ -226,9 +232,97 @@ export default function DebtsScreen() {
         }
     };
 
+    const sortLabelMap = useMemo(
+        () => Object.fromEntries(SORT_OPTIONS.map((option) => [option.value, t(option.labelKey)])),
+        [t],
+    );
+
+    const currentSort = SORT_OPTIONS.find((opt) => opt.value === sortOption);
+
     const sortedDebts = useMemo(() => {
-        return [...debts].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
-    }, [debts]);
+        const sorted = [...debts];
+
+        const getDateValue = (item: DebtItem) => {
+            if (!item.next_payment_date) return Number.MAX_SAFE_INTEGER;
+            const date = new Date(item.next_payment_date).getTime();
+            return Number.isNaN(date) ? Number.MAX_SAFE_INTEGER : date;
+        };
+
+        switch (sortOption) {
+            case "alphabetic-asc":
+                return sorted.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+            case "alphabetic-desc":
+                return sorted.sort((a, b) => b.name.localeCompare(a.name, undefined, { sensitivity: "base" }));
+            case "cost-asc":
+                return sorted.sort((a, b) => a.amount - b.amount);
+            case "cost-desc":
+                return sorted.sort((a, b) => b.amount - a.amount);
+            case "date-closest":
+                return sorted.sort((a, b) => getDateValue(a) - getDateValue(b));
+            case "date-farthest":
+                return sorted.sort((a, b) => getDateValue(b) - getDateValue(a));
+            case "default":
+            default:
+                return sorted;
+        }
+    }, [debts, sortOption]);
+
+    const setSortAndClose = async (opt: SortOption) => {
+        setSortOption(opt);
+        setSortModalVisible(false);
+
+        try {
+            await AsyncStorage.setItem(debtSortPreferenceKey, opt);
+            if (user) {
+                const { data } = await supabase.auth.getSession();
+                if (data.session) {
+                    const { error } = await supabase.auth.updateUser({ data: { debt_sort: opt } });
+                    if (error) throw error;
+                    await refreshUser();
+                }
+            }
+        } catch (error) {
+            console.error("Failed to save debt sort preference:", error);
+        }
+    };
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const loadSortPreference = async () => {
+            try {
+                if (user) {
+                    const { data: authUser } = await supabase.auth.getUser();
+                    const cloudSort = authUser.user?.user_metadata?.debt_sort;
+                    if (!cancelled && cloudSort && SORT_OPTIONS.some((option) => option.value === cloudSort)) {
+                        setSortOption(cloudSort as SortOption);
+                        await AsyncStorage.setItem(debtSortPreferenceKey, cloudSort);
+                        return;
+                    }
+                }
+
+                const savedSort = await AsyncStorage.getItem(debtSortPreferenceKey);
+                if (!cancelled && savedSort && SORT_OPTIONS.some((option) => option.value === savedSort)) {
+                    setSortOption(savedSort as SortOption);
+                    if (user) {
+                        const { data } = await supabase.auth.getSession();
+                        if (data.session) {
+                            const { error } = await supabase.auth.updateUser({ data: { debt_sort: savedSort } });
+                            if (error) throw error;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load debt sort preference:", error);
+            }
+        };
+
+        void loadSortPreference();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [debtSortPreferenceKey, user]);
 
     useEffect(() => {
         if (!user) return;
@@ -244,6 +338,9 @@ export default function DebtsScreen() {
         };
         fetchDebts();
     }, [user]);
+
+    const activeDebts = sortedDebts.filter((d) => d.amount > 0);
+    const paidOffDebts = sortedDebts.filter((d) => d.amount === 0);
 
     const Header = (
         <>
@@ -419,11 +516,37 @@ export default function DebtsScreen() {
             </ThemedView>
 
             {debts.length > 0 && (
-                <ThemedView style={styles.list}>
-                    <ThemedText type="subtitle" style={styles.header}>
-                        {t("debts.yourDebts")}
-                    </ThemedText>
-                </ThemedView>
+                <>
+                    <View style={styles.debtHeader}>
+                        <View style={styles.debtTitle}>
+                            <ThemedText type="subtitle">{t("debts.yourDebts")}</ThemedText>
+                            <ThemedText style={styles.debtNumber}>({activeDebts.length})</ThemedText>
+                        </View>
+                        <View style={styles.modalButtons}>
+                            <Pressable
+                                style={styles.modalTrigger}
+                                onPress={() => setSortModalVisible(true)}
+                                accessibilityRole="button"
+                                accessibilityLabel="Open sort options"
+                            >
+                                {currentSort &&
+                                    (currentSort.iconSet === "material" ?
+                                        <MaterialCommunityIcons name={currentSort.icon} size={18} color={theme.label} />
+                                    :   <Ionicons name={currentSort.icon} size={16} color={theme.label} />)}
+                                {screenWidth > 568 && (
+                                    <ThemedText style={styles.modalTriggerText}>{sortLabelMap[sortOption]}</ThemedText>
+                                )}
+                            </Pressable>
+                        </View>
+                    </View>
+                    <SortDebtsModal
+                        visible={sortModalVisible}
+                        sortOption={sortOption}
+                        onSelect={setSortAndClose}
+                        onClose={() => setSortModalVisible(false)}
+                        theme={theme}
+                    />
+                </>
             )}
         </>
     );
@@ -463,9 +586,6 @@ export default function DebtsScreen() {
             theme,
         ],
     );
-
-    const activeDebts = sortedDebts.filter((d) => d.amount > 0);
-    const paidOffDebts = sortedDebts.filter((d) => d.amount === 0);
 
     const PaidOffList =
         paidOffDebts.length > 0 ?

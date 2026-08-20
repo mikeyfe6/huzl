@@ -1,5 +1,5 @@
-import { useFocusEffect } from "expo-router/react-navigation";
 import { Link, useRouter } from "expo-router";
+import { useFocusEffect } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
@@ -33,9 +33,9 @@ import {
     baseInput,
     baseOutline,
     baseSelect,
+    baseSemiBold,
     baseSmall,
     baseSpace,
-    baseWeight,
 } from "@/styles/base";
 
 export default function SettingsScreen() {
@@ -140,7 +140,7 @@ export default function SettingsScreen() {
                     marginBottom: 16,
                 },
                 settingTitle: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                     marginTop: 8,
                     marginBottom: 8,
                     color: silverColor,
@@ -159,7 +159,7 @@ export default function SettingsScreen() {
                     paddingBottom: 8,
                 },
                 settingLabel: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                     ...baseSmall,
                     color: theme.label,
                     marginBottom: 12,
@@ -221,7 +221,7 @@ export default function SettingsScreen() {
                     color: theme.text,
                 },
                 themeButtonTextActive: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                     color: whiteColor,
                 },
                 linksContainer: {

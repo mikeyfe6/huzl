@@ -33,7 +33,7 @@ import {
     baseSelect,
     baseSize,
     baseSmall,
-    baseWeight,
+    baseSemiBold,
 } from "@/styles/base";
 
 export default function IncomeScreen() {
@@ -286,7 +286,7 @@ export default function IncomeScreen() {
                 input: {
                     ...baseOutline(theme),
                     ...baseSize,
-                    ...baseWeight,
+                    ...baseSemiBold,
                     color: theme.text,
                     padding: 6,
                     marginBottom: 4,
@@ -310,7 +310,7 @@ export default function IncomeScreen() {
                 typeText: { ...baseSmall },
                 add: { ...baseOutline(theme), marginTop: 8, marginBottom: 6, padding: 4 },
                 addText: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                     color: greenColor,
                 },
                 total: {

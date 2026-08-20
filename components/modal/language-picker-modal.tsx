@@ -18,9 +18,9 @@ import {
     baseLarge,
     baseMini,
     baseOutline,
+    baseSemiBold,
     baseSize,
     baseVertical,
-    baseWeight,
 } from "@/styles/base";
 
 const AVAILABLE_LANGUAGES: LanguageItem[] = [
@@ -89,7 +89,7 @@ export function LanguagePickerModal({ visible, onClose, theme }: Readonly<Langua
                     flex: 1,
                 },
                 languageName: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                     ...baseSize,
                 },
                 languageNative: {

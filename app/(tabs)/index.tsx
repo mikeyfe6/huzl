@@ -27,6 +27,7 @@ import {
     whiteColor,
 } from "@/constants/theme";
 import {
+    baseBlank,
     baseBold,
     baseButton,
     baseCenter,
@@ -38,13 +39,14 @@ import {
     baseHorizontal,
     baseInput,
     baseLarge,
+    baseMedium,
     baseMini,
     baseOutline,
     baseSelect,
+    baseSemiBold,
     baseSmall,
     baseSpace,
     baseSuccess,
-    baseWeight,
 } from "@/styles/base";
 
 export default function HomeScreen() {
@@ -332,16 +334,16 @@ export default function HomeScreen() {
                     borderColor: greenColor,
                 },
                 signInText: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                     color: whiteColor,
                 },
                 signUpButton: {
                     ...baseButton(theme),
-                    ...baseWeight,
+                    ...baseSemiBold,
                     borderColor: mediumGreyColor,
                 },
                 signUpText: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                 },
                 forgetButton: {
                     ...baseFlex("center", "center"),
@@ -350,7 +352,7 @@ export default function HomeScreen() {
                 },
                 forgetButtonText: {
                     ...baseSmall,
-                    ...baseWeight,
+                    ...baseSemiBold,
                     textAlign: "center",
                     color: mediumGreyColor,
                 },
@@ -415,7 +417,7 @@ export default function HomeScreen() {
                 },
                 statWrapper: {
                     ...baseFlex("center", "center"),
-                    gap: 4,
+                    ...baseBlank,
                 },
                 statValue: {
                     ...baseLarge,
@@ -430,9 +432,9 @@ export default function HomeScreen() {
                 },
                 nextDebt: {
                     ...baseFlex("center", "center"),
+                    ...baseBlank,
                     flexWrap: "wrap",
                     marginTop: 6,
-                    gap: 4,
                 },
                 nextDebtIntro: {
                     ...baseMini,
@@ -440,17 +442,18 @@ export default function HomeScreen() {
                     textAlign: "center",
                 },
                 nextDebtBadge: {
-                    backgroundColor: orangeColor,
-                    borderRadius: 6,
-                    paddingHorizontal: 4,
-                    marginTop: 16,
+                    backgroundColor: orangeColor + "90",
+                    borderRadius: 10,
+                    paddingHorizontal: 6,
                     marginLeft: 2,
                     opacity: 0.9,
+                    borderColor: orangeColor,
+                    borderWidth: 1,
                 },
                 nextDebtDate: {
+                    ...baseMedium,
                     color: blackColor,
-                    fontSize: 12,
-                    fontWeight: "500",
+                    fontSize: 11,
                     lineHeight: 18,
                 },
                 overdueDebts: {
@@ -482,7 +485,7 @@ export default function HomeScreen() {
     if (loading) {
         return (
             <ThemedView style={styles.container}>
-                <ThemedText style={baseWeight}>{t("common.loading")}</ThemedText>
+                <ThemedText style={baseSemiBold}>{t("common.loading")}</ThemedText>
             </ThemedView>
         );
     }
@@ -685,7 +688,9 @@ export default function HomeScreen() {
                     {nextDebt && (
                         <View style={styles.nextDebt}>
                             <ThemedText style={styles.nextDebtIntro}>{`${t("home.nextPayment")}:`}</ThemedText>
-                            <ThemedText style={{ color: theme.text, ...baseMini }}>{nextDebt.name}</ThemedText>
+                            <ThemedText style={{ color: theme.text, ...baseMini, ...baseMedium }}>
+                                {nextDebt.name}
+                            </ThemedText>
                             <View style={styles.nextDebtBadge}>
                                 <ThemedText style={styles.nextDebtDate}>
                                     {nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}

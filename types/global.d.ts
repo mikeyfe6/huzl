@@ -108,7 +108,14 @@ declare global {
 
     type Frequency = "daily" | "weekly" | "monthly" | "quarterly" | "halfyearly" | "yearly";
 
-    type SortOption = "default" | "alphabetic-asc" | "alphabetic-desc" | "cost-asc" | "cost-desc";
+    type SortOption =
+        | "default"
+        | "alphabetic-asc"
+        | "alphabetic-desc"
+        | "cost-asc"
+        | "cost-desc"
+        | "date-closest"
+        | "date-farthest";
 
     // items
 

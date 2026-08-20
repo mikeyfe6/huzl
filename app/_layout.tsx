@@ -151,21 +151,21 @@ export default function RootLayout() {
     }
 
     return (
-        <CustomThemeProvider>
-            <Head>
-                <meta
-                    name="description"
-                    content={t("seo.description", {
-                        defaultValue:
-                            "Manage budgets, track expenses, monitor debts and monthly income with Huzl's clear summaries.",
-                    })}
-                />
-                <meta property="og:locale" content={i18n.language === "nl" ? "nl_NL" : "en_US"} />
-                {verification && <meta name="google-site-verification" content={verification} />}
-            </Head>
-            <AuthProvider>
+        <AuthProvider>
+            <CustomThemeProvider>
+                <Head>
+                    <meta
+                        name="description"
+                        content={t("seo.description", {
+                            defaultValue:
+                                "Manage budgets, track expenses, monitor debts and monthly income with Huzl's clear summaries.",
+                        })}
+                    />
+                    <meta property="og:locale" content={i18n.language === "nl" ? "nl_NL" : "en_US"} />
+                    {verification && <meta name="google-site-verification" content={verification} />}
+                </Head>
                 <RootContent />
-            </AuthProvider>
-        </CustomThemeProvider>
+            </CustomThemeProvider>
+        </AuthProvider>
     );
 }

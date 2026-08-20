@@ -4,6 +4,7 @@
   "version": "1.0.1",
   "scripts": {
     "start": "expo start",
+    "postinstall": "node ./scripts/patch-expo-modules-jsi.mjs",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -18,8 +19,8 @@
     "@expo/vector-icons": "^15.1.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "9.1.0",
-    "@react-native-firebase/analytics": "^26.2.0",
-    "@react-native-firebase/app": "^26.2.0",
+    "@react-native-firebase/analytics": "^26.3.0",
+    "@react-native-firebase/app": "^26.3.0",
     "@react-native-picker/picker": "2.11.4",
     "@supabase/supabase-js": "^2.112.3",
     "color": "^5.0.3",

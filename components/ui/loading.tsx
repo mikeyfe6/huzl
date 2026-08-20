@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { baseCenter, baseWeight } from "@/styles/base";
+import { baseCenter, baseSemiBold } from "@/styles/base";
 
 export function AuthGate({ children }: { readonly children: React.ReactNode }) {
     const { t } = useTranslation();
@@ -25,7 +25,7 @@ export function AuthGate({ children }: { readonly children: React.ReactNode }) {
             >
                 <ThemedText
                     style={{
-                        ...baseWeight,
+                        ...baseSemiBold,
                     }}
                 >
                     {t("common.loading")}

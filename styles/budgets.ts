@@ -18,7 +18,7 @@ import {
     baseSelect,
     baseSmall,
     baseSpace,
-    baseWeight,
+    baseSemiBold,
 } from "@/styles/base";
 
 export const getBudgetsStyles = (theme: any) =>
@@ -70,7 +70,7 @@ export const getBudgetsStyles = (theme: any) =>
             color: theme.label,
         },
         budgetInline: {
-            ...baseWeight,
+            ...baseSemiBold,
         },
         budgetIcons: {
             ...baseIcons,
@@ -93,7 +93,7 @@ export const getBudgetsStyles = (theme: any) =>
             marginBottom: 4,
         },
         expenseRemaining: {
-            ...baseWeight,
+            ...baseSemiBold,
             marginBottom: 12,
             color: theme.label,
         },

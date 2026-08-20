@@ -33,9 +33,9 @@ import {
     baseList,
     baseMini,
     baseSelect,
+    baseSemiBold,
     baseSize,
     baseSpace,
-    baseWeight,
 } from "@/styles/base";
 
 export default function HelpdeskScreen() {
@@ -145,7 +145,7 @@ export default function HelpdeskScreen() {
                     fontSize: 18,
                 },
                 email: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                 },
                 or: {
                     marginTop: 16,
@@ -282,7 +282,7 @@ export default function HelpdeskScreen() {
 
             {!authLoading && !user && (
                 <ThemedView style={styles.login}>
-                    <Pressable onPress={() => router.push("/")} style={styles.loginButton}>
+                    <Pressable onPress={() => router.dismiss()} style={styles.loginButton}>
                         <ThemedText style={styles.loginButtonText}>{t("helpdesk.signInPrompt")}</ThemedText>
                     </Pressable>
                     <ThemedView style={styles.emptyState}>

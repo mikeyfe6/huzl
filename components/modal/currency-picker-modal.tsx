@@ -21,7 +21,7 @@ import {
     baseOutline,
     baseTitle,
     baseVertical,
-    baseWeight,
+    baseSemiBold,
 } from "@/styles/base";
 
 export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: Readonly<CurrencyPickerModalProps>) {
@@ -95,7 +95,7 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: 
                     height: 40,
                 },
                 currencyName: {
-                    ...baseWeight,
+                    ...baseSemiBold,
                 },
                 currencyCode: {
                     ...baseMini,
