@@ -6,9 +6,9 @@
  * You can remove the `reset-project` script from package.json and safely delete this file after running it.
  */
 
-const fs = require("fs");
-const path = require("path");
-const readline = require("readline");
+const fs = require("node:fs");
+const path = require("node:path");
+const readline = require("node:readline");
 
 const root = process.cwd();
 const oldDirs = ["app", "components", "hooks", "constants", "scripts"];
@@ -92,7 +92,7 @@ const moveDirectories = async (userInput) => {
         console.log(
             `1. Run \`npx expo start\` to start a development server.\n2. Edit app/index.tsx to edit the main screen.${
                 userInput === "y" ? `\n3. Delete the /${exampleDir} directory when you're done referencing it.` : ""
-            }`
+            }`,
         );
     } catch (error) {
         console.error(`❌ Error during script execution: ${error.message}`);

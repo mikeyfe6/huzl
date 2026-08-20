@@ -468,7 +468,7 @@ export default function BudgetsScreen() {
                             {editingId ? t("budgets.button.updateBudget") : t("budgets.button.addBudget")}
                         </ThemedText>
                     </Pressable>
-                    {editingId && (
+                    {editingId !== null && (
                         <Pressable
                             style={[styles.button, { ...baseRed }]}
                             onPress={handleCancelEdit}

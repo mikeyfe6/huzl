@@ -716,7 +716,7 @@ export default function ExpensesScreen() {
                             {editingId ? t("expenses.button.updateExpense") : t("expenses.button.addExpense")}
                         </ThemedText>
                     </Pressable>
-                    {editingId && (
+                  {editingId !== null && (
                         <Pressable style={[styles.button, { ...baseRed }]} onPress={handleCancel}>
                             <ThemedText style={styles.buttonText}>{t("common.cancel")}</ThemedText>
                         </Pressable>

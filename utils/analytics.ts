@@ -134,7 +134,7 @@ export async function logEvent(eventName: string, params?: Record<string, any>) 
     try {
         const inst = getNativeAnalyticsInstance();
         if (inst && typeof rnfbAnalyticsMod?.logEvent === "function") {
-            await rnfbAnalyticsMod.logEvent(inst, eventName, params ?? {});
+            rnfbAnalyticsMod.logEvent(inst, eventName, params ?? {});
         }
     } catch {
         // noop

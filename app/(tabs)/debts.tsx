@@ -391,7 +391,7 @@ export default function DebtsScreen() {
                             }
                             placeholder={t("debts.placeholder.nextPaymentDate")}
                         />
-                        {nextPaymentDate && (
+                        {nextPaymentDate.length > 0 && (
                             <Pressable
                                 accessibilityRole="button"
                                 style={styles.cancel}

@@ -16,16 +16,7 @@ import { ForgotPasswordModal } from "@/components/modal/forgot-password-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import {
-    blackColor,
-    blueColor,
-    Colors,
-    greenColor,
-    mediumGreyColor,
-    orangeColor,
-    redColor,
-    whiteColor,
-} from "@/constants/theme";
+import { blueColor, Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
 import {
     baseBlank,
     baseBold,
@@ -442,7 +433,7 @@ export default function HomeScreen() {
                     textAlign: "center",
                 },
                 nextDebtBadge: {
-                    backgroundColor: orangeColor + "90",
+                    backgroundColor: orangeColor + "25",
                     borderRadius: 10,
                     paddingHorizontal: 6,
                     marginLeft: 2,
@@ -452,7 +443,6 @@ export default function HomeScreen() {
                 },
                 nextDebtDate: {
                     ...baseMedium,
-                    color: blackColor,
                     fontSize: 11,
                     lineHeight: 18,
                 },
