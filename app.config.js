@@ -2,7 +2,7 @@ import packageJson from "./package.json";
 
 export default {
     expo: {
-        name: "huzl",
+        name: "Huzl",
         slug: "huzl",
         owner: "menefex",
         version: packageJson.version,
