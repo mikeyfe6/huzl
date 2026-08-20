@@ -436,7 +436,7 @@ export default function HomeScreen() {
                 nextDebtBadge: {
                     ...baseCenter,
                     ...baseBorder,
-                    backgroundColor: orangeColor + "25",
+                    backgroundColor: orangeColor + "50",
                     borderColor: orangeColor,
                     borderRadius: 10,
                     paddingHorizontal: 6,
