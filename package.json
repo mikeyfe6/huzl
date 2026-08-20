@@ -1,7 +1,7 @@
 {
   "name": "huzl",
   "main": "expo-router/entry",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "scripts": {
     "start": "expo start",
     "postinstall": "node ./scripts/patch-expo-modules-jsi.mjs",
