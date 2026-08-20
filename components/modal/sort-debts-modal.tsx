@@ -29,14 +29,14 @@ export const SORT_OPTIONS = [
     },
     {
         value: "cost-asc" as const,
-        labelKey: "sorting.amountHighToLow",
-        icon: "trending-down" as const,
+        labelKey: "sorting.amountLowToHigh",
+        icon: "trending-up" as const,
         iconSet: "ion" as const,
     },
     {
         value: "cost-desc" as const,
-        labelKey: "sorting.amountLowToHigh",
-        icon: "trending-up" as const,
+        labelKey: "sorting.amountHighToLow",
+        icon: "trending-down" as const,
         iconSet: "ion" as const,
     },
     {
