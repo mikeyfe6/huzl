@@ -38,6 +38,8 @@ import {
     baseSpace,
 } from "@/styles/base";
 
+import packageJson from "@/package.json";
+
 export default function SettingsScreen() {
     const { t, i18n } = useTranslation();
     const { user, refreshUser, signOut } = useAuth();
@@ -423,7 +425,7 @@ export default function SettingsScreen() {
                         </ThemedText>
                         <ThemedView style={[styles.settingItem]}>
                             <ThemedText style={styles.settingLabel}>{t("settings.label.version")}</ThemedText>
-                            <ThemedText style={styles.settingValue}>1.0.0</ThemedText>
+                            <ThemedText style={styles.settingValue}>{packageJson.version}</ThemedText>
                         </ThemedView>
                     </ThemedView>
 
