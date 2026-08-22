@@ -419,35 +419,36 @@ export default function SettingsScreen() {
                         </Pressable>
                     </ThemedView>
 
-                    <ThemedView>
-                        <ThemedText style={styles.settingTitle} type="subtitle">
-                            {t("settings.subtitle.notifications")}
-                        </ThemedText>
-                        <ThemedView style={styles.settingItem}>
-                            <View style={styles.settingBox}>
-                                <ThemedView>
-                                    <ThemedText style={styles.settingLabel}>
-                                        {t("settings.label.debtReminders")}
-                                    </ThemedText>
-                                    <ThemedText style={styles.settingValue}>
-                                        {t("settings.label.debtRemindersDescription", {
-                                            time: `${String(REMINDER_HOUR).padStart(2, "0")}:${String(
-                                                REMINDER_MINUTE,
-                                            ).padStart(2, "0")}`,
-                                        })}
-                                    </ThemedText>
-                                </ThemedView>
-                                <Switch
-                                    value={debtRemindersEnabled}
-                                    onValueChange={(value) => void handleToggleDebtReminders(value)}
-                                    trackColor={{ false: mediumGreyColor, true: linkColor }}
-                                    thumbColor={whiteColor}
-                                    ios_backgroundColor={mediumGreyColor}
-                                    {...(Platform.OS === "web" ? ({ activeThumbColor: whiteColor } as object) : {})}
-                                />
-                            </View>
+                    {Platform.OS !== "web" && (
+                        <ThemedView>
+                            <ThemedText style={styles.settingTitle} type="subtitle">
+                                {t("settings.subtitle.notifications")}
+                            </ThemedText>
+                            <ThemedView style={styles.settingItem}>
+                                <View style={styles.settingBox}>
+                                    <ThemedView>
+                                        <ThemedText style={styles.settingLabel}>
+                                            {t("settings.label.debtReminders")}
+                                        </ThemedText>
+                                        <ThemedText style={styles.settingValue}>
+                                            {t("settings.label.debtRemindersDescription", {
+                                                time: `${String(REMINDER_HOUR).padStart(2, "0")}:${String(
+                                                    REMINDER_MINUTE,
+                                                ).padStart(2, "0")}`,
+                                            })}
+                                        </ThemedText>
+                                    </ThemedView>
+                                    <Switch
+                                        value={debtRemindersEnabled}
+                                        onValueChange={(value) => void handleToggleDebtReminders(value)}
+                                        trackColor={{ false: mediumGreyColor, true: linkColor }}
+                                        thumbColor={whiteColor}
+                                        ios_backgroundColor={mediumGreyColor}
+                                    />
+                                </View>
+                            </ThemedView>
                         </ThemedView>
-                    </ThemedView>
+                    )}
 
                     <ThemedView>
                         <ThemedText style={styles.settingTitle} type="subtitle">
