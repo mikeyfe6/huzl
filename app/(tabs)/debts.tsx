@@ -466,10 +466,8 @@ export default function DebtsScreen() {
                                             mode="date"
                                             display="spinner"
                                             textColor={theme.inputText}
-                                            onChange={(_, selectedDate) => {
-                                                if (selectedDate) {
-                                                    setTempSelectedDate(selectedDate);
-                                                }
+                                            onValueChange={(_, selectedDate) => {
+                                                setTempSelectedDate(selectedDate);
                                             }}
                                         />
                                         <View style={styles.dateButtons}>
@@ -502,12 +500,11 @@ export default function DebtsScreen() {
                                 value={nextPaymentDate ? new Date(nextPaymentDate) : new Date()}
                                 mode="date"
                                 display="default"
-                                onChange={(_, selectedDate) => {
+                                onValueChange={(_, selectedDate) => {
                                     setShowDatePicker(false);
-                                    if (selectedDate) {
-                                        setNextPaymentDate(selectedDate.toISOString());
-                                    }
+                                    setNextPaymentDate(selectedDate.toISOString());
                                 }}
+                                onDismiss={() => setShowDatePicker(false)}
                             />
                         )}
                     </>

@@ -253,10 +253,8 @@ export const DebtItem = memo(
                                             mode="date"
                                             display="spinner"
                                             textColor={theme.inputText}
-                                            onChange={(_, selectedDate) => {
-                                                if (selectedDate) {
-                                                    setTempSelectedDate(selectedDate);
-                                                }
+                                            onValueChange={(_, selectedDate) => {
+                                                setTempSelectedDate(selectedDate);
                                             }}
                                         />
                                         <View style={styles.dateButtons}>
@@ -288,12 +286,11 @@ export const DebtItem = memo(
                                 value={paymentDate ? new Date(paymentDate) : new Date()}
                                 mode="date"
                                 display="default"
-                                onChange={(_, selectedDate) => {
+                                onValueChange={(_, selectedDate) => {
                                     setShowDatePicker(false);
-                                    if (selectedDate) {
-                                        setPaymentDate(selectedDate.toISOString());
-                                    }
+                                    setPaymentDate(selectedDate.toISOString());
                                 }}
+                                onDismiss={() => setShowDatePicker(false)}
                             />
                         )}
                     </View>
