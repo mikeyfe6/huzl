@@ -52,7 +52,6 @@ export const Colors = {
     light: {
         text: almostBlackColor,
         background: whiteColor,
-        tint: linkColor,
         icon: slateColor,
         focus: charcoalColor,
         main: smokeColor,
@@ -78,7 +77,6 @@ export const Colors = {
     dark: {
         text: lightTextColor,
         background: charcoalColor,
-        tint: linkColor,
         icon: silverColor,
         focus: whiteColor,
         main: blackColor,

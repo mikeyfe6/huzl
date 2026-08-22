@@ -80,6 +80,13 @@ export default {
             "expo-image",
             "expo-localization",
             "expo-status-bar",
+            [
+                "expo-notifications",
+                {
+                    icon: "./assets/images/huzl-icon.png",
+                    color: "#F6F5F3",
+                },
+            ],
         ],
         experiments: {
             typedRoutes: true,

@@ -20,6 +20,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
 import { formatNumber } from "@/utils/helpers";
+import { cancelDebtPaymentReminder, scheduleDebtPaymentReminder } from "@/utils/notifications";
 import { supabase } from "@/utils/supabase";
 
 import { DebtItem } from "@/components/list/debt-item";
@@ -91,6 +92,7 @@ export default function DebtsScreen() {
         const { error } = await supabase.from("debts").delete().eq("id", id).eq("user_id", user.id);
         if (!error) {
             setDebts((prev) => prev.filter((d) => d.id !== id));
+            void cancelDebtPaymentReminder(id);
         }
         setLoading(false);
     };
@@ -164,17 +166,27 @@ export default function DebtsScreen() {
                 .select();
 
             if (!error && data && data.length > 0) {
+                const updatedNextDate = updatedNextPaymentDate ?? debt.next_payment_date;
                 setDebts((prev) =>
                     prev.map((d) =>
                         d.id === debtId ?
                             {
                                 ...d,
                                 amount: newAmount,
-                                next_payment_date: updatedNextPaymentDate ?? d.next_payment_date,
+                                next_payment_date: updatedNextDate,
                             }
                         :   d,
                     ),
                 );
+                if (newAmount === 0) {
+                    void cancelDebtPaymentReminder(debtId);
+                } else {
+                    void scheduleDebtPaymentReminder({
+                        id: debtId,
+                        name: debt.name,
+                        next_payment_date: updatedNextDate,
+                    });
+                }
                 setPaymentId(null);
                 setPaymentAmount("");
             }
@@ -204,6 +216,7 @@ export default function DebtsScreen() {
                     .select();
                 if (!error && Array.isArray(data) && data.length > 0) {
                     setDebts((prev) => prev.map((d) => (d.id === editingId ? { ...d, ...data[0] } : d)));
+                    void scheduleDebtPaymentReminder(data[0] as DebtItem);
                     handleCancelEdit();
                 }
             } else {
@@ -221,6 +234,7 @@ export default function DebtsScreen() {
                     .single();
                 if (!error && data) {
                     setDebts((prev) => [data as DebtItem, ...prev]);
+                    void scheduleDebtPaymentReminder(data as DebtItem);
                     setName("");
                     setAmount("");
                     setPayPerMonth("");
@@ -333,7 +347,12 @@ export default function DebtsScreen() {
                 .select("*")
                 .eq("user_id", user.id)
                 .order("created_at", { ascending: false });
-            if (!error && Array.isArray(data)) setDebts(data as DebtItem[]);
+            if (!error && Array.isArray(data)) {
+                setDebts(data as DebtItem[]);
+                for (const debt of data as DebtItem[]) {
+                    if (debt.active && debt.amount > 0) void scheduleDebtPaymentReminder(debt);
+                }
+            }
             setLoading(false);
         };
         fetchDebts();

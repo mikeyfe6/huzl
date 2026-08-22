@@ -2,7 +2,7 @@ import { Link, useRouter } from "expo-router";
 import { useFocusEffect } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Switch, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -10,6 +10,12 @@ import { useCurrency } from "@/hooks/use-currency";
 import { useThemePreference } from "@/hooks/use-theme-preference";
 
 import { formatAmount } from "@/utils/helpers";
+import {
+    getDebtNotificationsPreferenceAsync,
+    REMINDER_HOUR,
+    REMINDER_MINUTE,
+    setDebtNotificationsPreferenceAsync,
+} from "@/utils/notifications";
 import { supabase } from "@/utils/supabase";
 
 import { CurrencyPickerModal } from "@/components/modal/currency-picker-modal";
@@ -58,6 +64,16 @@ export default function SettingsScreen() {
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
     const [changePasswordVisible, setChangePasswordVisible] = useState(false);
     const [terminateAccountVisible, setTerminateAccountVisible] = useState(false);
+    const [debtRemindersEnabled, setDebtRemindersEnabled] = useState(true);
+
+    useEffect(() => {
+        void getDebtNotificationsPreferenceAsync().then(setDebtRemindersEnabled);
+    }, []);
+
+    const handleToggleDebtReminders = async (value: boolean) => {
+        setDebtRemindersEnabled(value);
+        await setDebtNotificationsPreferenceAsync(value);
+    };
 
     const handleSaveProfile = async () => {
         if (!user) return;
@@ -216,8 +232,8 @@ export default function SettingsScreen() {
                     flex: 1,
                 },
                 themeButtonActive: {
-                    backgroundColor: theme.tint,
-                    borderColor: theme.tint,
+                    backgroundColor: linkColor,
+                    borderColor: linkColor,
                 },
                 themeButtonText: {
                     color: theme.text,
@@ -401,6 +417,36 @@ export default function SettingsScreen() {
                                 </ThemedText>
                             </View>
                         </Pressable>
+                    </ThemedView>
+
+                    <ThemedView>
+                        <ThemedText style={styles.settingTitle} type="subtitle">
+                            {t("settings.subtitle.notifications")}
+                        </ThemedText>
+                        <ThemedView style={styles.settingItem}>
+                            <View style={styles.settingBox}>
+                                <ThemedView>
+                                    <ThemedText style={styles.settingLabel}>
+                                        {t("settings.label.debtReminders")}
+                                    </ThemedText>
+                                    <ThemedText style={styles.settingValue}>
+                                        {t("settings.label.debtRemindersDescription", {
+                                            time: `${String(REMINDER_HOUR).padStart(2, "0")}:${String(
+                                                REMINDER_MINUTE,
+                                            ).padStart(2, "0")}`,
+                                        })}
+                                    </ThemedText>
+                                </ThemedView>
+                                <Switch
+                                    value={debtRemindersEnabled}
+                                    onValueChange={(value) => void handleToggleDebtReminders(value)}
+                                    trackColor={{ false: mediumGreyColor, true: linkColor }}
+                                    thumbColor={whiteColor}
+                                    ios_backgroundColor={mediumGreyColor}
+                                    {...(Platform.OS === "web" ? ({ activeThumbColor: whiteColor } as object) : {})}
+                                />
+                            </View>
+                        </ThemedView>
                     </ThemedView>
 
                     <ThemedView>

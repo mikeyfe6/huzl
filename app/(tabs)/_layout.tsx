@@ -8,7 +8,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 
-import { Colors } from "@/constants/theme";
+import { Colors, linkColor } from "@/constants/theme";
 import { baseOutline } from "@/styles/base";
 
 export default function TabLayout() {
@@ -21,7 +21,7 @@ export default function TabLayout() {
         <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }} edges={["top", "left", "right"]}>
             <Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: theme.tint,
+                    tabBarActiveTintColor: linkColor,
                     tabBarShowLabel: true,
                     headerShown: false,
                     tabBarButton: (props) => <HapticTab {...props} style={[props.style, baseOutline(theme)]} />,

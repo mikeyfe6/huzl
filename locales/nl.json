@@ -198,7 +198,11 @@
         "monthly": "P/M",
         "terms": "Termijnen",
         "paidOff": "Afgerond",
-        "deleteDebt": "Verwijder schuld"
+        "deleteDebt": "Verwijder schuld",
+        "notifications": {
+            "reminderTitle": "Betalingsherinnering",
+            "reminderBody": "Let op! Morgen uiterste betaaldatum voor: {{name}}"
+        }
     },
     "settings": {
         "title": "Instellingen",
@@ -208,6 +212,7 @@
             "currency": "Valuta",
             "income": "Inkomen",
             "language": "Taal",
+            "notifications": "Meldingen",
             "helpdesk": "Helpdesk",
             "about": "Over"
         },
@@ -215,6 +220,8 @@
             "email": "E-mail",
             "displayName": "Weergavenaam",
             "theme": "Thema",
+            "debtReminders": "Betalingsherinneringen schulden",
+            "debtRemindersDescription": "Notificeer mij de dag van tevoren om {{time}}",
             "helpdesk": "Bugs, Feedback & Ondersteuning",
             "version": "Versie"
         },

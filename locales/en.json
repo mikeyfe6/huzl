@@ -198,7 +198,11 @@
         "monthly": "P/M",
         "terms": "Terms",
         "paidOff": "Paid Off",
-        "deleteDebt": "Delete debt"
+        "deleteDebt": "Delete debt",
+        "notifications": {
+            "reminderTitle": "Payment reminder",
+            "reminderBody": "Heads up! Tomorrow is the due date for: {{name}}"
+        }
     },
     "settings": {
         "title": "Settings",
@@ -208,6 +212,7 @@
             "currency": "Currency",
             "income": "Income",
             "language": "Language",
+            "notifications": "Notifications",
             "helpdesk": "Helpdesk",
             "about": "About"
         },
@@ -215,6 +220,8 @@
             "email": "E-mail",
             "displayName": "Display Name",
             "theme": "Theme",
+            "debtReminders": "Debt payment reminders",
+            "debtRemindersDescription": "Notify me the day before at {{time}}",
             "helpdesk": "Bugs, Feedback & Support",
             "version": "Version"
         },
