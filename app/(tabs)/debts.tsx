@@ -360,6 +360,10 @@ export default function DebtsScreen() {
 
     const activeDebts = sortedDebts.filter((d) => d.amount > 0);
     const paidOffDebts = sortedDebts.filter((d) => d.amount === 0);
+    const totalDebtsInMoney = useMemo(
+        () => activeDebts.reduce((total, debt) => total + debt.amount, 0).toFixed(2),
+        [activeDebts],
+    );
 
     const Header = (
         <>
@@ -562,6 +566,14 @@ export default function DebtsScreen() {
                         onClose={() => setSortModalVisible(false)}
                         theme={theme}
                     />
+                    <View style={styles.debtTotal}>
+                        <View style={styles.debtTotalAmount}>
+                            <ThemedText style={styles.debtTotalAmountText}>Totaal nog te betalen:</ThemedText>
+                            <ThemedText style={styles.debtTotalAmountNumber}>
+                                {currencySymbol} {totalDebtsInMoney}
+                            </ThemedText>
+                        </View>
+                    </View>
                 </>
             )}
         </>

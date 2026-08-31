@@ -41,6 +41,8 @@ import {
     baseSuccess,
 } from "@/styles/base";
 
+// TODO: download app link for web version
+
 export default function HomeScreen() {
     const { t } = useTranslation();
     const { user, loading, signIn, signUp } = useAuth();

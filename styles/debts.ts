@@ -133,6 +133,21 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             ...baseSize,
             ...baseOpacity,
         },
+        debtTotal: {
+            ...baseCard(theme),
+        },
+        debtTotalAmount: {
+            ...baseFlex("space-between", "center"),
+        },
+        debtTotalAmountText: {
+            ...baseSmall,
+            ...baseOpacity,
+        },
+        debtTotalAmountNumber: {
+            ...baseSmall,
+            ...baseOpacity,
+            ...baseSemiBold,
+        },
         modalButtons: { ...baseFlex("center"), ...baseGap },
         modalTrigger: {
             ...baseFlex("center", "center"),
