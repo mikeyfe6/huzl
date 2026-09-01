@@ -104,13 +104,18 @@ export default function ExpensesScreen() {
     const filteredExpenses = useMemo(() => {
         let result = expenses;
         if (searchQuery.trim()) {
-            result = result.filter((e) => e.name.toLowerCase().includes(searchQuery.trim().toLowerCase()));
+            const normalizedQuery = searchQuery.trim().toLowerCase();
+            result = result.filter(
+                (expense) =>
+                    expense.name.toLowerCase().includes(normalizedQuery) ||
+                    categoryLabelMap[expense.category].toLowerCase().includes(normalizedQuery),
+            );
         }
         if (frequencyFilter) {
             result = result.filter((e) => e.frequency === frequencyFilter);
         }
         return result;
-    }, [expenses, searchQuery, frequencyFilter]);
+    }, [expenses, searchQuery, frequencyFilter, categoryLabelMap]);
 
     const sortedExpenses = useMemo(() => {
         const sorted = [...filteredExpenses];
