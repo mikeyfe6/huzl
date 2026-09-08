@@ -39,5 +39,6 @@ const styles = StyleSheet.create({
         ...baseHorizontal,
         ...baseSpace,
         marginBottom: 16,
+        alignSelf: "flex-start",
     },
 });
