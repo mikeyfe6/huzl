@@ -359,10 +359,11 @@ export default function DebtsScreen() {
     }, [user]);
 
     const activeDebts = sortedDebts.filter((d) => d.amount > 0);
+    const payingDebts = sortedDebts.filter((d) => d.amount > 0 && d.active);
     const paidOffDebts = sortedDebts.filter((d) => d.amount === 0);
     const totalDebtsInMoney = useMemo(
-        () => activeDebts.reduce((total, debt) => total + debt.amount, 0).toFixed(2),
-        [activeDebts],
+        () => payingDebts.reduce((total, debt) => total + debt.amount, 0).toFixed(2),
+        [payingDebts],
     );
 
     const Header = (

@@ -113,32 +113,36 @@ export const DebtItem = memo(
                         </ThemedText>
                     </View>
                     <View style={styles.itemIcons}>
-                        <Pressable
-                            onPress={() => onTogglePayment(debt.id, index)}
-                            style={[
-                                styles.itemIcon,
-                                {
-                                    borderColor: blueColor,
-                                },
-                            ]}
-                        >
-                            <Ionicons name="cash-outline" size={16} color={blueColor} />
-                        </Pressable>
-                        <Pressable
-                            onPress={() => onToggleActive(debt.id, debt.active)}
-                            style={[
-                                styles.itemIcon,
-                                {
-                                    borderColor: debt.active ? greenColor : mediumGreyColor,
-                                },
-                            ]}
-                        >
-                            <Ionicons
-                                name={debt.active ? "eye" : "eye-off"}
-                                size={16}
-                                color={debt.active ? greenColor : mediumGreyColor}
-                            />
-                        </Pressable>
+                        {debt.amount > 0 && (
+                            <>
+                                <Pressable
+                                    onPress={() => onTogglePayment(debt.id, index)}
+                                    style={[
+                                        styles.itemIcon,
+                                        {
+                                            borderColor: blueColor,
+                                        },
+                                    ]}
+                                >
+                                    <Ionicons name="cash-outline" size={16} color={blueColor} />
+                                </Pressable>
+                                <Pressable
+                                    onPress={() => onToggleActive(debt.id, debt.active)}
+                                    style={[
+                                        styles.itemIcon,
+                                        {
+                                            borderColor: debt.active ? greenColor : mediumGreyColor,
+                                        },
+                                    ]}
+                                >
+                                    <Ionicons
+                                        name={debt.active ? "eye" : "eye-off"}
+                                        size={16}
+                                        color={debt.active ? greenColor : mediumGreyColor}
+                                    />
+                                </Pressable>
+                            </>
+                        )}
                         <Pressable
                             onPress={() => onEdit(debt)}
                             style={[
