@@ -117,6 +117,11 @@ export const baseCard = (theme: any) => ({
     marginBottom: 16,
 });
 
+export const baseCardError = {
+    borderWidth: 2,
+    borderColor: redColor,
+};
+
 export const baseFieldset = {
     ...baseGap,
     ...baseHorizontal,

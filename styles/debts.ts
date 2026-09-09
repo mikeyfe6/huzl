@@ -7,6 +7,7 @@ import {
     baseButton,
     baseButtonText,
     baseCard,
+    baseCardError,
     baseCenter,
     baseCorner,
     baseEmpty,
@@ -248,5 +249,8 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         },
         emptyStateText: {
             ...baseEmptyText(theme),
+        },
+        itemNoNextPayment: {
+            ...baseCardError,
         },
     });

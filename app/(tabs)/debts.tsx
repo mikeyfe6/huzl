@@ -59,6 +59,7 @@ export default function DebtsScreen() {
     const [nextPaymentDate, setNextPaymentDate] = useState<string>("");
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(null);
+    const [dateInputResetKey, setDateInputResetKey] = useState(0);
     const [loading, setLoading] = useState(false);
     const [sortOption, setSortOption] = useState<SortOption>("default");
     const [sortModalVisible, setSortModalVisible] = useState(false);
@@ -74,6 +75,7 @@ export default function DebtsScreen() {
         setPayPerMonth(debt.pay_per_month?.toFixed(2) || "");
         setNextPaymentDate(debt.next_payment_date || "");
         setEditingId(debt.id);
+        setDateInputResetKey((key) => key + 1);
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
     }, []);
@@ -84,6 +86,7 @@ export default function DebtsScreen() {
         setPayPerMonth("");
         setNextPaymentDate("");
         setEditingId(null);
+        setDateInputResetKey((key) => key + 1);
     };
 
     const handleDeleteDebt = async (id: string) => {
@@ -166,7 +169,8 @@ export default function DebtsScreen() {
                 .select();
 
             if (!error && data && data.length > 0) {
-                const updatedNextDate = updatedNextPaymentDate ?? debt.next_payment_date;
+                const updatedNextDate =
+                    updatedNextPaymentDate !== undefined ? updatedNextPaymentDate : debt.next_payment_date;
                 setDebts((prev) =>
                     prev.map((d) =>
                         d.id === debtId ?
@@ -239,6 +243,7 @@ export default function DebtsScreen() {
                     setAmount("");
                     setPayPerMonth("");
                     setNextPaymentDate("");
+                    setDateInputResetKey((key) => key + 1);
                 }
             }
         } finally {
@@ -407,19 +412,25 @@ export default function DebtsScreen() {
                 {Platform.OS === "web" ?
                     <div style={styles.dateWrapper}>
                         <input
+                            key={dateInputResetKey}
                             type="date"
                             style={styles.dateInput}
                             value={nextPaymentDate ? nextPaymentDate.slice(0, 10) : ""}
-                            onChange={(e) =>
-                                setNextPaymentDate(e.target.value ? new Date(e.target.value).toISOString() : "")
-                            }
+                            onChange={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                if (target.validity.badInput) setDateInputResetKey((key) => key + 1);
+                                setNextPaymentDate(target.value ? new Date(target.value).toISOString() : "");
+                            }}
                             placeholder={t("debts.placeholder.nextPaymentDate")}
                         />
                         {nextPaymentDate.length > 0 && (
                             <Pressable
                                 accessibilityRole="button"
                                 style={styles.cancel}
-                                onPress={() => setNextPaymentDate("")}
+                                onPress={() => {
+                                    setNextPaymentDate("");
+                                    setDateInputResetKey((key) => key + 1);
+                                }}
                                 accessibilityLabel={t("common.clear")}
                             >
                                 <Ionicons name="close" size={24} color={whiteColor} />

@@ -102,7 +102,14 @@ export const DebtItem = memo(
         };
 
         return (
-            <ThemedView key={debt.id} style={[styles.item, !debt.active && baseInactive]}>
+            <ThemedView
+                key={debt.id}
+                style={[
+                    styles.item,
+                    !debt.active && baseInactive,
+                    debt.pay_per_month != null && debt.next_payment_date == null && styles.itemNoNextPayment,
+                ]}
+            >
                 <View style={styles.itemHeader}>
                     <View style={styles.itemTitle}>
                         <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
