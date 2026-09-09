@@ -142,7 +142,9 @@
         "amountLowToHigh": "Laag naar Hoog",
         "amountHighToLow": "Hoog naar Laag",
         "dateClosest": "Dichtstbijzijnde datum",
-        "dateFarthest": "Verste datum"
+        "dateFarthest": "Verste datum",
+        "termsFewest": "Minste termijnen",
+        "termsMost": "Meeste termijnen"
     },
     "filtering": {
         "filterBy": "Filter op",

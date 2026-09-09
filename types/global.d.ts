@@ -115,7 +115,9 @@ declare global {
         | "cost-asc"
         | "cost-desc"
         | "date-closest"
-        | "date-farthest";
+        | "date-farthest"
+        | "terms-fewest"
+        | "terms-most";
 
     // items
 

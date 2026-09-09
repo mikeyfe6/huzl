@@ -142,7 +142,9 @@
         "amountLowToHigh": "Low to High",
         "amountHighToLow": "High to Low",
         "dateClosest": "Closest Date",
-        "dateFarthest": "Farthest Date"
+        "dateFarthest": "Farthest Date",
+        "termsFewest": "Fewest Terms",
+        "termsMost": "Most Terms"
     },
     "filtering": {
         "filterBy": "Filter By",

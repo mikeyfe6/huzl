@@ -51,6 +51,18 @@ export const SORT_OPTIONS = [
         icon: "calendar-end" as const,
         iconSet: "material" as const,
     },
+    {
+        value: "terms-fewest" as const,
+        labelKey: "sorting.termsFewest",
+        icon: "sort-numeric-ascending" as const,
+        iconSet: "material" as const,
+    },
+    {
+        value: "terms-most" as const,
+        labelKey: "sorting.termsMost",
+        icon: "sort-numeric-descending" as const,
+        iconSet: "material" as const,
+    },
 ] as const;
 
 export function SortDebtsModal({ visible, sortOption, onSelect, onClose, theme }: Readonly<SortModalProps>) {

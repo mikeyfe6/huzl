@@ -268,6 +268,11 @@ export default function DebtsScreen() {
             return Number.isNaN(date) ? Number.MAX_SAFE_INTEGER : date;
         };
 
+        const getTermsValue = (item: DebtItem) => {
+            if (!item.pay_per_month || item.pay_per_month <= 0) return Number.MAX_SAFE_INTEGER;
+            return Math.ceil(item.amount / item.pay_per_month);
+        };
+
         switch (sortOption) {
             case "alphabetic-asc":
                 return sorted.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
@@ -281,6 +286,10 @@ export default function DebtsScreen() {
                 return sorted.sort((a, b) => getDateValue(a) - getDateValue(b));
             case "date-farthest":
                 return sorted.sort((a, b) => getDateValue(b) - getDateValue(a));
+            case "terms-fewest":
+                return sorted.sort((a, b) => getTermsValue(a) - getTermsValue(b));
+            case "terms-most":
+                return sorted.sort((a, b) => getTermsValue(b) - getTermsValue(a));
             case "default":
             default:
                 return sorted;
