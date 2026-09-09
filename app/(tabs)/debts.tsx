@@ -188,6 +188,7 @@ export default function DebtsScreen() {
                     void scheduleDebtPaymentReminder({
                         id: debtId,
                         name: debt.name,
+                        amount: newAmount,
                         next_payment_date: updatedNextDate,
                     });
                 }

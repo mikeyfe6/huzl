@@ -67,10 +67,13 @@ export async function setDebtNotificationsPreferenceAsync(enabled: boolean) {
 export async function scheduleDebtPaymentReminder(debt: {
     id: string;
     name: string;
+    amount: number;
     next_payment_date?: string | null;
 }) {
     if (Platform.OS === "web") return;
     await cancelDebtPaymentReminder(debt.id);
+
+    if (debt.amount <= 0) return;
 
     if (!debt.next_payment_date) return;
     if (!(await getDebtNotificationsPreferenceAsync())) return;
