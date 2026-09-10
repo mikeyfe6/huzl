@@ -197,6 +197,14 @@ declare global {
         ) => Promise<{ error: string | null }>;
     }
 
+    interface IncomeInputProps {
+        readonly initialAmount: string;
+        readonly onAmountChange: (value: string) => void;
+        readonly onAmountBlur: (value: string) => void;
+        readonly placeholderColor: string;
+        readonly style: StyleProp<TextStyle>;
+    }
+
     type BudgetListItem =
         | { type: "budget"; budget: BudgetItem }
         | { type: "expenseHeader" }
@@ -211,5 +219,10 @@ declare global {
         ) => Promise<{ error: AuthError | null; success: boolean; user: User | null }>;
         signOut: () => Promise<void>;
         refreshUser: () => Promise<void>;
+    }
+
+    interface RefreshContextType {
+        refreshFlag: number;
+        triggerRefresh: () => void;
     }
 }

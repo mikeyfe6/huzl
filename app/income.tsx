@@ -31,10 +31,33 @@ import {
     baseOutline,
     baseRed,
     baseSelect,
+    baseSemiBold,
     baseSize,
     baseSmall,
-    baseSemiBold,
 } from "@/styles/base";
+
+function IncomeInput({ initialAmount, onAmountChange, onAmountBlur, placeholderColor, style }: IncomeInputProps) {
+    const [localText, setLocalText] = useState(initialAmount);
+
+    useEffect(() => {
+        setLocalText(initialAmount);
+    }, [initialAmount]);
+
+    return (
+        <TextInput
+            style={style}
+            value={localText}
+            placeholder="0.00"
+            placeholderTextColor={placeholderColor}
+            keyboardType="decimal-pad"
+            onChangeText={(text) => {
+                setLocalText(text);
+                onAmountChange(text);
+            }}
+            onBlur={() => onAmountBlur(localText)}
+        />
+    );
+}
 
 export default function IncomeScreen() {
     const { t } = useTranslation();
@@ -100,11 +123,25 @@ export default function IncomeScreen() {
         setSources((prev) => prev.filter((_, i) => i !== idx));
     };
 
-    const formatAmount = (value: string): string => {
-        if (!value) return "";
-        const num = Number.parseFloat(formatNumber(value));
-        if (Number.isNaN(num)) return value;
-        return num.toFixed(2);
+    const normalizeAmountOnBlur = (idx: number, value: string) => {
+        const normalizedValue = formatNumber(value).trim();
+
+        if (normalizedValue === "") {
+            updateSource(idx, "amount", normalizedValue);
+            return;
+        }
+
+        const parsed = Number.parseFloat(normalizedValue);
+
+        if (!Number.isNaN(parsed) && parsed >= 0) {
+            updateSource(idx, "amount", parsed.toFixed(2));
+        }
+    };
+
+    const formatAmountForInput = (value: unknown) => {
+        const parsed = Number(value);
+
+        return Number.isFinite(parsed) ? parsed.toFixed(2) : "";
     };
 
     const hasIncomeChanges = useMemo(() => {
@@ -231,7 +268,7 @@ export default function IncomeScreen() {
                     mappedSources = data.map((row) => ({
                         id: row.id,
                         type: row.type,
-                        amount: String(row.amount ?? ""),
+                        amount: formatAmountForInput(row.amount),
                         active: row.active !== false,
                     }));
                 } else {
@@ -358,13 +395,12 @@ export default function IncomeScreen() {
                     :   sources.map((src, idx) => (
                             <View key={src.id ?? idx} style={styles.wrapper}>
                                 <View style={[styles.item, !src.active && baseInactive]}>
-                                    <TextInput
+                                    <IncomeInput
                                         style={styles.input}
-                                        value={formatAmount(src.amount)}
-                                        placeholder="0.00"
-                                        placeholderTextColor={theme.placeholder}
-                                        keyboardType="decimal-pad"
-                                        onChangeText={(text) => updateSource(idx, "amount", formatNumber(text))}
+                                        initialAmount={src.amount}
+                                        placeholderColor={theme.placeholder}
+                                        onAmountChange={(text) => updateSource(idx, "amount", text)}
+                                        onAmountBlur={(value) => normalizeAmountOnBlur(idx, value)}
                                     />
 
                                     <FlatList

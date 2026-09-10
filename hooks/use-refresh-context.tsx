@@ -1,10 +1,5 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 
-interface RefreshContextType {
-    refreshFlag: number;
-    triggerRefresh: () => void;
-}
-
 const RefreshContext = createContext<RefreshContextType | undefined>(undefined);
 
 export function RefreshProvider({ children }: Readonly<{ children: React.ReactNode }>) {
