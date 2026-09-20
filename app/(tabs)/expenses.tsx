@@ -38,6 +38,8 @@ import {
 import { baseGreen, baseRed } from "@/styles/base";
 import { getExpensesStyles } from "@/styles/expenses";
 
+//  TODO: add date for each expense item, based on frequency
+
 export default function ExpensesScreen() {
     const { t } = useTranslation();
     const { user, refreshUser } = useAuth();
