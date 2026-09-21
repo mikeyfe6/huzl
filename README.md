@@ -17,7 +17,9 @@ Huzl is een moneymanagement crossplatform applicatie, opgericht door [Michael Fr
 
 Met Huzl beheer je je persoonlijke financiën eenvoudig: bijhouden van inkomsten, uitgaven, budgetten en schulden, allemaal in één overzichtelijk dashboard.
 
-- _Meer weten? Bekijk de app / check the app: [Huzl](https://huzl.expo.app)_
+- _Meer weten? Bekijk de website: [Huzl Website](https://huzl.expo.app)_
+- _Download de app via de App Store: [Huzl iOS App](https://apps.apple.com/nl/app/huzl/id6757675910)_
+- _Binnenkort ook in de Play Store!_
 
 <br>
 
