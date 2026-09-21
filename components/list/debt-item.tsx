@@ -17,7 +17,7 @@ import {
     steelColor,
     whiteColor,
 } from "@/constants/theme";
-import { baseInactive } from "@/styles/base";
+import { baseBold, baseInactive, baseOpacity } from "@/styles/base";
 
 export const DebtItem = memo(
     ({
@@ -54,7 +54,7 @@ export const DebtItem = memo(
             if (!dateString) return <ThemedText style={[styles.itemPaymentText]}>—</ThemedText>;
             if (debt.amount === 0)
                 return (
-                    <ThemedText style={[styles.itemPaymentText, { fontWeight: "bold", color: greenColor }]}>
+                    <ThemedText style={[styles.itemPaymentText, { ...baseBold, color: greenColor }]}>
                         {t("debts.paidOff")}
                     </ThemedText>
                 );
@@ -66,10 +66,10 @@ export const DebtItem = memo(
             const formatted = dateObj.toLocaleDateString(t("seo.lang"));
 
             if (dateObj.getTime() === today.getTime()) {
-                return <ThemedText style={[styles.itemPaymentText, { fontWeight: "bold" }]}>{formatted} ◀︎</ThemedText>;
+                return <ThemedText style={[styles.itemPaymentText, { ...baseBold }]}>{formatted} ◀︎</ThemedText>;
             } else if (dateObj < today) {
                 return (
-                    <ThemedText style={[styles.itemPaymentText, { fontWeight: "bold", color: redColor }]}>
+                    <ThemedText style={[styles.itemPaymentText, { ...baseBold, color: redColor }]}>
                         {formatted}
                     </ThemedText>
                 );
@@ -352,10 +352,12 @@ export const DebtItem = memo(
                                 {t("debts.info.updatedAt")}
                             </ThemedText>
                             <ThemedText style={styles.infoValue}>
-                                {formatDate(debt.updated_at ?? debt.created_at, t("seo.lang"))}
+                                {debt.updated_at === debt.created_at ?
+                                    t("debts.info.noUpdate")
+                                :   formatDate(debt.updated_at ?? debt.created_at, t("seo.lang"))}
                             </ThemedText>
                         </View>
-                        <View style={styles.infoRow}>
+                        <View style={[styles.infoRow, { ...baseOpacity }]}>
                             <ThemedText style={styles.infoLabel}>{t("debts.info.createdAt")}</ThemedText>
                             <ThemedText style={styles.infoValue} numberOfLines={1} ellipsizeMode="tail">
                                 {formatDate(debt.created_at, t("seo.lang"))}

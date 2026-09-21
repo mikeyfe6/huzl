@@ -135,7 +135,8 @@
         "noSearchResults": "Geen uitgaven gevonden…",
         "info": {
             "createdAt": "Aangemaakt",
-            "updatedAt": "Laatst Bijgewerkt"
+            "updatedAt": "Laatst Bijgewerkt",
+            "noUpdate": "n.v.t."
         }
     },
     "sorting": {
@@ -207,7 +208,8 @@
         "deleteDebt": "Verwijder schuld",
         "info": {
             "createdAt": "Aangemaakt",
-            "updatedAt": "Laatst Bijgewerkt"
+            "updatedAt": "Laatst Bijgewerkt",
+            "noUpdate": "n.v.t."
         },
         "notifications": {
             "reminderTitle": "Betalingsherinnering",

@@ -421,7 +421,7 @@ export const getExpensesStyles = (theme: any) =>
         },
         infoTitle: {
             ...baseFlex("space-between", "flex-start"),
-            marginBottom: 8,
+            marginBottom: 12,
         },
         infoRow: {
             ...baseFlex("space-between"),
@@ -430,7 +430,6 @@ export const getExpensesStyles = (theme: any) =>
             ...baseSemiBold,
             ...baseMini,
             color: slateColor,
-            opacity: 0.7,
         },
         infoValue: {
             ...baseMini,

@@ -135,7 +135,8 @@
         "noSearchResults": "No expenses found…",
         "info": {
             "createdAt": "Created",
-            "updatedAt": "Last Updated"
+            "updatedAt": "Last Updated",
+            "noUpdate": "N/A"
         }
     },
     "sorting": {
@@ -207,7 +208,8 @@
         "deleteDebt": "Delete debt",
         "info": {
             "createdAt": "Created",
-            "updatedAt": "Last Updated"
+            "updatedAt": "Last Updated",
+            "noUpdate": "N/A"
         },
         "notifications": {
             "reminderTitle": "Payment reminder",

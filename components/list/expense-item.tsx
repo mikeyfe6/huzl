@@ -7,7 +7,7 @@ import { formatCurrency, formatDate } from "@/utils/helpers";
 import { ThemedText } from "@/components/themed-text";
 
 import { greenColor, mediumGreyColor, redColor, steelColor } from "@/constants/theme";
-import { baseInactive } from "@/styles/base";
+import { baseInactive, baseOpacity } from "@/styles/base";
 
 export const ExpenseItem = memo(
     ({
@@ -121,7 +121,7 @@ export const ExpenseItem = memo(
                                 {formatDate(expense.updated_at ?? expense.created_at, t("seo.lang"))}
                             </ThemedText>
                         </View>
-                        <View style={styles.infoRow}>
+                        <View style={[styles.infoRow, { ...baseOpacity }]}>
                             <ThemedText style={styles.infoLabel}>{t("expenses.info.createdAt")}</ThemedText>
                             <ThemedText style={styles.infoValue} numberOfLines={1} ellipsizeMode="tail">
                                 {formatDate(expense.created_at, t("seo.lang"))}
