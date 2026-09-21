@@ -3,12 +3,20 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { memo, useEffect, useState } from "react";
 import { Modal, Platform, Pressable, TextInput, View } from "react-native";
 
-import { formatAmount, formatCurrency, formatNumber } from "@/utils/helpers";
+import { formatAmount, formatCurrency, formatDate, formatNumber } from "@/utils/helpers";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { blueColor, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
+import {
+    blueColor,
+    greenColor,
+    mediumGreyColor,
+    orangeColor,
+    redColor,
+    steelColor,
+    whiteColor,
+} from "@/constants/theme";
 import { baseInactive } from "@/styles/base";
 
 export const DebtItem = memo(
@@ -33,6 +41,7 @@ export const DebtItem = memo(
         const [paymentDate, setPaymentDate] = useState<string>(debt.next_payment_date ?? "");
         const [showDatePicker, setShowDatePicker] = useState(false);
         const [tempSelectedDate, setTempSelectedDate] = useState<Date | null>(null);
+        const [showInfoModal, setShowInfoModal] = useState(false);
 
         useEffect(() => {
             if (paymentId === debt.id) {
@@ -160,6 +169,17 @@ export const DebtItem = memo(
                             ]}
                         >
                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
+                        </Pressable>
+                        <Pressable
+                            onPress={() => setShowInfoModal(true)}
+                            style={[
+                                styles.itemIcon,
+                                {
+                                    borderColor: steelColor,
+                                },
+                            ]}
+                        >
+                            <Ionicons name="information-circle-outline" size={16} color={steelColor} />
                         </Pressable>
                         <Pressable
                             onPress={() => onDelete(debt.id, debt.name)}
@@ -304,6 +324,43 @@ export const DebtItem = memo(
                                 onDismiss={() => setShowDatePicker(false)}
                             />
                         )}
+                    </View>
+                )}
+
+                {showInfoModal && (
+                    <View style={styles.infoOverlay}>
+                        <View style={styles.infoTitle}>
+                            <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
+                                {debt.name}
+                            </ThemedText>
+                            <Pressable
+                                onPress={() => setShowInfoModal(false)}
+                                accessibilityRole="button"
+                                accessibilityLabel={t("common.close")}
+                                style={[
+                                    styles.itemIcon,
+                                    {
+                                        borderColor: redColor,
+                                    },
+                                ]}
+                            >
+                                <Ionicons name="close" size={20} color={redColor} />
+                            </Pressable>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <ThemedText style={styles.infoLabel} numberOfLines={1} ellipsizeMode="tail">
+                                {t("debts.info.updatedAt")}
+                            </ThemedText>
+                            <ThemedText style={styles.infoValue}>
+                                {formatDate(debt.updated_at ?? debt.created_at, t("seo.lang"))}
+                            </ThemedText>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <ThemedText style={styles.infoLabel}>{t("debts.info.createdAt")}</ThemedText>
+                            <ThemedText style={styles.infoValue} numberOfLines={1} ellipsizeMode="tail">
+                                {formatDate(debt.created_at, t("seo.lang"))}
+                            </ThemedText>
+                        </View>
                     </View>
                 )}
             </ThemedView>

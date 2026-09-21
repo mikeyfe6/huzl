@@ -1,12 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Pressable, View } from "react-native";
 
-import { formatCurrency } from "@/utils/helpers";
+import { formatCurrency, formatDate } from "@/utils/helpers";
 
 import { ThemedText } from "@/components/themed-text";
 
-import { greenColor, mediumGreyColor, redColor } from "@/constants/theme";
+import { greenColor, mediumGreyColor, redColor, steelColor } from "@/constants/theme";
 import { baseInactive } from "@/styles/base";
 
 export const ExpenseItem = memo(
@@ -21,6 +21,8 @@ export const ExpenseItem = memo(
         styles,
         t,
     }: ExpenseListProps) => {
+        const [showInfoModal, setShowInfoModal] = useState(false);
+
         return (
             <View style={[styles.expenseCard, !expense.active && baseInactive]}>
                 <View style={styles.expenseWrapper}>
@@ -53,6 +55,12 @@ export const ExpenseItem = memo(
                             style={[styles.expenseIcon, { borderColor: mediumGreyColor }]}
                         >
                             <Ionicons name="pencil" size={16} color={mediumGreyColor} />
+                        </Pressable>
+                        <Pressable
+                            onPress={() => setShowInfoModal(true)}
+                            style={[styles.expenseIcon, { borderColor: steelColor }]}
+                        >
+                            <Ionicons name="information-circle-outline" size={16} color={steelColor} />
                         </Pressable>
                         <Pressable
                             onPress={() => onDelete(expense.id, expense.name)}
@@ -89,6 +97,38 @@ export const ExpenseItem = memo(
                         </View>
                     </View>
                 </View>
+
+                {showInfoModal && (
+                    <View style={styles.infoOverlay}>
+                        <View style={styles.infoTitle}>
+                            <ThemedText type="defaultSemiBold" numberOfLines={1} ellipsizeMode="tail">
+                                {expense.name}
+                            </ThemedText>
+                            <Pressable
+                                onPress={() => setShowInfoModal(false)}
+                                accessibilityRole="button"
+                                accessibilityLabel={t("common.close")}
+                                style={[styles.expenseIcon, { borderColor: redColor }]}
+                            >
+                                <Ionicons name="close" size={20} color={redColor} />
+                            </Pressable>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <ThemedText style={styles.infoLabel} numberOfLines={1} ellipsizeMode="tail">
+                                {t("expenses.info.updatedAt")}
+                            </ThemedText>
+                            <ThemedText style={styles.infoValue}>
+                                {formatDate(expense.updated_at ?? expense.created_at, t("seo.lang"))}
+                            </ThemedText>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <ThemedText style={styles.infoLabel}>{t("expenses.info.createdAt")}</ThemedText>
+                            <ThemedText style={styles.infoValue} numberOfLines={1} ellipsizeMode="tail">
+                                {formatDate(expense.created_at, t("seo.lang"))}
+                            </ThemedText>
+                        </View>
+                    </View>
+                )}
             </View>
         );
     },

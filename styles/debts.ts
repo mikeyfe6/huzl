@@ -24,6 +24,7 @@ import {
     baseInput,
     baseLabel,
     baseList,
+    baseMedium,
     baseMini,
     baseOpacity,
     basePadding,
@@ -164,6 +165,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         },
         item: {
             ...baseCard(theme),
+            position: "relative",
         },
         itemHeader: {
             ...baseFlex("space-between", "flex-start"),
@@ -252,5 +254,35 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         },
         itemNoNextPayment: {
             ...baseCardError,
+        },
+        infoOverlay: {
+            ...baseCorner,
+            ...baseBlank,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: theme.cardBackground,
+            padding: 12,
+            justifyContent: "flex-start",
+        },
+        infoTitle: {
+            ...baseFlex("space-between", "flex-start"),
+            marginBottom: 8,
+        },
+        infoRow: {
+            ...baseFlex("space-between"),
+        },
+        infoLabel: {
+            ...baseSemiBold,
+            ...baseMini,
+            color: slateColor,
+            opacity: 0.7,
+        },
+        infoValue: {
+            ...baseMini,
+            ...baseOpacity,
+            ...baseMedium,
         },
     });

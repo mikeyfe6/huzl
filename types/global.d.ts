@@ -41,6 +41,9 @@ declare global {
     interface itemCreatedAtProp {
         readonly created_at: string;
     }
+    interface itemUpdatedAtProp {
+        readonly updated_at?: string | null;
+    }
     interface itemTranslationProp {
         readonly t: (key: string) => string;
     }
@@ -121,7 +124,8 @@ declare global {
 
     // items
 
-    interface ExpenseItem extends itemIdProp, itemNameProp, itemAmountProp, itemActiveProp {
+    interface ExpenseItem
+        extends itemIdProp, itemNameProp, itemAmountProp, itemActiveProp, itemCreatedAtProp, itemUpdatedAtProp {
         frequency: Frequency;
         category: Category;
         yearlyTotal: number;
@@ -136,7 +140,14 @@ declare global {
     interface BudgetExpenseItem extends itemIdProp, itemNameProp, itemAmountProp, itemActiveProp, itemCreatedAtProp {}
 
     interface DebtItem
-        extends itemUserIdProp, itemIdProp, itemNameProp, itemAmountProp, itemActiveProp, itemCreatedAtProp {
+        extends
+            itemUserIdProp,
+            itemIdProp,
+            itemNameProp,
+            itemAmountProp,
+            itemActiveProp,
+            itemCreatedAtProp,
+            itemUpdatedAtProp {
         pay_per_month?: number | null;
         next_payment_date?: string | null;
     }

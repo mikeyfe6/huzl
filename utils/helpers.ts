@@ -34,3 +34,22 @@ export const formatCapitalize = (string: string): string => {
 export const formatNumber = (value: string): string => {
     return value.replaceAll(",", ".");
 };
+
+/**
+ * Format a date/time string prefixed with the locale's day name abbreviation (e.g., "wo 29 jun 2026, 15:57:48" for nl, "Wed 29 Jun 2026, 15:57:48" for en)
+ * @param dateString - The date string to format
+ * @param locale - The locale to use (e.g., "nl", "en")
+ * @returns Formatted string with day abbreviation prefix
+ */
+export const formatDate = (dateString: string, locale: string): string => {
+    const date = new Date(dateString);
+    const isEnglish = locale.startsWith("en");
+    const dayLength = isEnglish ? 3 : 2;
+    const rawDay = date.toLocaleDateString(locale, { weekday: "short" }).slice(0, dayLength);
+    const day = isEnglish ? formatCapitalize(rawDay.toLowerCase()) : rawDay.toLowerCase();
+    const month = date.toLocaleDateString(locale, { month: "short" }).replace(".", "").slice(0, 3);
+    const datePart = `${date.getDate()} ${isEnglish ? formatCapitalize(month) : month} ${date.getFullYear()}`;
+    const timePart = date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+    return `${day} ${datePart}, ${timePart}`;
+};

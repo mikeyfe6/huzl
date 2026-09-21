@@ -25,7 +25,7 @@ import {
 
 const AVAILABLE_LANGUAGES: LanguageItem[] = [
     { code: "nl", name: "Dutch", nativeName: "Nederlands" },
-    { code: "en", name: "English", nativeName: "English" },
+    { code: "en", name: "English", nativeName: "Engels" },
 ];
 
 export function LanguagePickerModal({ visible, onClose, theme }: Readonly<LanguagePickerModalProps>) {

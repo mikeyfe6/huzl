@@ -364,6 +364,8 @@ export default function ExpensesScreen() {
                                     category: (data.category as Category) ?? "personal",
                                     yearlyTotal: calculateYearlyTotal(amount, data.frequency as Frequency),
                                     active: data.active ?? true,
+                                    created_at: data.created_at,
+                                    updated_at: data.updated_at,
                                 }
                             :   exp,
                         ),
@@ -404,6 +406,8 @@ export default function ExpensesScreen() {
                         category: (data.category as Category) ?? "personal",
                         yearlyTotal: calculateYearlyTotal(amount, data.frequency as Frequency),
                         active: data.active ?? true,
+                        created_at: data.created_at,
+                        updated_at: data.updated_at,
                     };
                     setExpenses((prev) => [newExpense, ...prev]);
                     setExpenseName("");
@@ -514,7 +518,7 @@ export default function ExpensesScreen() {
             try {
                 const { data, error } = await supabase
                     .from("expenses")
-                    .select("id,name,amount,frequency,category,active")
+                    .select("id,name,amount,frequency,category,active,created_at,updated_at")
                     .order("created_at", { ascending: false })
                     .eq("user_id", user.id);
                 if (!error && data) {
@@ -528,6 +532,8 @@ export default function ExpensesScreen() {
                             category: (row.category as Category) ?? "personal",
                             yearlyTotal: calculateYearlyTotal(amount, row.frequency as Frequency),
                             active: row.active ?? true,
+                            created_at: row.created_at,
+                            updated_at: row.updated_at,
                         };
                     });
                     setExpenses(mapped);

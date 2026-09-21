@@ -157,7 +157,7 @@ export const baseEmptyText = (theme: any) => ({
 
 export const baseIcons = {
     ...baseFlex("center", "center"),
-    gap: 10,
+    ...baseSpace,
 };
 
 export const baseIcon = (theme: any) => ({

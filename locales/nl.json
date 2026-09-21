@@ -132,7 +132,11 @@
         "addFirstExpense": "Voeg je eerste uitgave toe!",
         "deleteExpense": "Verwijder uitgave",
         "noExpensesInPie": "Geen uitgaven in deze categorie.",
-        "noSearchResults": "Geen uitgaven gevonden…"
+        "noSearchResults": "Geen uitgaven gevonden…",
+        "info": {
+            "createdAt": "Aangemaakt",
+            "updatedAt": "Laatst Bijgewerkt"
+        }
     },
     "sorting": {
         "sortBy": "Sorteren op",
@@ -201,6 +205,10 @@
         "terms": "Termijnen",
         "paidOff": "Afgerond",
         "deleteDebt": "Verwijder schuld",
+        "info": {
+            "createdAt": "Aangemaakt",
+            "updatedAt": "Laatst Bijgewerkt"
+        },
         "notifications": {
             "reminderTitle": "Betalingsherinnering",
             "reminderBody": "Let op! Morgen uiterste betaaldatum voor: {{name}}"

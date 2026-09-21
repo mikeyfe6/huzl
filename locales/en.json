@@ -132,7 +132,11 @@
         "addFirstExpense": "Add your first expense!",
         "deleteExpense": "Delete expense",
         "noExpensesInPie": "No expenses in this category.",
-        "noSearchResults": "No expenses found…"
+        "noSearchResults": "No expenses found…",
+        "info": {
+            "createdAt": "Created",
+            "updatedAt": "Last Updated"
+        }
     },
     "sorting": {
         "sortBy": "Sort By",
@@ -201,6 +205,10 @@
         "terms": "Terms",
         "paidOff": "Paid Off",
         "deleteDebt": "Delete debt",
+        "info": {
+            "createdAt": "Created",
+            "updatedAt": "Last Updated"
+        },
         "notifications": {
             "reminderTitle": "Payment reminder",
             "reminderBody": "Heads up! Tomorrow is the due date for: {{name}}"

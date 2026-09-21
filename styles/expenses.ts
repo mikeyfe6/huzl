@@ -37,6 +37,7 @@ import {
     baseIcons,
     baseInput,
     baseLabel,
+    baseMedium,
     baseMini,
     baseOpacity,
     baseOutline,
@@ -176,6 +177,7 @@ export const getExpensesStyles = (theme: any) =>
         },
         expenseCard: {
             ...baseCard(theme),
+            position: "relative",
         },
         expenseWrapper: {
             ...baseFlex("space-between", "flex-start"),
@@ -405,5 +407,35 @@ export const getExpensesStyles = (theme: any) =>
         },
         emptyStateText: {
             ...baseEmptyText(theme),
+        },
+        infoOverlay: {
+            ...baseCorner,
+            ...baseBlank,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: theme.cardBackground,
+            padding: 12,
+            justifyContent: "flex-start",
+        },
+        infoTitle: {
+            ...baseFlex("space-between", "flex-start"),
+            marginBottom: 8,
+        },
+        infoRow: {
+            ...baseFlex("space-between"),
+        },
+        infoLabel: {
+            ...baseSemiBold,
+            ...baseMini,
+            color: slateColor,
+            opacity: 0.7,
+        },
+        infoValue: {
+            ...baseMini,
+            ...baseOpacity,
+            ...baseMedium,
         },
     });
