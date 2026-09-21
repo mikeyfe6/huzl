@@ -1,5 +1,5 @@
 import { blueColor, greenColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export const baseFamily = { fontFamily: "System-ui" };
 
@@ -62,6 +62,21 @@ export const baseInput = (theme: any) => ({
 });
 
 export const baseSelect = {
+    justifyContent: "center" as const,
+    overflow: Platform.select({
+        ios: "hidden" as const,
+        android: "hidden" as const,
+        default: "visible" as const,
+    }),
+    height: Platform.select({
+        ios: 125,
+        android: 44,
+        default: undefined,
+    }),
+    ...(Platform.OS === "android" && { paddingLeft: 6 }),
+};
+
+export const basePadding = {
     paddingHorizontal: 12,
     paddingVertical: 10,
 };

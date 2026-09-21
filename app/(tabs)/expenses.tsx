@@ -689,18 +689,23 @@ export default function ExpensesScreen() {
                     <Picker
                         selectedValue={frequency}
                         onValueChange={(itemValue) => setFrequency(itemValue as Frequency)}
-                        style={[
-                            styles.selectInput,
-                            Platform.OS === "web" ?
-                                ([
-                                    {
-                                        appearance: "none",
-                                        WebkitAppearance: "none",
-                                        MozAppearance: "none",
-                                    } as any,
-                                ] as any)
-                            :   null,
-                        ]}
+                        style={
+                            Platform.OS === "android" ?
+                                styles.selectInputAndroid
+                            :   [
+                                    styles.selectInput,
+                                    Platform.OS === "web" ?
+                                        ([
+                                            {
+                                                appearance: "none",
+                                                WebkitAppearance: "none",
+                                                MozAppearance: "none",
+                                            } as any,
+                                        ] as any)
+                                    :   null,
+                                ]
+                        }
+                        dropdownIconColor={Platform.OS === "android" ? theme.inputText : undefined}
                         itemStyle={styles.selectOption}
                     >
                         <Picker.Item label={t("expenses.frequency.daily")} value="daily" />

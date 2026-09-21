@@ -38,7 +38,7 @@ import {
     baseInactive,
     baseInput,
     baseOutline,
-    baseSelect,
+    basePadding,
     baseSemiBold,
     baseSmall,
     baseSpace,
@@ -202,7 +202,7 @@ export default function SettingsScreen() {
                 },
                 input: {
                     ...baseInput(theme),
-                    ...baseSelect,
+                    ...basePadding,
                 },
                 saveButton: {
                     ...baseButton(theme),

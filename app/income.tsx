@@ -30,7 +30,7 @@ import {
     baseInactive,
     baseOutline,
     baseRed,
-    baseSelect,
+    basePadding,
     baseSemiBold,
     baseSize,
     baseSmall,
@@ -306,7 +306,7 @@ export default function IncomeScreen() {
                 },
                 item: {
                     ...baseBorder,
-                    ...baseSelect,
+                    ...basePadding,
                     flex: 1,
                     borderColor: theme.inputBorder,
                     borderRadius: 6,

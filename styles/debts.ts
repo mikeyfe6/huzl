@@ -26,9 +26,9 @@ import {
     baseList,
     baseMini,
     baseOpacity,
+    basePadding,
     baseRadius,
     baseRed,
-    baseSelect,
     baseSemiBold,
     baseSize,
     baseSmall,
@@ -51,7 +51,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         },
         input: {
             ...baseInput(theme),
-            ...baseSelect,
+            ...basePadding,
             flex: 1,
         },
         dateWrapper: {
@@ -154,7 +154,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             ...baseFlex("center", "center"),
             ...baseInput(theme),
             ...baseSpace,
-            ...baseSelect,
+            ...basePadding,
         },
         modalTriggerText: {
             ...baseSemiBold,
@@ -212,7 +212,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         },
         paymentInput: {
             ...baseInput(theme),
-            ...baseSelect,
+            ...basePadding,
             backgroundColor: theme.inputSpecial,
             flex: 11,
             minWidth: 200,
@@ -226,7 +226,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
         },
         paymentDateButton: {
             ...baseInput(theme),
-            ...baseSelect,
+            ...basePadding,
             ...baseFlex("center", "center"),
             ...baseSpace,
             backgroundColor: theme.inputSpecial,

@@ -32,6 +32,7 @@ import {
     baseLabel,
     baseList,
     baseMini,
+    basePadding,
     baseSelect,
     baseSemiBold,
     baseSize,
@@ -167,24 +168,9 @@ export default function HelpdeskScreen() {
                 label: {
                     ...baseLabel(theme),
                 },
-                input: {
-                    ...baseInput(theme),
-                    ...baseSelect,
-                    height: 100,
-                },
                 select: {
                     ...baseInput(theme),
-                    justifyContent: "center",
-                    overflow: Platform.select({
-                        ios: "hidden",
-                        android: "hidden",
-                        default: "visible",
-                    }),
-                    height: Platform.select({
-                        ios: 125,
-                        android: undefined,
-                        default: undefined,
-                    }),
+                    ...baseSelect,
                 },
                 selectInput: {
                     ...baseFamily,
@@ -193,23 +179,18 @@ export default function HelpdeskScreen() {
                     color: theme.inputText,
                     height: Platform.select({
                         ios: 216,
-                        android: 44,
                         default: 44,
                     }),
                     paddingHorizontal: Platform.select({
                         ios: 0,
-                        android: 0,
                         default: 12,
                     }),
                     paddingVertical: Platform.select({
                         ios: 0,
-                        android: 0,
                         default: 10,
                     }),
-                    minHeight: Platform.select({
-                        android: "100%",
-                    }),
                 },
+                selectInputAndroid: { height: 56, color: theme.inputText },
                 selectOption: {
                     ...baseSize,
                     color: theme.inputText,
@@ -220,6 +201,12 @@ export default function HelpdeskScreen() {
                     top: "50%",
                     marginTop: -9,
                     pointerEvents: "none",
+                },
+                input: {
+                    ...baseInput(theme),
+                    ...basePadding,
+                    height: 100,
+                    textAlignVertical: "top",
                 },
                 button: {
                     ...baseButton(theme),
@@ -298,18 +285,23 @@ export default function HelpdeskScreen() {
                         <Picker
                             selectedValue={type}
                             onValueChange={(value) => setType(value)}
-                            style={[
-                                styles.selectInput,
-                                Platform.OS === "web" ?
-                                    ([
-                                        {
-                                            appearance: "none",
-                                            WebkitAppearance: "none",
-                                            MozAppearance: "none",
-                                        } as any,
-                                    ] as any)
-                                :   null,
-                            ]}
+                            style={
+                                Platform.OS === "android" ?
+                                    styles.selectInputAndroid
+                                :   [
+                                        styles.selectInput,
+                                        Platform.OS === "web" ?
+                                            ([
+                                                {
+                                                    appearance: "none",
+                                                    WebkitAppearance: "none",
+                                                    MozAppearance: "none",
+                                                } as any,
+                                            ] as any)
+                                        :   null,
+                                    ]
+                            }
+                            dropdownIconColor={Platform.OS === "android" ? theme.inputText : undefined}
                             itemStyle={styles.selectOption}
                         >
                             <Picker.Item label={t("helpdesk.type.bug")} value="bug" />

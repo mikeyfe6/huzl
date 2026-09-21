@@ -40,6 +40,7 @@ import {
     baseMini,
     baseOpacity,
     baseOutline,
+    basePadding,
     baseRadius,
     baseSelect,
     baseSemiBold,
@@ -62,7 +63,7 @@ export const getExpensesStyles = (theme: any) =>
         },
         input: {
             ...baseInput(theme),
-            ...baseSelect,
+            ...basePadding,
         },
         categoryGroup: {
             ...baseFlex("center"),
@@ -81,17 +82,7 @@ export const getExpensesStyles = (theme: any) =>
         },
         select: {
             ...baseInput(theme),
-            justifyContent: "center",
-            overflow: Platform.select({
-                ios: "hidden",
-                android: "hidden",
-                default: "visible",
-            }),
-            height: Platform.select({
-                ios: 125,
-                android: undefined,
-                default: undefined,
-            }),
+            ...baseSelect,
         },
         selectInput: {
             ...baseInput(theme),
@@ -100,23 +91,18 @@ export const getExpensesStyles = (theme: any) =>
             color: theme.inputText,
             height: Platform.select({
                 ios: 216,
-                android: 44,
                 default: 44,
             }),
             paddingHorizontal: Platform.select({
                 ios: 0,
-                android: 0,
                 default: 12,
             }),
             paddingVertical: Platform.select({
                 ios: 0,
-                android: 0,
                 default: 10,
             }),
-            minHeight: Platform.select({
-                android: "100%",
-            }),
         },
+        selectInputAndroid: { height: 56, color: theme.inputText },
         selectOption: {
             ...baseSize,
             color: theme.inputText,
@@ -176,7 +162,7 @@ export const getExpensesStyles = (theme: any) =>
             ...baseFlex("center", "center"),
             ...baseInput(theme),
             ...baseSpace,
-            ...baseSelect,
+            ...basePadding,
         },
         modalTriggerText: {
             ...baseSemiBold,

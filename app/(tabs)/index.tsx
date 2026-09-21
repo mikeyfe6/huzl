@@ -34,7 +34,7 @@ import {
     baseMedium,
     baseMini,
     baseOutline,
-    baseSelect,
+    basePadding,
     baseSemiBold,
     baseSmall,
     baseSpace,
@@ -319,7 +319,7 @@ export default function HomeScreen() {
                 },
                 input: {
                     ...baseInput(theme),
-                    ...baseSelect,
+                    ...basePadding,
                     color: theme.inputText,
                 },
                 signInButton: {

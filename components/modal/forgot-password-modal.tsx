@@ -16,7 +16,7 @@ import {
     baseModal,
     baseOverlay,
     baseRed,
-    baseSelect,
+    basePadding,
 } from "@/styles/base";
 
 // TODO: add successmessage after filling in email correctly
@@ -71,7 +71,7 @@ export function ForgotPasswordModal({ visible, onClose, theme }: Readonly<Forgot
                 },
                 input: {
                     ...baseInput(theme),
-                    ...baseSelect,
+                    ...basePadding,
                 },
                 buttons: {
                     ...baseFlex("center", "center"),

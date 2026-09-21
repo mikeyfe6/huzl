@@ -18,7 +18,7 @@ import {
     baseModal,
     baseOverlay,
     baseRed,
-    baseSelect,
+    basePadding,
     baseTrans,
     baseTransText,
 } from "@/styles/base";
@@ -83,7 +83,7 @@ export function TerminateAccountModal({ visible, onClose, theme }: Readonly<Term
                 },
                 input: {
                     ...baseInput(theme),
-                    ...baseSelect,
+                    ...basePadding,
                 },
                 buttons: {
                     ...baseFlex("center", "center"),

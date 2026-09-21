@@ -17,7 +17,7 @@ import {
     baseModal,
     baseOverlay,
     baseRed,
-    baseSelect,
+    basePadding,
 } from "@/styles/base";
 
 export function ChangePasswordModal({ visible, onClose, theme }: Readonly<ChangePasswordModalProps>) {
@@ -79,7 +79,7 @@ export function ChangePasswordModal({ visible, onClose, theme }: Readonly<Change
                 },
                 input: {
                     ...baseInput(theme),
-                    ...baseSelect,
+                    ...basePadding,
                 },
                 buttons: {
                     ...baseFlex("center", "center"),

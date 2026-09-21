@@ -15,10 +15,10 @@ import {
     baseIcons,
     baseInput,
     baseLabel,
-    baseSelect,
+    basePadding,
+    baseSemiBold,
     baseSmall,
     baseSpace,
-    baseSemiBold,
 } from "@/styles/base";
 
 export const getBudgetsStyles = (theme: any) =>
@@ -34,7 +34,7 @@ export const getBudgetsStyles = (theme: any) =>
         },
         input: {
             ...baseInput(theme),
-            ...baseSelect,
+            ...basePadding,
         },
         buttons: {
             ...baseFlex("center"),
