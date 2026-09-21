@@ -418,7 +418,6 @@ export const getExpensesStyles = (theme: any) =>
             bottom: 0,
             backgroundColor: theme.cardBackground,
             padding: 12,
-            justifyContent: "flex-start",
         },
         infoTitle: {
             ...baseFlex("space-between", "flex-start"),
