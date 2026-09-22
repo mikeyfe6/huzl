@@ -179,7 +179,7 @@ export const DebtItem = memo(
                                 },
                             ]}
                         >
-                            <Ionicons name="information-circle-outline" size={16} color={steelColor} />
+                            <Ionicons name="information" size={20} color={steelColor} />
                         </Pressable>
                         <Pressable
                             onPress={() => onDelete(debt.id, debt.name)}

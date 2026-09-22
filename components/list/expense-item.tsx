@@ -60,7 +60,7 @@ export const ExpenseItem = memo(
                             onPress={() => setShowInfoModal(true)}
                             style={[styles.expenseIcon, { borderColor: steelColor }]}
                         >
-                            <Ionicons name="information-circle-outline" size={16} color={steelColor} />
+                            <Ionicons name="information" size={20} color={steelColor} />
                         </Pressable>
                         <Pressable
                             onPress={() => onDelete(expense.id, expense.name)}
