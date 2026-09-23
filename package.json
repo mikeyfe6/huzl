@@ -22,7 +22,7 @@
     "@react-native-firebase/analytics": "^26.4.0",
     "@react-native-firebase/app": "^26.4.0",
     "@react-native-picker/picker": "2.11.4",
-    "@supabase/supabase-js": "^2.116.0",
+    "@supabase/supabase-js": "^2.117.1",
     "color": "^5.0.3",
     "expo": "~57.0.24",
     "expo-build-properties": "~57.0.21",
