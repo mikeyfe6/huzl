@@ -10,6 +10,7 @@ import { ExternalLink } from "@/components/external-link";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
+import { HUZL_MENEFEX_URL } from "@/constants/links";
 import { Colors, linkColor, whiteColor } from "@/constants/theme";
 import { baseButton, baseButtonText, baseOpacity, baseSpace } from "@/styles/base";
 
@@ -129,7 +130,7 @@ export default function TermsScreen() {
                     {t("terms.contact.email")}
                     {"\n"}
                     {t("terms.contact.website")}{" "}
-                    <ExternalLink href="https://menefex.nl" theme={theme}>
+                    <ExternalLink href={HUZL_MENEFEX_URL} theme={theme}>
                         <ThemedText type="link">menefex.nl</ThemedText>
                     </ExternalLink>
                 </ThemedText>

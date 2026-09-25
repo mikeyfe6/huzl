@@ -13,6 +13,7 @@
         "delete": "Delete",
         "save": "Save",
         "saving": "Saving …",
+        "downloadOnAppStore": "Download Huzl for iOS",
         "back": "Back",
         "clear": "Clear"
     },
@@ -142,6 +143,7 @@
     "sorting": {
         "sortBy": "Sort By",
         "dateAdded": "Date Added",
+        "recentlyEdited": "Recently Edited",
         "nameAToZ": "Name A to Z",
         "nameZToA": "Name Z to A",
         "amountLowToHigh": "Low to High",

@@ -12,11 +12,22 @@ import { useRefreshContext } from "@/hooks/use-refresh-context";
 
 import { supabase } from "@/utils/supabase";
 
+import { ExternalLink } from "@/components/external-link";
 import { ForgotPasswordModal } from "@/components/modal/forgot-password-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { blueColor, Colors, greenColor, mediumGreyColor, orangeColor, redColor, whiteColor } from "@/constants/theme";
+import { HUZL_APP_STORE_URL } from "@/constants/links";
+import {
+    blueColor,
+    Colors,
+    greenColor,
+    linkColor,
+    mediumGreyColor,
+    orangeColor,
+    redColor,
+    whiteColor,
+} from "@/constants/theme";
 import {
     baseBlank,
     baseBold,
@@ -40,8 +51,6 @@ import {
     baseSpace,
     baseSuccess,
 } from "@/styles/base";
-
-// TODO: download app link for web version
 
 export default function HomeScreen() {
     const { t } = useTranslation();
@@ -373,6 +382,10 @@ export default function HomeScreen() {
                         default: 12,
                     }),
                 },
+                appLink: {
+                    alignItems: "center",
+                    marginTop: 8,
+                },
                 errorContainer: { ...baseCenter, ...baseHeight },
                 errorText: {
                     ...baseError,
@@ -568,6 +581,16 @@ export default function HomeScreen() {
                                 <Ionicons name="help-circle" size={18} color={orangeColor} style={{ opacity: 0.9 }} />
                             </Link>
                         </ThemedText>
+                        {Platform.OS === "web" && (
+                            <View style={styles.appLink}>
+                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
+                                    <Ionicons name="logo-apple" size={16} color={linkColor} />{" "}
+                                    <ThemedText type="app" style={{ ...baseMini }}>
+                                        {t("common.downloadOnAppStore")}
+                                    </ThemedText>
+                                </ExternalLink>
+                            </View>
+                        )}
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
                             {registrationSuccess ?
                                 <ThemedText style={styles.successText}>{t("auth.success.accountCreated")}</ThemedText>

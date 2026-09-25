@@ -134,6 +134,13 @@ export default function ExpensesScreen() {
             case "cost-desc":
                 return sorted.sort((a, b) => b.yearlyTotal - a.yearlyTotal);
 
+            case "recently-edited":
+                return sorted.sort((a, b) => {
+                    const updatedA = Date.parse(a.updated_at ?? a.created_at);
+                    const updatedB = Date.parse(b.updated_at ?? b.created_at);
+                    return updatedB - updatedA;
+                });
+
             case "default":
             default:
                 return sorted;
@@ -863,8 +870,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.personal")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(personalYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(personalYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(personalYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -881,8 +892,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.business")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(businessYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(businessYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(businessYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -899,8 +914,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.family")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(familyYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(familyYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(familyYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -917,8 +936,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.invest")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(investYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(investYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(investYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -938,8 +961,12 @@ export default function ExpensesScreen() {
                                     {t("expenses.category.entertainment")}:{" "}
                                 </ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(entertainmentYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(entertainmentYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(entertainmentYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -956,8 +983,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.housing")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(housingYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(housingYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(housingYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -974,8 +1005,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.taxes")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(taxesYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(taxesYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(taxesYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -992,8 +1027,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.travel")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(travelYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(travelYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(travelYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -1010,8 +1049,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.pet")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(petYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(petYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(petYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -1028,8 +1071,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.care")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(careYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(careYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(careYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}
@@ -1046,8 +1093,12 @@ export default function ExpensesScreen() {
                                 />{" "}
                                 <ThemedText style={styles.totalLabel}> {t("expenses.category.health")}:</ThemedText>{" "}
                                 <ThemedText style={styles.totalInline}>
-                                    {" "}
-                                    {formatCurrency(healthYearlySpend, currencySymbol)}
+                                    <ThemedText style={styles.totalInlineYearly}>
+                                        {formatCurrency(healthYearlySpend, currencySymbol)}
+                                    </ThemedText>{" "}
+                                    <ThemedText style={styles.totalInlineMonthly}>
+                                        {formatCurrency(healthYearlySpend / 12, currencySymbol)}
+                                    </ThemedText>
                                 </ThemedText>
                             </ThemedText>
                         )}

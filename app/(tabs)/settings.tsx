@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { useFocusEffect } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -18,6 +19,7 @@ import {
 } from "@/utils/notifications";
 import { supabase } from "@/utils/supabase";
 
+import { ExternalLink } from "@/components/external-link";
 import { CurrencyPickerModal } from "@/components/modal/currency-picker-modal";
 import { LanguagePickerModal } from "@/components/modal/language-picker-modal";
 import { ChangePasswordModal } from "@/components/modal/reset-password-modal";
@@ -26,6 +28,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AuthGate } from "@/components/ui/loading";
 
+import { HUZL_APP_STORE_URL } from "@/constants/links";
 import { Colors, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
     baseButton,
@@ -477,6 +480,16 @@ export default function SettingsScreen() {
                     </ThemedView>
 
                     <ThemedView style={styles.linksContainer}>
+                        {Platform.OS === "web" && (
+                            <View style={styles.linksWrapper}>
+                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
+                                    <Ionicons name="logo-apple" size={16} color={linkColor} />{" "}
+                                    <ThemedText type="app" style={styles.linkText}>
+                                        {t("common.downloadOnAppStore")}
+                                    </ThemedText>
+                                </ExternalLink>
+                            </View>
+                        )}
                         <View style={styles.linksWrapper}>
                             <Link href="/terms" asChild style={{ ...baseOutline(theme) }}>
                                 <Pressable>

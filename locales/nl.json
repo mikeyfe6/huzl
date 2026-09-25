@@ -13,6 +13,7 @@
         "delete": "Verwijder",
         "save": "Opslaan",
         "saving": "Opslaan …",
+        "downloadOnAppStore": "Download Huzl voor iOS",
         "back": "Terug",
         "clear": "Wissen"
     },
@@ -142,6 +143,7 @@
     "sorting": {
         "sortBy": "Sorteren op",
         "dateAdded": "Toegevoegd",
+        "recentlyEdited": "Recent bewerkt",
         "nameAToZ": "Naam A tot Z",
         "nameZToA": "Naam Z tot A",
         "amountLowToHigh": "Laag naar Hoog",

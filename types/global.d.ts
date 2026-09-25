@@ -113,6 +113,7 @@ declare global {
 
     type SortOption =
         | "default"
+        | "recently-edited"
         | "alphabetic-asc"
         | "alphabetic-desc"
         | "cost-asc"

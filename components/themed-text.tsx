@@ -1,13 +1,14 @@
 import { StyleSheet, Text, type TextProps } from "react-native";
 
-import { lightGreyColor, linkColor, redColor } from "@/constants/theme";
-
 import { useThemeColor } from "@/hooks/use-theme-color";
+
+import { lightGreyColor, linkColor, redColor } from "@/constants/theme";
+import { baseBold, baseSize } from "@/styles/base";
 
 export type ThemedTextProps = TextProps & {
     lightColor?: string;
     darkColor?: string;
-    type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "danger" | "label" | "logo";
+    type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "danger" | "label" | "logo" | "app";
 };
 
 export function ThemedText({ style, lightColor, darkColor, type = "default", ...rest }: ThemedTextProps) {
@@ -22,6 +23,7 @@ export function ThemedText({ style, lightColor, darkColor, type = "default", ...
                 type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
                 type === "subtitle" ? styles.subtitle : undefined,
                 type === "link" ? styles.link : undefined,
+                type === "app" ? styles.app : undefined,
                 type === "danger" ? styles.danger : undefined,
                 type === "label" ? styles.label : undefined,
                 type === "logo" ? styles.logo : undefined,
@@ -34,31 +36,37 @@ export function ThemedText({ style, lightColor, darkColor, type = "default", ...
 
 const styles = StyleSheet.create({
     default: {
-        fontSize: 16,
+        ...baseSize,
         lineHeight: 24,
     },
     defaultSemiBold: {
-        fontSize: 16,
+        ...baseSize,
+        ...baseBold,
         lineHeight: 24,
-        fontWeight: "600",
     },
     title: {
+        ...baseBold,
         fontSize: 32,
-        fontWeight: "bold",
         lineHeight: 32,
     },
     subtitle: {
+        ...baseBold,
         fontSize: 20,
-        fontWeight: "bold",
     },
     link: {
+        ...baseSize,
         lineHeight: 30,
-        fontSize: 16,
         color: linkColor,
         textDecorationLine: "underline",
     },
+    app: {
+        ...baseSize,
+        ...baseBold,
+        lineHeight: 30,
+        color: linkColor,
+    },
     danger: {
-        fontSize: 16,
+        ...baseSize,
         color: redColor,
     },
     label: {

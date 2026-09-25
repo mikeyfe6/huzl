@@ -323,9 +323,16 @@ export const getExpensesStyles = (theme: any) =>
             opacity: 0.75,
         },
         totalInline: {
-            ...baseBold,
             paddingLeft: 8,
         },
+        totalInlineYearly: {
+            ...baseBold,
+        },
+        totalInlineMonthly: {
+            ...baseSemiBold,
+            color: mediumGreyColor,
+        },
+
         totalPeriod: {
             marginHorizontal: 0,
             marginTop: 0,

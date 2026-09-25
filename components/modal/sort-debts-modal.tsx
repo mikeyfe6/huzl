@@ -16,6 +16,12 @@ export const SORT_OPTIONS = [
         iconSet: "ion" as const,
     },
     {
+        value: "recently-edited" as const,
+        labelKey: "sorting.recentlyEdited",
+        icon: "create-outline" as const,
+        iconSet: "ion" as const,
+    },
+    {
         value: "alphabetic-asc" as const,
         labelKey: "sorting.nameAToZ",
         icon: "sort-alphabetical-ascending" as const,
