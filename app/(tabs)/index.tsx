@@ -17,7 +17,7 @@ import { ForgotPasswordModal } from "@/components/modal/forgot-password-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { HUZL_APP_STORE_URL } from "@/constants/links";
+import { HUZL_APP_STORE_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
 import {
     blueColor,
     Colors,
@@ -382,9 +382,16 @@ export default function HomeScreen() {
                         default: 12,
                     }),
                 },
-                appLink: {
-                    alignItems: "center",
+                appContainer: {
+                    ...baseFlex("center", "center"),
                     marginTop: 8,
+                    rowGap: 4,
+                    columnGap: 16,
+                    flexWrap: "wrap",
+                },
+                appLink: {
+                    ...baseFlex("center", "center"),
+                    ...baseGap,
                 },
                 errorContainer: { ...baseCenter, ...baseHeight },
                 errorText: {
@@ -582,14 +589,20 @@ export default function HomeScreen() {
                             </Link>
                         </ThemedText>
                         {Platform.OS === "web" && (
-                            <View style={styles.appLink}>
+                            <ThemedView style={styles.appContainer}>
                                 <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-apple" size={16} color={linkColor} />{" "}
-                                    <ThemedText type="app" style={{ ...baseMini }}>
+                                    <Ionicons name="logo-apple-appstore" size={16} color={linkColor} />{" "}
+                                    <ThemedText type="app" style={{ ...baseSmall }}>
                                         {t("common.downloadOnAppStore")}
                                     </ThemedText>
                                 </ExternalLink>
-                            </View>
+                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme}>
+                                    <Ionicons name="logo-google-playstore" size={16} color={linkColor} />{" "}
+                                    <ThemedText type="app" style={{ ...baseSmall }}>
+                                        {t("common.downloadOnPlayStore")}
+                                    </ThemedText>
+                                </ExternalLink>
+                            </ThemedView>
                         )}
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
                             {registrationSuccess ?

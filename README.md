@@ -19,7 +19,7 @@ Met Huzl beheer je je persoonlijke financiën eenvoudig: bijhouden van inkomsten
 
 - _Meer weten? Bekijk de website: [Huzl Website](https://huzl.expo.app)_
 - _Download de app via de App Store: [Huzl iOS App](https://apps.apple.com/nl/app/huzl/id6757675910)_
-- _Binnenkort ook in de Play Store!_
+- _Download de app via de Play Store: [Huzl Android App](https://play.google.com/store/apps/details?id=com.menefex.huzl)_
 
 <br>
 

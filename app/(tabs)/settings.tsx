@@ -28,7 +28,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AuthGate } from "@/components/ui/loading";
 
-import { HUZL_APP_STORE_URL } from "@/constants/links";
+import { HUZL_APP_STORE_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
 import { Colors, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
     baseButton,
@@ -249,6 +249,12 @@ export default function SettingsScreen() {
                     ...baseCenter,
                     ...baseSpace,
                     marginVertical: 12,
+                },
+                linksApps: {
+                    ...baseFlex("center", "center"),
+                    rowGap: 4,
+                    columnGap: 16,
+                    flexWrap: "wrap",
                 },
                 linksWrapper: {
                     ...baseFlex("center", "center"),
@@ -481,14 +487,20 @@ export default function SettingsScreen() {
 
                     <ThemedView style={styles.linksContainer}>
                         {Platform.OS === "web" && (
-                            <View style={styles.linksWrapper}>
+                            <ThemedView style={styles.linksApps}>
                                 <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-apple" size={16} color={linkColor} />{" "}
+                                    <Ionicons name="logo-apple-appstore" size={16} color={linkColor} />{" "}
                                     <ThemedText type="app" style={styles.linkText}>
                                         {t("common.downloadOnAppStore")}
                                     </ThemedText>
                                 </ExternalLink>
-                            </View>
+                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme}>
+                                    <Ionicons name="logo-google-playstore" size={16} color={linkColor} />{" "}
+                                    <ThemedText type="app" style={styles.linkText}>
+                                        {t("common.downloadOnPlayStore")}
+                                    </ThemedText>
+                                </ExternalLink>
+                            </ThemedView>
                         )}
                         <View style={styles.linksWrapper}>
                             <Link href="/terms" asChild style={{ ...baseOutline(theme) }}>
