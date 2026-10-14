@@ -3,7 +3,7 @@ import { openBrowserAsync, WebBrowserPresentationStyle } from "expo-web-browser"
 import { useMemo, type ComponentProps } from "react";
 import { StyleSheet } from "react-native";
 
-import { baseFlex, baseOutline } from "@/styles/base";
+import { baseOutline } from "@/styles/base";
 
 type Props = Omit<ComponentProps<typeof Link>, "href"> & {
     href: Href & string;
@@ -15,9 +15,6 @@ export function ExternalLink({ href, theme, ...rest }: Props & { theme: ThemePro
             StyleSheet.create({
                 externalLink: {
                     ...baseOutline(theme),
-                    ...baseFlex("center", "center"),
-                    display: "flex",
-                    gap: 6,
                 },
             }),
         [theme],

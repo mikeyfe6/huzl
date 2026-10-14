@@ -17,7 +17,7 @@ import { ForgotPasswordModal } from "@/components/modal/forgot-password-modal";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { HUZL_APP_STORE_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
+import { HUZL_APP_STORE_URL, HUZL_MENEFEX_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
 import {
     blueColor,
     Colors,
@@ -382,6 +382,13 @@ export default function HomeScreen() {
                         default: 12,
                     }),
                 },
+                poweredBy: {
+                    ...baseFlex("center", "center"),
+                },
+                poweredByText: {
+                    fontSize: 12,
+                    color: mediumGreyColor,
+                },
                 appContainer: {
                     ...baseFlex("center", "center"),
                     rowGap: 4,
@@ -611,6 +618,11 @@ export default function HomeScreen() {
                                 </ExternalLink>
                             </ThemedView>
                         )}
+                        <View style={styles.poweredBy}>
+                            <ExternalLink href={HUZL_MENEFEX_URL} theme={theme}>
+                                <ThemedText style={styles.poweredByText}>{t("common.poweredBy")} </ThemedText>
+                            </ExternalLink>
+                        </View>
                     </View>
                 </ThemedView>
                 <ForgotPasswordModal
