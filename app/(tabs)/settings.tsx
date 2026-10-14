@@ -489,13 +489,13 @@ export default function SettingsScreen() {
                         {Platform.OS === "web" && (
                             <ThemedView style={styles.linksApps}>
                                 <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-apple-appstore" size={16} color={linkColor} />{" "}
+                                    <Ionicons name="logo-apple-appstore" size={20} color={linkColor} />{" "}
                                     <ThemedText type="app" style={styles.linkText}>
                                         {t("common.downloadOnAppStore")}
                                     </ThemedText>
                                 </ExternalLink>
                                 <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-google-playstore" size={16} color={linkColor} />{" "}
+                                    <Ionicons name="logo-google-playstore" size={20} color={linkColor} />{" "}
                                     <ThemedText type="app" style={styles.linkText}>
                                         {t("common.downloadOnPlayStore")}
                                     </ThemedText>

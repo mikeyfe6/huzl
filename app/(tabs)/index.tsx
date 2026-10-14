@@ -384,7 +384,6 @@ export default function HomeScreen() {
                 },
                 appContainer: {
                     ...baseFlex("center", "center"),
-                    marginTop: 8,
                     rowGap: 4,
                     columnGap: 16,
                     flexWrap: "wrap",
@@ -588,22 +587,6 @@ export default function HomeScreen() {
                                 <Ionicons name="help-circle" size={18} color={orangeColor} style={{ opacity: 0.9 }} />
                             </Link>
                         </ThemedText>
-                        {Platform.OS === "web" && (
-                            <ThemedView style={styles.appContainer}>
-                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-apple-appstore" size={16} color={linkColor} />{" "}
-                                    <ThemedText type="app" style={{ ...baseSmall }}>
-                                        {t("common.downloadOnAppStore")}
-                                    </ThemedText>
-                                </ExternalLink>
-                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-google-playstore" size={16} color={linkColor} />{" "}
-                                    <ThemedText type="app" style={{ ...baseSmall }}>
-                                        {t("common.downloadOnPlayStore")}
-                                    </ThemedText>
-                                </ExternalLink>
-                            </ThemedView>
-                        )}
                         <View style={styles.errorContainer} accessible accessibilityLiveRegion="polite">
                             {registrationSuccess ?
                                 <ThemedText style={styles.successText}>{t("auth.success.accountCreated")}</ThemedText>
@@ -612,6 +595,22 @@ export default function HomeScreen() {
                                 </ThemedText>
                             }
                         </View>
+                        {Platform.OS === "web" && (
+                            <ThemedView style={styles.appContainer}>
+                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
+                                    <Ionicons name="logo-apple-appstore" size={20} color={linkColor} />{" "}
+                                    <ThemedText type="app" style={{ ...baseSmall }}>
+                                        {t("common.downloadOnAppStore")}
+                                    </ThemedText>
+                                </ExternalLink>
+                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme}>
+                                    <Ionicons name="logo-google-playstore" size={20} color={linkColor} />{" "}
+                                    <ThemedText type="app" style={{ ...baseSmall }}>
+                                        {t("common.downloadOnPlayStore")}
+                                    </ThemedText>
+                                </ExternalLink>
+                            </ThemedView>
+                        )}
                     </View>
                 </ThemedView>
                 <ForgotPasswordModal
