@@ -48,6 +48,7 @@ export default function PrivacyScreen() {
                 backButton: {
                     ...baseButton(theme),
                     backgroundColor: linkColor,
+                    borderColor: linkColor,
                     marginTop: 16,
                 },
                 backButtonText: {
