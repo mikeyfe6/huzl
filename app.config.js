@@ -6,7 +6,7 @@ export default {
         slug: "huzl",
         owner: "menefex",
         version: packageJson.version,
-        orientation: "portrait",
+        orientation: "default",
         icon: "./assets/images/huzl-square-icon.png",
         scheme: "huzl",
         userInterfaceStyle: "automatic",
