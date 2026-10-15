@@ -57,7 +57,7 @@ export default {
                     resizeMode: "contain",
                     backgroundColor: "#F6F5F3",
                     dark: {
-                        backgroundColor: "#000000",
+                        backgroundColor: "#151718",
                     },
                 },
             ],
