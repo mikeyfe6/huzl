@@ -296,6 +296,16 @@ export default function SettingsScreen() {
                         <ThemedView
                             style={[styles.settingItem, styles.settingItemNoBorder, styles.settingItemLessPadding]}
                         >
+                            <ThemedText style={styles.settingLabel}>{t("settings.label.displayName")}</ThemedText>
+                            <TextInput
+                                style={styles.input}
+                                placeholder={t("settings.placeholder.displayName")}
+                                placeholderTextColor={theme.placeholder}
+                                value={displayName}
+                                onChangeText={setDisplayName}
+                            />
+                        </ThemedView>
+                        <ThemedView style={[styles.settingItem, styles.settingItemNoBorder]}>
                             <ThemedText style={styles.settingLabel}>{t("settings.label.email")}</ThemedText>
                             <TextInput
                                 style={styles.input}
@@ -306,16 +316,6 @@ export default function SettingsScreen() {
                                 keyboardType="email-address"
                                 autoCapitalize="none"
                                 autoComplete="email"
-                            />
-                        </ThemedView>
-                        <ThemedView style={[styles.settingItem, styles.settingItemNoBorder]}>
-                            <ThemedText style={styles.settingLabel}>{t("settings.label.displayName")}</ThemedText>
-                            <TextInput
-                                style={styles.input}
-                                placeholder={t("settings.placeholder.displayName")}
-                                placeholderTextColor={theme.placeholder}
-                                value={displayName}
-                                onChangeText={setDisplayName}
                             />
                         </ThemedView>
                         <Pressable
