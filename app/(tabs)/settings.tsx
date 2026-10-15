@@ -31,6 +31,7 @@ import { AuthGate } from "@/components/ui/loading";
 import { HUZL_APP_STORE_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
 import { Colors, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
+    baseBlank,
     baseButton,
     baseButtonText,
     baseCenter,
@@ -255,6 +256,11 @@ export default function SettingsScreen() {
                     rowGap: 4,
                     columnGap: 16,
                     flexWrap: "wrap",
+                },
+                linksApp: {
+                    display: "flex",
+                    ...baseFlex("center", "center"),
+                    ...baseBlank,
                 },
                 linksWrapper: {
                     ...baseFlex("center", "center"),
@@ -487,20 +493,20 @@ export default function SettingsScreen() {
 
                     <ThemedView style={styles.linksContainer}>
                         {Platform.OS === "web" && (
-                            <ThemedView style={styles.linksApps}>
-                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-apple-appstore" size={20} color={linkColor} />{" "}
+                            <View style={styles.linksApps}>
+                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme} style={styles.linksApp}>
+                                    <Ionicons name="logo-apple-appstore" size={18} color={linkColor} />{" "}
                                     <ThemedText type="app" style={styles.linkText}>
                                         {t("common.downloadOnAppStore")}
                                     </ThemedText>
                                 </ExternalLink>
-                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-google-playstore" size={20} color={linkColor} />{" "}
+                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme} style={styles.linksApp}>
+                                    <Ionicons name="logo-google-playstore" size={18} color={linkColor} />{" "}
                                     <ThemedText type="app" style={styles.linkText}>
                                         {t("common.downloadOnPlayStore")}
                                     </ThemedText>
                                 </ExternalLink>
-                            </ThemedView>
+                            </View>
                         )}
                         <View style={styles.linksWrapper}>
                             <Link href="/terms" asChild style={{ ...baseOutline(theme) }}>

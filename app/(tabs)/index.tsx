@@ -396,8 +396,9 @@ export default function HomeScreen() {
                     flexWrap: "wrap",
                 },
                 appLink: {
+                    display: "flex",
                     ...baseFlex("center", "center"),
-                    ...baseGap,
+                    ...baseBlank,
                 },
                 errorContainer: { ...baseCenter, ...baseHeight },
                 errorText: {
@@ -604,14 +605,14 @@ export default function HomeScreen() {
                         </View>
                         {Platform.OS === "web" && (
                             <ThemedView style={styles.appContainer}>
-                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-apple-appstore" size={20} color={linkColor} />{" "}
+                                <ExternalLink href={HUZL_APP_STORE_URL} theme={theme} style={styles.appLink}>
+                                    <Ionicons name="logo-apple-appstore" size={18} color={linkColor} />{" "}
                                     <ThemedText type="app" style={{ ...baseSmall }}>
                                         {t("common.downloadOnAppStore")}
                                     </ThemedText>
                                 </ExternalLink>
-                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme}>
-                                    <Ionicons name="logo-google-playstore" size={20} color={linkColor} />{" "}
+                                <ExternalLink href={HUZL_PLAY_STORE_URL} theme={theme} style={styles.appLink}>
+                                    <Ionicons name="logo-google-playstore" size={18} color={linkColor} />{" "}
                                     <ThemedText type="app" style={{ ...baseSmall }}>
                                         {t("common.downloadOnPlayStore")}
                                     </ThemedText>
