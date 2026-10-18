@@ -48,7 +48,7 @@ function getNativeAnalyticsInstance(): AnalyticsModule | null {
         if (nativeAnalyticsInstance && !nativeCollectionEnabled) {
             try {
                 if (typeof rnfbAnalyticsMod?.setAnalyticsCollectionEnabled === "function") {
-                    rnfbAnalyticsMod.setAnalyticsCollectionEnabled(nativeAnalyticsInstance, true);
+                    void rnfbAnalyticsMod.setAnalyticsCollectionEnabled(nativeAnalyticsInstance, true);
                 }
             } finally {
                 nativeCollectionEnabled = true;
@@ -110,7 +110,7 @@ export async function logScreenView(name: string, title?: string) {
     }
 }
 
-export async function logEvent(eventName: string, params?: Record<string, any>) {
+export function logEvent(eventName: string, params?: Record<string, any>) {
     if (!eventName) return;
     if (Platform.OS === "web") {
         const g = getGlobal();

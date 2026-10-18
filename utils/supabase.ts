@@ -6,9 +6,9 @@ const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
 const serverStorage = {
-    getItem: async () => null,
-    setItem: async () => undefined,
-    removeItem: async () => undefined,
+    getItem: () => Promise.resolve(null),
+    setItem: () => Promise.resolve(),
+    removeItem: () => Promise.resolve(),
 };
 
 const storage = Platform.OS === "web" && typeof window === "undefined" ? serverStorage : AsyncStorage;

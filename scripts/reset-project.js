@@ -54,7 +54,7 @@ const moveDirectories = async (userInput) => {
         }
 
         // Move old directories to new app-example directory or delete them
-        for (const dir of oldDirs) {
+        await Promise.all(oldDirs.map(async (dir) => {
             const oldDirPath = path.join(root, dir);
             if (fs.existsSync(oldDirPath)) {
                 if (userInput === "y") {
@@ -71,7 +71,7 @@ const moveDirectories = async (userInput) => {
             } else {
                 console.log(`➡️ /${dir} does not exist, skipping.`);
             }
-        }
+        }));
 
         // Create new /app directory
         const newAppDirPath = path.join(root, newAppDir);
@@ -102,7 +102,7 @@ const moveDirectories = async (userInput) => {
 rl.question("Do you want to move existing files to /app-example instead of deleting them? (Y/n): ", (answer) => {
     const userInput = answer.trim().toLowerCase() || "y";
     if (userInput === "y" || userInput === "n") {
-        moveDirectories(userInput).finally(() => rl.close());
+        void moveDirectories(userInput).finally(() => rl.close());
     } else {
         console.log("❌ Invalid input. Please enter 'Y' or 'N'.");
         rl.close();

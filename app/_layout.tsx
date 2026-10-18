@@ -55,7 +55,7 @@ function RootContent() {
     })();
 
     useEffect(() => {
-        logScreenView(name, pageTitle);
+        void logScreenView(name, pageTitle);
     }, [pathname]);
 
     return (
@@ -91,12 +91,12 @@ export default function RootLayout() {
     });
 
     useEffect(() => {
-        SplashScreen.preventAutoHideAsync();
+        void SplashScreen.preventAutoHideAsync();
     }, []);
 
     useEffect(() => {
         if (fontsLoaded || fontError) {
-            SplashScreen.hideAsync();
+            void SplashScreen.hideAsync();
         }
     }, [fontsLoaded, fontError]);
 

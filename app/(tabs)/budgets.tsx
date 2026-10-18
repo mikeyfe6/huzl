@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
+import { Alert, FlatList, Platform, Pressable, TextInput, TextInputInstance, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -26,9 +26,9 @@ export default function BudgetsScreen() {
     const colorScheme = useColorScheme();
     const { symbol: currencySymbol } = useCurrency();
 
-    const nameInputRef = useRef<TextInput>(null);
-    const expenseNameInputRef = useRef<TextInput>(null);
-    const scrollViewRef = useRef<ScrollView>(null);
+    const nameInputRef = useRef<TextInputInstance | null>(null);
+    const expenseNameInputRef = useRef<TextInputInstance | null>(null);
+    const scrollViewRef = useRef<FlatList<any>>(null);
 
     const [budgetName, setBudgetName] = useState("");
     const [totalAmount, setTotalAmount] = useState("");
@@ -72,7 +72,7 @@ export default function BudgetsScreen() {
         setBudgetName(budget.name);
         setTotalAmount(budget.total.toFixed(2));
         setEditingId(budget.id);
-        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        scrollViewRef.current?.scrollToOffset({ offset: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
     }, []);
 
@@ -197,7 +197,7 @@ export default function BudgetsScreen() {
             if (Platform.OS === "web") {
                 const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
                 if (ok) {
-                    type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
+                    void (type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id));
                 }
                 return;
             }
@@ -208,7 +208,7 @@ export default function BudgetsScreen() {
                     text: t("common.delete"),
                     style: "destructive",
                     onPress: () => {
-                        type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id);
+                        void (type === "budget" ? handleDeleteBudget(id) : handleDeleteExpense(id));
                     },
                 },
             ]);
@@ -430,7 +430,7 @@ export default function BudgetsScreen() {
             }
         };
 
-        fetchBudgets();
+        void fetchBudgets();
     }, [user]);
 
     const BudgetHeader = (
@@ -610,6 +610,7 @@ export default function BudgetsScreen() {
     return (
         <AuthGate>
             <FlatList
+                ref={scrollViewRef}
                 data={budgetData}
                 keyExtractor={(item, index) => {
                     if (item.type === "budget") return `budget-${item.budget.id}`;

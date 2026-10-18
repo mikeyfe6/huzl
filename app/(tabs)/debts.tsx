@@ -9,8 +9,8 @@ import {
     Modal,
     Platform,
     Pressable,
-    ScrollView,
     TextInput,
+    TextInputInstance,
     View,
     useWindowDimensions,
 } from "react-native";
@@ -45,8 +45,8 @@ export default function DebtsScreen() {
     const { symbol: currencySymbol } = useCurrency();
     const { width: screenWidth } = useWindowDimensions();
 
-    const nameInputRef = useRef<TextInput>(null);
-    const scrollViewRef = useRef<ScrollView>(null);
+    const nameInputRef = useRef<TextInputInstance | null>(null);
+    const scrollViewRef = useRef<FlatList<any>>(null);
     const flatListRef = useRef<FlatList<DebtItem>>(null);
 
     const [debts, setDebts] = useState<DebtItem[]>([]);
@@ -76,7 +76,7 @@ export default function DebtsScreen() {
         setNextPaymentDate(debt.next_payment_date || "");
         setEditingId(debt.id);
         setDateInputResetKey((key) => key + 1);
-        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        scrollViewRef.current?.scrollToOffset({ offset: 0, animated: true });
         setTimeout(() => nameInputRef.current?.focus(), 100);
     }, []);
 
@@ -104,7 +104,7 @@ export default function DebtsScreen() {
         (id: string, name: string) => {
             if (Platform.OS === "web") {
                 const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
-                if (ok) handleDeleteDebt(id);
+                if (ok) void handleDeleteDebt(id);
                 return;
             }
 
@@ -372,7 +372,7 @@ export default function DebtsScreen() {
             }
             setLoading(false);
         };
-        fetchDebts();
+        void fetchDebts();
     }, [user]);
 
     const activeDebts = sortedDebts.filter((d) => d.amount > 0);
@@ -466,7 +466,7 @@ export default function DebtsScreen() {
                                     :   t("debts.placeholder.nextPaymentDate")}
                                 </ThemedText>
                             </Pressable>
-                            {nextPaymentDate && (
+                            {Boolean(nextPaymentDate) && (
                                 <Pressable
                                     accessibilityRole="button"
                                     style={styles.cancel}
@@ -689,7 +689,7 @@ export default function DebtsScreen() {
                             <ThemedText style={styles.emptyStateText}>{t("debts.noDebts")}</ThemedText>
                         </ThemedView>
                 }
-                ListFooterComponent={PaidOffList}
+                ListFooterComponent={PaidOffList ?? undefined}
             />
         </AuthGate>
     );

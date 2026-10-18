@@ -12,12 +12,13 @@ export const REMINDER_HOUR = 12;
 export const REMINDER_MINUTE = 0;
 
 Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowBanner: true,
-        shouldShowList: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-    }),
+    handleNotification: () =>
+        Promise.resolve({
+            shouldShowBanner: true,
+            shouldShowList: true,
+            shouldPlaySound: true,
+            shouldSetBadge: false,
+        }),
 });
 
 export async function ensureNotificationPermissionAsync(): Promise<boolean> {

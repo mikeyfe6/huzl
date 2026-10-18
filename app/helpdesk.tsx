@@ -66,7 +66,7 @@ export default function HelpdeskScreen() {
     const confirmDelete = (id: string, message: string) => {
         if (Platform.OS === "web") {
             const ok = globalThis.confirm(`${t("common.delete")} "${message.slice(0, 20)}"?`);
-            if (ok) handleDelete(id);
+            if (ok) void handleDelete(id);
             return;
         }
         Alert.alert(t("helpdesk.deleteTicket"), `${t("common.delete")} "${message.slice(0, 20)}"?`, [
@@ -115,7 +115,7 @@ export default function HelpdeskScreen() {
                 setMessage("");
                 setType("feedback");
                 Alert.alert("Thank you for your feedback!");
-                fetchTickets();
+                void fetchTickets();
             }
         } catch (e) {
             console.error("Helpdesk submission error:", e);
@@ -126,7 +126,7 @@ export default function HelpdeskScreen() {
     };
 
     useEffect(() => {
-        fetchTickets();
+        void fetchTickets();
     }, [user?.id]);
 
     const styles = useMemo(

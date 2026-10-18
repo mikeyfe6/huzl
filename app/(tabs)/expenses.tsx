@@ -1,9 +1,18 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Platform, Pressable, TextInput, useWindowDimensions, View } from "react-native";
+import {
+    Alert,
+    FlatList,
+    Platform,
+    Pressable,
+    TextInput,
+    TextInputInstance,
+    useWindowDimensions,
+    View,
+} from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -47,10 +56,10 @@ export default function ExpensesScreen() {
     const colorScheme = useColorScheme();
     const { symbol: currencySymbol } = useCurrency();
 
-    const nameInputRef = useRef<TextInput>(null);
+    const nameInputRef = useRef<TextInputInstance | null>(null);
     const listSectionRef = useRef<any>(null);
     const flatListRef = useRef<FlatList>(null);
-    const searchBarRef = useRef<View>(null);
+    const searchBarRef = useRef<ComponentRef<typeof View>>(null);
 
     const [expenseName, setExpenseName] = useState("");
     const [expenseAmount, setExpenseAmount] = useState("");
@@ -256,7 +265,7 @@ export default function ExpensesScreen() {
         (id: string, name: string) => {
             if (Platform.OS === "web") {
                 const ok = globalThis.confirm(`${t("common.delete")} "${name}"?`);
-                if (ok) handleDeleteExpense(id);
+                if (ok) void handleDeleteExpense(id);
                 return;
             }
 
@@ -551,7 +560,7 @@ export default function ExpensesScreen() {
                 setLoading(false);
             }
         };
-        fetchExpenses();
+        void fetchExpenses();
     }, [user]);
 
     const Header = (

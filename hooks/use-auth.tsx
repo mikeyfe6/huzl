@@ -30,12 +30,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
             if (event === "SIGNED_IN" && nextUserId) {
                 if (nextUserId !== lastUserIdSent) {
-                    setUserId(nextUserId);
+                    void setUserId(nextUserId);
                     lastUserIdSent = nextUserId;
                 }
             } else if (event === "SIGNED_OUT") {
                 if (initialized && lastUserIdSent) {
-                    setUserId(null);
+                    void setUserId(null);
                     logEvent("sign_out");
                 }
                 lastUserIdSent = null;
