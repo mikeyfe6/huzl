@@ -253,8 +253,8 @@
             "signOut": "Uitloggen"
         },
         "link": {
-            "currencySymbol": "Valutasymbool",
-            "monthlyIncome": "Maandelijks Inkomen",
+            "currencySymbol": "Selecteer Valuta",
+            "monthlyIncome": "Inkomen instellen",
             "selectLanguage": "Selecteer Taal",
             "submitTicket": "Een ticket indienen",
             "terms": "Servicevoorwaarden",
@@ -292,11 +292,11 @@
         "sek": "Zweedse Kroon"
     },
     "income": {
-        "title": "Stel je maandelijkse inkomen in",
+        "title": "Stel je inkomen in",
         "subtitle": "Voeg je inkomstenbronnen toe om een duidelijk overzicht van je maandelijkse in- en uitgaven te krijgen",
         "label": "Inkomensbronnen",
         "addSource": "Bron toevoegen",
-        "total": "Totaal",
+        "total": "Maandelijks totaal",
         "saved": "Opgeslagen",
         "savedMsg": "Inkomen bijgewerkt",
         "category": {
@@ -307,6 +307,14 @@
             "alimony": "Alimentatie",
             "investment": "Dividend/Rente",
             "other": "Overig"
+        },
+        "frequency": {
+            "weekly": "Wekelijks",
+            "biweekly": "2-wekelijks",
+            "fourweekly": "4-wekelijks",
+            "monthly": "Maandelijks",
+            "quarterly": "Per kwartaal",
+            "yearly": "Jaarlijks"
         },
         "error": {
             "invalidAmountTitle": "Ongeldig bedrag",

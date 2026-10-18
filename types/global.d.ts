@@ -157,9 +157,12 @@ declare global {
         message: string;
     }
 
+    type IncomeFrequency = "weekly" | "biweekly" | "fourweekly" | "monthly" | "quarterly" | "yearly";
+
     interface IncomeSource extends itemTypeProp, itemActiveProp {
         id?: string;
         amount: string;
+        frequency: IncomeFrequency;
     }
 
     interface LanguageItem extends itemNameProp, itemCodeProp {

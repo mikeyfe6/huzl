@@ -35,6 +35,25 @@ export const formatNumber = (value: string): string => {
     return value.replaceAll(",", ".");
 };
 
+export const INCOME_FREQUENCIES = ["weekly", "biweekly", "fourweekly", "monthly", "quarterly", "yearly"] as const;
+
+const INCOME_PAYMENTS_PER_YEAR: Record<string, number> = {
+    weekly: 52,
+    biweekly: 26,
+    fourweekly: 13,
+    monthly: 12,
+    quarterly: 4,
+    yearly: 1,
+};
+
+/**
+ * Convert an income amount to its average monthly equivalent
+ */
+export const formatToMonthlyIncome = (amount: number, frequency?: string | null): number => {
+    const perYear = INCOME_PAYMENTS_PER_YEAR[frequency ?? "monthly"] ?? 12;
+    return (amount * perYear) / 12;
+};
+
 /**
  * Format a date/time string prefixed with the locale's day name abbreviation (e.g., "wo 29 jun 2026, 15:57:48" for nl, "Wed 29 Jun 2026, 15:57:48" for en)
  * @param dateString - The date string to format

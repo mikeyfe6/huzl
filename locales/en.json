@@ -253,8 +253,8 @@
             "signOut": "Sign Out"
         },
         "link": {
-            "currencySymbol": "Currency Symbol",
-            "monthlyIncome": "Monthly Income",
+            "currencySymbol": "Select Currency",
+            "monthlyIncome": "Set Income",
             "selectLanguage": "Select Language",
             "submitTicket": "Submit a Ticket",
             "terms": "Terms of Service",
@@ -292,11 +292,11 @@
         "sek": "Swedish Krona"
     },
     "income": {
-        "title": "Set your monthly income",
+        "title": "Set your income",
         "subtitle": "Add your income sources to get a clear overview of your monthly income and expenses",
         "label": "Income Sources",
         "addSource": "Add Source",
-        "total": "Total",
+        "total": "Monthly total",
         "saved": "Saved",
         "savedMsg": "Income updated",
         "category": {
@@ -307,6 +307,14 @@
             "alimony": "Alimony",
             "investment": "Dividend/Interest",
             "other": "Other"
+        },
+        "frequency": {
+            "weekly": "Weekly",
+            "biweekly": "Every 2 weeks",
+            "fourweekly": "Every 4 weeks",
+            "monthly": "Monthly",
+            "quarterly": "Quarterly",
+            "yearly": "Yearly"
         },
         "error": {
             "invalidAmountTitle": "Invalid Amount",

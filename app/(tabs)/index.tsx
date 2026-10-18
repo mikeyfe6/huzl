@@ -10,6 +10,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useRefreshContext } from "@/hooks/use-refresh-context";
 
+import { formatToMonthlyIncome } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { ExternalLink } from "@/components/external-link";
@@ -246,7 +247,7 @@ export default function HomeScreen() {
 
             supabase
                 .from("incomes")
-                .select("amount")
+                .select("amount, frequency")
                 .eq("user_id", user.id)
                 .then(({ data, error }) => {
                     if (error || !Array.isArray(data)) {
@@ -255,7 +256,7 @@ export default function HomeScreen() {
                         const total = data.reduce((sum, row) => {
                             const amt =
                                 typeof row.amount === "number" ? row.amount : Number.parseFloat(String(row.amount));
-                            return sum + (Number.isNaN(amt) ? 0 : amt);
+                            return sum + (Number.isNaN(amt) ? 0 : formatToMonthlyIncome(amt, row.frequency));
                         }, 0);
                         setMonthlyIncome(total);
                     }

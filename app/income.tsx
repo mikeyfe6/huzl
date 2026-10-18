@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { formatCurrency, formatNumber } from "@/utils/helpers";
+import { formatCurrency, formatNumber, formatToMonthlyIncome, INCOME_FREQUENCIES } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
@@ -81,7 +81,7 @@ export default function IncomeScreen() {
         { key: "other", label: t("income.category.other") },
     ];
 
-    const updateSource = (idx: number, field: "type" | "amount", value: string) => {
+    const updateSource = (idx: number, field: "type" | "amount" | "frequency", value: string) => {
         setSources((prev) =>
             prev.map((src, i) =>
                 i === idx ?
@@ -95,7 +95,7 @@ export default function IncomeScreen() {
     };
 
     const addSource = () => {
-        setSources((prev) => [...prev, { type: "salary", amount: "", active: true }]);
+        setSources((prev) => [...prev, { type: "salary", amount: "", frequency: "monthly", active: true }]);
     };
 
     const toggleActive = (idx: number) => {
@@ -152,7 +152,8 @@ export default function IncomeScreen() {
 
             if (!b) return true;
 
-            if (a.type !== b.type || a.amount !== b.amount || a.active !== b.active) return true;
+            if (a.type !== b.type || a.amount !== b.amount || a.active !== b.active || a.frequency !== b.frequency)
+                return true;
         }
 
         return false;
@@ -181,7 +182,7 @@ export default function IncomeScreen() {
 
         const parsed = Number.parseFloat(formatNumber(src.amount));
 
-        return sum + (Number.isNaN(parsed) ? 0 : parsed);
+        return sum + (Number.isNaN(parsed) ? 0 : formatToMonthlyIncome(parsed, src.frequency));
     }, 0);
 
     const handleSave = async () => {
@@ -210,6 +211,7 @@ export default function IncomeScreen() {
                     .update({
                         type: src.type,
                         amount: Number.parseFloat(formatNumber(src.amount)),
+                        frequency: src.frequency,
                         active: src.active !== false,
                     })
                     .eq("id", src.id)
@@ -227,6 +229,7 @@ export default function IncomeScreen() {
                         user_id: user.id,
                         type: src.type,
                         amount: Number.parseFloat(formatNumber(src.amount)),
+                        frequency: src.frequency,
                         active: src.active !== false,
                     })),
                 );
@@ -255,7 +258,7 @@ export default function IncomeScreen() {
 
         supabase
             .from("incomes")
-            .select("id, type, amount, active")
+            .select("id, type, amount, frequency, active")
             .eq("user_id", user.id)
             .then(({ data, error }) => {
                 let mappedSources: IncomeSource[];
@@ -268,10 +271,11 @@ export default function IncomeScreen() {
                         id: row.id,
                         type: row.type,
                         amount: formatAmountForInput(row.amount),
+                        frequency: (row.frequency ?? "monthly") as IncomeFrequency,
                         active: row.active !== false,
                     }));
                 } else {
-                    mappedSources = [{ type: "salary", amount: "", active: true }];
+                    mappedSources = [{ type: "salary", amount: "", frequency: "monthly", active: true }];
                 }
 
                 setSources(mappedSources);
@@ -330,9 +334,7 @@ export default function IncomeScreen() {
                 category: {
                     borderTopWidth: StyleSheet.hairlineWidth,
                     borderTopColor: theme.inputBorder,
-                    paddingTop: 10,
-                    paddingBottom: 4,
-                    gap: 16,
+                    paddingVertical: 10,
                 },
                 type: {
                     ...baseBorder,
@@ -342,6 +344,12 @@ export default function IncomeScreen() {
                     borderColor: theme.inputBorder,
                 },
                 typeText: { ...baseSmall },
+                frequency: {
+                    borderTopWidth: StyleSheet.hairlineWidth,
+                    borderTopColor: theme.inputBorder,
+                    paddingTop: 10,
+                    paddingBottom: 4,
+                },
                 add: { marginTop: 8, marginBottom: 6, padding: 4 },
                 addText: {
                     ...baseSemiBold,
@@ -423,6 +431,31 @@ export default function IncomeScreen() {
                                                 </Pressable>
                                             );
                                         }}
+                                        showsHorizontalScrollIndicator={false}
+                                    />
+
+                                    <FlatList
+                                        data={INCOME_FREQUENCIES}
+                                        horizontal
+                                        keyExtractor={(item) => item}
+                                        style={styles.frequency}
+                                        renderItem={({ item, index }) => (
+                                            <Pressable
+                                                style={[
+                                                    styles.type,
+                                                    {
+                                                        borderColor:
+                                                            src.frequency === item ? linkColor : theme.inputBorder,
+                                                        marginRight: index === INCOME_FREQUENCIES.length - 1 ? 0 : 8,
+                                                    },
+                                                ]}
+                                                onPress={() => updateSource(idx, "frequency", item)}
+                                            >
+                                                <ThemedText style={styles.typeText}>
+                                                    {t(`income.frequency.${item}`)}
+                                                </ThemedText>
+                                            </Pressable>
+                                        )}
                                         showsHorizontalScrollIndicator={false}
                                     />
                                 </View>

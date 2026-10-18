@@ -10,7 +10,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useThemePreference } from "@/hooks/use-theme-preference";
 
-import { formatAmount } from "@/utils/helpers";
+import { formatAmount, formatToMonthlyIncome } from "@/utils/helpers";
 import {
     getDebtNotificationsPreferenceAsync,
     REMINDER_HOUR,
@@ -132,7 +132,7 @@ export default function SettingsScreen() {
             }
             supabase
                 .from("incomes")
-                .select("amount")
+                .select("amount, frequency")
                 .eq("user_id", user.id)
                 .then(({ data, error }) => {
                     if (error || !Array.isArray(data)) {
@@ -141,7 +141,7 @@ export default function SettingsScreen() {
                         const total = data.reduce((sum, row) => {
                             const amt =
                                 typeof row.amount === "number" ? row.amount : Number.parseFloat(String(row.amount));
-                            return sum + (Number.isNaN(amt) ? 0 : amt);
+                            return sum + (Number.isNaN(amt) ? 0 : formatToMonthlyIncome(amt, row.frequency));
                         }, 0);
                         setMonthlyIncome(total);
                     }
