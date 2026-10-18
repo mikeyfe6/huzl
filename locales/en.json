@@ -296,7 +296,8 @@
         "subtitle": "Add your income sources to get a clear overview of your monthly income and expenses",
         "label": "Income Sources",
         "addSource": "Add Source",
-        "total": "Monthly total",
+        "monthlyTotal": "Monthly Total",
+        "yearlyTotal": "Yearly Total",
         "saved": "Saved",
         "savedMsg": "Income updated",
         "category": {

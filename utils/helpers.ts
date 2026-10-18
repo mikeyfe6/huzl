@@ -4,7 +4,10 @@
  * @returns Formatted string with 2 decimals and comma (e.g., "123,45")
  */
 export const formatAmount = (amount: number): string => {
-    return amount.toFixed(2).replace(".", ",");
+    return new Intl.NumberFormat("nl-NL", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(amount);
 };
 
 /**

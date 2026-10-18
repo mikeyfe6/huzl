@@ -495,8 +495,13 @@ export default function IncomeScreen() {
                     </Pressable>
 
                     <View style={styles.total}>
-                        <ThemedText>{t("income.total")}:</ThemedText>
+                        <ThemedText>{t("income.monthlyTotal")}:</ThemedText>
                         <ThemedText type="defaultSemiBold">{formatCurrency(total, currencySymbol)}</ThemedText>
+                    </View>
+
+                    <View style={styles.total}>
+                        <ThemedText>{t("income.yearlyTotal")}:</ThemedText>
+                        <ThemedText type="defaultSemiBold">{formatCurrency(total * 12, currencySymbol)}</ThemedText>
                     </View>
 
                     <ThemedView style={styles.buttons}>

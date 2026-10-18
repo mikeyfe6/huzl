@@ -296,7 +296,8 @@
         "subtitle": "Voeg je inkomstenbronnen toe om een duidelijk overzicht van je maandelijkse in- en uitgaven te krijgen",
         "label": "Inkomensbronnen",
         "addSource": "Bron toevoegen",
-        "total": "Maandelijks totaal",
+        "monthlyTotal": "Maandelijks totaal",
+        "yearlyTotal": "Jaarlijks totaal",
         "saved": "Opgeslagen",
         "savedMsg": "Inkomen bijgewerkt",
         "category": {
