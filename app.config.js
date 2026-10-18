@@ -34,6 +34,7 @@ export default {
             favicon: "./assets/images/favicon.png",
         },
         plugins: [
+            "./plugins/with-android-date-picker-color",
             [
                 "@react-native-firebase/app",
                 {
