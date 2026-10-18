@@ -184,7 +184,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             ...baseIcons,
         },
         itemIcon: {
-            ...baseIcon(theme),
+            ...baseIcon,
         },
         itemAmount: {
             ...baseFlex("space-between"),

@@ -163,6 +163,13 @@ declare global {
         id?: string;
         amount: string;
         frequency: IncomeFrequency;
+        variable: boolean;
+        tracking_started_at: string;
+    }
+
+    interface IncomePayment extends itemIdProp, itemAmountProp {
+        income_id: string;
+        received_at: string;
     }
 
     interface LanguageItem extends itemNameProp, itemCodeProp {

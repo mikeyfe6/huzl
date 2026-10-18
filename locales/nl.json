@@ -297,7 +297,24 @@
         "label": "Inkomensbronnen",
         "addSource": "Bron toevoegen",
         "monthlyTotal": "Maandelijks totaal",
+        "actualMonthlyTotal": "Deze maand ontvangen",
+        "monthlyAverage": "Gemiddeld per maand",
+        "variableIncome": "Wisselend inkomen",
+        "variableNoPayments": "[Nog geen betalingen]",
         "yearlyTotal": "Jaarlijks totaal",
+        "averagePeriod": "* Wisselend inkomen ingevoerd: gemiddelde vanaf de vroegste betaling, met maximaal 12 maanden historie",
+        "trackingStartsOn": "Gemiddelde berekend vanaf",
+        "trackingStartHelp": "Automatisch bepaald op basis van de vroegste geregistreerde betaling",
+        "paymentHistory": "Betalingshistorie",
+        "receivedAmount": "Ontvangen bedrag",
+        "receivedDate": "Ontvangstdatum",
+        "datePlaceholder": "Datum (DD-MM-JJJJ)",
+        "recordPayment": "Betaling toevoegen",
+        "editPayment": "Bewerk betaling",
+        "updatePayment": "Betaling wijzigen",
+        "noPayments": "Nog geen betalingen geregistreerd voor deze bron",
+        "saveSourceFirst": "Sla eerst een inkomensbron op om betalingen te registreren",
+        "deletePayment": "Verwijder betaling",
         "saved": "Opgeslagen",
         "savedMsg": "Inkomen bijgewerkt",
         "category": {
@@ -319,7 +336,9 @@
         },
         "error": {
             "invalidAmountTitle": "Ongeldig bedrag",
-            "invalidAmountMsg": "Voer een geldig, niet-negatief bedrag in"
+            "invalidAmountMsg": "Voer een geldig, niet-negatief bedrag in",
+            "invalidDateTitle": "Ongeldige datum",
+            "invalidDateMsg": "Vul een geldige datum in als DD-MM-JJJJ"
         }
     },
     "language": {

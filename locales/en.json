@@ -297,7 +297,25 @@
         "label": "Income Sources",
         "addSource": "Add Source",
         "monthlyTotal": "Monthly Total",
+        "actualMonthlyTotal": "Received This Month",
+        "monthlyAverage": "Monthly Average",
+        "variableIncome": "Variable income",
+        "sourceAverage": "Monthly average",
+        "variableNoPayments": "No payments yet",
         "yearlyTotal": "Yearly Total",
+        "averagePeriod": "Variable income: average from the earliest payment, using up to 12 months of history.",
+        "trackingStartsOn": "Average from",
+        "trackingStartHelp": "Automatically determined from the earliest recorded payment.",
+        "paymentHistory": "Payment History",
+        "receivedAmount": "Amount received",
+        "receivedDate": "Date received",
+        "datePlaceholder": "Date (YYYY-MM-DD)",
+        "recordPayment": "Add payment",
+        "editPayment": "Edit payment",
+        "updatePayment": "Update payment",
+        "noPayments": "No payments recorded for this source yet.",
+        "saveSourceFirst": "Save an income source before recording payments.",
+        "deletePayment": "Delete payment",
         "saved": "Saved",
         "savedMsg": "Income updated",
         "category": {
@@ -319,7 +337,9 @@
         },
         "error": {
             "invalidAmountTitle": "Invalid Amount",
-            "invalidAmountMsg": "Enter a valid, non-negative amount"
+            "invalidAmountMsg": "Enter a valid, non-negative amount",
+            "invalidDateTitle": "Invalid Date",
+            "invalidDateMsg": "Enter a valid date as YYYY-MM-DD"
         }
     },
     "language": {

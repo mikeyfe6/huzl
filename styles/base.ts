@@ -159,13 +159,13 @@ export const baseIcons = {
     ...baseSpace,
 };
 
-export const baseIcon = (theme: any) => ({
+export const baseIcon = {
     ...baseFlex("center", "center"),
     ...baseBorder,
     borderRadius: 6,
     width: 32,
     height: 32,
-});
+};
 
 export const baseOverlay = {
     ...baseCenter,
@@ -173,12 +173,12 @@ export const baseOverlay = {
     flex: 1,
 };
 
-export const baseModal = (theme: any) => ({
+export const baseModal = (theme: any, maxWidth = 450) => ({
     ...baseCorner,
     ...baseBorder,
     alignItems: "stretch" as const,
     width: "90%" as const,
-    maxWidth: 450,
+    maxWidth,
     backgroundColor: theme.background,
     borderColor: theme.borderColor,
     padding: 24,

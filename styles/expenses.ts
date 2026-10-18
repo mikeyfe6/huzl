@@ -261,7 +261,7 @@ export const getExpensesStyles = (theme: any) =>
             ...baseIcons,
         },
         expenseIcon: {
-            ...baseIcon(theme),
+            ...baseIcon,
         },
         expenseTotal: {
             ...baseFlex("space-between", "center"),

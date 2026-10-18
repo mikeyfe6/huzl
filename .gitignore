@@ -46,3 +46,6 @@ app-example
 # Firebase config files (contain sensitive API keys)
 firebase/google-services.json
 firebase/GoogleService-Info.plist
+
+# supabase
+/supabase/.temp/

@@ -223,7 +223,7 @@ export default function HelpdeskScreen() {
                     ...baseCard(theme),
                 },
                 icon: {
-                    ...baseIcon(theme),
+                    ...baseIcon,
                     borderColor: redColor,
                 },
                 itemContent: {

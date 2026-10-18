@@ -10,7 +10,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 import { useRefreshContext } from "@/hooks/use-refresh-context";
 
-import { formatToMonthlyIncome } from "@/utils/helpers";
+import { formatTotalMonthlyIncome } from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { ExternalLink } from "@/components/external-link";
@@ -247,17 +247,42 @@ export default function HomeScreen() {
 
             supabase
                 .from("incomes")
-                .select("amount, frequency")
+                .select("id, amount, frequency, active, variable, tracking_started_at")
                 .eq("user_id", user.id)
-                .then(({ data, error }) => {
+                .then(async ({ data, error }) => {
                     if (error || !Array.isArray(data)) {
                         setMonthlyIncome(null);
                     } else {
-                        const total = data.reduce((sum, row) => {
-                            const amt =
-                                typeof row.amount === "number" ? row.amount : Number.parseFloat(String(row.amount));
-                            return sum + (Number.isNaN(amt) ? 0 : formatToMonthlyIncome(amt, row.frequency));
-                        }, 0);
+                        const activeIncomes = data.filter((row) => row.active !== false);
+                        const incomeIds = activeIncomes.map((row) => row.id);
+                        const { data: payments, error: paymentsError } =
+                            incomeIds.length > 0 ?
+                                await supabase
+                                    .from("income_payments")
+                                    .select("income_id, amount, received_at")
+                                    .in("income_id", incomeIds)
+                            :   { data: [], error: null };
+
+                        if (paymentsError || !Array.isArray(payments)) {
+                            setMonthlyIncome(null);
+                            return;
+                        }
+
+                        const total = formatTotalMonthlyIncome(
+                            activeIncomes.map((row) => ({
+                                id: row.id,
+                                amount: Number(row.amount),
+                                frequency: row.frequency,
+                                active: row.active,
+                                variable: row.variable === true,
+                                tracking_started_at: row.tracking_started_at,
+                            })),
+                            payments.map((payment) => ({
+                                income_id: payment.income_id,
+                                amount: Number(payment.amount),
+                                received_at: payment.received_at,
+                            })),
+                        );
                         setMonthlyIncome(total);
                     }
                 });

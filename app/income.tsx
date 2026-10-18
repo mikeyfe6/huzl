@@ -1,39 +1,73 @@
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { formatCurrency, formatNumber, formatToMonthlyIncome, INCOME_FREQUENCIES } from "@/utils/helpers";
+import {
+    formatCurrency,
+    formatIncomeAverage,
+    formatNumber,
+    formatTotalMonthlyIncome,
+    INCOME_FREQUENCIES,
+} from "@/utils/helpers";
 import { supabase } from "@/utils/supabase";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AuthGate } from "@/components/ui/loading";
 
-import { Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor } from "@/constants/theme";
+import { blueColor, Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor } from "@/constants/theme";
 import {
+    baseBlank,
+    baseBlur,
     baseBorder,
     baseButton,
     baseButtonText,
     baseCenter,
     baseCorner,
+    baseFamily,
     baseFieldset,
     baseFlex,
     baseGap,
     baseGreen,
     baseIcon,
     baseInactive,
+    baseInput,
+    baseMedium,
+    baseModal,
     basePadding,
     baseRed,
     baseSemiBold,
     baseSize,
     baseSmall,
+    baseSpace,
 } from "@/styles/base";
+
+const currentDateOnly = (): string => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+};
+
+const hasInvalidFixedIncomeAmount = (sources: ReadonlyArray<IncomeSource>): boolean =>
+    sources.some((source) => {
+        if (source.active === false || source.variable) return false;
+
+        const amount = Number.parseFloat(formatNumber(source.amount));
+        return source.amount.trim() === "" || Number.isNaN(amount) || amount < 0;
+    });
+
+const toDateOnly = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
 
 function IncomeInput({ initialAmount, onAmountChange, onAmountBlur, placeholderColor, style }: IncomeInputProps) {
     const [localText, setLocalText] = useState(initialAmount);
@@ -70,6 +104,15 @@ export default function IncomeScreen() {
     const [originalSources, setOriginalSources] = useState<IncomeSource[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [payments, setPayments] = useState<IncomePayment[]>([]);
+    const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
+    const [paymentHistoryVisible, setPaymentHistoryVisible] = useState(false);
+    const [paymentAmount, setPaymentAmount] = useState("");
+    const [paymentDate, setPaymentDate] = useState(currentDateOnly());
+    const [showPaymentDatePicker, setShowPaymentDatePicker] = useState(false);
+    const [tempPaymentDate, setTempPaymentDate] = useState(new Date());
+    const [savingPayment, setSavingPayment] = useState(false);
+    const [editingPaymentId, setEditingPaymentId] = useState<string | null>(null);
 
     const incomeTypes = [
         { key: "salary", label: t("income.category.salary") },
@@ -81,7 +124,11 @@ export default function IncomeScreen() {
         { key: "other", label: t("income.category.other") },
     ];
 
-    const updateSource = (idx: number, field: "type" | "amount" | "frequency", value: string) => {
+    const updateSource = (
+        idx: number,
+        field: "type" | "amount" | "frequency" | "tracking_started_at",
+        value: string,
+    ) => {
         setSources((prev) =>
             prev.map((src, i) =>
                 i === idx ?
@@ -95,11 +142,45 @@ export default function IncomeScreen() {
     };
 
     const addSource = () => {
-        setSources((prev) => [...prev, { type: "salary", amount: "", frequency: "monthly", active: true }]);
+        setSources((prev) => [
+            ...prev,
+            {
+                type: "salary",
+                amount: "",
+                frequency: "monthly",
+                active: true,
+                variable: false,
+                tracking_started_at: currentDateOnly(),
+            },
+        ]);
     };
 
     const toggleActive = (idx: number) => {
         setSources((prev) => prev.map((src, i) => (i === idx ? { ...src, active: !src.active } : src)));
+    };
+
+    const toggleVariable = (idx: number) => {
+        setSources((prev) => prev.map((src, i) => (i === idx ? { ...src, variable: !src.variable } : src)));
+    };
+
+    const updateTrackedStartDate = (incomeId: string, incomePayments: ReadonlyArray<IncomePayment>) => {
+        const earliestPayment = incomePayments.reduce<string | null>(
+            (earliest, payment) =>
+                earliest === null || payment.received_at < earliest ? payment.received_at : earliest,
+            null,
+        );
+        const trackingStartedAt = earliestPayment ?? currentDateOnly();
+
+        setSources((previous) =>
+            previous.map((source) =>
+                source.id === incomeId ? { ...source, tracking_started_at: trackingStartedAt } : source,
+            ),
+        );
+        setOriginalSources((previous) =>
+            previous.map((source) =>
+                source.id === incomeId ? { ...source, tracking_started_at: trackingStartedAt } : source,
+            ),
+        );
     };
 
     const removeSource = async (idx: number) => {
@@ -120,6 +201,88 @@ export default function IncomeScreen() {
         }
 
         setSources((prev) => prev.filter((_, i) => i !== idx));
+        setPayments((prev) => prev.filter((payment) => payment.income_id !== src.id));
+        setSelectedSourceId((current) => (current === src.id ? null : current));
+    };
+
+    const handleAddPayment = async () => {
+        if (!user || !selectedSourceId) return;
+
+        const amount = Number.parseFloat(formatNumber(paymentAmount).trim());
+        const date = new Date(`${paymentDate}T12:00:00`);
+        const isValidDate =
+            /^\d{4}-\d{2}-\d{2}$/.test(paymentDate) &&
+            !Number.isNaN(date.getTime()) &&
+            `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` ===
+                paymentDate;
+
+        if (!Number.isFinite(amount) || amount < 0 || paymentAmount.trim() === "") {
+            Alert.alert(t("income.error.invalidAmountTitle"), t("income.error.invalidAmountMsg"));
+            return;
+        }
+
+        if (!isValidDate) {
+            Alert.alert(t("income.error.invalidDateTitle"), t("income.error.invalidDateMsg"));
+            return;
+        }
+
+        setSavingPayment(true);
+        const paymentRequest =
+            editingPaymentId ?
+                supabase
+                    .from("income_payments")
+                    .update({ amount, received_at: paymentDate })
+                    .eq("id", editingPaymentId)
+                    .select("id, income_id, amount, received_at")
+                    .single()
+            :   supabase
+                    .from("income_payments")
+                    .insert({ income_id: selectedSourceId, amount, received_at: paymentDate })
+                    .select("id, income_id, amount, received_at")
+                    .single();
+        const { data, error } = await paymentRequest;
+
+        if (error) {
+            Alert.alert("Error", error.message);
+        } else if (data) {
+            const updatedPayments =
+                editingPaymentId ?
+                    payments.map((payment) => (payment.id === editingPaymentId ? data : payment))
+                :   [...payments, data];
+            setPayments(updatedPayments);
+            updateTrackedStartDate(
+                selectedSourceId,
+                updatedPayments.filter((payment) => payment.income_id === selectedSourceId),
+            );
+            setEditingPaymentId(null);
+            setPaymentAmount("");
+            setPaymentDate(currentDateOnly());
+        }
+        setSavingPayment(false);
+    };
+
+    const cancelPaymentEdit = () => {
+        setEditingPaymentId(null);
+        setPaymentAmount("");
+        setPaymentDate(currentDateOnly());
+    };
+
+    const handleDeletePayment = async (payment: IncomePayment) => {
+        if (!user) return;
+
+        const { error } = await supabase.from("income_payments").delete().eq("id", payment.id);
+        if (error) {
+            Alert.alert("Error", error.message);
+            return;
+        }
+
+        const updatedPayments = payments.filter((item) => item.id !== payment.id);
+        setPayments(updatedPayments);
+        updateTrackedStartDate(
+            payment.income_id,
+            updatedPayments.filter((item) => item.income_id === payment.income_id),
+        );
+        if (editingPaymentId === payment.id) cancelPaymentEdit();
     };
 
     const normalizeAmountOnBlur = (idx: number, value: string) => {
@@ -152,7 +315,14 @@ export default function IncomeScreen() {
 
             if (!b) return true;
 
-            if (a.type !== b.type || a.amount !== b.amount || a.active !== b.active || a.frequency !== b.frequency)
+            if (
+                a.type !== b.type ||
+                a.amount !== b.amount ||
+                a.active !== b.active ||
+                a.frequency !== b.frequency ||
+                a.variable !== b.variable ||
+                a.tracking_started_at !== b.tracking_started_at
+            )
                 return true;
         }
 
@@ -167,6 +337,8 @@ export default function IncomeScreen() {
         if (activeSources.length === 0) return true;
 
         for (const src of activeSources) {
+            if (src.variable) continue;
+
             const parsed = Number.parseFloat(formatNumber(src.amount));
 
             if (src.amount.trim() === "" || Number.isNaN(parsed) || parsed < 0) {
@@ -177,26 +349,46 @@ export default function IncomeScreen() {
         return false;
     }, [saving, hasIncomeChanges, sources]);
 
-    const total = sources.reduce((sum, src) => {
-        if (src.active === false) return sum;
+    const total = formatTotalMonthlyIncome(
+        sources.map((source) => ({
+            ...source,
+            amount: Number.parseFloat(formatNumber(source.amount)),
+        })),
+        payments,
+    );
+    const hasActiveVariableIncome = sources.some((source) => source.active !== false && source.variable);
 
-        const parsed = Number.parseFloat(formatNumber(src.amount));
+    const activeSourceIds = new Set(sources.filter((source) => source.active !== false).map((source) => source.id));
+    const currentMonth = currentDateOnly().slice(0, 7);
+    const receivedThisMonth = payments
+        .filter((payment) => activeSourceIds.has(payment.income_id) && payment.received_at.slice(0, 7) === currentMonth)
+        .reduce((sum, payment) => sum + payment.amount, 0);
+    const selectedPayments = payments
+        .filter((payment) => payment.income_id === selectedSourceId)
+        .sort((left, right) => right.received_at.localeCompare(left.received_at));
+    const selectedSource = sources.find((source) => source.id === selectedSourceId);
+    const getSourceAverage = (source: IncomeSource) => {
+        const parsedAmount = Number.parseFloat(formatNumber(source.amount));
+        const sourcePayments = source.id ? payments.filter((payment) => payment.income_id === source.id) : [];
 
-        return sum + (Number.isNaN(parsed) ? 0 : formatToMonthlyIncome(parsed, src.frequency));
-    }, 0);
+        return formatIncomeAverage(
+            Number.isFinite(parsedAmount) ? parsedAmount : 0,
+            source.frequency,
+            sourcePayments,
+            new Date(),
+            source.variable,
+            source.tracking_started_at,
+        );
+    };
+    const paymentSubmitLabel = editingPaymentId ? t("income.updatePayment") : t("income.recordPayment");
+    const paymentActionText = savingPayment ? t("common.saving") : paymentSubmitLabel;
 
     const handleSave = async () => {
         if (!user) return;
 
-        for (const src of sources) {
-            if (src.active === false) continue;
-
-            const parsed = Number.parseFloat(formatNumber(src.amount));
-
-            if (src.amount.trim() === "" || Number.isNaN(parsed) || parsed < 0) {
-                Alert.alert(t("income.error.invalidAmountTitle"), t("income.error.invalidAmountMsg"));
-                return;
-            }
+        if (hasInvalidFixedIncomeAmount(sources)) {
+            Alert.alert(t("income.error.invalidAmountTitle"), t("income.error.invalidAmountMsg"));
+            return;
         }
 
         setSaving(true);
@@ -210,9 +402,11 @@ export default function IncomeScreen() {
                     .from("incomes")
                     .update({
                         type: src.type,
-                        amount: Number.parseFloat(formatNumber(src.amount)),
+                        amount: Number.parseFloat(formatNumber(src.amount)) || 0,
                         frequency: src.frequency,
                         active: src.active !== false,
+                        variable: src.variable,
+                        tracking_started_at: src.tracking_started_at,
                     })
                     .eq("id", src.id)
                     .eq("user_id", user.id);
@@ -228,9 +422,11 @@ export default function IncomeScreen() {
                     inserts.map((src) => ({
                         user_id: user.id,
                         type: src.type,
-                        amount: Number.parseFloat(formatNumber(src.amount)),
+                        amount: Number.parseFloat(formatNumber(src.amount)) || 0,
                         frequency: src.frequency,
                         active: src.active !== false,
+                        variable: src.variable,
+                        tracking_started_at: src.tracking_started_at,
                     })),
                 );
 
@@ -240,7 +436,32 @@ export default function IncomeScreen() {
                 }
             }
 
-            setOriginalSources(sources);
+            const { data: savedData, error: savedError } = await supabase
+                .from("incomes")
+                .select("id, type, amount, frequency, active, variable, tracking_started_at")
+                .eq("user_id", user.id);
+
+            if (savedError) {
+                Alert.alert("Error", savedError.message);
+                return;
+            }
+
+            const savedSources: IncomeSource[] = (savedData ?? []).map((row) => ({
+                id: row.id,
+                type: row.type,
+                amount: formatAmountForInput(row.amount),
+                frequency: (row.frequency ?? "monthly") as IncomeFrequency,
+                active: row.active !== false,
+                variable: row.variable === true,
+                tracking_started_at: row.tracking_started_at ?? currentDateOnly(),
+            }));
+            setSources(savedSources);
+            setOriginalSources(savedSources);
+            setSelectedSourceId((current) =>
+                current && savedSources.some((source) => source.id === current) ?
+                    current
+                :   (savedSources[0]?.id ?? null),
+            );
 
             Alert.alert(t("income.saved"), t("income.savedMsg"));
         } catch (e) {
@@ -256,32 +477,59 @@ export default function IncomeScreen() {
 
         setLoading(true);
 
-        supabase
-            .from("incomes")
-            .select("id, type, amount, frequency, active")
-            .eq("user_id", user.id)
-            .then(({ data, error }) => {
-                let mappedSources: IncomeSource[];
+        const loadIncome = async () => {
+            const { data, error } = await supabase
+                .from("incomes")
+                .select("id, type, amount, frequency, active, variable, tracking_started_at")
+                .eq("user_id", user.id);
+            let mappedSources: IncomeSource[];
 
-                if (error) {
-                    Alert.alert("Error", error.message);
-                    mappedSources = [];
-                } else if (data && data.length > 0) {
-                    mappedSources = data.map((row) => ({
-                        id: row.id,
-                        type: row.type,
-                        amount: formatAmountForInput(row.amount),
-                        frequency: (row.frequency ?? "monthly") as IncomeFrequency,
-                        active: row.active !== false,
-                    }));
-                } else {
-                    mappedSources = [{ type: "salary", amount: "", frequency: "monthly", active: true }];
-                }
+            if (error) {
+                Alert.alert("Error", error.message);
+                mappedSources = [];
+            } else if (data && data.length > 0) {
+                mappedSources = data.map((row) => ({
+                    id: row.id,
+                    type: row.type,
+                    amount: formatAmountForInput(row.amount),
+                    frequency: (row.frequency ?? "monthly") as IncomeFrequency,
+                    active: row.active !== false,
+                    variable: row.variable === true,
+                    tracking_started_at: row.tracking_started_at ?? currentDateOnly(),
+                }));
+            } else {
+                mappedSources = [
+                    {
+                        type: "salary",
+                        amount: "",
+                        frequency: "monthly",
+                        active: true,
+                        variable: false,
+                        tracking_started_at: currentDateOnly(),
+                    },
+                ];
+            }
 
-                setSources(mappedSources);
-                setOriginalSources(mappedSources);
-                setLoading(false);
-            });
+            setSources(mappedSources);
+            setOriginalSources(mappedSources);
+            setSelectedSourceId(mappedSources.find((source) => source.id)?.id ?? null);
+
+            const { data: paymentData, error: paymentError } = await supabase
+                .from("income_payments")
+                .select("id, income_id, amount, received_at")
+                .order("received_at", { ascending: false });
+
+            if (paymentError) {
+                Alert.alert("Error", paymentError.message);
+                setPayments([]);
+            } else {
+                setPayments(paymentData ?? []);
+            }
+
+            setLoading(false);
+        };
+
+        void loadIncome();
     }, [user]);
 
     const styles = useMemo(
@@ -314,27 +562,42 @@ export default function IncomeScreen() {
                     borderColor: theme.inputBorder,
                     borderRadius: 6,
                 },
-                icons: {
-                    ...baseGap,
-                    ...baseCenter,
-                    flexDirection: "column",
-                    marginLeft: 16,
+                amountRow: {
+                    ...baseFlex("space-between", "center"),
+                    flexWrap: "wrap",
+                    marginBottom: 8,
+                    paddingVertical: 6,
                 },
-                icon: {
-                    ...baseIcon(theme),
+                variableAverage: {
+                    ...baseFlex("flex-start", "center"),
+                    ...baseBlank,
+                    minWidth: 150,
                 },
                 input: {
                     ...baseSize,
                     ...baseSemiBold,
                     color: theme.text,
-                    padding: 6,
-                    marginBottom: 4,
                     outlineWidth: 0,
+                },
+                amountInput: {
+                    flex: 1,
+                },
+                variableToggle: {
+                    ...baseFlex("center", "center"),
+                    ...baseBlank,
+                },
+                variableLabel: {
+                    ...baseSmall,
                 },
                 category: {
                     borderTopWidth: StyleSheet.hairlineWidth,
                     borderTopColor: theme.inputBorder,
                     paddingVertical: 10,
+                },
+                frequency: {
+                    borderTopWidth: StyleSheet.hairlineWidth,
+                    borderTopColor: theme.inputBorder,
+                    paddingTop: 10,
                 },
                 type: {
                     ...baseBorder,
@@ -344,13 +607,22 @@ export default function IncomeScreen() {
                     borderColor: theme.inputBorder,
                 },
                 typeText: { ...baseSmall },
-                frequency: {
-                    borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: theme.inputBorder,
-                    paddingTop: 10,
-                    paddingBottom: 4,
+                icons: {
+                    ...baseGap,
+                    ...baseCenter,
+                    flexDirection: "column",
+                    marginLeft: 16,
                 },
-                add: { marginTop: 8, marginBottom: 6, padding: 4 },
+                icon: {
+                    ...baseIcon,
+                },
+                add: {
+                    ...baseFlex("flex-start", "center"),
+                    alignSelf: "flex-start",
+                    marginTop: 8,
+                    marginBottom: 6,
+                    padding: 4,
+                },
                 addText: {
                     ...baseSemiBold,
                     color: greenColor,
@@ -361,7 +633,11 @@ export default function IncomeScreen() {
                     fontSize: 18,
                     backgroundColor: theme.cardBackground,
                     padding: 16,
-                    marginTop: 4,
+                },
+                totalAverage: {
+                    ...baseSmall,
+                    color: blueColor,
+                    marginLeft: 2,
                 },
                 buttons: {
                     ...baseFlex("center", "center"),
@@ -382,6 +658,80 @@ export default function IncomeScreen() {
                 closeButtonText: {
                     ...baseButtonText,
                 },
+                overlay: {
+                    ...baseFlex("center", "center"),
+                    ...baseBlur,
+                    flex: 1,
+                },
+                modal: {
+                    ...baseModal(theme, 550),
+                    maxHeight: "75%",
+                },
+                header: {
+                    ...baseFlex("space-between", "center"),
+                    marginBottom: 12,
+                },
+                paymentInput: {
+                    ...baseInput(theme),
+                    ...basePadding,
+                    marginBottom: 12,
+                },
+                dateInput: {
+                    ...baseInput(theme),
+                    ...baseFamily,
+                    borderStyle: "solid",
+                    paddingLeft: 12,
+                    paddingRight: 12,
+                    height: 44,
+                    flex: 1,
+                },
+                paymentList: {
+                    marginVertical: 16,
+                },
+                noPayments: {
+                    ...baseSmall,
+                    textAlign: "center",
+                    color: redColor,
+                },
+                paymentRow: {
+                    ...baseFlex("space-between", "center"),
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: theme.inputBorder,
+                    paddingVertical: 10,
+                },
+                paymentAmountIcons: {
+                    ...baseFlex("center", "center"),
+                    ...baseSpace,
+                },
+                paymentAmount: {
+                    marginRight: 8,
+                },
+                averageText: {
+                    ...baseMedium,
+                    ...baseSmall,
+                    marginTop: 8,
+                },
+                averageDescription: {
+                    ...baseSmall,
+                    marginTop: 4,
+                    color: silverColor,
+                },
+                datePicker: {
+                    ...baseCorner,
+                    ...baseCenter,
+                    backgroundColor: theme.inputBackground,
+                    margin: 24,
+                    padding: 16,
+                    height: 300,
+                },
+                paymentActions: {
+                    ...baseFlex("center", "center"),
+                    ...baseGap,
+                    marginTop: 8,
+                },
+                paymentAction: {
+                    flex: 1,
+                },
             }),
         [theme],
     );
@@ -400,13 +750,44 @@ export default function IncomeScreen() {
                     :   sources.map((src, idx) => (
                             <View key={src.id ?? idx} style={styles.wrapper}>
                                 <View style={[styles.item, !src.active && baseInactive]}>
-                                    <IncomeInput
-                                        style={styles.input}
-                                        initialAmount={src.amount}
-                                        placeholderColor={theme.placeholder}
-                                        onAmountChange={(text) => updateSource(idx, "amount", text)}
-                                        onAmountBlur={(value) => normalizeAmountOnBlur(idx, value)}
-                                    />
+                                    <View style={styles.amountRow}>
+                                        {src.variable ?
+                                            <View
+                                                style={styles.variableAverage}
+                                                accessible
+                                                accessibilityLabel={t("income.monthlyAverage")}
+                                            >
+                                                <Ionicons name="analytics" size={18} color={linkColor} />
+                                                <ThemedText style={[styles.input, styles.amountInput]}>
+                                                    {getSourceAverage(src).paymentCount > 0 ?
+                                                        formatCurrency(getSourceAverage(src).amount, currencySymbol)
+                                                    :   t("income.variableNoPayments")}
+                                                </ThemedText>
+                                            </View>
+                                        :   <IncomeInput
+                                                style={[styles.input, styles.amountInput]}
+                                                initialAmount={src.amount}
+                                                placeholderColor={theme.placeholder}
+                                                onAmountChange={(text) => updateSource(idx, "amount", text)}
+                                                onAmountBlur={(value) => normalizeAmountOnBlur(idx, value)}
+                                            />
+                                        }
+                                        <Pressable
+                                            style={styles.variableToggle}
+                                            onPress={() => toggleVariable(idx)}
+                                            accessibilityRole="checkbox"
+                                            accessibilityState={{ checked: src.variable }}
+                                        >
+                                            <Ionicons
+                                                name={src.variable ? "checkbox" : "square-outline"}
+                                                size={20}
+                                                color={src.variable ? linkColor : mediumGreyColor}
+                                            />
+                                            <ThemedText style={styles.variableLabel}>
+                                                {t("income.variableIncome")}
+                                            </ThemedText>
+                                        </Pressable>
+                                    </View>
 
                                     <FlatList
                                         data={incomeTypes}
@@ -477,6 +858,20 @@ export default function IncomeScreen() {
                                         />
                                     </Pressable>
 
+                                    {src.variable && (
+                                        <Pressable
+                                            onPress={() => {
+                                                setSelectedSourceId(src.id ?? null);
+                                                setPaymentHistoryVisible(true);
+                                            }}
+                                            style={[styles.icon, { borderColor: blueColor }]}
+                                            accessibilityRole="button"
+                                            accessibilityLabel={t("income.paymentHistory")}
+                                        >
+                                            <Ionicons name="cash-outline" size={16} color={blueColor} />
+                                        </Pressable>
+                                    )}
+
                                     {sources.length > 1 && (
                                         <Pressable
                                             onPress={() => removeSource(idx)}
@@ -494,10 +889,26 @@ export default function IncomeScreen() {
                         <ThemedText style={styles.addText}>+ {t("income.addSource")}</ThemedText>
                     </Pressable>
 
-                    <View style={styles.total}>
-                        <ThemedText>{t("income.monthlyTotal")}:</ThemedText>
-                        <ThemedText type="defaultSemiBold">{formatCurrency(total, currencySymbol)}</ThemedText>
-                    </View>
+                    {hasActiveVariableIncome ?
+                        <>
+                            <View style={styles.total}>
+                                <ThemedText>{t("income.actualMonthlyTotal")}:</ThemedText>
+                                <ThemedText type="defaultSemiBold">
+                                    {formatCurrency(receivedThisMonth, currencySymbol)}
+                                </ThemedText>
+                            </View>
+
+                            <View style={styles.total}>
+                                <ThemedText>{t("income.monthlyAverage")}:</ThemedText>
+                                <ThemedText type="defaultSemiBold">{formatCurrency(total, currencySymbol)}</ThemedText>
+                            </View>
+                            <ThemedText style={styles.totalAverage}>{t("income.averagePeriod")}</ThemedText>
+                        </>
+                    :   <View style={styles.total}>
+                            <ThemedText>{t("income.monthlyTotal")}:</ThemedText>
+                            <ThemedText type="defaultSemiBold">{formatCurrency(total, currencySymbol)}</ThemedText>
+                        </View>
+                    }
 
                     <View style={styles.total}>
                         <ThemedText>{t("income.yearlyTotal")}:</ThemedText>
@@ -521,6 +932,195 @@ export default function IncomeScreen() {
                     </ThemedView>
                 </ThemedView>
             </ScrollView>
+            <Modal
+                transparent
+                animationType="fade"
+                visible={paymentHistoryVisible}
+                onRequestClose={() => setPaymentHistoryVisible(false)}
+            >
+                <View style={styles.overlay}>
+                    <View style={styles.modal}>
+                        <View style={styles.header}>
+                            <ThemedText type="defaultSemiBold">
+                                {selectedSource ?
+                                    `${t("income.category." + selectedSource.type)} · ${t("income.frequency." + selectedSource.frequency)}`
+                                :   t("income.paymentHistory")}
+                            </ThemedText>
+                            <Pressable
+                                onPress={() => setPaymentHistoryVisible(false)}
+                                style={[styles.icon, { borderColor: redColor }]}
+                                accessibilityRole="button"
+                                accessibilityLabel={t("common.close")}
+                            >
+                                <Ionicons name="close" size={18} color={redColor} />
+                            </Pressable>
+                        </View>
+                        <ScrollView style={{ flexGrow: 0, flexShrink: 1 }} keyboardShouldPersistTaps="handled">
+                            {selectedSource?.id ?
+                                <>
+                                    <TextInput
+                                        style={styles.paymentInput}
+                                        value={paymentAmount}
+                                        placeholder={t("income.receivedAmount")}
+                                        placeholderTextColor={theme.placeholder}
+                                        keyboardType="decimal-pad"
+                                        onChangeText={setPaymentAmount}
+                                        accessibilityLabel={t("income.receivedAmount")}
+                                    />
+                                    {Platform.OS === "web" ?
+                                        <input
+                                            type="date"
+                                            value={paymentDate}
+                                            onChange={(event) => setPaymentDate(event.currentTarget.value)}
+                                            aria-label={t("income.receivedDate")}
+                                            style={styles.dateInput}
+                                        />
+                                    :   <Pressable
+                                            style={styles.paymentInput}
+                                            onPress={() => {
+                                                const date = new Date(`${paymentDate}T12:00:00`);
+                                                setTempPaymentDate(Number.isNaN(date.getTime()) ? new Date() : date);
+                                                setShowPaymentDatePicker(true);
+                                            }}
+                                            accessibilityRole="button"
+                                            accessibilityLabel={t("income.receivedDate")}
+                                        >
+                                            <ThemedText>
+                                                {new Date(`${paymentDate}T12:00:00`).toLocaleDateString(t("seo.lang"))}
+                                            </ThemedText>
+                                        </Pressable>
+                                    }
+                                    {Platform.OS === "android" && showPaymentDatePicker && (
+                                        <DateTimePicker
+                                            value={tempPaymentDate}
+                                            mode="date"
+                                            display="default"
+                                            onValueChange={(_, date) => {
+                                                setShowPaymentDatePicker(false);
+                                                if (date) setPaymentDate(toDateOnly(date));
+                                            }}
+                                            onDismiss={() => setShowPaymentDatePicker(false)}
+                                        />
+                                    )}
+                                    <View style={styles.buttons}>
+                                        <Pressable
+                                            style={[
+                                                styles.saveButton,
+                                                styles.paymentAction,
+                                                savingPayment && baseInactive,
+                                            ]}
+                                            disabled={savingPayment || paymentAmount.trim() === ""}
+                                            onPress={handleAddPayment}
+                                        >
+                                            <ThemedText style={styles.saveButtonText}>{paymentActionText}</ThemedText>
+                                        </Pressable>
+                                        {editingPaymentId && (
+                                            <Pressable
+                                                style={[styles.closeButton, styles.paymentAction]}
+                                                disabled={savingPayment}
+                                                onPress={cancelPaymentEdit}
+                                            >
+                                                <ThemedText style={styles.closeButtonText}>
+                                                    {t("common.cancel")}
+                                                </ThemedText>
+                                            </Pressable>
+                                        )}
+                                    </View>
+
+                                    <View style={styles.paymentList}>
+                                        {selectedPayments.length === 0 ?
+                                            <ThemedText style={styles.noPayments}>{t("income.noPayments")}</ThemedText>
+                                        :   selectedPayments.map((payment) => (
+                                                <View key={payment.id} style={styles.paymentRow}>
+                                                    <ThemedText>
+                                                        {new Date(`${payment.received_at}T12:00:00`).toLocaleDateString(
+                                                            t("seo.lang"),
+                                                        )}
+                                                    </ThemedText>
+                                                    <View style={styles.paymentAmountIcons}>
+                                                        <ThemedText type="defaultSemiBold" style={styles.paymentAmount}>
+                                                            {formatCurrency(payment.amount, currencySymbol)}
+                                                        </ThemedText>
+                                                        <Pressable
+                                                            onPress={() => {
+                                                                setEditingPaymentId(payment.id);
+                                                                setPaymentAmount(payment.amount.toFixed(2));
+                                                                setPaymentDate(payment.received_at);
+                                                            }}
+                                                            accessibilityRole="button"
+                                                            accessibilityLabel={t("income.editPayment")}
+                                                            style={[styles.icon, { borderColor: mediumGreyColor }]}
+                                                        >
+                                                            <Ionicons name="pencil" size={16} color={mediumGreyColor} />
+                                                        </Pressable>
+                                                        <Pressable
+                                                            onPress={() => void handleDeletePayment(payment)}
+                                                            accessibilityRole="button"
+                                                            accessibilityLabel={t("income.deletePayment")}
+                                                            style={[styles.icon, { borderColor: redColor }]}
+                                                        >
+                                                            <Ionicons name="trash" size={16} color={redColor} />
+                                                        </Pressable>
+                                                    </View>
+                                                </View>
+                                            ))
+                                        }
+                                    </View>
+                                    {selectedPayments.length > 0 && (
+                                        <>
+                                            <ThemedText style={styles.averageText}>
+                                                {t("income.trackingStartsOn")}:{" "}
+                                                {new Date(
+                                                    `${selectedSource.tracking_started_at}T12:00:00`,
+                                                ).toLocaleDateString(t("seo.lang"))}
+                                            </ThemedText>
+                                            <ThemedText style={styles.averageDescription}>
+                                                {t("income.trackingStartHelp")}
+                                            </ThemedText>
+                                        </>
+                                    )}
+                                </>
+                            :   <ThemedText style={styles.averageText}>{t("income.saveSourceFirst")}</ThemedText>}
+                        </ScrollView>
+                    </View>
+                </View>
+            </Modal>
+            {Platform.OS === "ios" && (
+                <Modal
+                    transparent
+                    animationType="fade"
+                    visible={showPaymentDatePicker}
+                    onRequestClose={() => setShowPaymentDatePicker(false)}
+                >
+                    <View style={styles.overlay}>
+                        <View style={styles.datePicker}>
+                            <DateTimePicker
+                                value={tempPaymentDate}
+                                mode="date"
+                                display="spinner"
+                                onValueChange={(_, date) => date && setTempPaymentDate(date)}
+                            />
+                            <View style={styles.paymentActions}>
+                                <Pressable
+                                    style={[styles.closeButton, styles.paymentAction]}
+                                    onPress={() => setShowPaymentDatePicker(false)}
+                                >
+                                    <ThemedText style={styles.closeButtonText}>{t("common.cancel")}</ThemedText>
+                                </Pressable>
+                                <Pressable
+                                    style={[styles.saveButton, styles.paymentAction]}
+                                    onPress={() => {
+                                        setPaymentDate(toDateOnly(tempPaymentDate));
+                                        setShowPaymentDatePicker(false);
+                                    }}
+                                >
+                                    <ThemedText style={styles.saveButtonText}>{t("common.save")}</ThemedText>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+            )}
         </AuthGate>
     );
 }

@@ -76,7 +76,7 @@ export const getBudgetsStyles = (theme: any) =>
             ...baseIcons,
         },
         budgetIcon: {
-            ...baseIcon(theme),
+            ...baseIcon,
         },
         progressBar: {
             height: 8,
