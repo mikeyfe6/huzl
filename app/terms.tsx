@@ -67,7 +67,7 @@ export default function TermsScreen() {
                     <meta name="robots" content="index, follow" />
                 </Head>
             )}
-            <ScrollView contentContainerStyle={styles.content}>
+            <ScrollView contentContainerStyle={styles.content} contentInsetAdjustmentBehavior="automatic">
                 <ThemedText type="title" style={styles.title}>
                     {t("terms.title")}
                 </ThemedText>

@@ -265,7 +265,7 @@
         "notSet": "Not Set"
     },
     "password": {
-        "title": "Change Password",
+        "title": "Change password",
         "placeholder": {
             "newPassword": "New Password",
             "confirmPassword": "Confirm New Password"

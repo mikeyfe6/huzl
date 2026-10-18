@@ -246,7 +246,7 @@ export default function HelpdeskScreen() {
     );
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} contentInsetAdjustmentBehavior="automatic">
             <ThemedView style={styles.fieldset}>
                 <ThemedText type="title" style={styles.heading}>
                     {t("helpdesk.title")}

@@ -6,7 +6,7 @@ import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { ThemedText } from "@/components/themed-text";
 
 import { linkColor } from "@/constants/theme";
-import { baseBlur, baseBorder, baseCorner, baseFlex, baseHorizontal, baseOutline, baseSpace } from "@/styles/base";
+import { baseBlur, baseBorder, baseCorner, baseFlex, baseHorizontal, baseSpace } from "@/styles/base";
 
 export const SORT_OPTIONS = [
     {
@@ -79,7 +79,6 @@ export function SortExpensesModal({ visible, sortOption, onSelect, onClose, them
                 },
                 item: {
                     ...baseFlex("space-between", "center"),
-                    ...baseOutline(theme),
                     ...baseHorizontal,
                     paddingVertical: 12,
                 },
@@ -93,7 +92,6 @@ export function SortExpensesModal({ visible, sortOption, onSelect, onClose, them
                 },
                 cancel: {
                     ...baseFlex("center"),
-                    ...baseOutline(theme),
                     ...baseHorizontal,
                     paddingVertical: 12,
                 },

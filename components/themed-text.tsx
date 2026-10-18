@@ -8,7 +8,17 @@ import { baseBold, baseSize } from "@/styles/base";
 export type ThemedTextProps = TextProps & {
     lightColor?: string;
     darkColor?: string;
-    type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link" | "danger" | "label" | "logo" | "app";
+    type?:
+        | "default"
+        | "title"
+        | "defaultSemiBold"
+        | "subtitle"
+        | "link"
+        | "link-danger"
+        | "danger"
+        | "label"
+        | "logo"
+        | "app";
 };
 
 export function ThemedText({ style, lightColor, darkColor, type = "default", ...rest }: ThemedTextProps) {
@@ -23,6 +33,7 @@ export function ThemedText({ style, lightColor, darkColor, type = "default", ...
                 type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
                 type === "subtitle" ? styles.subtitle : undefined,
                 type === "link" ? styles.link : undefined,
+                type === "link-danger" ? styles.linkDanger : undefined,
                 type === "app" ? styles.app : undefined,
                 type === "danger" ? styles.danger : undefined,
                 type === "label" ? styles.label : undefined,
@@ -57,6 +68,12 @@ const styles = StyleSheet.create({
         ...baseSize,
         lineHeight: 30,
         color: linkColor,
+        textDecorationLine: "underline",
+    },
+    linkDanger: {
+        ...baseSize,
+        lineHeight: 30,
+        color: redColor,
         textDecorationLine: "underline",
     },
     app: {

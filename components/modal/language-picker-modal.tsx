@@ -17,7 +17,6 @@ import {
     baseHorizontal,
     baseLarge,
     baseMini,
-    baseOutline,
     baseSemiBold,
     baseSize,
     baseVertical,
@@ -76,7 +75,6 @@ export function LanguagePickerModal({ visible, onClose, theme }: Readonly<Langua
                 },
                 languageItem: {
                     ...baseFlex("space-between", "center"),
-                    ...baseOutline(theme),
                     ...baseCorner,
                     ...baseHorizontal,
                     ...baseVertical,
@@ -114,7 +112,7 @@ export function LanguagePickerModal({ visible, onClose, theme }: Readonly<Langua
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("language.title")}</ThemedText>
-                    <Pressable onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
+                    <Pressable onPress={onClose} disabled={saving}>
                         <ThemedText type="danger">{t("common.close")}</ThemedText>
                     </Pressable>
                 </ThemedView>

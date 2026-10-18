@@ -28,7 +28,7 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AuthGate } from "@/components/ui/loading";
 
-import { HUZL_APP_STORE_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
+import { HUZL_APP_STORE_URL, HUZL_MENEFEX_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
 import { Colors, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
 import {
     baseBlank,
@@ -41,7 +41,7 @@ import {
     baseGreen,
     baseInactive,
     baseInput,
-    baseOutline,
+    baseMedium,
     basePadding,
     baseSemiBold,
     baseSmall,
@@ -168,7 +168,6 @@ export default function SettingsScreen() {
                     color: silverColor,
                 },
                 settingItem: {
-                    ...baseOutline(theme),
                     paddingTop: 12,
                     paddingBottom: 20,
                     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -268,6 +267,14 @@ export default function SettingsScreen() {
                 },
                 linkText: {
                     ...baseSmall,
+                },
+                poweredBy: {
+                    marginTop: 24,
+                },
+                poweredByText: {
+                    ...baseMedium,
+                    fontSize: 12,
+                    color: mediumGreyColor,
                 },
                 logOutButton: {
                     ...baseButton(theme),
@@ -471,7 +478,7 @@ export default function SettingsScreen() {
                         </ThemedText>
                         <ThemedView style={[styles.settingItem]}>
                             <ThemedText style={styles.settingLabel}>{t("settings.label.helpdesk")}</ThemedText>
-                            <Pressable onPress={() => router.push("/helpdesk")} style={{ ...baseOutline(theme) }}>
+                            <Pressable onPress={() => router.push("/helpdesk")}>
                                 <View style={styles.settingBox}>
                                     <ThemedText style={[styles.settingLabel, styles.settingLink]}>
                                         {t("settings.link.submitTicket")}
@@ -509,7 +516,7 @@ export default function SettingsScreen() {
                             </View>
                         )}
                         <View style={styles.linksWrapper}>
-                            <Link href="/terms" asChild style={{ ...baseOutline(theme) }}>
+                            <Link href="/terms" asChild>
                                 <Pressable>
                                     <ThemedText type="link" style={styles.linkText}>
                                         {t("settings.link.terms")}
@@ -517,7 +524,7 @@ export default function SettingsScreen() {
                                 </Pressable>
                             </Link>
                             <ThemedText type="label">•</ThemedText>
-                            <Link href="/privacy" asChild style={{ ...baseOutline(theme) }}>
+                            <Link href="/privacy" asChild>
                                 <Pressable>
                                     <ThemedText type="link" style={styles.linkText}>
                                         {t("settings.link.privacy")}
@@ -526,16 +533,18 @@ export default function SettingsScreen() {
                             </Link>
                         </View>
                         <View style={styles.linksWrapper}>
-                            <Pressable
-                                onPress={() => setTerminateAccountVisible(true)}
-                                style={{ ...baseOutline(theme) }}
-                            >
-                                <ThemedText type="link" style={styles.linkText}>
+                            <Pressable onPress={() => setTerminateAccountVisible(true)}>
+                                <ThemedText type="link-danger" style={styles.linkText}>
                                     {user?.user_metadata?.deleteRequested ?
                                         t("settings.link.undoTermination")
                                     :   t("settings.link.terminateAccount")}
                                 </ThemedText>
                             </Pressable>
+                        </View>
+                        <View style={styles.poweredBy}>
+                            <ExternalLink href={HUZL_MENEFEX_URL} theme={theme}>
+                                <ThemedText style={styles.poweredByText}>{t("common.poweredBy")} </ThemedText>
+                            </ExternalLink>
                         </View>
                     </ThemedView>
 

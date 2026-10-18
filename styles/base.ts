@@ -83,7 +83,6 @@ export const basePadding = {
 
 export const baseButton = (theme: any, flex?: number | undefined) => ({
     ...baseFlex("center", "center"),
-    ...baseOutline(theme),
     ...baseRadius,
     ...baseBorder,
     ...baseHeight,
@@ -162,7 +161,6 @@ export const baseIcons = {
 
 export const baseIcon = (theme: any) => ({
     ...baseFlex("center", "center"),
-    ...baseOutline(theme),
     ...baseBorder,
     borderRadius: 6,
     width: 32,

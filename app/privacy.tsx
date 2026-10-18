@@ -67,7 +67,7 @@ export default function PrivacyScreen() {
                     <meta name="robots" content="index, follow" />
                 </Head>
             )}
-            <ScrollView contentContainerStyle={styles.content}>
+            <ScrollView contentContainerStyle={styles.content} contentInsetAdjustmentBehavior="automatic">
                 <ThemedText type="title" style={styles.title}>
                     {t("privacy.title")}
                 </ThemedText>

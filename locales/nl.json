@@ -265,7 +265,7 @@
         "notSet": "Niet ingesteld"
     },
     "password": {
-        "title": "Wachtwoord Wijzigen",
+        "title": "Wachtwoord wijzigen",
         "placeholder": {
             "newPassword": "Nieuw wachtwoord",
             "confirmPassword": "Bevestig nieuw wachtwoord"

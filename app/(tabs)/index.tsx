@@ -44,7 +44,6 @@ import {
     baseLarge,
     baseMedium,
     baseMini,
-    baseOutline,
     basePadding,
     baseSemiBold,
     baseSmall,
@@ -350,7 +349,6 @@ export default function HomeScreen() {
                 },
                 forgetButton: {
                     ...baseFlex("center", "center"),
-                    ...baseOutline(theme),
                     ...baseHeight,
                 },
                 forgetButtonText: {
@@ -579,19 +577,19 @@ export default function HomeScreen() {
                         )}
                         <ThemedText style={styles.termsText}>
                             {t("auth.disclaimer.first")}{" "}
-                            <Link href="/terms" style={{ ...baseOutline(theme) }}>
+                            <Link href="/terms">
                                 <ThemedText type="link" style={styles.termsLink}>
                                     {t("auth.disclaimer.second")}
                                 </ThemedText>
                             </Link>{" "}
                             {t("auth.disclaimer.third")}{" "}
-                            <Link href="/privacy" style={{ ...baseOutline(theme) }}>
+                            <Link href="/privacy">
                                 <ThemedText type="link" style={styles.termsLink}>
                                     {t("auth.disclaimer.fourth")}
                                 </ThemedText>
                             </Link>
                             .{" "}
-                            <Link href="/helpdesk" style={{ ...baseOutline(theme) }}>
+                            <Link href="/helpdesk">
                                 <Ionicons name="help-circle" size={18} color={orangeColor} style={{ opacity: 0.9 }} />
                             </Link>
                         </ThemedText>

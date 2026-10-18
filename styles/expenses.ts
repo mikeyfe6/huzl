@@ -40,7 +40,6 @@ import {
     baseMedium,
     baseMini,
     baseOpacity,
-    baseOutline,
     basePadding,
     baseRadius,
     baseSelect,
@@ -368,7 +367,6 @@ export const getExpensesStyles = (theme: any) =>
         },
         chartButton: {
             ...baseFlex("space-between", "center"),
-            ...baseOutline(theme),
             ...baseRadius,
             ...baseBorder,
             ...baseHeight,

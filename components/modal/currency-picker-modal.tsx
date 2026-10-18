@@ -18,10 +18,9 @@ import {
     baseHorizontal,
     baseLarge,
     baseMini,
-    baseOutline,
+    baseSemiBold,
     baseTitle,
     baseVertical,
-    baseSemiBold,
 } from "@/styles/base";
 
 export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: Readonly<CurrencyPickerModalProps>) {
@@ -76,7 +75,6 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: 
                 },
                 currencyItem: {
                     ...baseFlex("space-between", "center"),
-                    ...baseOutline(theme),
                     ...baseCorner,
                     ...baseHorizontal,
                     ...baseVertical,
@@ -119,7 +117,7 @@ export function CurrencyPickerModal({ visible, onClose, currentSymbol, theme }: 
             <ThemedView style={styles.container}>
                 <ThemedView style={styles.header}>
                     <ThemedText type="title">{t("currency.selectCurrency")}</ThemedText>
-                    <Pressable onPress={onClose} disabled={saving} style={{ ...baseOutline(theme) }}>
+                    <Pressable onPress={onClose} disabled={saving}>
                         <ThemedText type="danger">{t("currency.close")}</ThemedText>
                     </Pressable>
                 </ThemedView>

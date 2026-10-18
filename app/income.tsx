@@ -28,9 +28,8 @@ import {
     baseGreen,
     baseIcon,
     baseInactive,
-    baseOutline,
-    baseRed,
     basePadding,
+    baseRed,
     baseSemiBold,
     baseSize,
     baseSmall,
@@ -321,7 +320,6 @@ export default function IncomeScreen() {
                     ...baseIcon(theme),
                 },
                 input: {
-                    ...baseOutline(theme),
                     ...baseSize,
                     ...baseSemiBold,
                     color: theme.text,
@@ -337,7 +335,6 @@ export default function IncomeScreen() {
                     gap: 16,
                 },
                 type: {
-                    ...baseOutline(theme),
                     ...baseBorder,
                     borderRadius: 7,
                     paddingHorizontal: 14,
@@ -345,7 +342,7 @@ export default function IncomeScreen() {
                     borderColor: theme.inputBorder,
                 },
                 typeText: { ...baseSmall },
-                add: { ...baseOutline(theme), marginTop: 8, marginBottom: 6, padding: 4 },
+                add: { marginTop: 8, marginBottom: 6, padding: 4 },
                 addText: {
                     ...baseSemiBold,
                     color: greenColor,
@@ -383,7 +380,7 @@ export default function IncomeScreen() {
 
     return (
         <AuthGate>
-            <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.container}>
                 <ThemedView style={styles.fieldset}>
                     <ThemedText type="title" style={styles.heading}>
                         {t("income.title")}

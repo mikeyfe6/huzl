@@ -15,7 +15,6 @@ import {
     taxesColor,
     travelColor,
 } from "@/constants/theme";
-import { baseOutline } from "@/styles/base";
 
 const CATEGORY_COLORS: Record<Category, string> = {
     personal: personalColor,
@@ -100,7 +99,6 @@ export function ExpensesPie({ expenses, selectedCategory, onCategorySelect, them
     return (
         <Pressable
             style={{
-                ...baseOutline(theme),
                 width: responsiveSize,
                 height: responsiveSize,
                 justifyContent: "center",
