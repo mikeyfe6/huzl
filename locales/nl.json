@@ -204,6 +204,7 @@
             "updateDebt": "Schuld Bijwerken"
         },
         "yourDebts": "Jouw Schulden",
+        "totalDebtAmount": "Totaal Nog Te Betalen",
         "noDebts": "Geen schulden (hoera!)",
         "total": "Totaal",
         "monthly": "P/M",

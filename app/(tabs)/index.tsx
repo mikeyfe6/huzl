@@ -72,6 +72,7 @@ export default function HomeScreen() {
     const [isSignUp, setIsSignUp] = useState(false);
     const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
+    const [hasVariableIncome, setHasVariableIncome] = useState(false);
     const [disposableToggle, setDisposableToggle] = useState(0);
 
     const mapAuthError = (err: unknown) => {
@@ -240,6 +241,7 @@ export default function HomeScreen() {
         useCallback(() => {
             if (!user) {
                 setMonthlyIncome(null);
+                setHasVariableIncome(false);
                 setExpenses([]);
                 setDebts([]);
                 return;
@@ -252,6 +254,7 @@ export default function HomeScreen() {
                 .then(async ({ data, error }) => {
                     if (error || !Array.isArray(data)) {
                         setMonthlyIncome(null);
+                        setHasVariableIncome(false);
                     } else {
                         const activeIncomes = data.filter((row) => row.active !== false);
                         const incomeIds = activeIncomes.map((row) => row.id);
@@ -265,6 +268,7 @@ export default function HomeScreen() {
 
                         if (paymentsError || !Array.isArray(payments)) {
                             setMonthlyIncome(null);
+                            setHasVariableIncome(false);
                             return;
                         }
 
@@ -284,6 +288,7 @@ export default function HomeScreen() {
                             })),
                         );
                         setMonthlyIncome(total);
+                        setHasVariableIncome(activeIncomes.some((row) => row.variable === true));
                     }
                 });
 
@@ -459,6 +464,11 @@ export default function HomeScreen() {
                     ...baseSmall,
                     color: theme.statLabel,
                     textAlign: "center",
+                },
+                statAverage: {
+                    ...baseLarge,
+                    ...baseMedium,
+                    color: greenColor,
                 },
                 statWrapper: {
                     ...baseFlex("center", "center"),
@@ -687,6 +697,12 @@ export default function HomeScreen() {
                                 <Ionicons name="add-outline" size={16} color={greenColor} />
                                 <ThemedText style={styles.statValue}>
                                     {currencySymbol} {monthlyIncome.toFixed(2).replace(".", ",")}
+                                    {hasVariableIncome && (
+                                        <>
+                                            {" "}
+                                            <ThemedText style={styles.statAverage}>*</ThemedText>
+                                        </>
+                                    )}
                                 </ThemedText>
                             </View>
                         </ThemedView>

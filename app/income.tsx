@@ -564,6 +564,7 @@ export default function IncomeScreen() {
                 },
                 amountRow: {
                     ...baseFlex("space-between", "center"),
+                    ...baseGap,
                     flexWrap: "wrap",
                     marginBottom: 8,
                     paddingVertical: 6,
@@ -584,7 +585,7 @@ export default function IncomeScreen() {
                 },
                 variableToggle: {
                     ...baseFlex("center", "center"),
-                    ...baseBlank,
+                    gap: 6,
                 },
                 variableLabel: {
                     ...baseSmall,
@@ -780,7 +781,7 @@ export default function IncomeScreen() {
                                         >
                                             <Ionicons
                                                 name={src.variable ? "checkbox" : "square-outline"}
-                                                size={20}
+                                                size={18}
                                                 color={src.variable ? linkColor : mediumGreyColor}
                                             />
                                             <ThemedText style={styles.variableLabel}>

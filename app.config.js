@@ -35,14 +35,7 @@ export default {
         },
         plugins: [
             "./plugins/with-android-date-picker-color",
-            [
-                "@react-native-firebase/app",
-                {
-                    ios: {
-                        disableSPM: true,
-                    },
-                },
-            ],
+            "@react-native-firebase/app",
             "@react-native-community/datetimepicker",
             [
                 "expo-router",
@@ -71,10 +64,9 @@ export default {
                         enableShrinkResourcesInReleaseBuilds: true,
                     },
                     ios: {
-                        useFrameworks: "static",
+                        useFrameworks: "dynamic",
                         podfileProperties: {
                             "use_modular_headers!": true,
-                            forceStaticLinking: ["RNFBApp", "RNFBAnalytics"],
                         },
                         buildReactNativeFromSource: false,
                     },

@@ -19,7 +19,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useCurrency } from "@/hooks/use-currency";
 
-import { formatNumber } from "@/utils/helpers";
+import { formatCurrency, formatNumber } from "@/utils/helpers";
 import { cancelDebtPaymentReminder, scheduleDebtPaymentReminder } from "@/utils/notifications";
 import { supabase } from "@/utils/supabase";
 
@@ -378,10 +378,7 @@ export default function DebtsScreen() {
     const activeDebts = sortedDebts.filter((d) => d.amount > 0);
     const payingDebts = sortedDebts.filter((d) => d.amount > 0 && d.active);
     const paidOffDebts = sortedDebts.filter((d) => d.amount === 0);
-    const totalDebtsInMoney = useMemo(
-        () => payingDebts.reduce((total, debt) => total + debt.amount, 0).toFixed(2),
-        [payingDebts],
-    );
+    const totalDebtsInMoney = useMemo(() => payingDebts.reduce((total, debt) => total + debt.amount, 0), [payingDebts]);
 
     const Header = (
         <>
@@ -592,9 +589,9 @@ export default function DebtsScreen() {
                     />
                     <View style={styles.debtTotal}>
                         <View style={styles.debtTotalAmount}>
-                            <ThemedText style={styles.debtTotalAmountText}>Totaal nog te betalen:</ThemedText>
+                            <ThemedText style={styles.debtTotalAmountText}>{t("debts.totalDebtAmount")}</ThemedText>
                             <ThemedText style={styles.debtTotalAmountNumber}>
-                                {currencySymbol} {totalDebtsInMoney}
+                                {formatCurrency(totalDebtsInMoney, currencySymbol)}
                             </ThemedText>
                         </View>
                     </View>
