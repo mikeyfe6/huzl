@@ -204,7 +204,7 @@
             "updateDebt": "Update Debt"
         },
         "yourDebts": "Your Debts",
-        "totalDebtAmount": "Total Still Owed",
+        "totalDebtAmount": "Total still owed:",
         "noDebts": "No debts (hooray!)",
         "total": "Total",
         "monthly": "P/M",
