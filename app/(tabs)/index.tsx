@@ -614,7 +614,7 @@ export default function HomeScreen() {
                                     {nextDebt.extraCount > 0 && (
                                         <ThemedText
                                             style={styles.nextDebtExtra}
-                                        >{`+ ${nextDebt.extraCount}`}</ThemedText>
+                                        >{`[+ ${nextDebt.extraCount}]`}</ThemedText>
                                     )}
                                 </View>
                             )}
