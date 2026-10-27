@@ -210,6 +210,7 @@ export const getIndexStyles = (theme: any) =>
         nextDebtDate: {
             ...baseMedium,
             fontSize: 10,
+            lineHeight: 18,
         },
         nextIncome: {
             ...baseFlex("center", "center"),
@@ -230,6 +231,7 @@ export const getIndexStyles = (theme: any) =>
         nextIncomeDate: {
             ...baseMedium,
             fontSize: 10,
+            lineHeight: 18,
         },
         nextIncomeIntro: {
             ...baseMini,
