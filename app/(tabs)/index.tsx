@@ -504,7 +504,7 @@ export default function HomeScreen() {
                         <ThemedView style={styles.statCard}>
                             <ThemedText style={styles.statLabel}>{t("home.monthlyIncome")}</ThemedText>
                             <View style={styles.statWrapper}>
-                                <Ionicons name="add-outline" size={16} color={greenColor} />
+                                <Ionicons name="add-outline" size={16} color={greenColor} style={styles.statIcon} />
                                 <ThemedText style={styles.statValue}>
                                     {currencySymbol} {monthlyIncome.toFixed(2).replace(".", ",")}
                                     {hasVariableIncome && (
@@ -522,7 +522,7 @@ export default function HomeScreen() {
                         <ThemedView style={styles.statCard}>
                             <ThemedText style={styles.statLabel}>{t("home.monthlyExpenses")}</ThemedText>
                             <View style={styles.statWrapper}>
-                                <Ionicons name="remove-outline" size={16} color={redColor} />
+                                <Ionicons name="remove-outline" size={16} color={redColor} style={styles.statIcon} />
                                 <ThemedText style={styles.statValue}>
                                     {currencySymbol} {monthlyExpenses.monthlyTotal.toFixed(2).replace(".", ",")}
                                 </ThemedText>
@@ -534,7 +534,7 @@ export default function HomeScreen() {
                         <ThemedView style={styles.statCard}>
                             <ThemedText style={styles.statLabel}>{t("home.monthlyBudgetExpenses")}</ThemedText>
                             <View style={styles.statWrapper}>
-                                <Ionicons name="remove-outline" size={16} color={blueColor} />
+                                <Ionicons name="remove-outline" size={16} color={blueColor} style={styles.statIcon} />
                                 <ThemedText style={styles.statValue}>
                                     {currencySymbol} {monthlyBudgetExpenses.toFixed(2).replace(".", ",")}
                                 </ThemedText>
@@ -546,7 +546,7 @@ export default function HomeScreen() {
                         <ThemedView style={styles.statCard}>
                             <ThemedText style={styles.statLabel}>{t("home.monthlyDebts")}</ThemedText>
                             <View style={styles.statWrapper}>
-                                <Ionicons name="remove-outline" size={16} color={orangeColor} />
+                                <Ionicons name="remove-outline" size={16} color={orangeColor} style={styles.statIcon} />
                                 <ThemedText style={styles.statValue}>
                                     {currencySymbol} {monthlyDebts.toFixed(2).replace(".", ",")}
                                 </ThemedText>

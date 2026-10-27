@@ -165,6 +165,13 @@ export const getIndexStyles = (theme: any) =>
             ...baseFlex("center", "center"),
             ...baseBlank,
         },
+        statIcon: {
+            height: Platform.select({
+                ios: 20,
+                android: 18,
+                default: 16,
+            }),
+        },
         statValue: {
             ...baseLarge,
             ...baseBold,
