@@ -17,6 +17,8 @@ export default {
             googleServicesFile: process.env.GOOGLE_SERVICE_INFO_PLIST ?? "./firebase/GoogleService-Info.plist",
             infoPlist: {
                 ITSAppUsesNonExemptEncryption: false,
+                CFBundleLocalizations: ["nl", "en"],
+                CFBundleDevelopmentRegion: "nl",
             },
         },
         android: {
