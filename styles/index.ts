@@ -177,7 +177,7 @@ export const getIndexStyles = (theme: any) =>
             backgroundColor: theme.cardNegativeBackground,
         },
         nextDetails: {
-            ...baseGap,
+            ...baseSpace,
             marginTop: 12,
         },
         nextDebt: {
