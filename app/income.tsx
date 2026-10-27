@@ -3,7 +3,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -22,41 +22,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AuthGate } from "@/components/ui/loading";
 
-import {
-    blueColor,
-    Colors,
-    greenColor,
-    linkColor,
-    mediumGreyColor,
-    orangeColor,
-    redColor,
-    silverColor,
-} from "@/constants/theme";
-import {
-    baseBlank,
-    baseBlur,
-    baseBorder,
-    baseButton,
-    baseButtonText,
-    baseCenter,
-    baseCorner,
-    baseFamily,
-    baseFieldset,
-    baseFlex,
-    baseGap,
-    baseGreen,
-    baseIcon,
-    baseInactive,
-    baseInput,
-    baseMedium,
-    baseModal,
-    basePadding,
-    baseRed,
-    baseSemiBold,
-    baseSize,
-    baseSmall,
-    baseSpace,
-} from "@/styles/base";
+import { blueColor, Colors, greenColor, linkColor, mediumGreyColor, orangeColor, redColor } from "@/constants/theme";
+import { baseInactive } from "@/styles/base";
+import { getIncomeStyles } from "@/styles/income";
 
 const currentDateOnly = (): string => {
     const now = new Date();
@@ -128,6 +96,8 @@ export default function IncomeScreen() {
     const [showNextIncomePicker, setShowNextIncomePicker] = useState(false);
     const [tempNextIncomeDate, setTempNextIncomeDate] = useState(new Date());
     const [savingNextIncome, setSavingNextIncome] = useState(false);
+
+    const styles = useMemo(() => getIncomeStyles(theme), [theme]);
 
     const incomeTypes = [
         { key: "salary", label: t("income.category.salary") },
@@ -598,229 +568,6 @@ export default function IncomeScreen() {
 
         void loadIncome();
     }, [user]);
-
-    const styles = useMemo(
-        () =>
-            StyleSheet.create({
-                container: {
-                    paddingBottom: 24,
-                },
-                fieldset: {
-                    ...baseFieldset,
-                },
-                heading: {
-                    marginBottom: 16,
-                },
-                subtitle: {
-                    color: silverColor,
-                    fontSize: 18,
-                    marginBottom: 24,
-                },
-                label: {
-                    marginBottom: 12,
-                },
-                wrapper: {
-                    ...baseFlex("center", "center"),
-                },
-                item: {
-                    ...baseBorder,
-                    ...basePadding,
-                    flex: 1,
-                    borderColor: theme.inputBorder,
-                    borderRadius: 6,
-                },
-                nameRow: {
-                    ...baseFlex("space-between", "center"),
-                    ...baseGap,
-                    paddingTop: 6,
-                    paddingBottom: 12,
-                },
-                nameInput: {
-                    flex: 1,
-                },
-                nextDate: {
-                    ...baseFlex("center", "center"),
-                    gap: 6,
-                },
-                nextDateLabel: {
-                    ...baseSmall,
-                    color: theme.statLabel,
-                },
-                amountRow: {
-                    ...baseFlex("space-between", "center"),
-                    ...baseGap,
-                    flexWrap: "wrap",
-                    paddingVertical: 12,
-                    borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: theme.inputBorder,
-                },
-                variableAverage: {
-                    ...baseFlex("flex-start", "center"),
-                    ...baseBlank,
-                    minWidth: 150,
-                },
-                input: {
-                    ...baseSize,
-                    ...baseSemiBold,
-                    color: theme.text,
-                    outlineWidth: 0,
-                },
-                amountInput: {
-                    flex: 1,
-                },
-                variableToggle: {
-                    ...baseFlex("center", "center"),
-                    gap: 6,
-                },
-                variableLabel: {
-                    ...baseSmall,
-                },
-                category: {
-                    borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: theme.inputBorder,
-                    paddingVertical: 10,
-                },
-                frequency: {
-                    borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: theme.inputBorder,
-                    paddingTop: 10,
-                },
-                type: {
-                    ...baseBorder,
-                    borderRadius: 7,
-                    paddingHorizontal: 14,
-                    paddingVertical: 5,
-                    borderColor: theme.inputBorder,
-                },
-                typeText: { ...baseSmall },
-                icons: {
-                    ...baseGap,
-                    ...baseCenter,
-                    flexDirection: "column",
-                    marginLeft: 16,
-                },
-                icon: {
-                    ...baseIcon,
-                },
-                add: {
-                    ...baseFlex("flex-start", "center"),
-                    alignSelf: "flex-start",
-                    marginTop: 8,
-                    marginBottom: 6,
-                    padding: 4,
-                },
-                addText: {
-                    ...baseSemiBold,
-                    color: greenColor,
-                },
-                total: {
-                    ...baseFlex("space-between", "center"),
-                    ...baseCorner,
-                    fontSize: 18,
-                    backgroundColor: theme.cardBackground,
-                    padding: 16,
-                },
-                totalAverage: {
-                    ...baseSmall,
-                    color: blueColor,
-                    marginLeft: 2,
-                },
-                buttons: {
-                    ...baseFlex("center", "center"),
-                    ...baseGap,
-                    marginTop: 12,
-                },
-                saveButton: {
-                    ...baseButton(theme),
-                    ...baseGreen,
-                },
-                saveButtonText: {
-                    ...baseButtonText,
-                },
-                closeButton: {
-                    ...baseButton(theme),
-                    ...baseRed,
-                },
-                closeButtonText: {
-                    ...baseButtonText,
-                },
-                overlay: {
-                    ...baseFlex("center", "center"),
-                    ...baseBlur,
-                    flex: 1,
-                },
-                modal: {
-                    ...baseModal(theme, 550),
-                    maxHeight: "75%",
-                },
-                header: {
-                    ...baseFlex("space-between", "center"),
-                    marginBottom: 12,
-                },
-                paymentInput: {
-                    ...baseInput(theme),
-                    ...basePadding,
-                    marginBottom: 12,
-                },
-                dateInput: {
-                    ...baseInput(theme),
-                    ...baseFamily,
-                    borderStyle: "solid",
-                    paddingLeft: 12,
-                    paddingRight: 12,
-                    height: 44,
-                    flex: 1,
-                },
-                paymentList: {
-                    marginVertical: 16,
-                },
-                noPayments: {
-                    ...baseSmall,
-                    textAlign: "center",
-                    color: redColor,
-                },
-                paymentRow: {
-                    ...baseFlex("space-between", "center"),
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderBottomColor: theme.inputBorder,
-                    paddingVertical: 10,
-                },
-                paymentAmountIcons: {
-                    ...baseFlex("center", "center"),
-                    ...baseSpace,
-                },
-                paymentAmount: {
-                    marginRight: 8,
-                },
-                averageText: {
-                    ...baseMedium,
-                    ...baseSmall,
-                    marginTop: 8,
-                },
-                averageDescription: {
-                    ...baseSmall,
-                    marginTop: 4,
-                    color: silverColor,
-                },
-                datePicker: {
-                    ...baseCorner,
-                    ...baseCenter,
-                    backgroundColor: theme.inputBackground,
-                    margin: 24,
-                    padding: 16,
-                    height: 300,
-                },
-                paymentActions: {
-                    ...baseFlex("center", "center"),
-                    ...baseGap,
-                    marginTop: 8,
-                },
-                paymentAction: {
-                    flex: 1,
-                },
-            }),
-        [theme],
-    );
 
     return (
         <AuthGate>
