@@ -85,28 +85,30 @@ async function syncDebtReminders() {
 
     if (groups.size === 0 || !(await ensureNotificationPermissionAsync())) return;
 
-    await Promise.all([...groups].map(async ([paymentDate, debts]) => {
-        const reminderDate = reminderDateFor(paymentDate);
-        if (!reminderDate) return;
+    await Promise.all(
+        [...groups].map(async ([paymentDate, debts]) => {
+            const reminderDate = reminderDateFor(paymentDate);
+            if (!reminderDate) return;
 
-        const sorted = [...debts].sort((a, b) => a.name.localeCompare(b.name));
-        const extra = sorted.length - 1;
-        const name = extra > 0 ? `${sorted[0].name} (+${extra})` : sorted[0].name;
+            const sorted = [...debts].sort((a, b) => a.name.localeCompare(b.name));
+            const extra = sorted.length - 1;
+            const name = extra > 0 ? `${sorted[0].name} [+${extra}]` : sorted[0].name;
 
-        await Notifications.scheduleNotificationAsync({
-            identifier: `${DEBT_REMINDER_ID_PREFIX}${paymentDate}`,
-            content: {
-                title: i18n.t("debts.notifications.reminderTitle"),
-                body: i18n.t("debts.notifications.reminderBody", { name }),
-                data: { debtIds: sorted.map((debt) => debt.id) },
-            },
-            trigger: {
-                type: Notifications.SchedulableTriggerInputTypes.DATE,
-                date: reminderDate,
-                ...(Platform.OS === "android" && { channelId: DEBT_REMINDER_CHANNEL_ID }),
-            },
-        });
-    }));
+            await Notifications.scheduleNotificationAsync({
+                identifier: `${DEBT_REMINDER_ID_PREFIX}${paymentDate}`,
+                content: {
+                    title: i18n.t("debts.notifications.reminderTitle"),
+                    body: i18n.t("debts.notifications.reminderBody", { name }),
+                    data: { debtIds: sorted.map((debt) => debt.id) },
+                },
+                trigger: {
+                    type: Notifications.SchedulableTriggerInputTypes.DATE,
+                    date: reminderDate,
+                    ...(Platform.OS === "android" && { channelId: DEBT_REMINDER_CHANNEL_ID }),
+                },
+            });
+        }),
+    );
 }
 
 // Calls made together (e.g. one per debt on load) share a single sync run, and runs never overlap.
