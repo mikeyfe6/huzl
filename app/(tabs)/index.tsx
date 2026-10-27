@@ -79,7 +79,8 @@ export default function HomeScreen() {
         debtsWithDate.sort((a, b) => a.nextDate - b.nextDate);
         const first = debtsWithDate[0];
         const sameDayCount = debtsWithDate.filter((d) => d.next_payment_date === first.next_payment_date).length;
-        return { ...first, extraCount: sameDayCount - 1 };
+        const isToday = new Date(first.nextDate).setHours(0, 0, 0, 0) === now.getTime();
+        return { ...first, extraCount: sameDayCount - 1, isToday };
     }, [debts]);
 
     const nextIncome = useMemo(() => {
@@ -605,11 +606,15 @@ export default function HomeScreen() {
                                     </ThemedText>
                                     <View style={styles.nextDebtBadge}>
                                         <ThemedText style={styles.nextDebtDate}>
-                                            {nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}
+                                            {nextDebt.isToday ?
+                                                t("home.nextPaymentToday")
+                                            :   nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}
                                         </ThemedText>
                                     </View>
                                     {nextDebt.extraCount > 0 && (
-                                        <ThemedText style={styles.nextDebtExtra}>{`+ ${nextDebt.extraCount}`}</ThemedText>
+                                        <ThemedText
+                                            style={styles.nextDebtExtra}
+                                        >{`+ ${nextDebt.extraCount}`}</ThemedText>
                                     )}
                                 </View>
                             )}

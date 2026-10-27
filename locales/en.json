@@ -85,6 +85,7 @@
         "weeklyDisposable": "Weekly Disposable",
         "dailyDisposable": "Daily Disposable",
         "nextPayment": "Next Payment",
+        "nextPaymentToday": "Today",
         "expectedIncome": "Expected Income",
         "incomeToday": "Today",
         "incomeInDays_one": "{{count}} day left",

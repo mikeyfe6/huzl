@@ -54,7 +54,9 @@ export const baseInput = (theme: any, height?: number) => ({
     ...baseRadius,
     ...baseBorder,
     ...baseSize,
-    ...(height === undefined || Platform.OS === "web" ? baseHeight : { height, minHeight: height }),
+    ...(height === undefined || Platform.OS === "web" || Platform.OS === "android" ?
+        baseHeight
+    :   { height, minHeight: height }),
     borderColor: theme.inputBorder,
     backgroundColor: theme.inputBackground,
     color: theme.inputText,

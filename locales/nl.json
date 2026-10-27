@@ -85,6 +85,7 @@
         "weeklyDisposable": "Wekelijks Beschikbaar",
         "dailyDisposable": "Dagelijks Beschikbaar",
         "nextPayment": "Volgende Betaling",
+        "nextPaymentToday": "Vandaag",
         "expectedIncome": "Verwacht Inkomen",
         "incomeToday": "Vandaag",
         "incomeInDays_one": "Nog {{count}} dag",
