@@ -12,7 +12,7 @@ const resources = {
 
 const defaultLanguage = "nl";
 const deviceLanguage = Localization.getLocales()[0]?.languageCode || defaultLanguage;
-const resolvedLanguage = deviceLanguage.startsWith("nl") ? "nl" : defaultLanguage;
+const resolvedLanguage = deviceLanguage.startsWith("nl") ? "nl" : deviceLanguage.startsWith("en") ? "en" : defaultLanguage;
 
 void i18n.use(initReactI18next).init({
     resources,
