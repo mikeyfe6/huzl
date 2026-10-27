@@ -178,7 +178,7 @@ export const getIndexStyles = (theme: any) =>
         },
         nextDetails: {
             ...baseSpace,
-            marginTop: 12,
+            marginTop: 16,
         },
         nextDebt: {
             ...baseFlex("center", "center"),
