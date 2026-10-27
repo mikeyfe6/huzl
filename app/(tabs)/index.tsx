@@ -3,7 +3,7 @@ import { Link } from "expo-router";
 import { useFocusEffect } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Image, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Image, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -19,47 +19,14 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
 import { HUZL_APP_STORE_URL, HUZL_MENEFEX_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
-import {
-    blueColor,
-    Colors,
-    greenColor,
-    linkColor,
-    mediumGreyColor,
-    orangeColor,
-    redColor,
-    whiteColor,
-} from "@/constants/theme";
-import {
-    baseBlank,
-    baseBold,
-    baseBorder,
-    baseButton,
-    baseCenter,
-    baseCorner,
-    baseError,
-    baseFlex,
-    baseGap,
-    baseHeight,
-    baseHorizontal,
-    baseInput,
-    baseLarge,
-    baseMedium,
-    baseMini,
-    basePadding,
-    baseSemiBold,
-    baseSmall,
-    baseSpace,
-    baseSuccess,
-} from "@/styles/base";
+import { blueColor, Colors, greenColor, linkColor, orangeColor, redColor } from "@/constants/theme";
+import { baseMedium, baseMini, baseSemiBold, baseSmall } from "@/styles/base";
+import { getIndexStyles } from "@/styles/index";
 
 export default function HomeScreen() {
     const { t } = useTranslation();
     const { user, loading, signIn, signUp } = useAuth();
     const { refreshFlag } = useRefreshContext();
-
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
-    const { symbol: currencySymbol } = useCurrency();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -74,6 +41,11 @@ export default function HomeScreen() {
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
     const [hasVariableIncome, setHasVariableIncome] = useState(false);
     const [disposableToggle, setDisposableToggle] = useState(0);
+
+    const { symbol: currencySymbol } = useCurrency();
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+    const styles = useMemo(() => getIndexStyles(theme), [theme]);
 
     const mapAuthError = (err: unknown) => {
         const code = (err as any)?.code;
@@ -330,197 +302,6 @@ export default function HomeScreen() {
                     }
                 });
         }, [user, refreshFlag]),
-    );
-
-    const styles = useMemo(
-        () =>
-            StyleSheet.create({
-                logo: { ...baseFlex("center", "center"), ...baseSpace, marginBottom: 16, pointerEvents: "none" },
-                image: {
-                    maxWidth: 100,
-                    height: 100,
-                },
-                container: {
-                    ...baseCenter,
-                    ...baseSpace,
-                    flex: 1,
-                    padding: 16,
-                },
-                text: {
-                    marginTop: 8,
-                },
-                fieldset: {
-                    ...baseGap,
-                    width: "100%",
-                    marginTop: 16,
-                    maxWidth: 500,
-                    marginBottom: 32,
-                },
-                input: {
-                    ...baseInput(theme),
-                    ...basePadding,
-                    color: theme.inputText,
-                },
-                signInButton: {
-                    ...baseButton(theme),
-                    backgroundColor: greenColor,
-                    borderColor: greenColor,
-                },
-                signInText: {
-                    ...baseSemiBold,
-                    color: whiteColor,
-                },
-                signUpButton: {
-                    ...baseButton(theme),
-                    ...baseSemiBold,
-                    borderColor: mediumGreyColor,
-                },
-                signUpText: {
-                    ...baseSemiBold,
-                },
-                forgetButton: {
-                    ...baseFlex("center", "center"),
-                    ...baseHeight,
-                },
-                forgetButtonText: {
-                    ...baseSmall,
-                    ...baseSemiBold,
-                    textAlign: "center",
-                    color: mediumGreyColor,
-                },
-                termsText: {
-                    color: mediumGreyColor,
-                    marginHorizontal: "auto",
-                    textAlign: "center",
-                    maxWidth: "90%",
-                    lineHeight: Platform.select({
-                        ios: 26,
-                        android: 26,
-                        default: 12,
-                    }),
-                    fontSize: Platform.select({
-                        ios: 14,
-                        android: 14,
-                        default: 12,
-                    }),
-                },
-                termsLink: {
-                    fontSize: Platform.select({
-                        ios: 14,
-                        android: 14,
-                        default: 12,
-                    }),
-                },
-                poweredBy: {
-                    ...baseFlex("center", "center"),
-                },
-                poweredByText: {
-                    fontSize: 12,
-                    color: mediumGreyColor,
-                },
-                appContainer: {
-                    ...baseFlex("center", "center"),
-                    rowGap: 4,
-                    columnGap: 16,
-                    flexWrap: "wrap",
-                },
-                appLink: {
-                    display: "flex",
-                    ...baseFlex("center", "center"),
-                    ...baseBlank,
-                },
-                errorContainer: { ...baseCenter, ...baseHeight },
-                errorText: {
-                    ...baseError,
-                },
-                successText: {
-                    ...baseSuccess,
-                },
-                errorHidden: {
-                    opacity: 0,
-                },
-                user: {
-                    color: mediumGreyColor,
-                },
-                terminate: {
-                    ...baseError,
-                },
-                statsContainer: {
-                    ...baseGap,
-                    width: "100%",
-                    maxWidth: 500,
-                    marginTop: 24,
-                    marginBottom: 16,
-                },
-                statCard: {
-                    ...baseSpace,
-                    ...baseCorner,
-                    ...baseHorizontal,
-                    paddingTop: 14,
-                    paddingBottom: 16,
-                    backgroundColor: theme.cardBackground,
-                },
-                statLabel: {
-                    ...baseSmall,
-                    color: theme.statLabel,
-                    textAlign: "center",
-                },
-                statAverage: {
-                    ...baseLarge,
-                    ...baseMedium,
-                    color: greenColor,
-                },
-                statWrapper: {
-                    ...baseFlex("center", "center"),
-                    ...baseBlank,
-                },
-                statValue: {
-                    ...baseLarge,
-                    ...baseBold,
-                    textAlign: "center",
-                },
-                statCardPositive: {
-                    backgroundColor: theme.cardPositiveBackground,
-                },
-                statCardNegative: {
-                    backgroundColor: theme.cardNegativeBackground,
-                },
-                nextDebt: {
-                    ...baseFlex("center", "center"),
-                    ...baseBlank,
-                    flexWrap: "wrap",
-                    marginTop: 6,
-                },
-                nextDebtIntro: {
-                    ...baseMini,
-                    color: orangeColor,
-                    textAlign: "center",
-                },
-                nextDebtBadge: {
-                    ...baseCenter,
-                    ...baseBorder,
-                    backgroundColor: orangeColor + "50",
-                    borderColor: orangeColor,
-                    borderRadius: 10,
-                    paddingHorizontal: 6,
-                    marginLeft: 2,
-                    opacity: 0.9,
-                    height: 18,
-                },
-                nextDebtDate: {
-                    ...baseMedium,
-                    fontSize: 11,
-                    lineHeight: 18,
-                },
-                overdueDebts: {
-                    ...baseMini,
-                    ...baseBold,
-                    color: redColor,
-                    textAlign: "center",
-                    lineHeight: 13,
-                },
-            }),
-        [theme],
     );
 
     const HeaderImage = () => (

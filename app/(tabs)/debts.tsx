@@ -41,8 +41,6 @@ export default function DebtsScreen() {
     const { t } = useTranslation();
     const { user, refreshUser } = useAuth();
 
-    const colorScheme = useColorScheme();
-    const { symbol: currencySymbol } = useCurrency();
     const { width: screenWidth } = useWindowDimensions();
 
     const nameInputRef = useRef<TextInputInstance | null>(null);
@@ -66,6 +64,8 @@ export default function DebtsScreen() {
 
     const debtSortPreferenceKey = user ? `@huzl_debt_sort:${user.id}` : "@huzl_debt_sort:guest";
 
+    const { symbol: currencySymbol } = useCurrency();
+    const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const styles = useMemo(() => getDebtsStyles(theme, screenWidth), [theme, screenWidth]);
 

@@ -3,7 +3,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Linking, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Alert, Linking, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -14,44 +14,23 @@ import { supabase } from "@/utils/supabase";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 
-import { Colors, redColor, silverColor } from "@/constants/theme";
-import {
-    baseBlue,
-    baseButton,
-    baseButtonText,
-    baseCard,
-    baseEmpty,
-    baseEmptyText,
-    baseFamily,
-    baseFieldset,
-    baseFlex,
-    baseGreen,
-    baseHorizontal,
-    baseIcon,
-    baseInput,
-    baseLabel,
-    baseList,
-    baseMini,
-    basePadding,
-    baseSelect,
-    baseSemiBold,
-    baseSize,
-    baseSpace,
-} from "@/styles/base";
+import { Colors, redColor } from "@/constants/theme";
+import { getHelpdeskStyles } from "@/styles/helpdesk";
 
 export default function HelpdeskScreen() {
     const { t } = useTranslation();
     const { user, loading: authLoading } = useAuth();
     const router = useRouter();
 
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
-
     const [message, setMessage] = useState("");
     const [type, setType] = useState("feedback");
     const [submitting, setSubmitting] = useState(false);
     const [tickets, setTickets] = useState<TicketItem[]>([]);
     const [loading, setLoading] = useState(false);
+
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+    const styles = useMemo(() => getHelpdeskStyles(theme), [theme]);
 
     const handleDelete = async (id: string) => {
         if (!user) return;
@@ -128,122 +107,6 @@ export default function HelpdeskScreen() {
     useEffect(() => {
         void fetchTickets();
     }, [user?.id]);
-
-    const styles = useMemo(
-        () =>
-            StyleSheet.create({
-                container: {
-                    paddingBottom: 24,
-                },
-                fieldset: {
-                    ...baseFieldset,
-                },
-                heading: {
-                    marginBottom: 16,
-                },
-                subtitle: {
-                    color: silverColor,
-                    fontSize: 18,
-                },
-                email: {
-                    ...baseSemiBold,
-                },
-                or: {
-                    marginTop: 16,
-                },
-                login: {
-                    ...baseHorizontal,
-                },
-                loginText: {
-                    ...baseEmptyText(theme),
-                },
-                loginButton: {
-                    ...baseButton(theme),
-                    ...baseBlue,
-                    marginTop: 4,
-                },
-                loginButtonText: {
-                    ...baseButtonText,
-                },
-                label: {
-                    ...baseLabel(theme),
-                },
-                select: {
-                    ...baseInput(theme),
-                    ...baseSelect,
-                },
-                selectInput: {
-                    ...baseFamily,
-                    ...baseInput(theme),
-                    borderWidth: 0,
-                    color: theme.inputText,
-                    height: Platform.select({
-                        ios: 216,
-                        default: 44,
-                    }),
-                    paddingHorizontal: Platform.select({
-                        ios: 0,
-                        default: 12,
-                    }),
-                    paddingVertical: Platform.select({
-                        ios: 0,
-                        default: 10,
-                    }),
-                },
-                selectInputAndroid: { height: 56, color: theme.inputText },
-                selectOption: {
-                    ...baseSize,
-                    color: theme.inputText,
-                },
-                selectIcon: {
-                    position: "absolute",
-                    right: 12,
-                    top: "50%",
-                    marginTop: -9,
-                    pointerEvents: "none",
-                },
-                input: {
-                    ...baseInput(theme),
-                    ...basePadding,
-                    height: 100,
-                    textAlignVertical: "top",
-                },
-                button: {
-                    ...baseButton(theme),
-                    ...baseGreen,
-                    marginTop: 8,
-                },
-                buttonText: { ...baseButtonText },
-                list: { ...baseList },
-                header: {
-                    marginBottom: 8,
-                },
-                item: {
-                    ...baseFlex("space-between", "flex-start"),
-                    ...baseCard(theme),
-                },
-                icon: {
-                    ...baseIcon,
-                    borderColor: redColor,
-                },
-                itemContent: {
-                    ...baseSpace,
-                    flex: 1,
-                },
-                time: {
-                    ...baseMini,
-                    opacity: 0.7,
-                    color: theme.label,
-                },
-                emptyState: {
-                    ...baseEmpty,
-                },
-                emptyStateText: {
-                    ...baseEmptyText(theme),
-                },
-            }),
-        [theme],
-    );
 
     return (
         <ScrollView contentContainerStyle={styles.container} contentInsetAdjustmentBehavior="automatic">

@@ -53,9 +53,6 @@ export default function ExpensesScreen() {
     const { t } = useTranslation();
     const { user, refreshUser } = useAuth();
 
-    const colorScheme = useColorScheme();
-    const { symbol: currencySymbol } = useCurrency();
-
     const nameInputRef = useRef<TextInputInstance | null>(null);
     const listSectionRef = useRef<any>(null);
     const flatListRef = useRef<FlatList>(null);
@@ -79,6 +76,8 @@ export default function ExpensesScreen() {
 
     const { width: screenWidth } = useWindowDimensions();
 
+    const { symbol: currencySymbol } = useCurrency();
+    const colorScheme = useColorScheme();
     const theme = Colors[colorScheme ?? "light"];
     const styles = useMemo(() => getExpensesStyles(theme), [theme]);
 

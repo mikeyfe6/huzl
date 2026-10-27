@@ -3,7 +3,7 @@ import { Link, useRouter } from "expo-router";
 import { useFocusEffect } from "expo-router/react-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Switch, TextInput, View } from "react-native";
+import { Alert, Platform, Pressable, ScrollView, Switch, TextInput, View } from "react-native";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -29,24 +29,10 @@ import { ThemedView } from "@/components/themed-view";
 import { AuthGate } from "@/components/ui/loading";
 
 import { HUZL_APP_STORE_URL, HUZL_MENEFEX_URL, HUZL_PLAY_STORE_URL } from "@/constants/links";
-import { Colors, linkColor, mediumGreyColor, redColor, silverColor, whiteColor } from "@/constants/theme";
-import {
-    baseBlank,
-    baseButton,
-    baseButtonText,
-    baseCenter,
-    baseFieldset,
-    baseFlex,
-    baseGap,
-    baseGreen,
-    baseInactive,
-    baseInput,
-    baseMedium,
-    basePadding,
-    baseSemiBold,
-    baseSmall,
-    baseSpace,
-} from "@/styles/base";
+import { Colors, linkColor, mediumGreyColor, whiteColor } from "@/constants/theme";
+import { baseInactive } from "@/styles/base";
+
+import { getSettingsStyles } from "@/styles/settings";
 
 import packageJson from "@/package.json";
 
@@ -54,11 +40,6 @@ export default function SettingsScreen() {
     const { t, i18n } = useTranslation();
     const { user, refreshUser, signOut } = useAuth();
     const router = useRouter();
-
-    const colorScheme = useColorScheme();
-    const theme = Colors[colorScheme ?? "light"];
-    const { preference, updatePreference } = useThemePreference();
-    const { symbol: currencySymbol, code: currencyCode } = useCurrency();
 
     const [email, setEmail] = useState("");
     const [displayName, setDisplayName] = useState("");
@@ -69,6 +50,12 @@ export default function SettingsScreen() {
     const [changePasswordVisible, setChangePasswordVisible] = useState(false);
     const [terminateAccountVisible, setTerminateAccountVisible] = useState(false);
     const [debtRemindersEnabled, setDebtRemindersEnabled] = useState(true);
+
+    const { symbol: currencySymbol, code: currencyCode } = useCurrency();
+    const { preference, updatePreference } = useThemePreference();
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme ?? "light"];
+    const styles = useMemo(() => getSettingsStyles(theme), [theme]);
 
     useEffect(() => {
         void getDebtNotificationsPreferenceAsync().then(setDebtRemindersEnabled);
@@ -187,145 +174,6 @@ export default function SettingsScreen() {
                 cancelled = true;
             };
         }, [user]),
-    );
-
-    const styles = useMemo(
-        () =>
-            StyleSheet.create({
-                container: {
-                    paddingBottom: 24,
-                },
-                wrapper: {
-                    ...baseFieldset,
-                },
-                heading: {
-                    marginBottom: 16,
-                },
-                settingTitle: {
-                    ...baseSemiBold,
-                    marginTop: 8,
-                    marginBottom: 8,
-                    color: silverColor,
-                },
-                settingItem: {
-                    paddingTop: 12,
-                    paddingBottom: 20,
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderBottomColor: theme.dividerColor,
-                },
-                settingItemNoBorder: {
-                    borderBottomWidth: 0,
-                },
-                settingItemLessPadding: {
-                    paddingBottom: 8,
-                },
-                settingLabel: {
-                    ...baseSemiBold,
-                    ...baseSmall,
-                    color: theme.label,
-                    marginBottom: 12,
-                },
-                settingBox: {
-                    ...baseFlex("space-between", "center"),
-                },
-                settingWrapper: {
-                    ...baseGap,
-                    flexDirection: "row",
-                },
-                settingLink: {
-                    color: linkColor,
-                    marginBottom: 0,
-                },
-                settingLabelNoMargin: {
-                    marginBottom: 0,
-                },
-                settingValue: {
-                    ...baseSmall,
-                    color: theme.placeholder,
-                },
-                input: {
-                    ...baseInput(theme),
-                    ...basePadding,
-                },
-                saveButton: {
-                    ...baseButton(theme),
-                    ...baseGreen,
-                },
-                saveButtonText: {
-                    ...baseButtonText,
-                    color: whiteColor,
-                },
-                passwordButton: {
-                    ...baseButton(theme),
-                    marginTop: 16,
-                    borderColor: mediumGreyColor,
-                },
-                passwordButtonText: {
-                    ...baseButtonText,
-                    color: theme.text,
-                },
-                hr: {
-                    borderBottomColor: theme.dividerColor,
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    marginTop: 16,
-                },
-                themeButton: {
-                    ...baseInput(theme),
-                    ...baseCenter,
-                    flex: 1,
-                },
-                themeButtonActive: {
-                    backgroundColor: linkColor,
-                    borderColor: linkColor,
-                },
-                themeButtonText: {
-                    color: theme.text,
-                },
-                themeButtonTextActive: {
-                    ...baseSemiBold,
-                    color: whiteColor,
-                },
-                linksContainer: {
-                    ...baseCenter,
-                    ...baseSpace,
-                    marginVertical: 12,
-                },
-                linksApps: {
-                    ...baseFlex("center", "center"),
-                    rowGap: 4,
-                    columnGap: 16,
-                    flexWrap: "wrap",
-                },
-                linksApp: {
-                    display: "flex",
-                    ...baseFlex("center", "center"),
-                    ...baseBlank,
-                },
-                linksWrapper: {
-                    ...baseFlex("center", "center"),
-                    ...baseGap,
-                },
-                linkText: {
-                    ...baseSmall,
-                },
-                poweredBy: {
-                    marginTop: 24,
-                },
-                poweredByText: {
-                    ...baseMedium,
-                    fontSize: 12,
-                    color: mediumGreyColor,
-                },
-                logOutButton: {
-                    ...baseButton(theme),
-                    borderColor: redColor,
-                },
-                logOutButtonText: {
-                    ...baseButtonText,
-                    color: redColor,
-                },
-            }),
-        [theme],
     );
 
     return (
