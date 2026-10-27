@@ -37,6 +37,12 @@ function RootContent() {
         }
     }, [i18n, user?.user_metadata?.language_code]);
 
+    useEffect(() => {
+        if (Platform.OS === "web" && typeof document !== "undefined") {
+            document.documentElement.lang = i18n.language;
+        }
+    }, [i18n.language]);
+
     const pageTitle = (() => {
         if (name === "home") {
             return t("seo.title", { defaultValue: "Huzl • Money Management" });
