@@ -161,10 +161,12 @@ declare global {
 
     interface IncomeSource extends itemTypeProp, itemActiveProp {
         id?: string;
+        name?: string;
         amount: string;
         frequency: IncomeFrequency;
         variable: boolean;
         tracking_started_at: string;
+        next_expected_at?: string | null;
     }
 
     interface IncomePayment extends itemIdProp, itemAmountProp {

@@ -40,6 +40,7 @@ export default function HomeScreen() {
     const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
     const [monthlyIncome, setMonthlyIncome] = useState<number | null>(null);
     const [hasVariableIncome, setHasVariableIncome] = useState(false);
+    const [incomeDates, setIncomeDates] = useState<{ name: string; next_expected_at: string }[]>([]);
     const [disposableToggle, setDisposableToggle] = useState(0);
 
     const { symbol: currencySymbol } = useCurrency();
@@ -78,6 +79,21 @@ export default function HomeScreen() {
         debtsWithDate.sort((a, b) => a.nextDate - b.nextDate);
         return debtsWithDate[0];
     }, [debts]);
+
+    const nextIncome = useMemo(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const upcoming = incomeDates
+            .map((income) => ({ ...income, date: new Date(`${income.next_expected_at}T00:00:00`) }))
+            .filter((income) => !Number.isNaN(income.date.getTime()) && income.date >= today)
+            .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+        if (upcoming.length === 0) return null;
+
+        const days = Math.round((upcoming[0].date.getTime() - today.getTime()) / 86_400_000);
+        return { name: upcoming[0].name, days };
+    }, [incomeDates]);
 
     const overdueDebtsCount = useMemo(() => {
         const now = new Date();
@@ -214,6 +230,7 @@ export default function HomeScreen() {
             if (!user) {
                 setMonthlyIncome(null);
                 setHasVariableIncome(false);
+                setIncomeDates([]);
                 setExpenses([]);
                 setDebts([]);
                 return;
@@ -221,14 +238,23 @@ export default function HomeScreen() {
 
             supabase
                 .from("incomes")
-                .select("id, amount, frequency, active, variable, tracking_started_at")
+                .select("id, name, type, amount, frequency, active, variable, tracking_started_at, next_expected_at")
                 .eq("user_id", user.id)
                 .then(async ({ data, error }) => {
                     if (error || !Array.isArray(data)) {
                         setMonthlyIncome(null);
                         setHasVariableIncome(false);
+                        setIncomeDates([]);
                     } else {
                         const activeIncomes = data.filter((row) => row.active !== false);
+                        setIncomeDates(
+                            activeIncomes
+                                .filter((row) => row.next_expected_at)
+                                .map((row) => ({
+                                    name: row.name?.trim() || t(`income.category.${row.type}`),
+                                    next_expected_at: row.next_expected_at,
+                                })),
+                        );
                         const incomeIds = activeIncomes.map((row) => row.id);
                         const { data: payments, error: paymentsError } =
                             incomeIds.length > 0 ?
@@ -549,26 +575,48 @@ export default function HomeScreen() {
                         </Pressable>
                     )}
 
-                    {nextDebt && (
-                        <View style={styles.nextDebt}>
-                            <ThemedText style={styles.nextDebtIntro}>{`${t("home.nextPayment")}:`}</ThemedText>
-                            <ThemedText style={{ color: theme.text, ...baseMini, ...baseMedium }}>
-                                {nextDebt.name}
-                            </ThemedText>
-                            <View style={styles.nextDebtBadge}>
-                                <ThemedText style={styles.nextDebtDate}>
-                                    {nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}
-                                </ThemedText>
-                            </View>
-                        </View>
-                    )}
+                    {(nextIncome || nextDebt || overdueDebtsCount > 0) && (
+                        <View style={styles.nextDetails}>
+                            {nextIncome && (
+                                <View style={styles.nextIncome}>
+                                    <ThemedText
+                                        style={styles.nextIncomeIntro}
+                                    >{`${t("home.expectedIncome")}:`}</ThemedText>
+                                    <ThemedText style={{ color: theme.text, ...baseMini, ...baseMedium }}>
+                                        {nextIncome.name}
+                                    </ThemedText>
+                                    <View style={styles.nextIncomeBadge}>
+                                        <ThemedText style={styles.nextIncomeDate}>
+                                            {nextIncome.days === 0 ?
+                                                t("home.incomeToday")
+                                            :   t("home.incomeInDays", { count: nextIncome.days })}
+                                        </ThemedText>
+                                    </View>
+                                </View>
+                            )}
 
-                    {overdueDebtsCount > 0 && (
-                        <ThemedText style={styles.overdueDebts}>
-                            {overdueDebtsCount === 1 ?
-                                t("home.overdueDebtsSingle", { count: overdueDebtsCount })
-                            :   t("home.overdueDebtsMultiple", { count: overdueDebtsCount })}
-                        </ThemedText>
+                            {nextDebt && (
+                                <View style={styles.nextDebt}>
+                                    <ThemedText style={styles.nextDebtIntro}>{`${t("home.nextPayment")}:`}</ThemedText>
+                                    <ThemedText style={{ color: theme.text, ...baseMini, ...baseMedium }}>
+                                        {nextDebt.name}
+                                    </ThemedText>
+                                    <View style={styles.nextDebtBadge}>
+                                        <ThemedText style={styles.nextDebtDate}>
+                                            {nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}
+                                        </ThemedText>
+                                    </View>
+                                </View>
+                            )}
+
+                            {overdueDebtsCount > 0 && (
+                                <ThemedText style={styles.overdueDebts}>
+                                    {overdueDebtsCount === 1 ?
+                                        t("home.overdueDebtsSingle", { count: overdueDebtsCount })
+                                    :   t("home.overdueDebtsMultiple", { count: overdueDebtsCount })}
+                                </ThemedText>
+                            )}
+                        </View>
                     )}
                 </ThemedView>
             </ThemedView>

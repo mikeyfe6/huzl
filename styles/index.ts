@@ -176,11 +176,14 @@ export const getIndexStyles = (theme: any) =>
         statCardNegative: {
             backgroundColor: theme.cardNegativeBackground,
         },
+        nextDetails: {
+            ...baseGap,
+            marginTop: 12,
+        },
         nextDebt: {
             ...baseFlex("center", "center"),
             ...baseBlank,
             flexWrap: "wrap",
-            marginTop: 6,
         },
         nextDebtIntro: {
             ...baseMini,
@@ -200,14 +203,37 @@ export const getIndexStyles = (theme: any) =>
         },
         nextDebtDate: {
             ...baseMedium,
-            fontSize: 11,
-            lineHeight: 18,
+            fontSize: 10,
+        },
+        nextIncome: {
+            ...baseFlex("center", "center"),
+            ...baseBlank,
+            flexWrap: "wrap",
+        },
+        nextIncomeBadge: {
+            ...baseCenter,
+            ...baseBorder,
+            backgroundColor: greenColor + "50",
+            borderColor: greenColor,
+            borderRadius: 10,
+            paddingHorizontal: 6,
+            marginLeft: 2,
+            opacity: 0.9,
+            height: 18,
+        },
+        nextIncomeDate: {
+            ...baseMedium,
+            fontSize: 10,
+        },
+        nextIncomeIntro: {
+            ...baseMini,
+            color: greenColor,
+            textAlign: "center",
         },
         overdueDebts: {
             ...baseMini,
             ...baseBold,
             color: redColor,
             textAlign: "center",
-            lineHeight: 13,
         },
     });

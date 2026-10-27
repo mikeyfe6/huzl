@@ -22,7 +22,16 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AuthGate } from "@/components/ui/loading";
 
-import { blueColor, Colors, greenColor, linkColor, mediumGreyColor, redColor, silverColor } from "@/constants/theme";
+import {
+    blueColor,
+    Colors,
+    greenColor,
+    linkColor,
+    mediumGreyColor,
+    orangeColor,
+    redColor,
+    silverColor,
+} from "@/constants/theme";
 import {
     baseBlank,
     baseBlur,
@@ -113,6 +122,12 @@ export default function IncomeScreen() {
     const [tempPaymentDate, setTempPaymentDate] = useState(new Date());
     const [savingPayment, setSavingPayment] = useState(false);
     const [editingPaymentId, setEditingPaymentId] = useState<string | null>(null);
+    const [nextIncomeVisible, setNextIncomeVisible] = useState(false);
+    const [nextIncomeSourceId, setNextIncomeSourceId] = useState<string | null>(null);
+    const [nextIncomeDate, setNextIncomeDate] = useState(currentDateOnly());
+    const [showNextIncomePicker, setShowNextIncomePicker] = useState(false);
+    const [tempNextIncomeDate, setTempNextIncomeDate] = useState(new Date());
+    const [savingNextIncome, setSavingNextIncome] = useState(false);
 
     const incomeTypes = [
         { key: "salary", label: t("income.category.salary") },
@@ -126,7 +141,7 @@ export default function IncomeScreen() {
 
     const updateSource = (
         idx: number,
-        field: "type" | "amount" | "frequency" | "tracking_started_at",
+        field: "name" | "type" | "amount" | "frequency" | "tracking_started_at",
         value: string,
     ) => {
         setSources((prev) =>
@@ -145,6 +160,7 @@ export default function IncomeScreen() {
         setSources((prev) => [
             ...prev,
             {
+                name: "",
                 type: "salary",
                 amount: "",
                 frequency: "monthly",
@@ -237,7 +253,11 @@ export default function IncomeScreen() {
                     .single()
             :   supabase
                     .from("income_payments")
-                    .insert({ income_id: selectedSourceId, amount, received_at: paymentDate })
+                    .insert({
+                        income_id: selectedSourceId,
+                        amount,
+                        received_at: paymentDate,
+                    })
                     .select("id, income_id, amount, received_at")
                     .single();
         const { data, error } = await paymentRequest;
@@ -259,6 +279,44 @@ export default function IncomeScreen() {
             setPaymentDate(currentDateOnly());
         }
         setSavingPayment(false);
+    };
+
+    const openNextIncomeModal = (source: IncomeSource) => {
+        setNextIncomeSourceId(source.id ?? null);
+        setNextIncomeDate(source.next_expected_at ?? currentDateOnly());
+        setNextIncomeVisible(true);
+    };
+
+    const persistNextIncome = async (value: string | null) => {
+        if (!user || !nextIncomeSourceId) return;
+
+        if (value !== null) {
+            const date = new Date(`${value}T12:00:00`);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || Number.isNaN(date.getTime()) || toDateOnly(date) !== value) {
+                Alert.alert(t("income.error.invalidDateTitle"), t("income.error.invalidDateMsg"));
+                return;
+            }
+        }
+
+        setSavingNextIncome(true);
+        const { error } = await supabase
+            .from("incomes")
+            .update({ next_expected_at: value })
+            .eq("id", nextIncomeSourceId)
+            .eq("user_id", user.id);
+
+        if (error) {
+            Alert.alert("Error", error.message);
+        } else {
+            const apply = (list: IncomeSource[]) =>
+                list.map((source) =>
+                    source.id === nextIncomeSourceId ? { ...source, next_expected_at: value } : source,
+                );
+            setSources(apply);
+            setOriginalSources(apply);
+            setNextIncomeVisible(false);
+        }
+        setSavingNextIncome(false);
     };
 
     const cancelPaymentEdit = () => {
@@ -316,6 +374,7 @@ export default function IncomeScreen() {
             if (!b) return true;
 
             if (
+                a.name !== b.name ||
                 a.type !== b.type ||
                 a.amount !== b.amount ||
                 a.active !== b.active ||
@@ -367,6 +426,7 @@ export default function IncomeScreen() {
         .filter((payment) => payment.income_id === selectedSourceId)
         .sort((left, right) => right.received_at.localeCompare(left.received_at));
     const selectedSource = sources.find((source) => source.id === selectedSourceId);
+    const nextIncomeSource = sources.find((source) => source.id === nextIncomeSourceId);
     const getSourceAverage = (source: IncomeSource) => {
         const parsedAmount = Number.parseFloat(formatNumber(source.amount));
         const sourcePayments = source.id ? payments.filter((payment) => payment.income_id === source.id) : [];
@@ -401,6 +461,7 @@ export default function IncomeScreen() {
                 const { error } = await supabase
                     .from("incomes")
                     .update({
+                        name: src.name?.trim() || null,
                         type: src.type,
                         amount: Number.parseFloat(formatNumber(src.amount)) || 0,
                         frequency: src.frequency,
@@ -421,6 +482,7 @@ export default function IncomeScreen() {
                 const { error } = await supabase.from("incomes").insert(
                     inserts.map((src) => ({
                         user_id: user.id,
+                        name: src.name?.trim() || null,
                         type: src.type,
                         amount: Number.parseFloat(formatNumber(src.amount)) || 0,
                         frequency: src.frequency,
@@ -438,7 +500,7 @@ export default function IncomeScreen() {
 
             const { data: savedData, error: savedError } = await supabase
                 .from("incomes")
-                .select("id, type, amount, frequency, active, variable, tracking_started_at")
+                .select("id, name, type, amount, frequency, active, variable, tracking_started_at, next_expected_at")
                 .eq("user_id", user.id);
 
             if (savedError) {
@@ -448,12 +510,14 @@ export default function IncomeScreen() {
 
             const savedSources: IncomeSource[] = (savedData ?? []).map((row) => ({
                 id: row.id,
+                name: row.name ?? "",
                 type: row.type,
                 amount: formatAmountForInput(row.amount),
                 frequency: (row.frequency ?? "monthly") as IncomeFrequency,
                 active: row.active !== false,
                 variable: row.variable === true,
                 tracking_started_at: row.tracking_started_at ?? currentDateOnly(),
+                next_expected_at: row.next_expected_at ?? null,
             }));
             setSources(savedSources);
             setOriginalSources(savedSources);
@@ -480,7 +544,7 @@ export default function IncomeScreen() {
         const loadIncome = async () => {
             const { data, error } = await supabase
                 .from("incomes")
-                .select("id, type, amount, frequency, active, variable, tracking_started_at")
+                .select("id, name, type, amount, frequency, active, variable, tracking_started_at, next_expected_at")
                 .eq("user_id", user.id);
             let mappedSources: IncomeSource[];
 
@@ -490,16 +554,19 @@ export default function IncomeScreen() {
             } else if (data && data.length > 0) {
                 mappedSources = data.map((row) => ({
                     id: row.id,
+                    name: row.name ?? "",
                     type: row.type,
                     amount: formatAmountForInput(row.amount),
                     frequency: (row.frequency ?? "monthly") as IncomeFrequency,
                     active: row.active !== false,
                     variable: row.variable === true,
                     tracking_started_at: row.tracking_started_at ?? currentDateOnly(),
+                    next_expected_at: row.next_expected_at ?? null,
                 }));
             } else {
                 mappedSources = [
                     {
+                        name: "",
                         type: "salary",
                         amount: "",
                         frequency: "monthly",
@@ -562,12 +629,30 @@ export default function IncomeScreen() {
                     borderColor: theme.inputBorder,
                     borderRadius: 6,
                 },
+                nameRow: {
+                    ...baseFlex("space-between", "center"),
+                    ...baseGap,
+                    paddingTop: 6,
+                    paddingBottom: 12,
+                },
+                nameInput: {
+                    flex: 1,
+                },
+                nextDate: {
+                    ...baseFlex("center", "center"),
+                    gap: 6,
+                },
+                nextDateLabel: {
+                    ...baseSmall,
+                    color: theme.statLabel,
+                },
                 amountRow: {
                     ...baseFlex("space-between", "center"),
                     ...baseGap,
                     flexWrap: "wrap",
-                    marginBottom: 8,
-                    paddingVertical: 6,
+                    paddingVertical: 12,
+                    borderTopWidth: StyleSheet.hairlineWidth,
+                    borderTopColor: theme.inputBorder,
                 },
                 variableAverage: {
                     ...baseFlex("flex-start", "center"),
@@ -751,6 +836,32 @@ export default function IncomeScreen() {
                     :   sources.map((src, idx) => (
                             <View key={src.id ?? idx} style={styles.wrapper}>
                                 <View style={[styles.item, !src.active && baseInactive]}>
+                                    <View style={styles.nameRow}>
+                                        <TextInput
+                                            style={[styles.input, styles.nameInput]}
+                                            value={src.name ?? ""}
+                                            placeholder={t("income.namePlaceholder")}
+                                            placeholderTextColor={theme.placeholder}
+                                            onChangeText={(text) => updateSource(idx, "name", text)}
+                                            accessibilityLabel={t("income.namePlaceholder")}
+                                        />
+                                        <Pressable
+                                            style={styles.nextDate}
+                                            disabled={!src.id}
+                                            onPress={() => openNextIncomeModal(src)}
+                                            accessibilityRole="button"
+                                            accessibilityLabel={t("income.nextIncome")}
+                                        >
+                                            <Ionicons name="calendar-outline" size={16} color={orangeColor} />
+                                            <ThemedText style={styles.nextDateLabel}>
+                                                {src.next_expected_at ?
+                                                    new Date(`${src.next_expected_at}T12:00:00`).toLocaleDateString(
+                                                        t("seo.lang"),
+                                                    )
+                                                :   "-"}
+                                            </ThemedText>
+                                        </Pressable>
+                                    </View>
                                     <View style={styles.amountRow}>
                                         {src.variable ?
                                             <View
@@ -858,6 +969,17 @@ export default function IncomeScreen() {
                                             color={src.active ? greenColor : mediumGreyColor}
                                         />
                                     </Pressable>
+
+                                    {src.id && (
+                                        <Pressable
+                                            onPress={() => openNextIncomeModal(src)}
+                                            style={[styles.icon, { borderColor: orangeColor }]}
+                                            accessibilityRole="button"
+                                            accessibilityLabel={t("income.nextIncome")}
+                                        >
+                                            <Ionicons name="calendar-outline" size={16} color={orangeColor} />
+                                        </Pressable>
+                                    )}
 
                                     {src.variable && (
                                         <Pressable
@@ -1086,6 +1208,128 @@ export default function IncomeScreen() {
                     </View>
                 </View>
             </Modal>
+            <Modal
+                transparent
+                animationType="fade"
+                visible={nextIncomeVisible}
+                onRequestClose={() => setNextIncomeVisible(false)}
+            >
+                <View style={styles.overlay}>
+                    <View style={styles.modal}>
+                        <View style={styles.header}>
+                            <ThemedText type="defaultSemiBold">
+                                {nextIncomeSource ?
+                                    `${t("income.category." + nextIncomeSource.type)} · ${t("income.frequency." + nextIncomeSource.frequency)}`
+                                :   t("income.nextIncome")}
+                            </ThemedText>
+                            <Pressable
+                                onPress={() => setNextIncomeVisible(false)}
+                                style={[styles.icon, { borderColor: redColor }]}
+                                accessibilityRole="button"
+                                accessibilityLabel={t("common.close")}
+                            >
+                                <Ionicons name="close" size={18} color={redColor} />
+                            </Pressable>
+                        </View>
+                        <ThemedText style={styles.averageDescription}>{t("income.nextIncomeHelp")}</ThemedText>
+                        <View style={{ marginTop: 12 }}>
+                            {Platform.OS === "web" ?
+                                <input
+                                    type="date"
+                                    value={nextIncomeDate}
+                                    onChange={(event) => setNextIncomeDate(event.currentTarget.value)}
+                                    aria-label={t("income.nextIncomeDate")}
+                                    style={styles.dateInput}
+                                />
+                            :   <Pressable
+                                    style={styles.paymentInput}
+                                    onPress={() => {
+                                        const date = new Date(`${nextIncomeDate}T12:00:00`);
+                                        setTempNextIncomeDate(Number.isNaN(date.getTime()) ? new Date() : date);
+                                        setShowNextIncomePicker(true);
+                                    }}
+                                    accessibilityRole="button"
+                                    accessibilityLabel={t("income.nextIncomeDate")}
+                                >
+                                    <ThemedText>
+                                        {new Date(`${nextIncomeDate}T12:00:00`).toLocaleDateString(t("seo.lang"))}
+                                    </ThemedText>
+                                </Pressable>
+                            }
+                            {Platform.OS === "android" && showNextIncomePicker && (
+                                <DateTimePicker
+                                    value={tempNextIncomeDate}
+                                    mode="date"
+                                    display="default"
+                                    onValueChange={(_, date) => {
+                                        setShowNextIncomePicker(false);
+                                        if (date) setNextIncomeDate(toDateOnly(date));
+                                    }}
+                                    onDismiss={() => setShowNextIncomePicker(false)}
+                                />
+                            )}
+                        </View>
+                        <View style={styles.buttons}>
+                            {nextIncomeSource?.next_expected_at && (
+                                <Pressable
+                                    style={[styles.closeButton, styles.paymentAction, savingNextIncome && baseInactive]}
+                                    disabled={savingNextIncome}
+                                    onPress={() => void persistNextIncome(null)}
+                                >
+                                    <ThemedText style={styles.closeButtonText}>
+                                        {t("income.clearNextIncome")}
+                                    </ThemedText>
+                                </Pressable>
+                            )}
+                            <Pressable
+                                style={[styles.saveButton, styles.paymentAction, savingNextIncome && baseInactive]}
+                                disabled={savingNextIncome}
+                                onPress={() => void persistNextIncome(nextIncomeDate)}
+                            >
+                                <ThemedText style={styles.saveButtonText}>
+                                    {savingNextIncome ? t("common.saving") : t("common.save")}
+                                </ThemedText>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+            {Platform.OS === "ios" && (
+                <Modal
+                    transparent
+                    animationType="fade"
+                    visible={showNextIncomePicker}
+                    onRequestClose={() => setShowNextIncomePicker(false)}
+                >
+                    <View style={styles.overlay}>
+                        <View style={styles.datePicker}>
+                            <DateTimePicker
+                                value={tempNextIncomeDate}
+                                mode="date"
+                                display="spinner"
+                                onValueChange={(_, date) => date && setTempNextIncomeDate(date)}
+                            />
+                            <View style={styles.paymentActions}>
+                                <Pressable
+                                    style={[styles.closeButton, styles.paymentAction]}
+                                    onPress={() => setShowNextIncomePicker(false)}
+                                >
+                                    <ThemedText style={styles.closeButtonText}>{t("common.cancel")}</ThemedText>
+                                </Pressable>
+                                <Pressable
+                                    style={[styles.saveButton, styles.paymentAction]}
+                                    onPress={() => {
+                                        setNextIncomeDate(toDateOnly(tempNextIncomeDate));
+                                        setShowNextIncomePicker(false);
+                                    }}
+                                >
+                                    <ThemedText style={styles.saveButtonText}>{t("common.save")}</ThemedText>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+            )}
             {Platform.OS === "ios" && (
                 <Modal
                     transparent
