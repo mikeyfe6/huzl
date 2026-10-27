@@ -449,7 +449,7 @@ export default function DebtsScreen() {
                 :   <>
                         <View style={styles.dateWrapperFallback}>
                             <Pressable
-                                style={styles.input}
+                                style={styles.dateInput}
                                 onPress={() => {
                                     setTempSelectedDate(nextPaymentDate ? new Date(nextPaymentDate) : new Date());
                                     setShowDatePicker(true);

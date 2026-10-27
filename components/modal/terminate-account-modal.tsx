@@ -17,8 +17,8 @@ import {
     baseInput,
     baseModal,
     baseOverlay,
-    baseRed,
     basePadding,
+    baseRed,
     baseTrans,
     baseTransText,
 } from "@/styles/base";
@@ -92,13 +92,13 @@ export function TerminateAccountModal({ visible, onClose, theme }: Readonly<Term
                     marginTop: 24,
                 },
                 button: {
-                    ...baseButton(theme),
+                    ...baseButton(),
                 },
                 buttonText: {
                     ...baseButtonText,
                 },
                 transButton: {
-                    ...baseTrans(theme, redColor),
+                    ...baseTrans(redColor),
                     backgroundColor: whiteColor,
                 },
                 transButtonText: {

@@ -157,14 +157,14 @@ export const getIncomeStyles = (theme: any) =>
             marginTop: 12,
         },
         saveButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             ...baseGreen,
         },
         saveButtonText: {
             ...baseButtonText,
         },
         closeButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             ...baseRed,
         },
         closeButtonText: {
@@ -175,6 +175,15 @@ export const getIncomeStyles = (theme: any) =>
             ...baseBlur,
             flex: 1,
         },
+        pickerOverlay: {
+            ...baseFlex("center", "center"),
+            ...baseBlur,
+            position: "absolute",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+        },
         modal: {
             ...baseModal(theme, 550),
             maxHeight: "75%",
@@ -184,7 +193,7 @@ export const getIncomeStyles = (theme: any) =>
             marginBottom: 12,
         },
         paymentInput: {
-            ...baseInput(theme),
+            ...baseInput(theme, 42),
             ...basePadding,
             marginBottom: 12,
         },
@@ -194,7 +203,6 @@ export const getIncomeStyles = (theme: any) =>
             borderStyle: "solid",
             paddingLeft: 12,
             paddingRight: 12,
-            height: 44,
             flex: 1,
         },
         paymentList: {

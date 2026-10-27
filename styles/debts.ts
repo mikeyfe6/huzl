@@ -68,12 +68,12 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             ...baseGap,
         },
         dateInput: {
-            ...baseInput(theme),
+            ...baseInput(theme, 42),
             ...baseFamily,
+            ...basePadding,
             borderStyle: "solid",
             paddingLeft: 12,
             paddingRight: 12,
-            height: 44,
             flex: 1,
         },
         cancel: {
@@ -100,11 +100,11 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             marginTop: 16,
         },
         saveButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             ...baseGreen,
         },
         cancelButton: {
-            ...baseButton(theme, 0),
+            ...baseButton(0),
             ...baseRed,
         },
         buttons: {
@@ -113,7 +113,7 @@ export const getDebtsStyles = (theme: any, screenWidth = 0) =>
             marginTop: 8,
         },
         button: {
-            ...baseButton(theme),
+            ...baseButton(),
         },
         buttonText: { ...baseButtonText },
         list: { ...baseList },

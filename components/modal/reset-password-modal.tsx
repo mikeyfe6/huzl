@@ -16,8 +16,8 @@ import {
     baseInput,
     baseModal,
     baseOverlay,
-    baseRed,
     basePadding,
+    baseRed,
 } from "@/styles/base";
 
 export function ChangePasswordModal({ visible, onClose, theme }: Readonly<ChangePasswordModalProps>) {
@@ -87,7 +87,7 @@ export function ChangePasswordModal({ visible, onClose, theme }: Readonly<Change
                     marginTop: 24,
                 },
                 button: {
-                    ...baseButton(theme),
+                    ...baseButton(),
                 },
                 buttonText: {
                     ...baseButtonText,

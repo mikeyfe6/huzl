@@ -76,7 +76,7 @@ export const getSettingsStyles = (theme: any) =>
             ...basePadding,
         },
         saveButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             ...baseGreen,
         },
         saveButtonText: {
@@ -84,7 +84,7 @@ export const getSettingsStyles = (theme: any) =>
             color: whiteColor,
         },
         passwordButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             marginTop: 16,
             borderColor: mediumGreyColor,
         },
@@ -145,7 +145,7 @@ export const getSettingsStyles = (theme: any) =>
             color: mediumGreyColor,
         },
         logOutButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             borderColor: redColor,
         },
         logOutButtonText: {

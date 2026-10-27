@@ -46,7 +46,7 @@ export default function PrivacyScreen() {
                     fontStyle: "italic",
                 },
                 backButton: {
-                    ...baseButton(theme),
+                    ...baseButton(),
                     backgroundColor: linkColor,
                     borderColor: linkColor,
                     marginTop: 16,

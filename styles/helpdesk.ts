@@ -53,7 +53,7 @@ export const getHelpdeskStyles = (theme: any) =>
             ...baseEmptyText(theme),
         },
         loginButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             ...baseBlue,
             marginTop: 4,
         },
@@ -104,7 +104,7 @@ export const getHelpdeskStyles = (theme: any) =>
             textAlignVertical: "top",
         },
         button: {
-            ...baseButton(theme),
+            ...baseButton(),
             ...baseGreen,
             marginTop: 8,
         },

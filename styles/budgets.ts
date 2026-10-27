@@ -42,7 +42,7 @@ export const getBudgetsStyles = (theme: any) =>
             marginTop: 8,
         },
         button: {
-            ...baseButton(theme),
+            ...baseButton(),
             backgroundColor: blueColor,
         },
         buttonText: {

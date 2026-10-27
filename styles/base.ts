@@ -49,12 +49,12 @@ export const baseCenter = {
 
 export const baseOutline = (theme: any) => ({ outlineColor: theme.focus });
 
-export const baseInput = (theme: any) => ({
+export const baseInput = (theme: any, height?: number) => ({
     ...baseOutline(theme),
     ...baseRadius,
     ...baseBorder,
     ...baseSize,
-    ...baseHeight,
+    ...(height === undefined || Platform.OS === "web" ? baseHeight : { height, minHeight: height }),
     borderColor: theme.inputBorder,
     backgroundColor: theme.inputBackground,
     color: theme.inputText,
@@ -81,7 +81,7 @@ export const basePadding = {
     paddingVertical: 10,
 };
 
-export const baseButton = (theme: any, flex?: number | undefined) => ({
+export const baseButton = (flex?: number | undefined) => ({
     ...baseFlex("center", "center"),
     ...baseRadius,
     ...baseBorder,
@@ -92,8 +92,8 @@ export const baseButton = (theme: any, flex?: number | undefined) => ({
     flex: flex ?? 1,
 });
 
-export const baseTrans = (theme: any, color: string) => ({
-    ...baseButton(theme),
+export const baseTrans = (color: string) => ({
+    ...baseButton(),
     ...baseBorder,
     borderColor: color,
 });

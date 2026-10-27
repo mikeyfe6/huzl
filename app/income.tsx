@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, FlatList, Modal, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
 
@@ -843,7 +843,7 @@ export default function IncomeScreen() {
                                             value={paymentDate}
                                             onChange={(event) => setPaymentDate(event.currentTarget.value)}
                                             aria-label={t("income.receivedDate")}
-                                            style={styles.dateInput}
+                                            style={styles.dateInput as unknown as CSSProperties}
                                         />
                                     :   <Pressable
                                             style={styles.paymentInput}
@@ -959,7 +959,10 @@ export default function IncomeScreen() {
                 transparent
                 animationType="fade"
                 visible={nextIncomeVisible}
-                onRequestClose={() => setNextIncomeVisible(false)}
+                onRequestClose={() => {
+                    setShowNextIncomePicker(false);
+                    setNextIncomeVisible(false);
+                }}
             >
                 <View style={styles.overlay}>
                     <View style={styles.modal}>
@@ -986,7 +989,7 @@ export default function IncomeScreen() {
                                     value={nextIncomeDate}
                                     onChange={(event) => setNextIncomeDate(event.currentTarget.value)}
                                     aria-label={t("income.nextIncomeDate")}
-                                    style={styles.dateInput}
+                                    style={styles.dateInput as unknown as CSSProperties}
                                 />
                             :   <Pressable
                                     style={styles.paymentInput}
@@ -1039,44 +1042,37 @@ export default function IncomeScreen() {
                             </Pressable>
                         </View>
                     </View>
-                </View>
-            </Modal>
-            {Platform.OS === "ios" && (
-                <Modal
-                    transparent
-                    animationType="fade"
-                    visible={showNextIncomePicker}
-                    onRequestClose={() => setShowNextIncomePicker(false)}
-                >
-                    <View style={styles.overlay}>
-                        <View style={styles.datePicker}>
-                            <DateTimePicker
-                                value={tempNextIncomeDate}
-                                mode="date"
-                                display="spinner"
-                                onValueChange={(_, date) => date && setTempNextIncomeDate(date)}
-                            />
-                            <View style={styles.paymentActions}>
-                                <Pressable
-                                    style={[styles.closeButton, styles.paymentAction]}
-                                    onPress={() => setShowNextIncomePicker(false)}
-                                >
-                                    <ThemedText style={styles.closeButtonText}>{t("common.cancel")}</ThemedText>
-                                </Pressable>
-                                <Pressable
-                                    style={[styles.saveButton, styles.paymentAction]}
-                                    onPress={() => {
-                                        setNextIncomeDate(toDateOnly(tempNextIncomeDate));
-                                        setShowNextIncomePicker(false);
-                                    }}
-                                >
-                                    <ThemedText style={styles.saveButtonText}>{t("common.save")}</ThemedText>
-                                </Pressable>
+                    {Platform.OS === "ios" && showNextIncomePicker && (
+                        <View style={styles.pickerOverlay}>
+                            <View style={styles.datePicker}>
+                                <DateTimePicker
+                                    value={tempNextIncomeDate}
+                                    mode="date"
+                                    display="spinner"
+                                    onValueChange={(_, date) => date && setTempNextIncomeDate(date)}
+                                />
+                                <View style={styles.paymentActions}>
+                                    <Pressable
+                                        style={[styles.closeButton, styles.paymentAction]}
+                                        onPress={() => setShowNextIncomePicker(false)}
+                                    >
+                                        <ThemedText style={styles.closeButtonText}>{t("common.cancel")}</ThemedText>
+                                    </Pressable>
+                                    <Pressable
+                                        style={[styles.saveButton, styles.paymentAction]}
+                                        onPress={() => {
+                                            setNextIncomeDate(toDateOnly(tempNextIncomeDate));
+                                            setShowNextIncomePicker(false);
+                                        }}
+                                    >
+                                        <ThemedText style={styles.saveButtonText}>{t("common.save")}</ThemedText>
+                                    </Pressable>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                </Modal>
-            )}
+                    )}
+                </View>
+            </Modal>
             {Platform.OS === "ios" && (
                 <Modal
                     transparent

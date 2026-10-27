@@ -120,7 +120,7 @@ export const getExpensesStyles = (theme: any) =>
             marginTop: 8,
         },
         button: {
-            ...baseButton(theme),
+            ...baseButton(),
         },
         buttonText: {
             ...baseButtonText,

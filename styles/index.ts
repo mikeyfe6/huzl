@@ -53,7 +53,7 @@ export const getIndexStyles = (theme: any) =>
             color: theme.inputText,
         },
         signInButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             backgroundColor: greenColor,
             borderColor: greenColor,
         },
@@ -62,7 +62,7 @@ export const getIndexStyles = (theme: any) =>
             color: whiteColor,
         },
         signUpButton: {
-            ...baseButton(theme),
+            ...baseButton(),
             ...baseSemiBold,
             borderColor: mediumGreyColor,
         },
