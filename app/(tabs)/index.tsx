@@ -77,7 +77,9 @@ export default function HomeScreen() {
         if (debtsWithDate.length === 0) return null;
 
         debtsWithDate.sort((a, b) => a.nextDate - b.nextDate);
-        return debtsWithDate[0];
+        const first = debtsWithDate[0];
+        const sameDayCount = debtsWithDate.filter((d) => d.next_payment_date === first.next_payment_date).length;
+        return { ...first, extraCount: sameDayCount - 1 };
     }, [debts]);
 
     const nextIncome = useMemo(() => {
@@ -606,6 +608,9 @@ export default function HomeScreen() {
                                             {nextDebt.nextDate.toLocaleDateString(t("seo.lang"))}
                                         </ThemedText>
                                     </View>
+                                    {nextDebt.extraCount > 0 && (
+                                        <ThemedText style={styles.nextDebtExtra}>{`+ ${nextDebt.extraCount}`}</ThemedText>
+                                    )}
                                 </View>
                             )}
 

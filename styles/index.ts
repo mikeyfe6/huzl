@@ -201,6 +201,12 @@ export const getIndexStyles = (theme: any) =>
             opacity: 0.9,
             height: 18,
         },
+        nextDebtExtra: {
+            ...baseMedium,
+            color: orangeColor,
+            marginLeft: 2,
+            fontSize: 11,
+        },
         nextDebtDate: {
             ...baseMedium,
             fontSize: 10,
