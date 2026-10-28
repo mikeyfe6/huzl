@@ -77,7 +77,8 @@
         "greeting": {
             "morning": "Goedemorgen",
             "afternoon": "Goedemiddag",
-            "evening": "Goedenavond"
+            "evening": "Goedenavond",
+            "night": "Goedenacht"
         },
         "signedInAs": "Ingelogd als",
         "pendingTermination": "Je account wordt binnen 24 uur verwijderd.",

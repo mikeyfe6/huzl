@@ -77,7 +77,8 @@
         "greeting": {
             "morning": "Good morning",
             "afternoon": "Good afternoon",
-            "evening": "Good evening"
+            "evening": "Good evening",
+            "night": "Good night"
         },
         "signedInAs": "Signed in as",
         "pendingTermination": "Your account will be deleted within 24 hours.",

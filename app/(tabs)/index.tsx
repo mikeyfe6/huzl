@@ -50,13 +50,17 @@ export default function HomeScreen() {
 
     const hour = new Date().getHours();
     let greeting: string;
-    if (hour < 12) {
+
+    if (hour >= 6 && hour < 12) {
         greeting = "morning";
-    } else if (hour < 18) {
+    } else if (hour >= 12 && hour < 18) {
         greeting = "afternoon";
-    } else {
+    } else if (hour >= 18 && hour < 24) {
         greeting = "evening";
+    } else {
+        greeting = "night";
     }
+
     const greetingMessage = t(`home.greeting.${greeting}`);
 
     const mapAuthError = (err: unknown) => {
