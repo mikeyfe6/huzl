@@ -74,7 +74,11 @@
         "text": "Vul je e-mailadres in om een wachtwoordresetlink te ontvangen."
     },
     "home": {
-        "title": "Hallo",
+        "greeting": {
+            "morning": "Goedemorgen",
+            "afternoon": "Goedemiddag",
+            "evening": "Goedenavond"
+        },
         "signedInAs": "Ingelogd als",
         "pendingTermination": "Je account wordt binnen 24 uur verwijderd.",
         "monthlyIncome": "Maandelijks Inkomen",

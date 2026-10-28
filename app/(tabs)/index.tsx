@@ -48,6 +48,17 @@ export default function HomeScreen() {
     const theme = Colors[colorScheme ?? "light"];
     const styles = useMemo(() => getIndexStyles(theme), [theme]);
 
+    const hour = new Date().getHours();
+    let greeting: string;
+    if (hour < 12) {
+        greeting = "morning";
+    } else if (hour < 18) {
+        greeting = "afternoon";
+    } else {
+        greeting = "evening";
+    }
+    const greetingMessage = t(`home.greeting.${greeting}`);
+
     const mapAuthError = (err: unknown) => {
         const code = (err as any)?.code;
 
@@ -484,7 +495,7 @@ export default function HomeScreen() {
             <ThemedView style={styles.container}>
                 <HeaderImage />
                 <ThemedText type="title">
-                    {t("home.title")}{" "}
+                    {greetingMessage}{" "}
                     {(
                         typeof user.user_metadata.display_name === "string" &&
                         user.user_metadata.display_name.trim().length > 0

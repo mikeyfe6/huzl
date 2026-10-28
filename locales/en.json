@@ -74,7 +74,11 @@
         "text": "Enter your email address to receive a password reset link."
     },
     "home": {
-        "title": "Hello",
+        "greeting": {
+            "morning": "Good morning",
+            "afternoon": "Good afternoon",
+            "evening": "Good evening"
+        },
         "signedInAs": "Signed in as",
         "pendingTermination": "Your account will be deleted within 24 hours.",
         "monthlyIncome": "Monthly Income",
