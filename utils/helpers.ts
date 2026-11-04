@@ -76,7 +76,10 @@ export const formatIncomeAverage = (
                 new Date(trackingDate.getFullYear(), trackingDate.getMonth(), 1)
             :   rollingPeriodStart;
         const periodStartString = `${periodStart.getFullYear()}-${String(periodStart.getMonth() + 1).padStart(2, "0")}-01`;
-        const endDateString = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, "0")}-${String(endDate.getDate()).padStart(2, "0")}`;
+        
+        // Include payments already registered later this month, since the month counts as covered
+        const monthEnd = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0);
+        const endDateString = `${monthEnd.getFullYear()}-${String(monthEnd.getMonth() + 1).padStart(2, "0")}-${String(monthEnd.getDate()).padStart(2, "0")}`;
         const recentPayments = payments.filter(
             (payment) => payment.received_at >= periodStartString && payment.received_at <= endDateString,
         );
