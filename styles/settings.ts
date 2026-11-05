@@ -16,7 +16,7 @@ import {
     baseSemiBold,
     baseSmall,
     baseSpace,
-} from "./base";
+} from "@/styles/base";
 
 export const getSettingsStyles = (theme: any) =>
     StyleSheet.create({

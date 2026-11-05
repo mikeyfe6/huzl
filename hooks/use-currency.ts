@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { useAuth } from "./use-auth";
+import { useAuth } from "@/hooks/use-auth";
 
 const CURRENCY_CONFIGS = [
     { symbol: "€", code: "EUR", nameKey: "currency.eur" },

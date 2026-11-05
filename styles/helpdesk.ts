@@ -23,7 +23,7 @@ import {
     baseSemiBold,
     baseSize,
     baseSpace,
-} from "./base";
+} from "@/styles/base";
 
 export const getHelpdeskStyles = (theme: any) =>
     StyleSheet.create({

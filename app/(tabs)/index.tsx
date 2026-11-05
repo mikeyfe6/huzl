@@ -348,10 +348,10 @@ export default function HomeScreen() {
         }, [user, refreshFlag]),
     );
 
-    const HeaderImage = () => (
+    const headerImage = (
         <View style={styles.logo}>
             <Image
-                source={require("../../assets/images/huzl-icon.png")}
+                source={require("@/assets/images/huzl-icon.png")}
                 style={styles.image}
                 accessible
                 accessibilityLabel="Huzl logo"
@@ -375,7 +375,7 @@ export default function HomeScreen() {
         return (
             <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
                 <ThemedView style={styles.container}>
-                    <HeaderImage />
+                    {headerImage}
                     <ThemedText type="title">{t("auth.welcome")}</ThemedText>
                     <ThemedText style={styles.text}>
                         {isSignUp ? t("auth.getStarted") : t("auth.signInOrCreate")}
@@ -497,7 +497,7 @@ export default function HomeScreen() {
     return (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
             <ThemedView style={styles.container}>
-                <HeaderImage />
+                {headerImage}
                 <ThemedText type="title">
                     {greetingMessage}{" "}
                     {(

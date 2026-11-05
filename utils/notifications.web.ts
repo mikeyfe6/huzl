@@ -5,13 +5,17 @@ const DEBT_NOTIFICATIONS_PREFERENCE_KEY = "@huzl_debt_notifications_enabled";
 export const REMINDER_HOUR = 12;
 export const REMINDER_MINUTE = 0;
 
-export async function ensureNotificationPermissionAsync(): Promise<boolean> {
-    return false;
+export function ensureNotificationPermissionAsync(): Promise<boolean> {
+    return Promise.resolve(false);
 }
 
-export async function cancelDebtPaymentReminder(_debtId: string) {}
+export function cancelDebtPaymentReminder(_debtId: string): Promise<void> {
+    return Promise.resolve();
+}
 
-export async function cancelAllDebtPaymentReminders() {}
+export function cancelAllDebtPaymentReminders(): Promise<void> {
+    return Promise.resolve();
+}
 
 export async function getDebtNotificationsPreferenceAsync(): Promise<boolean> {
     const value = await AsyncStorage.getItem(DEBT_NOTIFICATIONS_PREFERENCE_KEY);
@@ -22,9 +26,11 @@ export async function setDebtNotificationsPreferenceAsync(enabled: boolean) {
     await AsyncStorage.setItem(DEBT_NOTIFICATIONS_PREFERENCE_KEY, String(enabled));
 }
 
-export async function scheduleDebtPaymentReminder(_debt: {
+export function scheduleDebtPaymentReminder(_debt: {
     id: string;
     name: string;
     amount: number;
     next_payment_date?: string | null;
-}) {}
+}): Promise<void> {
+    return Promise.resolve();
+}

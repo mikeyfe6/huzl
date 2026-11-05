@@ -1,5 +1,5 @@
+import { useThemePreference } from "@/hooks/use-theme-preference";
 import { useEffect, useState } from "react";
-import { useThemePreference } from "./use-theme-preference";
 
 /**
  * To support static rendering, this value needs to be re-calculated on the client side for web
@@ -19,4 +19,4 @@ export function useColorScheme() {
     return "light";
 }
 
-export { ThemeProvider } from "./use-theme-preference";
+export { ThemeProvider } from "@/hooks/use-theme-preference";

@@ -93,7 +93,7 @@ export default function RootLayout() {
     const verification = process.env.EXPO_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
     const [fontsLoaded, fontError] = useFonts({
-        "BebasNeue-Regular": require("../assets/fonts/BebasNeue-Regular.ttf"),
+        "BebasNeue-Regular": require("@/assets/fonts/BebasNeue-Regular.ttf"),
     });
 
     useEffect(() => {
